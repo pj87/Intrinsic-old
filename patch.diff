@@ -1,0 +1,949 @@
+From 359afe7b69207b4b6b058f2b1811061530d8d968 Mon Sep 17 00:00:00 2001
+From: Benjamin Glatzel <begla@intrinsic-engine.com>
+Date: Sun, 21 May 2017 12:53:21 +0200
+Subject: [PATCH] Rewrote GPU memory allocation scheme - more flexible and
+ should be able to deal with more complex GPU memory heap setups
+
+* Switched from a "global pool" based system to a page allocation scheme
+for each pool type supporting pages per pool from different GPU heaps
+* Addresses #32
+---
+ .../src/IntrinsicCoreLinearOffsetAllocator.h       |  17 +-
+ .../src/IntrinsicRendererVulkanEnumsStructs.h      |  20 +-
+ .../IntrinsicRendererVulkanGpuMemoryManager.cpp    | 255 +++++++++------------
+ .../src/IntrinsicRendererVulkanGpuMemoryManager.h  |  84 +++----
+ .../src/IntrinsicRendererVulkanRenderSystem.cpp    |   4 +-
+ .../src/IntrinsicRendererVulkanResourcesBuffer.cpp |  55 ++---
+ .../src/IntrinsicRendererVulkanResourcesBuffer.h   |  12 +-
+ .../src/IntrinsicRendererVulkanResourcesImage.cpp  |  82 ++++---
+ .../src/IntrinsicRendererVulkanResourcesImage.h    |   4 +-
+ 9 files changed, 242 insertions(+), 291 deletions(-)
+
+diff --git a/IntrinsicCore/src/IntrinsicCoreLinearOffsetAllocator.h b/IntrinsicCore/src/IntrinsicCoreLinearOffsetAllocator.h
+index ed769b7..28b444b 100644
+--- a/IntrinsicCore/src/IntrinsicCoreLinearOffsetAllocator.h
++++ b/IntrinsicCore/src/IntrinsicCoreLinearOffsetAllocator.h
+@@ -38,13 +38,12 @@ struct LinearOffsetAllocator
+ 
+   _INTR_INLINE uint32_t allocate(uint32_t p_Size, uint32_t p_Alignment)
+   {
+-    // Align current offset
+-    const uint32_t newOffset =
++    const uint32_t alignedNewOffset =
+         (_currentOffsetInBytes + p_Alignment) & ~(p_Alignment - 1u);
+-    _currentOffsetInBytes = newOffset + p_Size;
++    _currentOffsetInBytes = alignedNewOffset + p_Size;
+     _INTR_ASSERT((_currentOffsetInBytes - _initialOffset) <= _sizeInBytes &&
+                  "Out of memory");
+-    return newOffset;
++    return alignedNewOffset;
+   }
+ 
+   // <-
+@@ -66,6 +65,16 @@ struct LinearOffsetAllocator
+     return _sizeInBytes - (_currentOffsetInBytes - _initialOffset);
+   }
+ 
++  // <-
++
++  _INTR_INLINE bool fits(uint32_t p_Size, uint32_t p_Alignment) const
++  {
++    const uint32_t startOffset =
++        ((_currentOffsetInBytes + p_Alignment) & ~(p_Alignment - 1u)) + p_Size;
++
++    return (startOffset - _initialOffset) <= _sizeInBytes;
++  }
++
+ private:
+   uint32_t _initialOffset;
+   uint32_t _sizeInBytes;
+diff --git a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanEnumsStructs.h b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanEnumsStructs.h
+index fc04370..6f8da73 100644
+--- a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanEnumsStructs.h
++++ b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanEnumsStructs.h
+@@ -45,13 +45,15 @@ enum Enum
+ };
+ }
+ 
+-struct MemoryAllocationInfo
+-{
+-  VkDeviceMemory vkDeviceMemory;
+-  uint32_t sizeInBytes;
+-  uint32_t alignmentInBytes;
+-  uint32_t offsetInBytes;
+-  uint8_t memoryPoolType;
++struct GpuMemoryAllocationInfo
++{
++  MemoryPoolType::Enum _memoryPoolType;
++  uint32_t _pageIdx;
++  uint32_t _offset;
++  VkDeviceMemory _vkDeviceMemory;
++  uint32_t _sizeInBytes;
++  uint32_t _alignmentInBytes;
++  uint8_t* _mappedMemory;
+ };
+ 
+ namespace RenderSize
+@@ -116,7 +118,9 @@ namespace MemoryLocation
+ enum Enum
+ {
+   kDeviceLocal,
+-  kHostVisible
++  kHostVisible,
++
++  kCount
+ };
+ }
+ 
+diff --git a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanGpuMemoryManager.cpp b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanGpuMemoryManager.cpp
+index f1f5f9e..e301c01 100644
+--- a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanGpuMemoryManager.cpp
++++ b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanGpuMemoryManager.cpp
+@@ -23,18 +23,15 @@ namespace Renderer
+ namespace Vulkan
+ {
+ // Static members
+-Core::LinearOffsetAllocator
+-    GpuMemoryManager::_memoryAllocators[MemoryPoolType::kCount];
++_INTR_ARRAY(GpuMemoryPage)
++GpuMemoryManager::_memoryPools[MemoryPoolType::kCount];
+ 
+-uint32_t GpuMemoryManager::_deviceLocalMemorySizeInBytes = 0u;
+-uint32_t GpuMemoryManager::_hostVisibleMemorySizeInBytes = 0u;
+-VkDeviceMemory GpuMemoryManager::_vkDeviceLocalMemory = VK_NULL_HANDLE;
+-VkDeviceMemory GpuMemoryManager::_vkHostVisibleMemory = VK_NULL_HANDLE;
+-uint8_t* GpuMemoryManager::_mappedHostVisibleMemory = nullptr;
+-
+-uint32_t GpuMemoryManager::_memoryPoolSizesInBytes[MemoryPoolType::kCount] = {};
+ MemoryLocation::Enum
+-    GpuMemoryManager::_memoryPoolUsages[MemoryPoolType::kCount] = {};
++    GpuMemoryManager::_memoryPoolToMemoryLocation[MemoryPoolType::kCount] = {};
++uint32_t GpuMemoryManager::_memoryLocationToMemoryPropertyFlags
++    [MemoryLocation::kCount] = {VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
++                                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
++                                    VK_MEMORY_PROPERTY_HOST_COHERENT_BIT};
+ const char* GpuMemoryManager::_memoryPoolNames[MemoryPoolType::kCount] = {};
+ 
+ namespace
+@@ -44,184 +41,140 @@ namespace
+ void GpuMemoryManager::init()
+ {
+   _INTR_LOG_INFO("Initializing GPU Memory Manager...");
+-  _INTR_LOG_PUSH();
+ 
+   // Setup memory pools
+   {
+-    _memoryPoolSizesInBytes[MemoryPoolType::kStaticImages] =
+-        512u * 1024u * 1024u;
+-    _memoryPoolUsages[MemoryPoolType::kStaticImages] =
++    _memoryPoolToMemoryLocation[MemoryPoolType::kStaticImages] =
+         MemoryLocation::kDeviceLocal;
+     _memoryPoolNames[MemoryPoolType::kStaticImages] = "Static Images";
+ 
+-    _memoryPoolSizesInBytes[MemoryPoolType::kStaticBuffers] =
+-        64u * 1024u * 1024u;
+-    _memoryPoolUsages[MemoryPoolType::kStaticBuffers] =
++    _memoryPoolToMemoryLocation[MemoryPoolType::kStaticBuffers] =
+         MemoryLocation::kDeviceLocal;
+     _memoryPoolNames[MemoryPoolType::kStaticBuffers] = "Static Buffers";
+ 
+-    _memoryPoolSizesInBytes[MemoryPoolType::kStaticStagingBuffers] =
+-        64u * 1024u * 1024u;
+-    _memoryPoolUsages[MemoryPoolType::kStaticStagingBuffers] =
++    _memoryPoolToMemoryLocation[MemoryPoolType::kStaticStagingBuffers] =
+         MemoryLocation::kHostVisible;
+     _memoryPoolNames[MemoryPoolType::kStaticStagingBuffers] =
+         "Static Staging Buffers";
+ 
+-    _memoryPoolSizesInBytes[MemoryPoolType::kResolutionDependentImages] =
+-        512u * 1024u * 1024u;
+-    _memoryPoolUsages[MemoryPoolType::kResolutionDependentImages] =
++    _memoryPoolToMemoryLocation[MemoryPoolType::kResolutionDependentImages] =
+         MemoryLocation::kDeviceLocal;
+     _memoryPoolNames[MemoryPoolType::kResolutionDependentImages] =
+         "Resolution Dependent Images";
+ 
+-    _memoryPoolSizesInBytes[MemoryPoolType::kResolutionDependentBuffers] =
+-        64u * 1024u * 1024u;
+-    _memoryPoolUsages[MemoryPoolType::kResolutionDependentBuffers] =
++    _memoryPoolToMemoryLocation[MemoryPoolType::kResolutionDependentBuffers] =
+         MemoryLocation::kDeviceLocal;
+     _memoryPoolNames[MemoryPoolType::kResolutionDependentBuffers] =
+         "Resolution Dependent Buffers";
+ 
+-    _memoryPoolSizesInBytes
++    _memoryPoolToMemoryLocation
+         [MemoryPoolType::kResolutionDependentStagingBuffers] =
+-            64u * 1024u * 1024u;
+-    _memoryPoolUsages[MemoryPoolType::kResolutionDependentStagingBuffers] =
+-        MemoryLocation::kHostVisible;
++            MemoryLocation::kHostVisible;
+     _memoryPoolNames[MemoryPoolType::kResolutionDependentStagingBuffers] =
+         "Resolution Dependent Staging Buffers";
+ 
+-    _memoryPoolSizesInBytes[MemoryPoolType::kVolatileStagingBuffers] =
+-        64u * 1024u * 1024u;
+-    _memoryPoolUsages[MemoryPoolType::kVolatileStagingBuffers] =
++    _memoryPoolToMemoryLocation[MemoryPoolType::kVolatileStagingBuffers] =
+         MemoryLocation::kHostVisible;
+     _memoryPoolNames[MemoryPoolType::kVolatileStagingBuffers] =
+         "Volatile Staging Buffers";
+   }
++}
+ 
+-  static const uint32_t deviceLocalMemoryPropertyFlags =
+-      VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+-  uint32_t deviceLocalMemoryTypeIdx = (uint32_t)-1;
++// <-
+ 
+-  static const uint32_t hostVisiblePropertyFlags =
+-      VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+-      VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+-  uint32_t hostVisibleMemoryTypeIdx = (uint32_t)-1;
++GpuMemoryAllocationInfo
++GpuMemoryManager::allocateOffset(MemoryPoolType::Enum p_MemoryPoolType,
++                                 uint32_t p_Size, uint32_t p_Alignment,
++                                 uint32_t p_MemoryTypeFlags)
++{
++  _INTR_ARRAY(GpuMemoryPage)& poolPages = _memoryPools[p_MemoryPoolType];
+ 
+-  for (uint32_t i = 0;
+-       i < RenderSystem::_vkPhysicalDeviceMemoryProperties.memoryTypeCount; ++i)
++  // Try to find a fitting page
++  for (uint32_t pageIdx = 0u; pageIdx < _memoryPools[p_MemoryPoolType].size();
++       ++pageIdx)
+   {
+-    const VkMemoryType& memoryType =
+-        RenderSystem::_vkPhysicalDeviceMemoryProperties.memoryTypes[i];
++    GpuMemoryPage& page = poolPages[pageIdx];
+ 
+-    if (deviceLocalMemoryTypeIdx == (uint32_t)-1)
++    if ((p_MemoryTypeFlags & (1u << page._memoryTypeIdx)) > 0u &&
++        page._allocator.fits(p_Size, p_Alignment))
+     {
+-      if ((memoryType.propertyFlags & deviceLocalMemoryPropertyFlags) ==
+-          deviceLocalMemoryPropertyFlags)
+-      {
+-        deviceLocalMemoryTypeIdx = i;
+-      }
+-    }
+-    if (hostVisibleMemoryTypeIdx == (uint32_t)-1)
+-    {
+-      if ((memoryType.propertyFlags & hostVisiblePropertyFlags) ==
+-          hostVisiblePropertyFlags)
+-      {
+-        hostVisibleMemoryTypeIdx = i;
+-      }
++      const uint32_t offset = page._allocator.allocate(p_Size, p_Alignment);
++      return {p_MemoryPoolType,
++              pageIdx,
++              offset,
++              page._vkDeviceMemory,
++              p_Size,
++              p_Alignment,
++              page._mappedMemory != nullptr ? &page._mappedMemory[offset]
++                                            : nullptr};
+     }
+   }
+-  _INTR_ASSERT(deviceLocalMemoryTypeIdx != (uint32_t)-1 &&
+-               hostVisibleMemoryTypeIdx != (uint32_t)-1 &&
+-               "Required memory type not available");
+ 
+-  // Allocate device local memory
++  // No existing page found, allocate a new one
++  for (uint32_t memoryTypeIdx = 0;
++       memoryTypeIdx <
++       RenderSystem::_vkPhysicalDeviceMemoryProperties.memoryTypeCount;
++       ++memoryTypeIdx)
+   {
+-    _deviceLocalMemorySizeInBytes = 0u;
+-
+-    for (uint32_t i = 0u; i < MemoryPoolType::kCount; ++i)
+-    {
+-      if (_memoryPoolUsages[i] == MemoryLocation::kDeviceLocal)
+-      {
+-        _deviceLocalMemorySizeInBytes += _memoryPoolSizesInBytes[i];
+-      }
+-    }
+-
+-    VkMemoryAllocateInfo memAllocInfo = {};
+-    {
+-      memAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+-      memAllocInfo.pNext = 0u;
+-      memAllocInfo.allocationSize = _deviceLocalMemorySizeInBytes;
+-      memAllocInfo.memoryTypeIndex = deviceLocalMemoryTypeIdx;
+-    }
+-
+-    VkResult result = vkAllocateMemory(RenderSystem::_vkDevice, &memAllocInfo,
+-                                       nullptr, &_vkDeviceLocalMemory);
+-    _INTR_VK_CHECK_RESULT(result);
++    const VkMemoryType& memoryType =
++        RenderSystem::_vkPhysicalDeviceMemoryProperties
++            .memoryTypes[memoryTypeIdx];
+ 
+-    _INTR_LOG_INFO("Allocated %.2f MB of device local memory...",
+-                   Math::bytesToMegaBytes(_deviceLocalMemorySizeInBytes));
+-  }
++    const MemoryLocation::Enum memLocation =
++        _memoryPoolToMemoryLocation[p_MemoryPoolType];
++    const uint32_t memoryPropertyFlags =
++        _memoryLocationToMemoryPropertyFlags[memLocation];
+ 
+-  // Allocate host visible memory
+-  {
+-    for (uint32_t i = 0u; i < MemoryPoolType::kCount; ++i)
++    if ((memoryType.propertyFlags & memoryPropertyFlags) ==
++            memoryPropertyFlags &&
++        (p_MemoryTypeFlags & (1u << memoryTypeIdx)) > 0u)
+     {
+-      if (_memoryPoolUsages[i] == MemoryLocation::kHostVisible)
++      poolPages.resize(poolPages.size() + 1u);
++      GpuMemoryPage& page = poolPages.back();
+       {
+-        _hostVisibleMemorySizeInBytes += _memoryPoolSizesInBytes[i];
++        page._allocator.init(_INTR_GPU_PAGE_SIZE_IN_BYTES);
++        page._memoryTypeIdx = memoryTypeIdx;
++
++        VkMemoryAllocateInfo memAllocInfo = {};
++        {
++          memAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
++          memAllocInfo.pNext = 0u;
++          memAllocInfo.allocationSize = _INTR_GPU_PAGE_SIZE_IN_BYTES;
++          memAllocInfo.memoryTypeIndex = memoryTypeIdx;
++        }
++
++        VkResult result =
++            vkAllocateMemory(RenderSystem::_vkDevice, &memAllocInfo, nullptr,
++                             &page._vkDeviceMemory);
++        _INTR_VK_CHECK_RESULT(result);
+       }
+-    }
+ 
+-    VkMemoryAllocateInfo memAllocInfo = {};
+-    {
+-      memAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+-      memAllocInfo.pNext = 0u;
+-      memAllocInfo.allocationSize = _hostVisibleMemorySizeInBytes;
+-      memAllocInfo.memoryTypeIndex = hostVisibleMemoryTypeIdx;
+-    }
+-
+-    VkResult result = vkAllocateMemory(RenderSystem::_vkDevice, &memAllocInfo,
+-                                       nullptr, &_vkHostVisibleMemory);
+-    _INTR_VK_CHECK_RESULT(result);
+-
+-    _INTR_LOG_INFO("Allocated %.2f MB of host visible memory...",
+-                   Math::bytesToMegaBytes(_hostVisibleMemorySizeInBytes));
+-  }
+-
+-  // Setup allocators
+-  {
+-    uint32_t deviceLocalOffset = 0u;
+-    uint32_t hostVisibleOffset = 0u;
+-
+-    for (uint32_t i = 0u; i < MemoryPoolType::kCount; ++i)
+-    {
+-      if (_memoryPoolUsages[i] == MemoryLocation::kDeviceLocal)
+-      {
+-        _memoryAllocators[i].init(_memoryPoolSizesInBytes[i],
+-                                  deviceLocalOffset);
+-        deviceLocalOffset += _memoryPoolSizesInBytes[i];
+-      }
+-      else if (_memoryPoolUsages[i] == MemoryLocation::kHostVisible)
+-      {
+-        _memoryAllocators[i].init(_memoryPoolSizesInBytes[i],
+-                                  hostVisibleOffset);
+-        hostVisibleOffset += _memoryPoolSizesInBytes[i];
+-      }
+-      else
++      // Map device local memory
++      if (memLocation == MemoryLocation::kHostVisible)
+       {
+-        _INTR_ASSERT(false);
++        VkResult result = vkMapMemory(
++            RenderSystem::_vkDevice, page._vkDeviceMemory, 0u,
++            _INTR_GPU_PAGE_SIZE_IN_BYTES, 0u, (void**)&page._mappedMemory);
++        _INTR_VK_CHECK_RESULT(result);
+       }
+-    }
+-  }
+ 
+-  // Map host visible memory
+-  {
+-    VkResult result = vkMapMemory(RenderSystem::_vkDevice, _vkHostVisibleMemory,
+-                                  0u, _hostVisibleMemorySizeInBytes, 0u,
+-                                  (void**)&_mappedHostVisibleMemory);
+-    _INTR_VK_CHECK_RESULT(result);
++      _INTR_ASSERT(page._allocator.fits(p_Size, p_Alignment) &&
++                   "Allocation does not fit in a single page");
++
++      const uint32_t offset = page._allocator.allocate(p_Size, p_Alignment);
++      return {p_MemoryPoolType,
++              (uint32_t)poolPages.size() - 1u,
++              offset,
++              page._vkDeviceMemory,
++              p_Size,
++              p_Alignment,
++              page._mappedMemory != nullptr ? &page._mappedMemory[offset]
++                                            : nullptr};
++    }
+   }
+ 
+-  _INTR_LOG_POP();
++  _INTR_ASSERT(false && "Failed to allocate a new GPU memory page");
++  return {};
+ }
+ 
+ // <-
+@@ -234,26 +187,32 @@ void GpuMemoryManager::updateMemoryStats()
+ 
+   if (!init)
+   {
+-    for (uint32_t i = 0u; i < MemoryPoolType::kCount; ++i)
++    for (uint32_t memoryPoolType = 0u; memoryPoolType < MemoryPoolType::kCount;
++         ++memoryPoolType)
+     {
+       static char charBuffer[128];
+-      sprintf(charBuffer, "Total %s Memory (MB)", _memoryPoolNames[i]);
+-      tokens[i][0] = MicroProfileGetCounterToken(charBuffer);
++      sprintf(charBuffer, "Total %s Memory (MB)",
++              _memoryPoolNames[memoryPoolType]);
++      tokens[memoryPoolType][0] = MicroProfileGetCounterToken(charBuffer);
+ 
+-      sprintf(charBuffer, "Available %s Memory (MB)", _memoryPoolNames[i]);
+-      tokens[i][1] = MicroProfileGetCounterToken(charBuffer);
++      sprintf(charBuffer, "Available %s Memory (MB)",
++              _memoryPoolNames[memoryPoolType]);
++      tokens[memoryPoolType][1] = MicroProfileGetCounterToken(charBuffer);
+     }
+ 
+     init = true;
+   }
+ 
+-  for (uint32_t i = 0u; i < MemoryPoolType::kCount; ++i)
++  for (uint32_t memoryPoolType = 0u; memoryPoolType < MemoryPoolType::kCount;
++       ++memoryPoolType)
+   {
+-    MicroProfileCounterSet(tokens[i][0], (uint64_t)Math::bytesToMegaBytes(
+-                                             _memoryAllocators[i].size()));
++    MicroProfileCounterSet(tokens[memoryPoolType][0],
++                           (uint64_t)Math::bytesToMegaBytes(calcPoolSizeInBytes(
++                               (MemoryPoolType::Enum)memoryPoolType)));
+     MicroProfileCounterSet(
+-        tokens[i][1], (uint64_t)Math::bytesToMegaBytes(
+-                          _memoryAllocators[i].calcAvailableMemoryInBytes()));
++        tokens[memoryPoolType][1],
++        (uint64_t)Math::bytesToMegaBytes(calcAvailablePoolMemoryInBytes(
++            (MemoryPoolType::Enum)memoryPoolType)));
+   }
+ #endif // _INTR_PROFILING_ENABLED
+ }
+diff --git a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanGpuMemoryManager.h b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanGpuMemoryManager.h
+index 9517df4..74037db 100644
+--- a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanGpuMemoryManager.h
++++ b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanGpuMemoryManager.h
+@@ -14,12 +14,22 @@
+ 
+ #pragma once
+ 
++#define _INTR_GPU_PAGE_SIZE_IN_BYTES (80u * 1024u * 1024u)
++
+ namespace Intrinsic
+ {
+ namespace Renderer
+ {
+ namespace Vulkan
+ {
++struct GpuMemoryPage
++{
++  Core::LinearOffsetAllocator _allocator;
++  VkDeviceMemory _vkDeviceMemory;
++  uint8_t* _mappedMemory;
++  uint32_t _memoryTypeIdx;
++};
++
+ struct GpuMemoryManager
+ {
+   static void init();
+@@ -28,66 +38,56 @@ struct GpuMemoryManager
+ 
+   // <-
+ 
+-  _INTR_INLINE static uint8_t* getHostVisibleMemoryForOffset(uint32_t p_Offset)
+-  {
+-    return &_mappedHostVisibleMemory[p_Offset];
+-  }
+-
+-  // <-
+-
+-  _INTR_INLINE static uint32_t
++  static GpuMemoryAllocationInfo
+   allocateOffset(MemoryPoolType::Enum p_MemoryPoolType, uint32_t p_Size,
+-                 uint32_t p_Alignment)
+-  {
+-    return _memoryAllocators[p_MemoryPoolType].allocate(p_Size, p_Alignment);
+-  }
+-
++                 uint32_t p_Alignment, uint32_t p_MemoryTypeFlags);
+   // <-
+ 
+-  _INTR_INLINE static void resetAllocator(MemoryPoolType::Enum p_MemoryPoolType)
++  _INTR_INLINE static void resetPool(MemoryPoolType::Enum p_MemoryPoolType)
+   {
+-    _memoryAllocators[p_MemoryPoolType].reset();
++    for (uint32_t pageIdx = 0u; pageIdx < _memoryPools[p_MemoryPoolType].size();
++         ++pageIdx)
++    {
++      _memoryPools[p_MemoryPoolType][pageIdx]._allocator.reset();
++    }
+   }
+ 
+   // <-
+ 
+   _INTR_INLINE static uint32_t
+-  calcAvailableMemoryInBytes(MemoryPoolType::Enum p_MemoryPoolType)
+-  {
+-    return _memoryAllocators[p_MemoryPoolType].calcAvailableMemoryInBytes();
+-  }
+-
+-  // <-
+-
+-  _INTR_INLINE static VkDeviceMemory
+-  getDeviceMemory(MemoryPoolType::Enum p_MemoryPoolType)
++  calcAvailablePoolMemoryInBytes(MemoryPoolType::Enum p_MemoryPoolType)
+   {
+-    return _memoryPoolUsages[p_MemoryPoolType] == MemoryLocation::kDeviceLocal
+-               ? _vkDeviceLocalMemory
+-               : _vkHostVisibleMemory;
++    uint32_t totalAvailableMemoryInBytes = 0u;
++    for (uint32_t pageIdx = 0u; pageIdx < _memoryPools[p_MemoryPoolType].size();
++         ++pageIdx)
++    {
++      totalAvailableMemoryInBytes +=
++          _memoryPools[p_MemoryPoolType][pageIdx]
++              ._allocator.calcAvailableMemoryInBytes();
++    }
++    return totalAvailableMemoryInBytes;
+   }
+ 
+-  // <-
+-
+-  _INTR_INLINE static MemoryLocation::Enum
+-  getMemoryUsage(MemoryPoolType::Enum p_MemoryPoolType)
++  _INTR_INLINE static uint32_t
++  calcPoolSizeInBytes(MemoryPoolType::Enum p_MemoryPoolType)
+   {
+-    return _memoryPoolUsages[p_MemoryPoolType];
++    uint32_t totalSizeInBytes = 0u;
++    for (uint32_t pageIdx = 0u; pageIdx < _memoryPools[p_MemoryPoolType].size();
++         ++pageIdx)
++    {
++      totalSizeInBytes +=
++          _memoryPools[p_MemoryPoolType][pageIdx]._allocator.size();
++    }
++    return totalSizeInBytes;
+   }
+ 
+ private:
+-  static Core::LinearOffsetAllocator _memoryAllocators[MemoryPoolType::kCount];
+-
+-  static uint32_t _deviceLocalMemorySizeInBytes;
+-  static uint32_t _hostVisibleMemorySizeInBytes;
+-  static VkDeviceMemory _vkDeviceLocalMemory;
+-  static VkDeviceMemory _vkHostVisibleMemory;
+-
+-  static uint8_t* _mappedHostVisibleMemory;
++  static _INTR_ARRAY(GpuMemoryPage) _memoryPools[MemoryPoolType::kCount];
+ 
+-  static uint32_t _memoryPoolSizesInBytes[MemoryPoolType::kCount];
+-  static MemoryLocation::Enum _memoryPoolUsages[MemoryPoolType::kCount];
++  static MemoryLocation::Enum
++      _memoryPoolToMemoryLocation[MemoryPoolType::kCount];
+   static const char* _memoryPoolNames[MemoryPoolType::kCount];
++  static uint32_t _memoryLocationToMemoryPropertyFlags[MemoryLocation::kCount];
+ };
+ }
+ }
+diff --git a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanRenderSystem.cpp b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanRenderSystem.cpp
+index 0028420..893f8b8 100644
+--- a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanRenderSystem.cpp
++++ b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanRenderSystem.cpp
+@@ -240,8 +240,8 @@ void RenderSystem::reinitRendering()
+   _INTR_PROFILE_AUTO("Reinit. Rendering");
+ 
+   // Reset allocators
+-  GpuMemoryManager::resetAllocator(MemoryPoolType::kResolutionDependentBuffers);
+-  GpuMemoryManager::resetAllocator(MemoryPoolType::kResolutionDependentImages);
++  GpuMemoryManager::resetPool(MemoryPoolType::kResolutionDependentBuffers);
++  GpuMemoryManager::resetPool(MemoryPoolType::kResolutionDependentImages);
+ 
+   // Update from config files
+   RenderProcess::Default::loadRendererConfig();
+diff --git a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesBuffer.cpp b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesBuffer.cpp
+index 240e168..3d9d067 100644
+--- a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesBuffer.cpp
++++ b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesBuffer.cpp
+@@ -60,10 +60,8 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
+     vkGetBufferMemoryRequirements(RenderSystem::_vkDevice, buffer, &memReqs);
+ 
+     MemoryPoolType::Enum memoryPoolType = _descMemoryPoolType(bufferRef);
+-    MemoryAllocationInfo& memoryAllocationInfo =
++    GpuMemoryAllocationInfo& memoryAllocationInfo =
+         _memoryAllocationInfo(bufferRef);
+-    VkDeviceMemory deviceMemory =
+-        GpuMemoryManager::getDeviceMemory(memoryPoolType);
+ 
+     bool needsAlloc = true;
+ 
+@@ -71,10 +69,9 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
+     if (memoryPoolType >= MemoryPoolType::kRangeStartStatic &&
+         memoryPoolType <= MemoryPoolType::kRangeEndStatic)
+     {
+-      if (memoryAllocationInfo.memoryPoolType == memoryPoolType &&
+-          memReqs.size <= memoryAllocationInfo.sizeInBytes &&
+-          memReqs.alignment == memoryAllocationInfo.alignmentInBytes &&
+-          deviceMemory == memoryAllocationInfo.vkDeviceMemory)
++      if (memoryAllocationInfo._memoryPoolType == memoryPoolType &&
++          memReqs.size <= memoryAllocationInfo._sizeInBytes &&
++          memReqs.alignment == memoryAllocationInfo._alignmentInBytes)
+       {
+         needsAlloc = false;
+       }
+@@ -82,17 +79,14 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
+ 
+     if (needsAlloc)
+     {
+-      memoryAllocationInfo.sizeInBytes = (uint32_t)memReqs.size;
+-      memoryAllocationInfo.alignmentInBytes = (uint32_t)memReqs.alignment;
+-      memoryAllocationInfo.memoryPoolType = memoryPoolType;
+-      memoryAllocationInfo.vkDeviceMemory = deviceMemory;
+-      memoryAllocationInfo.offsetInBytes = GpuMemoryManager::allocateOffset(
+-          memoryPoolType, (uint32_t)memReqs.size, (uint32_t)memReqs.alignment);
++      memoryAllocationInfo = GpuMemoryManager::allocateOffset(
++          memoryPoolType, (uint32_t)memReqs.size, (uint32_t)memReqs.alignment,
++          memReqs.memoryTypeBits);
+     }
+ 
+     result = vkBindBufferMemory(RenderSystem::_vkDevice, buffer,
+-                                memoryAllocationInfo.vkDeviceMemory,
+-                                memoryAllocationInfo.offsetInBytes);
++                                memoryAllocationInfo._vkDeviceMemory,
++                                memoryAllocationInfo._offset);
+     _INTR_VK_CHECK_RESULT(result);
+ 
+     void* initialData = _descInitialData(bufferRef);
+@@ -108,36 +102,25 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
+                               nullptr, &stagingBuffer);
+       _INTR_VK_CHECK_RESULT(result);
+ 
+-      // We've run out of memory - flush the command buffer and reset the
+-      // allocator
+-      if (GpuMemoryManager::calcAvailableMemoryInBytes(
+-              MemoryPoolType::kVolatileStagingBuffers) < memReqs.size)
+-      {
+-        RenderSystem::flushTemporaryCommandBuffer();
+-        GpuMemoryManager::resetAllocator(
+-            MemoryPoolType::kVolatileStagingBuffers);
+-        copyCmd = RenderSystem::beginTemporaryCommandBuffer();
+-      }
+-
+       VkMemoryRequirements stagingMemReqs;
+       vkGetBufferMemoryRequirements(RenderSystem::_vkDevice, stagingBuffer,
+                                     &stagingMemReqs);
+ 
+-      const uint32_t stagingMemOffset = GpuMemoryManager::allocateOffset(
+-          MemoryPoolType::kVolatileStagingBuffers,
+-          (uint32_t)stagingMemReqs.size, (uint32_t)stagingMemReqs.alignment);
++      const GpuMemoryAllocationInfo stagingGpuAllocInfo =
++          GpuMemoryManager::allocateOffset(
++              MemoryPoolType::kVolatileStagingBuffers,
++              (uint32_t)stagingMemReqs.size, (uint32_t)stagingMemReqs.alignment,
++              stagingMemReqs.memoryTypeBits);
+ 
+       result = vkBindBufferMemory(RenderSystem::_vkDevice, stagingBuffer,
+-                                  GpuMemoryManager::getDeviceMemory(
+-                                      MemoryPoolType::kVolatileStagingBuffers),
+-                                  stagingMemOffset);
++                                  stagingGpuAllocInfo._vkDeviceMemory,
++                                  stagingGpuAllocInfo._offset);
+       _INTR_VK_CHECK_RESULT(result);
+ 
+       // Copy initial data to staging memory
+       {
+-        memcpy(
+-            GpuMemoryManager::getHostVisibleMemoryForOffset(stagingMemOffset),
+-            initialData, _descSizeInBytes(bufferRef));
++        memcpy(stagingGpuAllocInfo._mappedMemory, initialData,
++               _descSizeInBytes(bufferRef));
+       }
+ 
+       VkBufferCopy bufferCopy = {};
+@@ -160,7 +143,7 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
+                     nullptr);
+   }
+ 
+-  GpuMemoryManager::resetAllocator(MemoryPoolType::kVolatileStagingBuffers);
++  GpuMemoryManager::resetPool(MemoryPoolType::kVolatileStagingBuffers);
+ }
+ }
+ }
+diff --git a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesBuffer.h b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesBuffer.h
+index 2f7fd99..e37c12e 100644
+--- a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesBuffer.h
++++ b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesBuffer.h
+@@ -48,7 +48,7 @@ struct BufferData : Dod::Resources::ResourceDataBase
+ 
+   _INTR_ARRAY(VkDescriptorBufferInfo) vkDescriptorBufferInfo;
+   _INTR_ARRAY(VkBuffer) vkBuffer;
+-  _INTR_ARRAY(MemoryAllocationInfo) memoryAllocationInfo;
++  _INTR_ARRAY(GpuMemoryAllocationInfo) memoryAllocationInfo;
+ };
+ 
+ struct BufferManager
+@@ -175,11 +175,9 @@ struct BufferManager
+ 
+   _INTR_INLINE static uint8_t* getGpuMemory(BufferRef p_Ref)
+   {
+-    _INTR_ASSERT(GpuMemoryManager::getMemoryUsage(
+-                     (MemoryPoolType::Enum)_memoryAllocationInfo(p_Ref)
+-                         .memoryPoolType) == MemoryLocation::kHostVisible);
+-    return GpuMemoryManager::getHostVisibleMemoryForOffset(
+-        _memoryAllocationInfo(p_Ref).offsetInBytes);
++    _INTR_ASSERT(_memoryAllocationInfo(p_Ref)._mappedMemory != nullptr &&
++                 "Memory is not mappable");
++    return _memoryAllocationInfo(p_Ref)._mappedMemory;
+   }
+ 
+   // <-
+@@ -221,7 +219,7 @@ struct BufferManager
+   {
+     return _data.vkBuffer[p_Ref._id];
+   }
+-  _INTR_INLINE static MemoryAllocationInfo&
++  _INTR_INLINE static GpuMemoryAllocationInfo&
+   _memoryAllocationInfo(BufferRef p_Ref)
+   {
+     return _data.memoryAllocationInfo[p_Ref._id];
+diff --git a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesImage.cpp b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesImage.cpp
+index ffa51b4..3299ff6 100644
+--- a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesImage.cpp
++++ b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesImage.cpp
+@@ -69,7 +69,7 @@ void ImageManager::init()
+ 
+ namespace
+ {
+-_INTR_INLINE void allocateMemory(MemoryAllocationInfo& p_MemAllocInfo,
++_INTR_INLINE void allocateMemory(GpuMemoryAllocationInfo& p_MemAllocInfo,
+                                  MemoryPoolType::Enum p_PoolType,
+                                  const VkMemoryRequirements& p_MemReqs)
+ {
+@@ -78,9 +78,9 @@ _INTR_INLINE void allocateMemory(MemoryAllocationInfo& p_MemAllocInfo,
+   if (p_PoolType >= MemoryPoolType::kRangeStartStatic &&
+       p_PoolType <= MemoryPoolType::kRangeEndStatic)
+   {
+-    if (p_MemAllocInfo.sizeInBytes <= p_MemReqs.size &&
+-        p_MemAllocInfo.alignmentInBytes == p_MemReqs.alignment &&
+-        p_MemAllocInfo.memoryPoolType == p_PoolType)
++    if (p_MemAllocInfo._sizeInBytes <= p_MemReqs.size &&
++        p_MemAllocInfo._alignmentInBytes == p_MemReqs.alignment &&
++        p_MemAllocInfo._memoryPoolType == p_PoolType)
+     {
+       needsAlloc = false;
+     }
+@@ -88,13 +88,9 @@ _INTR_INLINE void allocateMemory(MemoryAllocationInfo& p_MemAllocInfo,
+ 
+   if (needsAlloc)
+   {
+-    p_MemAllocInfo.offsetInBytes = GpuMemoryManager::allocateOffset(
+-        p_PoolType, (uint32_t)p_MemReqs.size, (uint32_t)p_MemReqs.alignment);
+-    p_MemAllocInfo.sizeInBytes = (uint32_t)p_MemReqs.size;
+-    p_MemAllocInfo.vkDeviceMemory =
+-        GpuMemoryManager::getDeviceMemory(p_PoolType);
+-    p_MemAllocInfo.alignmentInBytes = (uint32_t)p_MemReqs.alignment;
+-    p_MemAllocInfo.memoryPoolType = p_PoolType;
++    p_MemAllocInfo = GpuMemoryManager::allocateOffset(
++        p_PoolType, (uint32_t)p_MemReqs.size, (uint32_t)p_MemReqs.alignment,
++        p_MemReqs.memoryTypeBits);
+   }
+ }
+ void createTexture(ImageRef p_Ref)
+@@ -102,7 +98,7 @@ void createTexture(ImageRef p_Ref)
+   VkImage& vkImage = ImageManager::_vkImage(p_Ref);
+   VkFormat vkFormat =
+       Helper::mapFormatToVkFormat(ImageManager::_descImageFormat(p_Ref));
+-  MemoryAllocationInfo& memoryAllocationInfo =
++  GpuMemoryAllocationInfo& memoryAllocationInfo =
+       ImageManager::_memoryAllocationInfo(p_Ref);
+   MemoryPoolType::Enum memoryPoolType =
+       ImageManager::_descMemoryPoolType(p_Ref);
+@@ -244,8 +240,8 @@ void createTexture(ImageRef p_Ref)
+   allocateMemory(memoryAllocationInfo, memoryPoolType, memReqs);
+ 
+   result = vkBindImageMemory(RenderSystem::_vkDevice, vkImage,
+-                             memoryAllocationInfo.vkDeviceMemory,
+-                             memoryAllocationInfo.offsetInBytes);
++                             memoryAllocationInfo._vkDeviceMemory,
++                             memoryAllocationInfo._offset);
+   _INTR_VK_CHECK_RESULT(result);
+ 
+   VkImageViewCreateInfo imageViewCreateInfo = {};
+@@ -321,7 +317,7 @@ void createTextureFromFileCubemap(ImageRef p_Ref, gli::texture& p_Texture)
+   VkFormat vkFormat =
+       Helper::mapFormatToVkFormat(ImageManager::_descImageFormat(p_Ref));
+ 
+-  MemoryAllocationInfo& memoryAllocationInfo =
++  GpuMemoryAllocationInfo& memoryAllocationInfo =
+       ImageManager::_memoryAllocationInfo(p_Ref);
+   MemoryPoolType::Enum memoryPoolType =
+       ImageManager::_descMemoryPoolType(p_Ref);
+@@ -353,22 +349,22 @@ void createTextureFromFileCubemap(ImageRef p_Ref, gli::texture& p_Texture)
+   VkResult result = vkCreateBuffer(RenderSystem::_vkDevice, &bufferCreateInfo,
+                                    nullptr, &stagingBuffer);
+   _INTR_VK_CHECK_RESULT(result);
+-  VkMemoryRequirements memReqs;
++  VkMemoryRequirements stagingMemReqs;
+   vkGetBufferMemoryRequirements(RenderSystem::_vkDevice, stagingBuffer,
+-                                &memReqs);
++                                &stagingMemReqs);
+ 
+-  const uint32_t stagingMemOffset = GpuMemoryManager::allocateOffset(
+-      MemoryPoolType::kVolatileStagingBuffers, (uint32_t)memReqs.size,
+-      (uint32_t)memReqs.alignment);
++  GpuMemoryAllocationInfo stagingGpuAllocInfo =
++      GpuMemoryManager::allocateOffset(MemoryPoolType::kVolatileStagingBuffers,
++                                       (uint32_t)stagingMemReqs.size,
++                                       (uint32_t)stagingMemReqs.alignment,
++                                       stagingMemReqs.memoryTypeBits);
+ 
+   result = vkBindBufferMemory(RenderSystem::_vkDevice, stagingBuffer,
+-                              GpuMemoryManager::getDeviceMemory(
+-                                  MemoryPoolType::kVolatileStagingBuffers),
+-                              stagingMemOffset);
++                              stagingGpuAllocInfo._vkDeviceMemory,
++                              stagingGpuAllocInfo._offset);
+   _INTR_VK_CHECK_RESULT(result);
+ 
+-  uint8_t* data =
+-      GpuMemoryManager::getHostVisibleMemoryForOffset(stagingMemOffset);
++  uint8_t* data = stagingGpuAllocInfo._mappedMemory;
+   {
+     memcpy(data, texCube.data(), texCube.size());
+   }
+@@ -420,13 +416,14 @@ void createTextureFromFileCubemap(ImageRef p_Ref, gli::texture& p_Texture)
+                          &vkImage);
+   _INTR_VK_CHECK_RESULT(result);
+ 
++  VkMemoryRequirements memReqs;
+   vkGetImageMemoryRequirements(RenderSystem::_vkDevice, vkImage, &memReqs);
+ 
+   allocateMemory(memoryAllocationInfo, memoryPoolType, memReqs);
+ 
+   result = vkBindImageMemory(RenderSystem::_vkDevice, vkImage,
+-                             memoryAllocationInfo.vkDeviceMemory,
+-                             memoryAllocationInfo.offsetInBytes);
++                             memoryAllocationInfo._vkDeviceMemory,
++                             memoryAllocationInfo._offset);
+   _INTR_VK_CHECK_RESULT(result);
+ 
+   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
+@@ -453,7 +450,7 @@ void createTextureFromFileCubemap(ImageRef p_Ref, gli::texture& p_Texture)
+   RenderSystem::flushTemporaryCommandBuffer();
+ 
+   vkDestroyBuffer(RenderSystem::_vkDevice, stagingBuffer, nullptr);
+-  GpuMemoryManager::resetAllocator(MemoryPoolType::kVolatileStagingBuffers);
++  GpuMemoryManager::resetPool(MemoryPoolType::kVolatileStagingBuffers);
+ 
+   VkImageViewCreateInfo view = {};
+   {
+@@ -486,7 +483,7 @@ void createTextureFromFile2D(ImageRef p_Ref, gli::texture& p_Texture)
+   VkFormat vkFormat =
+       Helper::mapFormatToVkFormat(ImageManager::_descImageFormat(p_Ref));
+ 
+-  MemoryAllocationInfo& memoryAllocationInfo =
++  GpuMemoryAllocationInfo& memoryAllocationInfo =
+       ImageManager::_memoryAllocationInfo(p_Ref);
+   MemoryPoolType::Enum memoryPoolType =
+       ImageManager::_descMemoryPoolType(p_Ref);
+@@ -518,22 +515,22 @@ void createTextureFromFile2D(ImageRef p_Ref, gli::texture& p_Texture)
+                                    nullptr, &stagingBuffer);
+   _INTR_VK_CHECK_RESULT(result);
+ 
+-  VkMemoryRequirements memReqs;
++  VkMemoryRequirements stagingMemReqs;
+   vkGetBufferMemoryRequirements(RenderSystem::_vkDevice, stagingBuffer,
+-                                &memReqs);
++                                &stagingMemReqs);
+ 
+-  const uint32_t stagingMemOffset = GpuMemoryManager::allocateOffset(
+-      MemoryPoolType::kVolatileStagingBuffers, (uint32_t)memReqs.size,
+-      (uint32_t)memReqs.alignment);
++  GpuMemoryAllocationInfo stagingGpuAllocInfo =
++      GpuMemoryManager::allocateOffset(MemoryPoolType::kVolatileStagingBuffers,
++                                       (uint32_t)stagingMemReqs.size,
++                                       (uint32_t)stagingMemReqs.alignment,
++                                       stagingMemReqs.memoryTypeBits);
+ 
+   result = vkBindBufferMemory(RenderSystem::_vkDevice, stagingBuffer,
+-                              GpuMemoryManager::getDeviceMemory(
+-                                  MemoryPoolType::kVolatileStagingBuffers),
+-                              stagingMemOffset);
++                              stagingGpuAllocInfo._vkDeviceMemory,
++                              stagingGpuAllocInfo._offset);
+   _INTR_VK_CHECK_RESULT(result);
+ 
+-  uint8_t* data =
+-      GpuMemoryManager::getHostVisibleMemoryForOffset(stagingMemOffset);
++  uint8_t* data = stagingGpuAllocInfo._mappedMemory;
+   {
+     memcpy(data, tex2D.data(), tex2D.size());
+   }
+@@ -582,13 +579,14 @@ void createTextureFromFile2D(ImageRef p_Ref, gli::texture& p_Texture)
+                          &vkImage);
+   _INTR_VK_CHECK_RESULT(result);
+ 
++  VkMemoryRequirements memReqs;
+   vkGetImageMemoryRequirements(RenderSystem::_vkDevice, vkImage, &memReqs);
+ 
+   allocateMemory(memoryAllocationInfo, memoryPoolType, memReqs);
+ 
+   result = vkBindImageMemory(RenderSystem::_vkDevice, vkImage,
+-                             memoryAllocationInfo.vkDeviceMemory,
+-                             memoryAllocationInfo.offsetInBytes);
++                             memoryAllocationInfo._vkDeviceMemory,
++                             memoryAllocationInfo._offset);
+   _INTR_VK_CHECK_RESULT(result);
+ 
+   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
+@@ -615,7 +613,7 @@ void createTextureFromFile2D(ImageRef p_Ref, gli::texture& p_Texture)
+   RenderSystem::flushTemporaryCommandBuffer();
+ 
+   vkDestroyBuffer(RenderSystem::_vkDevice, stagingBuffer, nullptr);
+-  GpuMemoryManager::resetAllocator(MemoryPoolType::kVolatileStagingBuffers);
++  GpuMemoryManager::resetPool(MemoryPoolType::kVolatileStagingBuffers);
+ 
+   VkImageViewCreateInfo view = {};
+   {
+diff --git a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesImage.h b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesImage.h
+index 4f74f45..78a1c07 100644
+--- a/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesImage.h
++++ b/IntrinsicRendererVulkan/src/IntrinsicRendererVulkanResourcesImage.h
+@@ -59,7 +59,7 @@ struct ImageData : Dod::Resources::ResourceDataBase
+   _INTR_ARRAY(VkImage) vkImage;
+   _INTR_ARRAY(VkImageView) vkImageView;
+   _INTR_ARRAY(ImageViewArray) vkSubResourceImageViews;
+-  _INTR_ARRAY(MemoryAllocationInfo) memoryAllocationInfo;
++  _INTR_ARRAY(GpuMemoryAllocationInfo) memoryAllocationInfo;
+ };
+ 
+ struct ImageManager
+@@ -381,7 +381,7 @@ struct ImageManager
+   {
+     return _data.vkSubResourceImageViews[p_Ref._id];
+   }
+-  _INTR_INLINE static MemoryAllocationInfo&
++  _INTR_INLINE static GpuMemoryAllocationInfo&
+   _memoryAllocationInfo(ImageRef p_Ref)
+   {
+     return _data.memoryAllocationInfo[p_Ref._id];
+-- 
+2.8.1.windows.1
+

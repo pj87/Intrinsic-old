@@ -30,3 +30,4 @@ app/assets/*
 app/crash_dumps
 
 app/Intrinsic.log
+*.dds

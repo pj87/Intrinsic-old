@@ -73,7 +73,7 @@ IntrinsicEd::IntrinsicEd(QWidget* parent) : QMainWindow(parent)
   _ui.setupUi(this);
 
   // Init. Intrinsic
-  Application::init(qWinAppInst(), (void*)_ui.centralWidget->winId());
+  Application::init(GetModuleHandle(NULL), (void*)_ui.centralWidget->winId());
 
   // Activate editing game state
   GameStates::Manager::activateGameState(GameStates::GameState::kEditing);
