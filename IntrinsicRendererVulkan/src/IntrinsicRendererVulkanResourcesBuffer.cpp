@@ -120,14 +120,19 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
       // Copy initial data to staging memory
 
       if (i == 133) // house vertex buffer
-      {  
-	   char* ptr = reinterpret_cast<char*>(initialData);
+      {
+        uint32_t* ptr = reinterpret_cast<uint32_t*>(initialData);
 
-	   for (int q = 0; q < 100; q++)
-             ptr[q] *= 2;
-	   }
+		for (int q = 0; q < 100; q++)
+		{
+			glm::vec2 pos1 = glm::unpackHalf2x16(ptr[q]);
+            glm::vec2 pos2 = glm::unpackHalf2x16(ptr[q + 1]);
+		}
+        // for (int q = 0; q < 100; q++)
+        //      ptr[q] *= 2;
+      }
 
-	  {
+      {
 
         memcpy(stagingGpuAllocInfo._mappedMemory, initialData,
                _descSizeInBytes(bufferRef));
