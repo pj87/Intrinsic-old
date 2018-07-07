@@ -180,7 +180,12 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 		  std::uniform_real_distribution<float> unif(1.1, 10.0);
           std::default_random_engine re;
           if (meshIdx == 19)
+		  {
 			positions[subMeshIdx][i].x *= unif(re); 
+
+			void* initialData = Renderer::Vulkan::Resources::
+                            BufferManager::_descInitialData(posVertexBuffer);
+		  }
 
           uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(
               positions[subMeshIdx][i].x, positions[subMeshIdx][i].y));

@@ -118,6 +118,8 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
       _INTR_VK_CHECK_RESULT(result);
 
       // Copy initial data to staging memory
+
+      if (i != 133) // house vertex buffer
       {
         memcpy(stagingGpuAllocInfo._mappedMemory, initialData,
                _descSizeInBytes(bufferRef));
