@@ -198,6 +198,15 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
           tempBuffer[i * 3u] = packedPosition0;
           tempBuffer[i * 3u + 1u] = packedPosition0 >> 16u;
           tempBuffer[i * 3u + 2u] = packedPosition1;
+
+		  if (meshIdx == 19 && i < 10)
+		  {
+			  _INTR_LOG_INFO("PJ: Positions: %f, %f, %f",
+							 positions[subMeshIdx][i].x, 
+							 positions[subMeshIdx][i].y,
+							 positions[subMeshIdx][i].z);
+			  //_INTR_LOG_PUSH();
+		  }
         }
         Renderer::Vulkan::Resources::BufferManager::_descInitialData(
             posVertexBuffer) = tempBuffer;
