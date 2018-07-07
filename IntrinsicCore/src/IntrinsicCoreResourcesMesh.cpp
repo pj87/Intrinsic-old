@@ -195,6 +195,8 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
             posVertexBuffer) = tempBuffer;
 
 		}
+
+		// 134 bufor to chyba bufor vertexow dla domku 
         buffersToCreate.push_back(posVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(posVertexBuffer);
       }
