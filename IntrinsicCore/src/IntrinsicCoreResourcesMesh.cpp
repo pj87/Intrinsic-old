@@ -157,7 +157,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         Renderer::Vulkan::Resources::BufferManager::resetToDefault(
             posVertexBuffer);
 
-		if (meshIdx > 20)
+		if (meshIdx != 19)
         {
         Renderer::Vulkan::Resources::BufferManager::addResourceFlags(
             posVertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
