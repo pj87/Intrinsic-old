@@ -157,6 +157,8 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         Renderer::Vulkan::Resources::BufferManager::resetToDefault(
             posVertexBuffer);
 
+		if (meshIdx > 20)
+        {
         Renderer::Vulkan::Resources::BufferManager::addResourceFlags(
             posVertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
         Renderer::Vulkan::Resources::BufferManager::_descBufferType(
@@ -185,6 +187,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         Renderer::Vulkan::Resources::BufferManager::_descInitialData(
             posVertexBuffer) = tempBuffer;
 
+		}
         buffersToCreate.push_back(posVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(posVertexBuffer);
       }
