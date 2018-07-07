@@ -123,10 +123,12 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
       {
         uint32_t* ptr = reinterpret_cast<uint32_t*>(initialData);
 
-		for (int q = 0; q < 100; q++)
+		for (int q = 0; q < 10; q+=2)
 		{
 			glm::vec2 pos1 = glm::unpackHalf2x16(ptr[q]);
             glm::vec2 pos2 = glm::unpackHalf2x16(ptr[q + 1]);
+
+			_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos1.x, pos1.y, pos2.x);
 		}
         // for (int q = 0; q < 100; q++)
         //      ptr[q] *= 2;
