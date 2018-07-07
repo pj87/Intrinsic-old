@@ -119,8 +119,16 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
 
       // Copy initial data to staging memory
 
-      if (i != 133) // house vertex buffer
-      {
+      if (i == 133) // house vertex buffer
+      {  
+	   char* ptr = reinterpret_cast<char*>(initialData);
+
+	   for (int q = 0; q < 100; q++)
+             ptr[q] *= 2;
+	   }
+
+	  {
+
         memcpy(stagingGpuAllocInfo._mappedMemory, initialData,
                _descSizeInBytes(bufferRef));
       }
