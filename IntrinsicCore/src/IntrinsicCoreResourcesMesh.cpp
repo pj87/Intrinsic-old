@@ -15,6 +15,8 @@
 // Precompiled header file
 #include "stdafx.h"
 
+#include <random>
+
 // PhysX includes
 #include "PxPhysics.h"
 #include "PxScene.h"
@@ -116,7 +118,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
   {
     MeshRef meshRef = p_Meshes[meshIdx];
-    const PositionsPerSubMeshArray& positions =
+    PositionsPerSubMeshArray& positions =
         _descPositionsPerSubMesh(meshRef);
     const UVsPerSubMeshArray& uv0s = _descUV0sPerSubMesh(meshRef);
     const IndicesPerSubMeshArray& indices = _descIndicesPerSubMesh(meshRef);
@@ -157,7 +159,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         Renderer::Vulkan::Resources::BufferManager::resetToDefault(
             posVertexBuffer);
 
-		if (meshIdx != 19)
+		//if (meshIdx == 19) // house 
         {
         Renderer::Vulkan::Resources::BufferManager::addResourceFlags(
             posVertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
@@ -174,7 +176,12 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         tempBuffersToRelease.push_back(tempBuffer);
 
         for (uint32_t i = 0u; i < positions[subMeshIdx].size(); ++i)
-        {
+        { 
+		  std::uniform_real_distribution<float> unif(1.1, 10.0);
+          std::default_random_engine re;
+          if (meshIdx == 19)
+			positions[subMeshIdx][i].x *= unif(re); 
+
           uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(
               positions[subMeshIdx][i].x, positions[subMeshIdx][i].y));
           uint32_t packedPosition1 =
