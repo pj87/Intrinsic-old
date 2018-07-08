@@ -25,23 +25,24 @@ namespace Vulkan
 namespace Resources
 {
 
-// PJ: Added++ 
-//static void readVertexValueFromRawBuffer(BufferRef bufferRef)
+// PJ: Added++
+// static void readVertexValueFromRawBuffer(BufferRef bufferRef)
 glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
 {
-	uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
-	glm::vec3* pos = new glm::vec3();
+  uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
+  glm::vec3* pos = new glm::vec3();
 
-	pos->x = glm::detail::toFloat32(ptr[i * 3u]);
-	pos->y = glm::detail::toFloat32(ptr[i * 3u + 1u]);
-    pos->z = glm::detail::toFloat32(ptr[i * 3u + 2u]);
+  pos->x = glm::detail::toFloat32(ptr[i * 3u]);
+  pos->y = glm::detail::toFloat32(ptr[i * 3u + 1u]);
+  pos->z = glm::detail::toFloat32(ptr[i * 3u + 2u]);
 
-    //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
+  //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
-	return pos;
+  return pos;
 }
 
-void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i, glm::vec3& pos)
+void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i,
+                                                glm::vec3& pos)
 {
   uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
 
@@ -52,7 +53,12 @@ void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i, glm::v
   ptr[i * 3u + 1u] = packedPosition0 >> 16u;
   ptr[i * 3u + 2u] = packedPosition1;
 }
-// PJ: Added-- 
+
+void BufferManager::updateResources(const BufferRefArray& p_Buffers) 
+{
+}
+
+// PJ: Added--
 
 void BufferManager::createResources(const BufferRefArray& p_Buffers)
 {
@@ -150,22 +156,22 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
       // Copy initial data to staging memory
 
       if (i == 133) // house vertex buffer
-      { 
-		for (int q = 0; q < 40; q ++ )
-		{
-            glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
+      {
+        for (int q = 0; q < 40; q++)
+        {
+          glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
 
-			_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
+          _INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
-			pos->x *= 2.0f;
-            pos->z *= 2.0f;
+          pos->x *= 2.0f;
+          pos->z *= 2.0f;
 
-			storeVertexValueToRawBuffer(initialData, q, *pos);
+          storeVertexValueToRawBuffer(initialData, q, *pos);
 
-			glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
+          glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
 
-			_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y, pos1->z);
-		}
+          _INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y, pos1->z);
+        }
       }
 
       {

@@ -62,9 +62,11 @@ struct BufferManager
         BufferData, _INTR_MAX_BUFFER_COUNT>::_initResourceManager();
   }
 
-  // PJ: Added 
+  // PJ: Added++ 
   static glm::vec3* readVertexValueFromRawBuffer(void* initialData, int i); 
-  static void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i, glm::vec3& pos);
+  static void storeVertexValueToRawBuffer(void* initialData, int i, glm::vec3& pos);
+  static void updateResources(const BufferRefArray& p_Buffers);
+  // PJ: Added-- 
 
   // <-
 
