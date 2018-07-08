@@ -122,16 +122,15 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
       if (i == 133) // house vertex buffer
       {
         uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
-
-		for (int q = 0; q < 20; q++)
+        
+		for (int q = 0; q < 40; q +=3 )
 		{
-			glm::vec2 pos = glm::unpackHalf2x16(ptr[q]);
-            //glm::vec2 pos2 = glm::unpackHalf2x16(ptr[q + 1]);
+			glm::vec2 pos0 = glm::unpackHalf2x16(ptr[q]);
+            glm::vec2 pos1 = glm::unpackHalf2x16(ptr[q + 1]);
+            glm::vec2 pos2 = glm::unpackHalf2x16(ptr[q + 2]);
 
-			_INTR_LOG_INFO("PJ: Reading: %f, %f", pos.x, pos.y);
+			_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos0.x, pos1.x, pos2.x);
 		}
-        // for (int q = 0; q < 100; q++)
-        //      ptr[q] *= 2;
       }
 
       {
