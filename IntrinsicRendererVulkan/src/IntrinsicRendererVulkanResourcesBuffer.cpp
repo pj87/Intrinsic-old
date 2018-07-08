@@ -125,11 +125,12 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
         
 		for (int q = 0; q < 40; q +=3 )
 		{
-			glm::vec2 pos0 = glm::unpackHalf2x16(ptr[q]);
-            glm::vec2 pos1 = glm::unpackHalf2x16(ptr[q + 1]);
-            glm::vec2 pos2 = glm::unpackHalf2x16(ptr[q + 2]);
+			glm::vec3 pos;
+			pos.x = glm::detail::toFloat32(ptr[q]);
+            pos.y = glm::detail::toFloat32(ptr[q + 1]);
+            pos.z = glm::detail::toFloat32(ptr[q + 2]);
 
-			_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos0.x, pos1.x, pos2.x);
+			_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos.x, pos.y, pos.z);
 		}
       }
 
