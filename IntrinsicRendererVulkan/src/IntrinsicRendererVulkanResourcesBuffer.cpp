@@ -36,7 +36,7 @@ glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
 	pos->y = glm::detail::toFloat32(ptr[i * 3u + 1u]);
     pos->z = glm::detail::toFloat32(ptr[i * 3u + 2u]);
 
-    _INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
+    //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
 	return pos;
 }
@@ -137,17 +137,12 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
       // Copy initial data to staging memory
 
       if (i == 133) // house vertex buffer
-      {
-        uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
-        
-		for (int q = 0; q < 40; q +=3 )
+      { 
+		for (int q = 0; q < 40; q ++ )
 		{
-			glm::vec3 pos;
-			pos.x = glm::detail::toFloat32(ptr[q]);
-            pos.y = glm::detail::toFloat32(ptr[q + 1]);
-            pos.z = glm::detail::toFloat32(ptr[q + 2]);
+            glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
 
-			_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos.x, pos.y, pos.z);
+			_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 		}
       }
 
