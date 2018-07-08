@@ -24,6 +24,23 @@ namespace Vulkan
 {
 namespace Resources
 {
+
+// PJ: Added 
+//static void readVertexValueFromRawBuffer(BufferRef bufferRef)
+glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
+{
+	uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
+	glm::vec3* pos = new glm::vec3();
+
+	pos->x = glm::detail::toFloat32(ptr[i * 3u]);
+	pos->y = glm::detail::toFloat32(ptr[i * 3u + 1u]);
+    pos->z = glm::detail::toFloat32(ptr[i * 3u + 2u]);
+
+    _INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
+
+	return pos;
+}
+
 void BufferManager::createResources(const BufferRefArray& p_Buffers)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
