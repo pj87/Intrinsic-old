@@ -114,7 +114,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
   // attribute
   Intrinsic::Renderer::Vulkan::Resources::BufferRefArray buffersToCreate;
 
-  //buffersToCreate1.clear();
+  _buffersToCreate1.clear();
   _dupa = 0;
 
   _INTR_ARRAY(void*) tempBuffersToRelease;

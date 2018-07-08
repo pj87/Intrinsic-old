@@ -155,6 +155,7 @@ struct ResourceManagerBase : Dod::ManagerBase<IdCount, DataType>
   static _INTR_HASH_MAP(Name, Ref) _nameResourceMap;
   static DataType _data;
   static int _dupa;
+  static Intrinsic::Renderer::Vulkan::Resources::BufferRefArray _buffersToCreate1;
   static Name _defaultResourceName;
 
 protected:
@@ -489,7 +490,9 @@ template <class DataType, uint32_t IdCount>
 Name ResourceManagerBase<DataType, IdCount>::_defaultResourceName;
 template <class DataType, uint32_t IdCount>
 int ResourceManagerBase<DataType, IdCount>::_dupa;
-
+template <class DataType, uint32_t IdCount>
+Intrinsic::Renderer::Vulkan::Resources::BufferRefArray 
+ResourceManagerBase<DataType, IdCount>::_buffersToCreate1;
 }
 }
 }
