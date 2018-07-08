@@ -54,8 +54,9 @@ void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i,
   ptr[i * 3u + 2u] = packedPosition1;
 }
 
-void BufferManager::updateResources(const BufferRefArray& p_Buffers) 
+void BufferManager::updateResources() 
 {
+  const BufferRefArray& p_Buffers = Core::Resources::MeshManager::buffersToCreate;
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
   _INTR_ARRAY(VkBuffer) stagingBuffersToDestroy;
