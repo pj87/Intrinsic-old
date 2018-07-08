@@ -25,7 +25,7 @@ namespace Vulkan
 namespace Resources
 {
 
-// PJ: Added 
+// PJ: Added++ 
 //static void readVertexValueFromRawBuffer(BufferRef bufferRef)
 glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
 {
@@ -52,6 +52,7 @@ void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i, glm::v
   ptr[i * 3u + 1u] = packedPosition0 >> 16u;
   ptr[i * 3u + 2u] = packedPosition1;
 }
+// PJ: Added-- 
 
 void BufferManager::createResources(const BufferRefArray& p_Buffers)
 {
@@ -155,6 +156,15 @@ void BufferManager::createResources(const BufferRefArray& p_Buffers)
             glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
 
 			_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
+
+			pos->x *= 2.0f;
+            pos->z *= 2.0f;
+
+			storeVertexValueToRawBuffer(initialData, q, *pos);
+
+			glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
+
+			_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y, pos1->z);
 		}
       }
 
