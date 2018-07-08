@@ -112,7 +112,11 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 {
   // Create vertex/index buffers - we're using a separate buffer for each vertex
   // attribute
-  Renderer::Vulkan::Resources::BufferRefArray buffersToCreate;
+  Intrinsic::Renderer::Vulkan::Resources::BufferRefArray buffersToCreate;
+
+  //buffersToCreate1.clear();
+  _dupa = 0;
+
   _INTR_ARRAY(void*) tempBuffersToRelease;
 
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
@@ -456,12 +460,14 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 
   Renderer::Vulkan::Resources::BufferManager::createResources(buffersToCreate);
   Renderer::Vulkan::Resources::BufferManager::updateResources(buffersToCreate);
-
+  
+  /*
   for (uint32_t i = 0u; i < tempBuffersToRelease.size(); ++i)
   {
     Tlsf::MainAllocator::free(tempBuffersToRelease[i]);
   }
   tempBuffersToRelease.clear();
+  */
 }
 
 // <-

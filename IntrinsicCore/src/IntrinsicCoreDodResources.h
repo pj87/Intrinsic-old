@@ -14,6 +14,22 @@
 
 #pragma once
 
+// Forware declaration
+namespace Intrinsic
+{
+namespace Renderer
+{
+namespace Vulkan
+{
+namespace Resources
+{
+typedef Dod::Ref BufferRef;
+typedef _INTR_ARRAY(BufferRef) BufferRefArray;
+}
+}
+}
+}
+
 namespace Intrinsic
 {
 namespace Core
@@ -138,6 +154,7 @@ struct ResourceManagerBase : Dod::ManagerBase<IdCount, DataType>
 
   static _INTR_HASH_MAP(Name, Ref) _nameResourceMap;
   static DataType _data;
+  static int _dupa;
   static Name _defaultResourceName;
 
 protected:
@@ -170,10 +187,11 @@ protected:
                                               rapidjson::Value& p_Properties,
                                               rapidjson::Document& p_Document)
   {
-    p_Properties.AddMember(
-        "name", _INTR_CREATE_PROP(p_Document, p_GenerateDesc, _N(Resource),
-                                  _N(string), _name(p_Ref), false, false),
-        p_Document.GetAllocator());
+    p_Properties.AddMember("name",
+                           _INTR_CREATE_PROP(p_Document, p_GenerateDesc,
+                                             _N(Resource), _N(string),
+                                             _name(p_Ref), false, false),
+                           p_Document.GetAllocator());
   }
 
   // <-
@@ -462,11 +480,16 @@ protected:
 
 template <class DataType, uint32_t IdCount>
 DataType ResourceManagerBase<DataType, IdCount>::_data;
+//template <class DataType, uint32_t IdCount>
+//Intrinsic::Renderer::Vulkan::Resources::BufferRefArray ResourceManagerBase<DataType, IdCount>::buffersToCreate1;
 template <class DataType, uint32_t IdCount>
 _INTR_HASH_MAP(Name, Ref)
 ResourceManagerBase<DataType, IdCount>::_nameResourceMap;
 template <class DataType, uint32_t IdCount>
 Name ResourceManagerBase<DataType, IdCount>::_defaultResourceName;
+template <class DataType, uint32_t IdCount>
+int ResourceManagerBase<DataType, IdCount>::_dupa;
+
 }
 }
 }

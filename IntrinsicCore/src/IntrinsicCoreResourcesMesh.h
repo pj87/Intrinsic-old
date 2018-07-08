@@ -14,6 +14,14 @@
 
 #pragma once
 
+//#include <vector>
+
+//#include "IntrinsicRendererVulkanResourcesBuffer.h"
+
+// Intrinsic::Renderer::Vulkan::Resources::BufferRefArray buffersToCreate;
+
+// Renderer::Vulkan::Resources::BufferRefArray buffersToCreate;
+
 // Forward decls.
 namespace physx
 {
@@ -84,6 +92,8 @@ struct MeshManager
     : Dod::Resources::ResourceManagerBase<MeshData, _INTR_MAX_MESH_COUNT>
 {
   static void init();
+
+  //Intrinsic::Renderer::Vulkan::Resources::BufferRefArray buffersToCreate1;
 
   // <-
 

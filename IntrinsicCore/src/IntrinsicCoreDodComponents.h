@@ -95,6 +95,7 @@ protected:
 
   static EntityComponentMap _entityComponentMap;
   static DataType _data;
+  static int _dupa;
 };
 
 template <class DataType, uint32_t IdCount>
@@ -102,6 +103,8 @@ DataType ComponentManagerBase<DataType, IdCount>::_data;
 template <class DataType, uint32_t IdCount>
 _INTR_HASH_MAP(uint32_t, Ref)
 ComponentManagerBase<DataType, IdCount>::_entityComponentMap;
+template <class DataType, uint32_t IdCount>
+int ComponentManagerBase<DataType, IdCount>::_dupa;
 }
 }
 }
