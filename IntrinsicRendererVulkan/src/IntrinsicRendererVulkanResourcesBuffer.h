@@ -64,6 +64,7 @@ struct BufferManager
 
   // PJ: Added 
   static glm::vec3* readVertexValueFromRawBuffer(void* initialData, int i); 
+  static void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i, glm::vec3& pos);
 
   // <-
 

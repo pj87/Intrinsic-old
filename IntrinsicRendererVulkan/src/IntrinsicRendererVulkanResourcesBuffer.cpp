@@ -41,6 +41,18 @@ glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
 	return pos;
 }
 
+void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i, glm::vec3& pos)
+{
+  uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
+
+  uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(pos.x, pos.y));
+  uint32_t packedPosition1 = glm::packHalf2x16(glm::vec2(pos.z, 0.0f));
+
+  ptr[i * 3u] = packedPosition0;
+  ptr[i * 3u + 1u] = packedPosition0 >> 16u;
+  ptr[i * 3u + 2u] = packedPosition1;
+}
+
 void BufferManager::createResources(const BufferRefArray& p_Buffers)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
