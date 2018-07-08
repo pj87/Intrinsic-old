@@ -152,7 +152,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
       // Copy initial data to staging memory
 
-      if (i == 133) // house vertex buffer
+      //if (i == 133) // house vertex buffer
       {
         for (int q = 0; q < 40; q++)
         {
