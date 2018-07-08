@@ -161,8 +161,8 @@ void BufferManager::updateResources()
 
           _INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
-          pos->x *= 2.0f;
-          pos->z *= 2.0f;
+          pos->x += 0.1f;
+          pos->z += 0.1f;
 
           storeVertexValueToRawBuffer(initialData, q, *pos);
 
