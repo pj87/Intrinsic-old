@@ -71,6 +71,12 @@ struct BufferManager
     return ref;
   }
 
+  // PJ: Added++ 
+  static glm::vec3* readVertexValueFromRawBuffer(void* initialData, int i); 
+  static void storeVertexValueToRawBuffer(void* initialData, int i, glm::vec3& pos);
+  static void updateResources(const BufferRefArray& p_Buffers);
+  // PJ: Added-- 
+
   // <-
 
   _INTR_INLINE static void resetToDefault(BufferRef p_Ref)
