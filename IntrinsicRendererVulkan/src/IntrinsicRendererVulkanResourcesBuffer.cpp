@@ -63,7 +63,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
   // for (uint32_t i = 0u; i < p_Buffers.size(); ++i)
 
-  uint32_t i = 133;
+  uint32_t i = 406;
   {
     BufferRef bufferRef = p_Buffers[i];
 
@@ -153,7 +153,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
       // Copy initial data to staging memory
 
-      if (i == 133) // house vertex buffer
+      if (i == 406) // possible sphere vertex buffer
       {
         for (int q = 0; q < 40; q++)
         {
@@ -161,8 +161,8 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
           _INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
-          pos->x *= 2.0f;
-          pos->z *= 2.0f;
+          pos->x *= 10.0f;
+          pos->z *= 10.0f;
 
           storeVertexValueToRawBuffer(initialData, q, *pos);
 
