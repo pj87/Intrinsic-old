@@ -66,6 +66,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
   uint32_t i = 406;
   {
     BufferRef bufferRef = p_Buffers[i];
+    uint32_t bufSize = _descSizeInBytes(bufferRef) / 8;
 
     VkBufferCreateInfo bufferCreateInfo = {};
     {
@@ -151,16 +152,11 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
                                   stagingGpuAllocInfo._offset);
       _INTR_VK_CHECK_RESULT(result);
 
-      // Copy initial data to staging memory
+      // Copy initial data to staging memory{
 
-      if (i == 406) // possible sphere vertex buffer
+      for (int q = 0; q < bufSize; q++)
       {
-
-		uint32_t bufSize = _descSizeInBytes(p_Buffers[i]) / 8;
-
-        for (int q = 0; q < bufSize; q++)
-        {
-          glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
+		  glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
 
           _INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
@@ -172,7 +168,6 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
           glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
 
           _INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y, pos1->z);
-        }
       }
 
       {
