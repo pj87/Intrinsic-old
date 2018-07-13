@@ -182,11 +182,21 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
           tempBuffer[i * 3u + 1u] = packedPosition0 >> 16u;
           tempBuffer[i * 3u + 2u] = packedPosition1;
         }
+
+		_INTR_LOG_INFO("PJ: SIZE: %d", positions[subMeshIdx].size());
+
         Renderer::Vulkan::Resources::BufferManager::_descInitialData(
             posVertexBuffer) = tempBuffer;
 
+		_INTR_LOG_INFO("PJ: BUFFER_SIZE: %d", Renderer::Vulkan::Resources::BufferManager::_descSizeInBytes(posVertexBuffer));
+
         buffersToCreate.push_back(posVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(posVertexBuffer);
+
+		//if (buffersToCreate.size() > 390)
+		{
+         _INTR_LOG_INFO("PJ: buffersToCreate.size(): %d", buffersToCreate.size());
+		}
       }
 
       Renderer::Vulkan::Resources::BufferRef uv0VertexBuffer =
