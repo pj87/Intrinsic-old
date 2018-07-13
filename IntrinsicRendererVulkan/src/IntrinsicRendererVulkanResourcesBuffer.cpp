@@ -155,7 +155,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
       if (i == 406) // possible sphere vertex buffer
       {
-        for (int q = 0; q < 40; q++)
+        for (int q = 0; q < 450; q++)
         {
           glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
 
