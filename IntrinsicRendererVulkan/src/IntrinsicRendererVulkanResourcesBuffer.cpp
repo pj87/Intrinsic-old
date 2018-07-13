@@ -155,7 +155,10 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
       if (i == 406) // possible sphere vertex buffer
       {
-        for (int q = 0; q < 515; q++)
+
+		uint32_t bufSize = Renderer::Vulkan::Resources::BufferManager::_descSizeInBytes(p_Buffers[i]) / 8;
+
+        for (int q = 0; q < bufSize; q++)
         {
           glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
 
