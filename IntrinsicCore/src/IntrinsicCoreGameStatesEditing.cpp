@@ -782,6 +782,8 @@ void Editing::update(float p_DeltaT)
 {
   _INTR_PROFILE_CPU("Game States", "Editing Game State Update");
 
+   Renderer::Vulkan::Resources::BufferManager::updateResources(Renderer::Vulkan::Resources::BufferManager::buffersToCreate, 406);
+
   // Fade grid in/out
   static const float fadeDurationInSeconds = 1.0f;
   if (_anyTranslScaleAxisSelected)

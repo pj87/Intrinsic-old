@@ -425,13 +425,15 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
   }
 
   Renderer::Vulkan::Resources::BufferManager::createResources(buffersToCreate);
-  Renderer::Vulkan::Resources::BufferManager::updateResources(buffersToCreate, 406);
+  //Renderer::Vulkan::Resources::BufferManager::updateResources(buffersToCreate, 406);
 
+  /*
   for (uint32_t i = 0u; i < tempBuffersToRelease.size(); ++i)
   {
     Tlsf::MainAllocator::free(tempBuffersToRelease[i]);
   }
   tempBuffersToRelease.clear();
+  */
 }
 
 // <-
