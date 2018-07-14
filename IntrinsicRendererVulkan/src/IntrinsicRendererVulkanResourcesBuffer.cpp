@@ -54,18 +54,13 @@ void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i,
   ptr[i * 3u + 2u] = packedPosition1;
 }
 
-void BufferManager::updateResources(const BufferRefArray& p_Buffers)
+void BufferManager::updateResources(const BufferRefArray& p_Buffers, int index)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
-  _INTR_ARRAY(VkBuffer) stagingBuffersToDestroy;
-  stagingBuffersToDestroy.reserve(p_Buffers.size());
-
   // for (uint32_t i = 0u; i < p_Buffers.size(); ++i)
-
-  uint32_t i = 406;
   {
-    BufferRef bufferRef = p_Buffers[i];
+    BufferRef bufferRef = p_Buffers[index];
     uint32_t bufSize = _descSizeInBytes(bufferRef) / 8;
 
     VkBufferCreateInfo bufferCreateInfo = {};
@@ -83,40 +78,13 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
     }
 
     VkBuffer& buffer = _vkBuffer(bufferRef);
-    //_INTR_ASSERT(buffer == VK_NULL_HANDLE);
-
-    // VkResult result = vkCreateBuffer(RenderSystem::_vkDevice,
-    // &bufferCreateInfo,
-    //                                 nullptr, &buffer);
-    //_INTR_VK_CHECK_RESULT(result);
-
+    
     VkMemoryRequirements memReqs;
     vkGetBufferMemoryRequirements(RenderSystem::_vkDevice, buffer, &memReqs);
 
     MemoryPoolType::Enum memoryPoolType = _descMemoryPoolType(bufferRef);
     GpuMemoryAllocationInfo& memoryAllocationInfo =
         _memoryAllocationInfo(bufferRef);
-
-    bool needsAlloc = true;
-
-    // Try to keep memory for static buffers
-    if (memoryPoolType >= MemoryPoolType::kRangeStartStatic &&
-        memoryPoolType <= MemoryPoolType::kRangeEndStatic)
-    {
-      if (memoryAllocationInfo._memoryPoolType == memoryPoolType &&
-          memReqs.size <= memoryAllocationInfo._sizeInBytes &&
-          memReqs.alignment == memoryAllocationInfo._alignmentInBytes)
-      {
-        needsAlloc = false;
-      }
-    }
-
-    if (needsAlloc)
-    {
-      memoryAllocationInfo = GpuMemoryManager::allocateOffset(
-          memoryPoolType, (uint32_t)memReqs.size, (uint32_t)memReqs.alignment,
-          memReqs.memoryTypeBits);
-    }
 
     VkResult result;
     result = vkBindBufferMemory(RenderSystem::_vkDevice, buffer,
@@ -189,13 +157,6 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
   }
 
   RenderSystem::flushTemporaryCommandBuffer();
-
-  for (uint32_t i = 0u; i < stagingBuffersToDestroy.size(); ++i)
-  {
-    vkDestroyBuffer(RenderSystem::_vkDevice, stagingBuffersToDestroy[i],
-                    nullptr);
-  }
-
   GpuMemoryManager::resetPool(MemoryPoolType::kVolatileStagingBuffers);
 }
 // PJ: Added--
