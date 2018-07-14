@@ -36,7 +36,7 @@ glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
   pos->y = glm::detail::toFloat32(ptr[i * 3u + 1u]);
   pos->z = glm::detail::toFloat32(ptr[i * 3u + 2u]);
 
-  _INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
+  //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
   return pos;
 }
@@ -128,7 +128,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers1, int index)
       {
 		  glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
 
-          _INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
+          //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
           pos->x *= 10.0f;
           pos->z *= 10.0f;
@@ -137,7 +137,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers1, int index)
 
           glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
 
-          _INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y, pos1->z);
+          //_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y, pos1->z);
       }
 
       {
