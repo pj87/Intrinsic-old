@@ -54,14 +54,12 @@ void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i,
   ptr[i * 3u + 2u] = packedPosition1;
 }
 
-void BufferManager::updateResources(const BufferRefArray& p_Buffers1, int index)
+void BufferManager::updateResources(const BufferRefArray& p_Buffers, int index)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
   // for (uint32_t i = 0u; i < p_Buffers.size(); ++i)
   {
-
-	const BufferRefArray& p_Buffers = Core::Resources::MeshManager::buffersToCreate;
     BufferRef bufferRef = p_Buffers[index];
     uint32_t bufSize = _descSizeInBytes(bufferRef) / 8;
 
