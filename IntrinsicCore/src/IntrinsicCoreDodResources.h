@@ -14,6 +14,9 @@
 
 #pragma once
 
+// Forward declaration 
+struct Triangle;
+
 // Forware declaration
 namespace Intrinsic
 {
@@ -154,6 +157,7 @@ struct ResourceManagerBase : Dod::ManagerBase<IdCount, DataType>
 
   static _INTR_HASH_MAP(Name, Ref) _nameResourceMap;
   static DataType _data;
+  static std::vector<Triangle> _triangles;
   static Name _defaultResourceName;
   static Intrinsic::Renderer::Vulkan::Resources::BufferRefArray buffersToCreate;
 
@@ -487,6 +491,8 @@ Name ResourceManagerBase<DataType, IdCount>::_defaultResourceName;
 template <class DataType, uint32_t IdCount>
 Intrinsic::Renderer::Vulkan::Resources::BufferRefArray
 ResourceManagerBase<DataType, IdCount>::buffersToCreate;
+template <class DataType, uint32_t IdCount> 
+std::vector<Triangle> ResourceManagerBase<DataType, IdCount>::_triangles;
 }
 }
 }

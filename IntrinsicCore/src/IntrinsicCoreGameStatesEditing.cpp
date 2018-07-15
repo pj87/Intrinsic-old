@@ -21,6 +21,7 @@
 #include "extensions/PxRigidBodyExt.h"
 #include "PxScene.h"
 #include "extensions/PxJoint.h"
+#include "IntrinsicAlgorithms/MarchingCubes.h"
 
 namespace Intrinsic
 {
@@ -782,6 +783,10 @@ void Editing::update(float p_DeltaT)
 {
   _INTR_PROFILE_CPU("Game States", "Editing Game State Update");
 
+   vSetTime(1.0f);
+   //std::vector<Triangle> t; 
+   //vMarchingCubes(t);
+   //vMarchingCubes(Core::Resources::MeshManager::_triangles);
    Renderer::Vulkan::Resources::BufferManager::updateResources(Core::Resources::MeshManager::buffersToCreate, 406);
 
   // Fade grid in/out
