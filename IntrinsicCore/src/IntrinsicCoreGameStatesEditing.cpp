@@ -786,10 +786,12 @@ void Editing::update(float p_DeltaT)
    //void vMarchCube(float fX, float fY, float fZ, float fScale, std::vector<Triangle>& triangles);
 
    std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
+   float& time = Core::Resources::MeshManager::_time;
 
-   vMarchCube(1.0f, 1.0f, 1.0f, 0.1f, triangles);
-
+   time += 10.1;
+   vSetTime(time);
    vMarchingCubes(triangles);
+
    Renderer::Vulkan::Resources::BufferManager::updateResources(Core::Resources::MeshManager::buffersToCreate, 406);
 
   // Fade grid in/out

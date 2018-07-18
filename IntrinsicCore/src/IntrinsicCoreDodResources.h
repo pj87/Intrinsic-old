@@ -160,6 +160,7 @@ struct ResourceManagerBase : Dod::ManagerBase<IdCount, DataType>
   static DataType _data;
   static std::vector<Triangle> _triangles;
   static std::vector<Metaball> _metaballs;
+  static float _time;
   static Name _defaultResourceName;
   static Intrinsic::Renderer::Vulkan::Resources::BufferRefArray buffersToCreate;
 
@@ -497,6 +498,8 @@ template <class DataType, uint32_t IdCount>
 std::vector<Triangle> ResourceManagerBase<DataType, IdCount>::_triangles;
 template <class DataType, uint32_t IdCount>
 std::vector<Metaball> ResourceManagerBase<DataType, IdCount>::_metaballs;
+template <class DataType, uint32_t IdCount>
+float ResourceManagerBase<DataType, IdCount>::_time;
 }
 }
 }

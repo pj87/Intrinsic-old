@@ -425,6 +425,8 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
   }
 
   Renderer::Vulkan::Resources::BufferManager::createResources(buffersToCreate);
+  Core::Resources::MeshManager::_time = 0.0f;
+
   //Renderer::Vulkan::Resources::BufferManager::updateResources(buffersToCreate, 406);
 
   /*
