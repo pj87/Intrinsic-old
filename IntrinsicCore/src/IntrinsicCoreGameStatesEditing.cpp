@@ -793,6 +793,7 @@ void Editing::update(float p_DeltaT)
    vMarchingCubes(triangles);
 
    Renderer::Vulkan::Resources::BufferManager::updateResources(Core::Resources::MeshManager::buffersToCreate, 406);
+   Renderer::Vulkan::Resources::BufferManager::updateResourcesIndices(Core::Resources::MeshManager::buffersToCreate, 411);
 
   // Fade grid in/out
   static const float fadeDurationInSeconds = 1.0f;

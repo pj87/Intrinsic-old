@@ -42,6 +42,16 @@ glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
   return pos;
 }
 
+uint16_t* BufferManager::readIndexValueFromRawBuffer(void* initialData, int i)
+{
+  uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
+  
+  _INTR_LOG_INFO("PJ: Reading: %i", ptr[i]);
+
+  return nullptr;
+}
+
+
 void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i,
                                                 glm::vec3& pos)
 {
@@ -154,6 +164,100 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers, int index)
         //_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y, pos1->z);
       }
 	  */
+      {
+
+        memcpy(stagingGpuAllocInfo._mappedMemory, initialData,
+               _descSizeInBytes(bufferRef));
+      }
+
+      VkBufferCopy bufferCopy = {};
+      {
+        bufferCopy.dstOffset = 0u;
+        bufferCopy.srcOffset = 0u;
+        bufferCopy.size = _descSizeInBytes(bufferRef);
+      }
+
+      // Finally copy from the staging buffer to the actual buffer
+      vkCmdCopyBuffer(copyCmd, stagingBuffer, buffer, 1u, &bufferCopy);
+    }
+  }
+
+  RenderSystem::flushTemporaryCommandBuffer();
+  GpuMemoryManager::resetPool(MemoryPoolType::kVolatileStagingBuffers);
+}
+
+void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers, int index)
+{
+  VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
+
+  // for (uint32_t i = 0u; i < p_Buffers.size(); ++i)
+  {
+    BufferRef bufferRef = p_Buffers[index];
+    uint32_t bufSize = _descSizeInBytes(bufferRef) / 8;
+
+    VkBufferCreateInfo bufferCreateInfo = {};
+    {
+      bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+      bufferCreateInfo.pNext = nullptr;
+      bufferCreateInfo.usage =
+          Helper::mapBufferTypeToVkUsageFlagBits(_descBufferType(bufferRef)) |
+          VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+      bufferCreateInfo.size = _descSizeInBytes(bufferRef);
+      bufferCreateInfo.queueFamilyIndexCount = 0;
+      bufferCreateInfo.pQueueFamilyIndices = nullptr;
+      bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+      bufferCreateInfo.flags = 0u;
+    }
+
+    VkBuffer& buffer = _vkBuffer(bufferRef);
+
+    VkMemoryRequirements memReqs;
+    vkGetBufferMemoryRequirements(RenderSystem::_vkDevice, buffer, &memReqs);
+
+    MemoryPoolType::Enum memoryPoolType = _descMemoryPoolType(bufferRef);
+    GpuMemoryAllocationInfo& memoryAllocationInfo =
+        _memoryAllocationInfo(bufferRef);
+
+    VkResult result;
+    result = vkBindBufferMemory(RenderSystem::_vkDevice, buffer,
+                                memoryAllocationInfo._vkDeviceMemory,
+                                memoryAllocationInfo._offset);
+    _INTR_VK_CHECK_RESULT(result);
+
+    void* initialData = _descInitialData(bufferRef);
+    if (initialData)
+    {
+      VkBufferCreateInfo stagingBufferCreateInfo = bufferCreateInfo;
+      {
+        stagingBufferCreateInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+      }
+
+      VkBuffer stagingBuffer;
+      result = vkCreateBuffer(RenderSystem::_vkDevice, &stagingBufferCreateInfo,
+                              nullptr, &stagingBuffer);
+      _INTR_VK_CHECK_RESULT(result);
+
+      VkMemoryRequirements stagingMemReqs;
+      vkGetBufferMemoryRequirements(RenderSystem::_vkDevice, stagingBuffer,
+                                    &stagingMemReqs);
+
+      const GpuMemoryAllocationInfo stagingGpuAllocInfo =
+          GpuMemoryManager::allocateOffset(
+              MemoryPoolType::kVolatileStagingBuffers,
+              (uint32_t)stagingMemReqs.size, (uint32_t)stagingMemReqs.alignment,
+              stagingMemReqs.memoryTypeBits);
+
+      result = vkBindBufferMemory(RenderSystem::_vkDevice, stagingBuffer,
+                                  stagingGpuAllocInfo._vkDeviceMemory,
+                                  stagingGpuAllocInfo._offset);
+      _INTR_VK_CHECK_RESULT(result);
+
+	  //uint16_t* tempIndexBuffer =
+
+     for (int i = 0; i < 100; i++) 
+		readIndexValueFromRawBuffer(initialData, i);
+
+      // Copy initial data to staging memory{
       {
 
         memcpy(stagingGpuAllocInfo._mappedMemory, initialData,
