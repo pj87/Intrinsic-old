@@ -33,9 +33,9 @@ glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
   uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
   glm::vec3* pos = new glm::vec3();
 
-  pos->x = glm::detail::toFloat32(ptr[i * 3u]);
-  pos->y = glm::detail::toFloat32(ptr[i * 3u + 1u]);
-  pos->z = glm::detail::toFloat32(ptr[i * 3u + 2u]);
+  pos->x = 1000.0 * glm::detail::toFloat32(ptr[i * 3u]) + 13.0;
+  pos->y = 1000.0 * glm::detail::toFloat32(ptr[i * 3u + 1u]) + 32.0;
+  pos->z = 1000.0 * glm::detail::toFloat32(ptr[i * 3u + 2u]) + 33.0;
 
   //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
@@ -46,7 +46,7 @@ uint16_t* BufferManager::readIndexValueFromRawBuffer(void* initialData, int i)
 {
   uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
   
-  _INTR_LOG_INFO("PJ: Reading: %i", ptr[i]);
+  //_INTR_LOG_INFO("PJ: Reading: %i", ptr[i]);
 
   return nullptr;
 }

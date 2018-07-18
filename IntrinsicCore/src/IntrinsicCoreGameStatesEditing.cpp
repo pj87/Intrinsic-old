@@ -788,12 +788,14 @@ void Editing::update(float p_DeltaT)
    std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
    float& time = Core::Resources::MeshManager::_time;
 
-   time += 10.1;
+   time += 0.1;
    vSetTime(time);
    vMarchingCubes(triangles);
 
    Renderer::Vulkan::Resources::BufferManager::updateResources(Core::Resources::MeshManager::buffersToCreate, 406);
    Renderer::Vulkan::Resources::BufferManager::updateResourcesIndices(Core::Resources::MeshManager::buffersToCreate, 412);
+
+   triangles.clear();
 
   // Fade grid in/out
   static const float fadeDurationInSeconds = 1.0f;
