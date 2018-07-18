@@ -783,10 +783,13 @@ void Editing::update(float p_DeltaT)
 {
   _INTR_PROFILE_CPU("Game States", "Editing Game State Update");
 
-   vSetTime(1.0f);
-   //std::vector<Triangle> t; 
-   //vMarchingCubes(t);
-   //vMarchingCubes(Core::Resources::MeshManager::_triangles);
+   //void vMarchCube(float fX, float fY, float fZ, float fScale, std::vector<Triangle>& triangles);
+
+   std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
+
+   vMarchCube(1.0f, 1.0f, 1.0f, 0.1f, triangles);
+
+   vMarchingCubes(triangles);
    Renderer::Vulkan::Resources::BufferManager::updateResources(Core::Resources::MeshManager::buffersToCreate, 406);
 
   // Fade grid in/out

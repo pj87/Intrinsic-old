@@ -13,6 +13,7 @@
 // limitations under the License.
 
 // Precompiled header file
+#include "IntrinsicAlgorithms/MarchingCubes.h"
 #include "stdafx_vulkan.h"
 #include "stdafx.h"
 
@@ -122,22 +123,37 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers, int index)
 
       // Copy initial data to staging memory{
 
+	  std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
+
+	  //for (int i = 0; i < triangles.size(); i++)
+      for (int i = 0; i < 200; i++)
+	  {
+            std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
+
+			pos->x = triangles[i].pos.x;
+            pos->y = triangles[i].pos.y;
+            pos->z = triangles[i].pos.z;
+
+            storeVertexValueToRawBuffer(initialData, i, *pos);
+	  }
+
+	  /*
       for (int q = 0; q < bufSize; q++)
       {
-		  glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
+        glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
 
-          //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
+        //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
-          pos->x *= 1.001f;
-          pos->z *= 1.001f;
+        pos->x *= 1.001f;
+        pos->z *= 1.001f;
 
-          storeVertexValueToRawBuffer(initialData, q, *pos);
+        storeVertexValueToRawBuffer(initialData, q, *pos);
 
-          glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
+        glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
 
-          //_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y, pos1->z);
+        //_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y, pos1->z);
       }
-
+	  */
       {
 
         memcpy(stagingGpuAllocInfo._mappedMemory, initialData,

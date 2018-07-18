@@ -15,7 +15,8 @@
 #pragma once
 
 // Forward declaration 
-struct Triangle;
+#include "IntrinsicAlgorithms/MarchingCubes.h"
+//struct Triangle;
 
 // Forware declaration
 namespace Intrinsic
@@ -158,6 +159,7 @@ struct ResourceManagerBase : Dod::ManagerBase<IdCount, DataType>
   static _INTR_HASH_MAP(Name, Ref) _nameResourceMap;
   static DataType _data;
   static std::vector<Triangle> _triangles;
+  static std::vector<Metaball> _metaballs;
   static Name _defaultResourceName;
   static Intrinsic::Renderer::Vulkan::Resources::BufferRefArray buffersToCreate;
 
@@ -493,6 +495,8 @@ Intrinsic::Renderer::Vulkan::Resources::BufferRefArray
 ResourceManagerBase<DataType, IdCount>::buffersToCreate;
 template <class DataType, uint32_t IdCount> 
 std::vector<Triangle> ResourceManagerBase<DataType, IdCount>::_triangles;
+template <class DataType, uint32_t IdCount>
+std::vector<Metaball> ResourceManagerBase<DataType, IdCount>::_metaballs;
 }
 }
 }

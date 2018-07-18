@@ -2,6 +2,11 @@
 
 #include <vector>
 
+struct Metaball
+{
+	float x, y, z, scale;
+};
+
 struct Vec3
 {
 	float x, y, z;
