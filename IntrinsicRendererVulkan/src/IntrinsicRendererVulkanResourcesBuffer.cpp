@@ -65,6 +65,12 @@ void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i,
   ptr[i * 3u + 2u] = packedPosition1;
 }
 
+void BufferManager::storeIndexValueToRawBuffer(void* initialData, int i, int& value)
+{
+  uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
+  ptr[i] = value;
+}
+
 void BufferManager::updateResources(const BufferRefArray& p_Buffers, int index)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
@@ -136,7 +142,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers, int index)
 	  std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
 
 	  //for (int i = 0; i < triangles.size(); i++)
-      for (int i = 0; i < 200; i++)
+      for (int i = 0; i < 300; i++)
 	  {
             std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
 
@@ -254,8 +260,12 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers, int 
 
 	  //uint16_t* tempIndexBuffer =
 
-     for (int i = 0; i < 100; i++) 
+
+     for (int i = 0; i < 300; i++) 
+     {
+        storeIndexValueToRawBuffer(initialData, i, i);
 		readIndexValueFromRawBuffer(initialData, i);
+	 }
 
       // Copy initial data to staging memory{
       {
