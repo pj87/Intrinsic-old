@@ -33,9 +33,15 @@ glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
   uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
   glm::vec3* pos = new glm::vec3();
 
-  pos->x = 1000.0 * glm::detail::toFloat32(ptr[i * 3u]) + 13.0;
-  pos->y = 1000.0 * glm::detail::toFloat32(ptr[i * 3u + 1u]) + 32.0;
-  pos->z = 1000.0 * glm::detail::toFloat32(ptr[i * 3u + 2u]) + 33.0;
+  /*
+  pos->x = 10.0 * glm::detail::toFloat32(ptr[i * 3u]) + 13.0;
+  pos->y = 10.0 * glm::detail::toFloat32(ptr[i * 3u + 1u]) + 32.0;
+  pos->z = 10.0 * glm::detail::toFloat32(ptr[i * 3u + 2u]) + 33.0;
+  */
+
+  pos->x = glm::detail::toFloat32(ptr[i * 3u]);
+  pos->y = glm::detail::toFloat32(ptr[i * 3u + 1u]);
+  pos->z = glm::detail::toFloat32(ptr[i * 3u + 2u]);
 
   //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
@@ -141,8 +147,11 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers, int index)
 
 	  std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
 
+	  int treshold =
+              triangles.size() < bufSize ? triangles.size() : bufSize;
+
 	  //for (int i = 0; i < triangles.size(); i++)
-      for (int i = 0; i < 300; i++)
+      for (int i = 0; i < treshold; i++)
 	  {
             std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
 
@@ -261,10 +270,23 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers, int 
 	  //uint16_t* tempIndexBuffer =
 
 
-     for (int i = 0; i < 300; i++) 
+	 int ffff = _descSizeInBytes(bufferRef) / 2;
+
+     for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++) 
      {
-        storeIndexValueToRawBuffer(initialData, i, i);
-		readIndexValueFromRawBuffer(initialData, i);
+       int zero = 0;
+
+	   /*
+       if (i < 300)
+			storeIndexValueToRawBuffer(initialData, i, i);
+       else
+			storeIndexValueToRawBuffer(initialData, i, zero);
+	   */
+
+	   storeIndexValueToRawBuffer(initialData, i, i);
+
+	   //storeIndexValueToRawBuffer(initialData, i, zero);
+		//readIndexValueFromRawBuffer(initialData, i);
 	 }
 
       // Copy initial data to staging memory{
