@@ -160,6 +160,8 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
             posVertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
         Renderer::Vulkan::Resources::BufferManager::_descBufferType(
             posVertexBuffer) = Renderer::Vulkan::BufferType::kVertex;
+		
+		// PJ: Tutaj alokuj wielkosc bufora dla vertexow
         Renderer::Vulkan::Resources::BufferManager::_descSizeInBytes(
             posVertexBuffer) =
             (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 4u;
