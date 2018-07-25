@@ -270,20 +270,21 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers, int 
 	  //uint16_t* tempIndexBuffer =
 
 
-	 int ffff = _descSizeInBytes(bufferRef) / 2;
+	  std::vector<Triangle>& triangles =
+          Core::Resources::MeshManager::_triangles;
+
+	  int treshold = triangles.size() < bufSize ? triangles.size() : bufSize;
 
      for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++) 
      {
        int zero = 0;
 
-	   /*
-       if (i < 300)
+       if (i < treshold)
 			storeIndexValueToRawBuffer(initialData, i, i);
        else
 			storeIndexValueToRawBuffer(initialData, i, zero);
-	   */
 
-	   storeIndexValueToRawBuffer(initialData, i, i);
+	   //storeIndexValueToRawBuffer(initialData, i, i);
 
 	   //storeIndexValueToRawBuffer(initialData, i, zero);
 		//readIndexValueFromRawBuffer(initialData, i);
