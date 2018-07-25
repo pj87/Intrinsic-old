@@ -112,8 +112,13 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
   // attribute
   _INTR_ARRAY(void*) tempBuffersToRelease;
 
+  uint32_t multiplier = 1u;
+
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
   {
+    if (meshIdx == 58) 
+      multiplier = 400u;
+
     MeshRef meshRef = p_Meshes[meshIdx];
     const PositionsPerSubMeshArray& positions =
         _descPositionsPerSubMesh(meshRef);
@@ -164,7 +169,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 		// PJ: Tutaj alokuj wielkosc bufora dla vertexow
         Renderer::Vulkan::Resources::BufferManager::_descSizeInBytes(
             posVertexBuffer) =
-            (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 4u * 100u;
+            (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 4u * multiplier;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Tlsf::MainAllocator::allocate(
@@ -390,7 +395,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         if (indices[subMeshIdx].size() <= 0xFFFF)
         {
           uint32_t indexBufferSizeInBytes =
-              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t) * 100u;
+              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t) * multiplier;
           uint16_t* tempIndexBuffer =
               (uint16_t*)Tlsf::MainAllocator::allocate(indexBufferSizeInBytes);
           tempBuffersToRelease.push_back(tempIndexBuffer);
