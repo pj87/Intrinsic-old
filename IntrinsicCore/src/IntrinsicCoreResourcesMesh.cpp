@@ -116,7 +116,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
   {
-    //if (meshIdx == 58) 
+    //if (meshIdx == 30) 
     //  multiplier = 100u;
 
     MeshRef meshRef = p_Meshes[meshIdx];
@@ -160,7 +160,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
       {
         Renderer::Vulkan::Resources::BufferManager::resetToDefault(
             posVertexBuffer);
-        if (meshIdx != 30)
+        //if (meshIdx != 30)
 		{
         Renderer::Vulkan::Resources::BufferManager::addResourceFlags(
             posVertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
