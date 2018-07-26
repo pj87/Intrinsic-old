@@ -792,8 +792,8 @@ void Editing::update(float p_DeltaT)
    vSetTime(time);
    vMarchingCubes(triangles);
 
-   Renderer::Vulkan::Resources::BufferManager::updateResources(Core::Resources::MeshManager::buffersToCreate, 406);
-   Renderer::Vulkan::Resources::BufferManager::updateResourcesIndices(Core::Resources::MeshManager::buffersToCreate, 412);
+   //Renderer::Vulkan::Resources::BufferManager::updateResources(Core::Resources::MeshManager::buffersToCreate, 406);
+   //Renderer::Vulkan::Resources::BufferManager::updateResourcesIndices(Core::Resources::MeshManager::buffersToCreate, 412);
 
    triangles.clear();
 
