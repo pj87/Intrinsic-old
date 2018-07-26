@@ -117,7 +117,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
   {
     if (meshIdx == 58) 
-      multiplier = 400u;
+      multiplier = 100u;
 
     MeshRef meshRef = p_Meshes[meshIdx];
     const PositionsPerSubMeshArray& positions =
@@ -244,7 +244,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
             normalVertexBuffer) = Renderer::Vulkan::BufferType::kVertex;
         Renderer::Vulkan::Resources::BufferManager::_descSizeInBytes(
             normalVertexBuffer) =
-            (uint32_t)normals[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+            (uint32_t)normals[subMeshIdx].size() * sizeof(uint16_t) * 4u * multiplier;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Tlsf::MainAllocator::allocate(

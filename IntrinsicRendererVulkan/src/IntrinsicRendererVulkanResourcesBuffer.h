@@ -77,6 +77,7 @@ struct BufferManager
   static void storeVertexValueToRawBuffer(void* initialData, int i, glm::vec3& pos);
   static void storeIndexValueToRawBuffer(void* initialData, int i, int& value);
   static void updateResources(const BufferRefArray& p_Buffers, int index);
+  static void updateResourcesNormals(const BufferRefArray& p_Buffers, int index);
   static void updateResourcesIndices(const BufferRefArray& p_Buffers, int index);
   // PJ: Added-- 
 
