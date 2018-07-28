@@ -96,6 +96,7 @@ struct MeshManager
 
   // <-
 
+  // PJ: Tutaj znalazlem gdzie resetuje
   _INTR_INLINE static void resetToDefault(MeshRef p_Ref)
   {
     _descPositionsPerSubMesh(p_Ref).clear();
@@ -230,6 +231,7 @@ struct MeshManager
 
   // <-
 
+  // PJ: Tutaj znalazlem gdzie wypelnia dane meshow z jsonow 
   _INTR_INLINE static void initFromDescriptor(MeshRef p_Ref,
                                               rapidjson::Value& p_Properties)
   {
