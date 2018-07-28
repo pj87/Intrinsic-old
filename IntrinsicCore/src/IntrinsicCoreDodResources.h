@@ -148,6 +148,7 @@ protected:
 
   // <-
 
+  // PJ: To jest fabryka resourcow, dlatego od razu sa tworzone przy alokacji
   _INTR_INLINE static Ref _createResource(const Name& p_Name)
   {
     Ref ref = Dod::ManagerBase<IdCount, DataType>::allocate();
