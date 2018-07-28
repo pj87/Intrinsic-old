@@ -462,69 +462,14 @@ protected:
 
   // PJ: Added++
   _INTR_INLINE static void
-  _generateMeshes(const char* p_Path, const char* p_Extension,
-                  ManagerInitFromDescriptorFunction p_InitFunction,
+  _loadFromGeneratedMemory(ManagerInitFromDescriptorFunction p_InitFunction,
                   ManagerResetToDefaultFunction p_ResetToDefaultFunction)
   {
-    char* readBuffer = (char*)Tlsf::MainAllocator::allocate(65536u);
+	  Name name("PJGeneratedMesh");
 
-    tinydir_dir dir;
-    if (tinydir_open(&dir, p_Path) == -1)
-    {
-      _INTR_LOG_ERROR("Directory not found while loading resources from "
-                      "multiple files...");
-      return;
-    }
-
-    while (dir.has_next)
-    {
-      tinydir_file file;
-      if (tinydir_readfile(&dir, &file) == -1)
-      {
-        _INTR_LOG_ERROR("Failed to read file in directory...");
-        tinydir_next(&dir);
-        continue;
-      }
-
-      _INTR_STRING resourceName, extension;
-      StringUtil::extractFileNameAndExtension(file.path, resourceName,
-                                              extension);
-
-      // Ignore files not matching the extension
-      if (extension.find(p_Extension) == std::string::npos)
-      {
-        tinydir_next(&dir);
-        continue;
-      }
-
-      FILE* fp = fopen(file.path, "rb");
-
-      if (fp == nullptr)
-      {
-        _INTR_LOG_WARNING("Failed to load resources from file '%s'...",
-                          resourceName.c_str());
-        return;
-      }
-
-      rapidjson::Document resource;
-
-      {
-        rapidjson::FileReadStream is(fp, readBuffer, 65536u);
-        resource.ParseStream(is);
-      }
-
-      fclose(fp);
-
-      Ref ref = _createResource(resource["name"].GetString());
+      Ref ref = _createResource(name);
       p_ResetToDefaultFunction(ref);
-      p_InitFunction(ref, resource["properties"]);
-
-      tinydir_next(&dir);
-    }
-
-    tinydir_close(&dir);
-
-    Tlsf::MainAllocator::free(readBuffer);
+      //p_InitFunction(ref, resource["properties"]);
   }
 // PJ: Added--
 

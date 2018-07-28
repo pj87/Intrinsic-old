@@ -350,6 +350,99 @@ struct MeshManager
 
   static void destroyResources(const MeshRefArray& p_Meshes);
 
+  // PJ: Added++ 
+  // PJ: Tutaj znalazlem gdzie wypelnia dane meshow z jsonow
+  _INTR_INLINE static void generateFromMemory(MeshRef p_Ref, rapidjson::Value& p_Properties)
+  {
+    /*
+    Dod::Resources::ResourceManagerBase<
+        MeshData, _INTR_MAX_MESH_COUNT>::_initFromDescriptor(p_Ref,
+                                                             p_Properties);
+
+    rapidjson::Value& positionsPerSubMesh = p_Properties["positionsPerSubMesh"];
+    rapidjson::Value& uv0sPerSubMesh = p_Properties["uv0sPerSubMesh"];
+    rapidjson::Value& normalPerSubMesh = p_Properties["normalPerSubMesh"];
+    rapidjson::Value& tangentsPerSubMesh = p_Properties["tangentsPerSubMesh"];
+    rapidjson::Value& binormalsPerSubMesh = p_Properties["binormalsPerSubMesh"];
+    rapidjson::Value& vertexColorsPerSubMesh =
+        p_Properties["vertexColorsPerSubMesh"];
+    rapidjson::Value& indicesPerSubMesh = p_Properties["indicesPerSubMesh"];
+    rapidjson::Value& materialNamesPerSubMesh =
+        p_Properties["materialNamesPerSubMesh"];
+
+    const uint32_t subMeshCount = positionsPerSubMesh.Size();
+    _descPositionsPerSubMesh(p_Ref).resize(subMeshCount);
+    _descUV0sPerSubMesh(p_Ref).resize(subMeshCount);
+    _descNormalsPerSubMesh(p_Ref).resize(subMeshCount);
+    _descTangentsPerSubMesh(p_Ref).resize(subMeshCount);
+    _descBinormalsPerSubMesh(p_Ref).resize(subMeshCount);
+    _descVertexColorsPerSubMesh(p_Ref).resize(subMeshCount);
+    _descIndicesPerSubMesh(p_Ref).resize(subMeshCount);
+    _descMaterialNamesPerSubMesh(p_Ref).resize(subMeshCount);
+
+    for (uint32_t subMeshIdx = 0u; subMeshIdx < positionsPerSubMesh.Size();
+         ++subMeshIdx)
+    {
+      rapidjson::Value& positions = positionsPerSubMesh[subMeshIdx];
+      _descPositionsPerSubMesh(p_Ref)[subMeshIdx].resize(positions.Size());
+
+      rapidjson::Value& uv0s = uv0sPerSubMesh[subMeshIdx];
+      _descUV0sPerSubMesh(p_Ref)[subMeshIdx].resize(uv0s.Size());
+
+      rapidjson::Value& normals = normalPerSubMesh[subMeshIdx];
+      _descNormalsPerSubMesh(p_Ref)[subMeshIdx].resize(normals.Size());
+
+      rapidjson::Value& tangents = tangentsPerSubMesh[subMeshIdx];
+      _descTangentsPerSubMesh(p_Ref)[subMeshIdx].resize(tangents.Size());
+
+      rapidjson::Value& binormals = binormalsPerSubMesh[subMeshIdx];
+      _descBinormalsPerSubMesh(p_Ref)[subMeshIdx].resize(binormals.Size());
+
+      rapidjson::Value& vertexColors = vertexColorsPerSubMesh[subMeshIdx];
+      _descVertexColorsPerSubMesh(p_Ref)[subMeshIdx].resize(
+          vertexColors.Size());
+
+      rapidjson::Value& indices = indicesPerSubMesh[subMeshIdx];
+      _descIndicesPerSubMesh(p_Ref)[subMeshIdx].resize(indices.Size());
+
+      for (uint32_t vtxIdx = 0u; vtxIdx < positions.Size(); ++vtxIdx)
+      {
+        _descPositionsPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
+            JsonHelper::readVec3(positions[vtxIdx]);
+        _descUV0sPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
+            JsonHelper::readVec2(uv0s[vtxIdx]);
+        _descNormalsPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
+            JsonHelper::readVec3(normals[vtxIdx]);
+        _descTangentsPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
+            JsonHelper::readVec3(tangents[vtxIdx]);
+        _descBinormalsPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
+            JsonHelper::readVec3(binormals[vtxIdx]);
+        _descVertexColorsPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
+            JsonHelper::readVec4(vertexColors[vtxIdx]);
+      }
+
+      for (uint32_t i = 0u; i < indices.Size(); ++i)
+      {
+        _descIndicesPerSubMesh(p_Ref)[subMeshIdx][i] = indices[i].GetUint();
+      }
+    }
+
+    for (uint32_t subMeshIdx = 0u; subMeshIdx < subMeshCount; ++subMeshIdx)
+    {
+      _descMaterialNamesPerSubMesh(p_Ref)[subMeshIdx] =
+          materialNamesPerSubMesh[subMeshIdx].GetString();
+    }
+        */
+  }
+
+  _INTR_INLINE static void generateMultipleMeshes()
+  {
+    Dod::Resources::ResourceManagerBase<MeshData, _INTR_MAX_MESH_COUNT>::
+        _loadFromGeneratedMemory(generateFromMemory, resetToDefault);
+  }
+
+  // PJ: Added-- 
+
   // Getter/Setter
   // ->
 
