@@ -79,6 +79,8 @@ void Application::init(void* p_PlatformHandle, void* p_PlatformWindow)
   {
     Resources::MeshManager::loadFromMultipleFiles("managers/meshes/",
                                                   ".mesh.json");
+    Resources::MeshManager::generateMultipleMeshes();
+	
     Resources::MeshManager::createAllResources();
 
     Resources::ScriptManager::loadFromMultipleFiles("managers/scripts/",
