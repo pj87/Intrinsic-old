@@ -352,13 +352,13 @@ struct MeshManager
 
   // PJ: Added++ 
   // PJ: Tutaj znalazlem gdzie wypelnia dane meshow z jsonow
-  _INTR_INLINE static void generateFromMemory(MeshRef p_Ref, rapidjson::Value& p_Properties)
+  _INTR_INLINE static void generateFromMemory(MeshRef p_Ref, Name& p_Name)
   {
-    /*
+    
     Dod::Resources::ResourceManagerBase<
         MeshData, _INTR_MAX_MESH_COUNT>::_initFromDescriptor(p_Ref,
-                                                             p_Properties);
-
+                                                             p_Name);
+    /*
     rapidjson::Value& positionsPerSubMesh = p_Properties["positionsPerSubMesh"];
     rapidjson::Value& uv0sPerSubMesh = p_Properties["uv0sPerSubMesh"];
     rapidjson::Value& normalPerSubMesh = p_Properties["normalPerSubMesh"];
@@ -404,7 +404,7 @@ struct MeshManager
 
       rapidjson::Value& indices = indicesPerSubMesh[subMeshIdx];
       _descIndicesPerSubMesh(p_Ref)[subMeshIdx].resize(indices.Size());
-
+	  *
       for (uint32_t vtxIdx = 0u; vtxIdx < positions.Size(); ++vtxIdx)
       {
         _descPositionsPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
@@ -432,7 +432,8 @@ struct MeshManager
       _descMaterialNamesPerSubMesh(p_Ref)[subMeshIdx] =
           materialNamesPerSubMesh[subMeshIdx].GetString();
     }
-        */
+	
+	*/
   }
 
   _INTR_INLINE static void generateMultipleMeshes()

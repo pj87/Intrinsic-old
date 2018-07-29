@@ -71,6 +71,7 @@ typedef _INTR_ARRAY(Ref) RefArray;
 typedef void (*ManagerCompileDescriptorFunction)(Ref, bool, rapidjson::Value&,
                                                  rapidjson::Document&);
 typedef void (*ManagerInitFromDescriptorFunction)(Ref, rapidjson::Value&);
+typedef void (*ManagerInitFromMemoryFunction)(Ref, Name&); // PJ 
 typedef Ref (*ManagerCreateFunction)(Ref);
 typedef void (*ManagerDestroyFunction)(Ref);
 typedef bool (*ManagerIsAliveFunction)(Ref);
@@ -94,7 +95,8 @@ struct ManagerEntry
         getActiveResourceAtIndexFunction(nullptr),
         resetToDefaultFunction(nullptr),
         onPropertyUpdateFinishedFunction(nullptr),
-        onInsertionDeletionFinishedAction(nullptr)
+        onInsertionDeletionFinishedAction(nullptr), 
+	    createFromMemoryFunction(nullptr)
   {
   }
 
@@ -102,6 +104,7 @@ struct ManagerEntry
   ManagerDestroyFunction destroyFunction;
   ManagerCreateResourcesFunction createResourcesFunction;
   ManagerDestroyResourcesFunction destroyResourcesFunction;
+  ManagerInitFromMemoryFunction createFromMemoryFunction;
   ManagerIsAliveFunction isAliveFunction;
   ManagerGetActiveResourceCountFunction getActiveResourceCountFunction;
   ManagerGetActiveResourceAtIndexFunction getActiveResourceAtIndexFunction;

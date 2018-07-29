@@ -461,8 +461,15 @@ protected:
   }
 
   // PJ: Added++
+  
+  _INTR_INLINE static void _initFromDescriptor(Ref p_Ref, Name &name)
+  {
+    _name(p_Ref) = name;
+    _onNameChanged(p_Ref);
+  }
+  
   _INTR_INLINE static void
-  _loadFromGeneratedMemory(ManagerInitFromDescriptorFunction p_InitFunction,
+  _loadFromGeneratedMemory(ManagerInitFromMemoryFunction p_InitFunction,
                   ManagerResetToDefaultFunction p_ResetToDefaultFunction)
   {
 	  Name name("PJGeneratedMesh");
@@ -470,7 +477,7 @@ protected:
 
       Ref ref = _createResource(name);
       p_ResetToDefaultFunction(ref);
-      p_InitFunction(ref, resource);
+      p_InitFunction(ref, name);
   }
 // PJ: Added--
 
