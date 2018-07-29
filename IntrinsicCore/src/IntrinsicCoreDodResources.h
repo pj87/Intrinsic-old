@@ -466,10 +466,11 @@ protected:
                   ManagerResetToDefaultFunction p_ResetToDefaultFunction)
   {
 	  Name name("PJGeneratedMesh");
+      rapidjson::Value resource;
 
       Ref ref = _createResource(name);
       p_ResetToDefaultFunction(ref);
-      //p_InitFunction(ref, resource["properties"]);
+      p_InitFunction(ref, resource);
   }
 // PJ: Added--
 
