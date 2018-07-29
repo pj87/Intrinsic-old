@@ -351,26 +351,14 @@ struct MeshManager
   static void destroyResources(const MeshRefArray& p_Meshes);
 
   // PJ: Added++ 
-  // PJ: Tutaj znalazlem gdzie wypelnia dane meshow z jsonow
+  // PJ: Tutaj wypelnia danymi z pamieci 
   _INTR_INLINE static void generateFromMemory(MeshRef p_Ref, Name& p_Name)
   {
     
     Dod::Resources::ResourceManagerBase<
         MeshData, _INTR_MAX_MESH_COUNT>::_initFromDescriptor(p_Ref,
                                                              p_Name);
-    /*
-    rapidjson::Value& positionsPerSubMesh = p_Properties["positionsPerSubMesh"];
-    rapidjson::Value& uv0sPerSubMesh = p_Properties["uv0sPerSubMesh"];
-    rapidjson::Value& normalPerSubMesh = p_Properties["normalPerSubMesh"];
-    rapidjson::Value& tangentsPerSubMesh = p_Properties["tangentsPerSubMesh"];
-    rapidjson::Value& binormalsPerSubMesh = p_Properties["binormalsPerSubMesh"];
-    rapidjson::Value& vertexColorsPerSubMesh =
-        p_Properties["vertexColorsPerSubMesh"];
-    rapidjson::Value& indicesPerSubMesh = p_Properties["indicesPerSubMesh"];
-    rapidjson::Value& materialNamesPerSubMesh =
-        p_Properties["materialNamesPerSubMesh"];
-
-    const uint32_t subMeshCount = positionsPerSubMesh.Size();
+	const uint32_t subMeshCount = 1;
     _descPositionsPerSubMesh(p_Ref).resize(subMeshCount);
     _descUV0sPerSubMesh(p_Ref).resize(subMeshCount);
     _descNormalsPerSubMesh(p_Ref).resize(subMeshCount);
@@ -380,6 +368,7 @@ struct MeshManager
     _descIndicesPerSubMesh(p_Ref).resize(subMeshCount);
     _descMaterialNamesPerSubMesh(p_Ref).resize(subMeshCount);
 
+    /*
     for (uint32_t subMeshIdx = 0u; subMeshIdx < positionsPerSubMesh.Size();
          ++subMeshIdx)
     {
