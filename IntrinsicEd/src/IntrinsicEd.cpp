@@ -487,6 +487,7 @@ void IntrinsicEd::onEditingGameState()
 
 void IntrinsicEd::onCreateCube()
 {
+	// PJ: Here dynamically add a cube 
   Components::MeshRefArray meshComponentsToCreate;
 
   {
