@@ -490,7 +490,7 @@ void IntrinsicEd::onCreateCube()
   Components::MeshRefArray meshComponentsToCreate;
 
   {
-    Entity::EntityRef entityRef = Entity::EntityManager::createEntity(_N(Cube));
+    Entity::EntityRef entityRef = Entity::EntityManager::createEntity(_N(Plane));
     Components::NodeRef nodeRef =
         Components::NodeManager::createNode(entityRef);
     Components::NodeManager::attachChild(World::getRootNode(), nodeRef);
@@ -499,7 +499,7 @@ void IntrinsicEd::onCreateCube()
     meshComponentsToCreate.push_back(meshRef);
     Components::MeshManager::resetToDefault(meshRef);
 
-    Components::MeshManager::_descMeshName(meshRef) = _N(cube);
+    Components::MeshManager::_descMeshName(meshRef) = _N(Plane);
 
     Components::CameraRef activeCamera = World::getActiveCamera();
     Components::NodeRef cameraNode =
