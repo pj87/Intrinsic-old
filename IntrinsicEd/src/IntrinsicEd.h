@@ -76,6 +76,7 @@ public slots:
   void onCameraSpeedChanged(double p_Value);
   void onCreateCube();
   void onCreatePlane();
+  void onCreateMesh();
   void onCreateRigidBody();
   void onCreateRigidBodySphere();
   void onCreateSphere();

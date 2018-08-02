@@ -208,6 +208,8 @@ IntrinsicEd::IntrinsicEd(QWidget* parent) : QMainWindow(parent)
                    SLOT(onCreateCube()));
   QObject::connect(_ui.actionCreatePlane, SIGNAL(triggered()), this,
                    SLOT(onCreatePlane()));
+  QObject::connect(_ui.actionCreateMesh, SIGNAL(triggered()), this,
+                   SLOT(onCreateMesh()));
   QObject::connect(_ui.actionCreateRigidBody, SIGNAL(triggered()), this,
                    SLOT(onCreateRigidBody()));
   QObject::connect(_ui.actionCreateRigidBody_Sphere, SIGNAL(triggered()), this,
@@ -325,6 +327,7 @@ IntrinsicEd::IntrinsicEd(QWidget* parent) : QMainWindow(parent)
 {
   _createContextMenu.addAction(_ui.actionCreateCube);
   _createContextMenu.addAction(_ui.actionCreatePlane);
+  _createContextMenu.addAction(_ui.actionCreateMesh);
   _createContextMenu.addAction(_ui.actionCreateSphere);
   _createContextMenu.addSeparator();
   _createContextMenu.addAction(_ui.actionCreateRigidBody);
@@ -525,6 +528,38 @@ void IntrinsicEd::onCreatePlane()
 
   {
     Entity::EntityRef entityRef = Entity::EntityManager::createEntity(_N(Plane));
+    Components::NodeRef nodeRef =
+        Components::NodeManager::createNode(entityRef);
+    Components::NodeManager::attachChild(World::getRootNode(), nodeRef);
+    Components::MeshRef meshRef =
+        Components::MeshManager::createMesh(entityRef);
+    meshComponentsToCreate.push_back(meshRef);
+    Components::MeshManager::resetToDefault(meshRef);
+
+    Components::MeshManager::_descMeshName(meshRef) = _N(Plane);
+
+    Components::CameraRef activeCamera = World::getActiveCamera();
+    Components::NodeRef cameraNode =
+        Components::NodeManager::getComponentForEntity(
+            Components::CameraManager::_entity(activeCamera));
+
+    Components::NodeManager::_position(nodeRef) =
+        Components::NodeManager::_worldPosition(cameraNode) +
+        Components::CameraManager::_forward(activeCamera) * 10.0f;
+    GameStates::Editing::_currentlySelectedEntity = entityRef;
+  }
+
+  Components::NodeManager::rebuildTreeAndUpdateTransforms();
+  Components::MeshManager::createResources(meshComponentsToCreate);
+}
+
+void IntrinsicEd::onCreateMesh()
+{
+  Components::MeshRefArray meshComponentsToCreate;
+
+  {
+    Entity::EntityRef entityRef =
+        Entity::EntityManager::createEntity(_N(Plane));
     Components::NodeRef nodeRef =
         Components::NodeManager::createNode(entityRef);
     Components::NodeManager::attachChild(World::getRootNode(), nodeRef);

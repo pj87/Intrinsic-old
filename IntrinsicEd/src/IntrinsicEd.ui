@@ -588,6 +588,18 @@
     <string>Create Plane</string>
    </property>
   </action>
+  <action name="actionCreateMesh">
+   <property name="icon">
+    <iconset resource="../IntrinsicEd.qrc">
+     <normaloff>:/Icons/user</normaloff>:/Icons/user</iconset>
+   </property>
+   <property name="text">
+    <string>Create Mesh</string>
+   </property>
+   <property name="toolTip">
+    <string>Create Mesh</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
