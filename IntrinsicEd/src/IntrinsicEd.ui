@@ -576,6 +576,18 @@
     <string>Open Microprofile</string>
    </property>
   </action>
+  <action name="actionCreatePlane">
+   <property name="icon">
+    <iconset resource="../IntrinsicEd.qrc">
+     <normaloff>:/Icons/doc</normaloff>:/Icons/doc</iconset>
+   </property>
+   <property name="text">
+    <string>Create Plane</string>
+   </property>
+   <property name="toolTip">
+    <string>Create Plane</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
