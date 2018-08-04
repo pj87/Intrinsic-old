@@ -394,10 +394,10 @@ struct MeshManager
     _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
     _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
 
-	_descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
-    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
-    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
-    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
+	_descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
+    _descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
+    _descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
+    _descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
 
 	_descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
     _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
