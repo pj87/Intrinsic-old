@@ -371,14 +371,6 @@ struct MeshManager
     _descIndicesPerSubMesh(p_Ref).resize(subMeshCount);
     _descMaterialNamesPerSubMesh(p_Ref).resize(subMeshCount);
 
-	_descPositionsPerSubMesh(p_Ref)[0].resize(verticesCount);
-    _descUV0sPerSubMesh(p_Ref)[0].resize(verticesCount);
-    _descNormalsPerSubMesh(p_Ref)[0].resize(verticesCount);
-    _descTangentsPerSubMesh(p_Ref)[0].resize(verticesCount);
-    _descBinormalsPerSubMesh(p_Ref)[0].resize(verticesCount);
-    _descVertexColorsPerSubMesh(p_Ref)[0].resize(verticesCount);
-    _descIndicesPerSubMesh(p_Ref)[0].resize(indicesCount);
-
 	_descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(50.0, 0.0, -50.0));
     _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(-50.0, 0.0, -50.0));
     _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(-50.0, 0.0, 50.0));
@@ -416,63 +408,8 @@ struct MeshManager
     _descIndicesPerSubMesh(p_Ref)[0].push_back(2);
     _descIndicesPerSubMesh(p_Ref)[0].push_back(3);
 	
-	_descMaterialNamesPerSubMesh(p_Ref)[0] = "Material.001";
-
-    /*
-    for (uint32_t subMeshIdx = 0u; subMeshIdx < positionsPerSubMesh.Size();
-         ++subMeshIdx)
-    {
-      rapidjson::Value& positions = positionsPerSubMesh[subMeshIdx];
-      _descPositionsPerSubMesh(p_Ref)[subMeshIdx].resize(positions.Size());
-
-      rapidjson::Value& uv0s = uv0sPerSubMesh[subMeshIdx];
-      _descUV0sPerSubMesh(p_Ref)[subMeshIdx].resize(uv0s.Size());
-
-      rapidjson::Value& normals = normalPerSubMesh[subMeshIdx];
-      _descNormalsPerSubMesh(p_Ref)[subMeshIdx].resize(normals.Size());
-
-      rapidjson::Value& tangents = tangentsPerSubMesh[subMeshIdx];
-      _descTangentsPerSubMesh(p_Ref)[subMeshIdx].resize(tangents.Size());
-
-      rapidjson::Value& binormals = binormalsPerSubMesh[subMeshIdx];
-      _descBinormalsPerSubMesh(p_Ref)[subMeshIdx].resize(binormals.Size());
-
-      rapidjson::Value& vertexColors = vertexColorsPerSubMesh[subMeshIdx];
-      _descVertexColorsPerSubMesh(p_Ref)[subMeshIdx].resize(
-          vertexColors.Size());
-
-      rapidjson::Value& indices = indicesPerSubMesh[subMeshIdx];
-      _descIndicesPerSubMesh(p_Ref)[subMeshIdx].resize(indices.Size());
-	  *
-      for (uint32_t vtxIdx = 0u; vtxIdx < positions.Size(); ++vtxIdx)
-      {
-        _descPositionsPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
-            JsonHelper::readVec3(positions[vtxIdx]);
-        _descUV0sPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
-            JsonHelper::readVec2(uv0s[vtxIdx]);
-        _descNormalsPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
-            JsonHelper::readVec3(normals[vtxIdx]);
-        _descTangentsPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
-            JsonHelper::readVec3(tangents[vtxIdx]);
-        _descBinormalsPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
-            JsonHelper::readVec3(binormals[vtxIdx]);
-        _descVertexColorsPerSubMesh(p_Ref)[subMeshIdx][vtxIdx] =
-            JsonHelper::readVec4(vertexColors[vtxIdx]);
-      }
-
-      for (uint32_t i = 0u; i < indices.Size(); ++i)
-      {
-        _descIndicesPerSubMesh(p_Ref)[subMeshIdx][i] = indices[i].GetUint();
-      }
-    }
-
-    for (uint32_t subMeshIdx = 0u; subMeshIdx < subMeshCount; ++subMeshIdx)
-    {
-      _descMaterialNamesPerSubMesh(p_Ref)[subMeshIdx] =
-          materialNamesPerSubMesh[subMeshIdx].GetString();
-    }
-	
-	*/
+	//_descMaterialNamesPerSubMesh(p_Ref)[0] = "Material.001";
+    _descMaterialNamesPerSubMesh(p_Ref)[0] = "default";
   }
 
   _INTR_INLINE static void generateMultipleMeshes()
