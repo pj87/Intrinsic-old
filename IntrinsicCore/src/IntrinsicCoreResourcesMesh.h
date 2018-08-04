@@ -359,6 +359,9 @@ struct MeshManager
         MeshData, _INTR_MAX_MESH_COUNT>::_initFromDescriptor(p_Ref,
                                                              p_Name);
 	const uint32_t subMeshCount = 1;
+    const uint32_t verticesCount = 4;
+    const uint32_t indicesCount = 6;
+
     _descPositionsPerSubMesh(p_Ref).resize(subMeshCount);
     _descUV0sPerSubMesh(p_Ref).resize(subMeshCount);
     _descNormalsPerSubMesh(p_Ref).resize(subMeshCount);
@@ -367,6 +370,53 @@ struct MeshManager
     _descVertexColorsPerSubMesh(p_Ref).resize(subMeshCount);
     _descIndicesPerSubMesh(p_Ref).resize(subMeshCount);
     _descMaterialNamesPerSubMesh(p_Ref).resize(subMeshCount);
+
+	_descPositionsPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descUV0sPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descNormalsPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descTangentsPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descBinormalsPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descVertexColorsPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descIndicesPerSubMesh(p_Ref)[0].resize(indicesCount);
+
+	_descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(50.0, 0.0, -50.0));
+    _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(-50.0, 0.0, -50.0));
+    _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(-50.0, 0.0, 50.0));
+    _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(50.0, 0.0, 50.0));
+
+	_descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(1.0, 1.0));
+    _descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(0.0, 1.0));
+    _descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(0.0, 0.0));
+    _descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(1.0, 0.0));
+
+	_descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
+    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
+    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
+    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
+
+	_descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
+    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
+    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
+    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
+
+	_descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
+    _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
+    _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
+    _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
+
+	_descVertexColorsPerSubMesh(p_Ref)[0].push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+
+	_descIndicesPerSubMesh(p_Ref)[0].push_back(0);
+    _descIndicesPerSubMesh(p_Ref)[0].push_back(1);
+    _descIndicesPerSubMesh(p_Ref)[0].push_back(2);
+    _descIndicesPerSubMesh(p_Ref)[0].push_back(0);
+    _descIndicesPerSubMesh(p_Ref)[0].push_back(2);
+    _descIndicesPerSubMesh(p_Ref)[0].push_back(3);
+	
+	_descMaterialNamesPerSubMesh(p_Ref)[0] = "Material.001";
 
     /*
     for (uint32_t subMeshIdx = 0u; subMeshIdx < positionsPerSubMesh.Size();
