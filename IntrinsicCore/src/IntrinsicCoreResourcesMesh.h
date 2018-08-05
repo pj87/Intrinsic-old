@@ -352,7 +352,7 @@ struct MeshManager
 
   // PJ: Added++ 
   // PJ: Tutaj wypelnia danymi z pamieci 
-  _INTR_INLINE static void generateFromMemory(MeshRef p_Ref, Name& p_Name)
+  _INTR_INLINE static void initFromMemory(MeshRef p_Ref, Name& p_Name)
   {
     
     Dod::Resources::ResourceManagerBase<
@@ -412,10 +412,10 @@ struct MeshManager
     _descMaterialNamesPerSubMesh(p_Ref)[0] = "default";
   }
 
-  _INTR_INLINE static void generateMultipleMeshes()
+  _INTR_INLINE static void loadMultipleMeshesFromMemory()
   {
     Dod::Resources::ResourceManagerBase<MeshData, _INTR_MAX_MESH_COUNT>::
-        _loadFromGeneratedMemory(generateFromMemory, resetToDefault);
+       _loadMultipleMeshesFromMemory(initFromMemory, resetToDefault);
   }
 
   // PJ: Added-- 

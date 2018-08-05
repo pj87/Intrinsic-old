@@ -468,9 +468,9 @@ protected:
     _onNameChanged(p_Ref);
   }
   
-  _INTR_INLINE static void
-  _loadFromGeneratedMemory(ManagerInitFromMemoryFunction p_InitFunction,
-                  ManagerResetToDefaultFunction p_ResetToDefaultFunction)
+  _INTR_INLINE static void _loadMultipleMeshesFromMemory(
+      ManagerInitFromMemoryFunction p_InitFunction,
+      ManagerResetToDefaultFunction p_ResetToDefaultFunction)
   {
 	  Name name("PJGeneratedMesh");
       rapidjson::Value resource;
