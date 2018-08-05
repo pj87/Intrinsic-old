@@ -32,3 +32,4 @@ app/crash_dumps
 app/Intrinsic.log
 *.dds
 IntrinsicAlgorithms/
+IntrinsicGeneratedMesh/x64/
