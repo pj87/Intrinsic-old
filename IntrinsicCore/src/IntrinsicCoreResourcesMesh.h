@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include "IntrinsicGeneratedMesh/src/GeneratedStaticMesh.h"
+
 // Forward decls.
 namespace physx
 {
@@ -231,7 +233,7 @@ struct MeshManager
 
   // <-
 
-  // PJ: Tutaj znalazlem gdzie wypelnia dane meshow z jsonow 
+  // PJ: Tutaj znalazlem gdzie wypelnia dane meshow z jsonow
   _INTR_INLINE static void initFromDescriptor(MeshRef p_Ref,
                                               rapidjson::Value& p_Properties)
   {
@@ -350,17 +352,17 @@ struct MeshManager
 
   static void destroyResources(const MeshRefArray& p_Meshes);
 
-  // PJ: Added++ 
-  // PJ: Tutaj wypelnia danymi z pamieci 
+  // PJ: Added++
+  // PJ: Tutaj wypelnia danymi z pamieci
   _INTR_INLINE static void initFromMemory(MeshRef p_Ref, Name& p_Name)
   {
-    
+    //Name& name = _generatedStaticMeshes.name.c_str();
+
     Dod::Resources::ResourceManagerBase<
-        MeshData, _INTR_MAX_MESH_COUNT>::_initFromDescriptor(p_Ref,
-                                                             p_Name);
-	const uint32_t subMeshCount = 1;
-    const uint32_t verticesCount = 4;
-    const uint32_t indicesCount = 6;
+        MeshData, _INTR_MAX_MESH_COUNT>::_initFromDescriptor(p_Ref, p_Name);
+    const uint32_t subMeshCount = 1;
+    const uint32_t verticesCount = _generatedStaticMeshes.positions.size();
+    const uint32_t indicesCount = _generatedStaticMeshes.indices.size();
 
     _descPositionsPerSubMesh(p_Ref).resize(subMeshCount);
     _descUV0sPerSubMesh(p_Ref).resize(subMeshCount);
@@ -371,54 +373,85 @@ struct MeshManager
     _descIndicesPerSubMesh(p_Ref).resize(subMeshCount);
     _descMaterialNamesPerSubMesh(p_Ref).resize(subMeshCount);
 
-	_descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(50.0, 0.0, -50.0));
+	_descPositionsPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descUV0sPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descNormalsPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descTangentsPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descBinormalsPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descVertexColorsPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descIndicesPerSubMesh(p_Ref)[0].resize(indicesCount);
+
+	for (int i = 0; i < verticesCount; i++)
+	{
+        _descPositionsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.positions[i];
+        _descUV0sPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.uv0[i];
+        _descNormalsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.normals[i];
+        _descTangentsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.tangents[i];
+        _descBinormalsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.binormals[i];
+		_descVertexColorsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.colors[i];
+	}
+
+	for (int i = 0; i < indicesCount; i++)
+	{
+        _descIndicesPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.indices[i];
+	}
+
+    _descMaterialNamesPerSubMesh(p_Ref)[0] = _generatedStaticMeshes.material.c_str();
+
+    /*
+    _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(50.0, 0.0, -50.0));
     _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(-50.0, 0.0, -50.0));
     _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(-50.0, 0.0, 50.0));
     _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(50.0, 0.0, 50.0));
 
-	_descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(1.0, 1.0));
+    _descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(1.0, 1.0));
     _descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(0.0, 1.0));
     _descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(0.0, 0.0));
     _descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(1.0, 0.0));
 
-	_descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
     _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
     _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
     _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
+    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
 
-	_descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
     _descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
     _descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
     _descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
+    _descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
 
-	_descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
     _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
     _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
     _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
+    _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
 
-	_descVertexColorsPerSubMesh(p_Ref)[0].push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
-    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
-    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
-    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(
+        glm::vec4(1.0, 1.0, 1.0, 1.0));
+    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(
+        glm::vec4(1.0, 1.0, 1.0, 1.0));
+    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(
+        glm::vec4(1.0, 1.0, 1.0, 1.0));
+    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(
+        glm::vec4(1.0, 1.0, 1.0, 1.0));
 
-	_descIndicesPerSubMesh(p_Ref)[0].push_back(0);
+    _descIndicesPerSubMesh(p_Ref)[0].push_back(0);
     _descIndicesPerSubMesh(p_Ref)[0].push_back(1);
     _descIndicesPerSubMesh(p_Ref)[0].push_back(2);
     _descIndicesPerSubMesh(p_Ref)[0].push_back(0);
     _descIndicesPerSubMesh(p_Ref)[0].push_back(2);
     _descIndicesPerSubMesh(p_Ref)[0].push_back(3);
-	
-	//_descMaterialNamesPerSubMesh(p_Ref)[0] = "Material.001";
-    _descMaterialNamesPerSubMesh(p_Ref)[0] = "default";
+
+    //_descMaterialNamesPerSubMesh(p_Ref)[0] = "Material.001";
+    _descMaterialNamesPerSubMesh(p_Ref)[0] = _generatedStaticMeshes.material.c_str();
+	*/
   }
 
   _INTR_INLINE static void loadMultipleMeshesFromMemory()
   {
     Dod::Resources::ResourceManagerBase<MeshData, _INTR_MAX_MESH_COUNT>::
-       _loadMultipleMeshesFromMemory(initFromMemory, resetToDefault);
+        _loadMultipleMeshesFromMemory(initFromMemory, resetToDefault);
   }
 
-  // PJ: Added-- 
+  // PJ: Added--
 
   // Getter/Setter
   // ->

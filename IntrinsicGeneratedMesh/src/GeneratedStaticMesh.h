@@ -21,8 +21,9 @@ namespace Resources
 		std::vector<glm::vec4> colors; 
 		std::vector<int> indices;
 		std::string material;
-
 	} GeneratedStaticMesh;
+
+	void GenerateMeshes();
 
 	static GeneratedStaticMesh _generatedStaticMeshes;
 }
