@@ -14,7 +14,9 @@
 
 #pragma once
 
-#include "IntrinsicGeneratedMesh/src/GeneratedStaticMesh.h"
+#include "GeneratedStaticMesh.h"
+
+//extern Intrinsic::Core::Resources::GeneratedStaticMesh _generatedStaticMeshes;
 
 // Forward decls.
 namespace physx
@@ -356,8 +358,11 @@ struct MeshManager
   // PJ: Tutaj wypelnia danymi z pamieci
   _INTR_INLINE static void initFromMemory(MeshRef p_Ref, Name& p_Name)
   {
-    //Name& name = _generatedStaticMeshes.name.c_str();
+    std::string str = 
+		Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh.name;
 
+    // Name& name = _generatedStaticMeshes.name.c_str();
+    /*
     Dod::Resources::ResourceManagerBase<
         MeshData, _INTR_MAX_MESH_COUNT>::_initFromDescriptor(p_Ref, p_Name);
     const uint32_t subMeshCount = 1;
@@ -373,7 +378,7 @@ struct MeshManager
     _descIndicesPerSubMesh(p_Ref).resize(subMeshCount);
     _descMaterialNamesPerSubMesh(p_Ref).resize(subMeshCount);
 
-	_descPositionsPerSubMesh(p_Ref)[0].resize(verticesCount);
+    _descPositionsPerSubMesh(p_Ref)[0].resize(verticesCount);
     _descUV0sPerSubMesh(p_Ref)[0].resize(verticesCount);
     _descNormalsPerSubMesh(p_Ref)[0].resize(verticesCount);
     _descTangentsPerSubMesh(p_Ref)[0].resize(verticesCount);
@@ -381,22 +386,26 @@ struct MeshManager
     _descVertexColorsPerSubMesh(p_Ref)[0].resize(verticesCount);
     _descIndicesPerSubMesh(p_Ref)[0].resize(indicesCount);
 
-	for (int i = 0; i < verticesCount; i++)
-	{
-        _descPositionsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.positions[i];
-        _descUV0sPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.uv0[i];
-        _descNormalsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.normals[i];
-        _descTangentsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.tangents[i];
-        _descBinormalsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.binormals[i];
-		_descVertexColorsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.colors[i];
-	}
+    for (int i = 0; i < verticesCount; i++)
+    {
+      _descPositionsPerSubMesh(p_Ref)[0][i] =
+          _generatedStaticMeshes.positions[i];
+      _descUV0sPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.uv0[i];
+      _descNormalsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.normals[i];
+      _descTangentsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.tangents[i];
+      _descBinormalsPerSubMesh(p_Ref)[0][i] =
+          _generatedStaticMeshes.binormals[i];
+      _descVertexColorsPerSubMesh(p_Ref)[0][i] =
+          _generatedStaticMeshes.colors[i];
+    }
 
-	for (int i = 0; i < indicesCount; i++)
-	{
-        _descIndicesPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.indices[i];
-	}
+    for (int i = 0; i < indicesCount; i++)
+    {
+      _descIndicesPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.indices[i];
+    }
 
-    _descMaterialNamesPerSubMesh(p_Ref)[0] = _generatedStaticMeshes.material.c_str();
+    _descMaterialNamesPerSubMesh(p_Ref)[0] =
+        _generatedStaticMeshes.material.c_str();
 
     /*
     _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(50.0, 0.0, -50.0));
@@ -441,8 +450,9 @@ struct MeshManager
     _descIndicesPerSubMesh(p_Ref)[0].push_back(3);
 
     //_descMaterialNamesPerSubMesh(p_Ref)[0] = "Material.001";
-    _descMaterialNamesPerSubMesh(p_Ref)[0] = _generatedStaticMeshes.material.c_str();
-	*/
+    _descMaterialNamesPerSubMesh(p_Ref)[0] =
+    _generatedStaticMeshes.material.c_str();
+        */
   }
 
   _INTR_INLINE static void loadMultipleMeshesFromMemory()

@@ -2,8 +2,13 @@
 
 #include "GeneratedStaticMesh.h"
 
-Intrinsic::Core::Resources::GeneratedStaticMesh _generatedStaticMeshes;
+Intrinsic::Core::Resources::GeneratedStaticMesh Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh;
 
+void Intrinsic::Core::Resources::PJGeneratedStaticMeshes::GenerateMeshes() {
+  mesh.name = "DUPA";
+}
+
+/*
 void Intrinsic::Core::Resources::GenerateMeshes() {
   _generatedStaticMeshes.name = "PJGeneratedMesh";
   _generatedStaticMeshes.material = "default";
@@ -45,6 +50,7 @@ void Intrinsic::Core::Resources::GenerateMeshes() {
   _generatedStaticMeshes.indices.push_back(2);
   _generatedStaticMeshes.indices.push_back(3);
 }
+*/
 
 //int main()
 //{

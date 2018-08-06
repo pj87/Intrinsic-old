@@ -23,9 +23,12 @@ namespace Resources
 		std::string material;
 	} GeneratedStaticMesh;
 
-	void GenerateMeshes();
-
-	static GeneratedStaticMesh _generatedStaticMeshes;
+	class PJGeneratedStaticMeshes
+	{
+        public: 
+			static GeneratedStaticMesh mesh; 
+			static void GenerateMeshes();
+	};
 }
 }
 };
