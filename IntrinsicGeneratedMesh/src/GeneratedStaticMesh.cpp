@@ -2,9 +2,10 @@
 
 #include "GeneratedStaticMesh.h"
 
-Intrinsic::Core::Resources::GeneratedStaticMesh Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh;
+Intrinsic::Core::Resources::GeneratedStaticMesh Intrinsic::Core::Resources::MeshGenerator::mesh;
 
-void Intrinsic::Core::Resources::PJGeneratedStaticMeshes::GenerateMeshes() {
+void Intrinsic::Core::Resources::MeshGenerator::GenerateMeshes()
+{
   mesh.name = "PJGeneratedMesh";
   mesh.material = "default";
 
