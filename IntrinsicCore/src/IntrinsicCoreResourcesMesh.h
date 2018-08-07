@@ -411,52 +411,6 @@ struct MeshManager
     _descMaterialNamesPerSubMesh(p_Ref)[0] =
         mesh.material.c_str();
 	}
-    /*
-    _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(50.0, 0.0, -50.0));
-    _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(-50.0, 0.0, -50.0));
-    _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(-50.0, 0.0, 50.0));
-    _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(50.0, 0.0, 50.0));
-
-    _descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(1.0, 1.0));
-    _descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(0.0, 1.0));
-    _descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(0.0, 0.0));
-    _descUV0sPerSubMesh(p_Ref)[0].push_back(glm::vec2(1.0, 0.0));
-
-    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
-    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
-    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
-    _descNormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 1.0, 0.0));
-
-    _descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
-    _descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
-    _descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
-    _descTangentsPerSubMesh(p_Ref)[0].push_back(glm::vec3(1.0, 0.0, 0.0));
-
-    _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
-    _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
-    _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
-    _descBinormalsPerSubMesh(p_Ref)[0].push_back(glm::vec3(0.0, 0.0, -1.0));
-
-    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(
-        glm::vec4(1.0, 1.0, 1.0, 1.0));
-    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(
-        glm::vec4(1.0, 1.0, 1.0, 1.0));
-    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(
-        glm::vec4(1.0, 1.0, 1.0, 1.0));
-    _descVertexColorsPerSubMesh(p_Ref)[0].push_back(
-        glm::vec4(1.0, 1.0, 1.0, 1.0));
-
-    _descIndicesPerSubMesh(p_Ref)[0].push_back(0);
-    _descIndicesPerSubMesh(p_Ref)[0].push_back(1);
-    _descIndicesPerSubMesh(p_Ref)[0].push_back(2);
-    _descIndicesPerSubMesh(p_Ref)[0].push_back(0);
-    _descIndicesPerSubMesh(p_Ref)[0].push_back(2);
-    _descIndicesPerSubMesh(p_Ref)[0].push_back(3);
-
-    //_descMaterialNamesPerSubMesh(p_Ref)[0] = "Material.001";
-    _descMaterialNamesPerSubMesh(p_Ref)[0] =
-    _generatedStaticMeshes.material.c_str();
-        */
   }
 
   _INTR_INLINE static void loadMultipleMeshesFromMemory()
