@@ -362,12 +362,16 @@ struct MeshManager
 		Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh.name;
 
     // Name& name = _generatedStaticMeshes.name.c_str();
-    /*
+    
     Dod::Resources::ResourceManagerBase<
         MeshData, _INTR_MAX_MESH_COUNT>::_initFromDescriptor(p_Ref, p_Name);
     const uint32_t subMeshCount = 1;
-    const uint32_t verticesCount = _generatedStaticMeshes.positions.size();
-    const uint32_t indicesCount = _generatedStaticMeshes.indices.size();
+    const uint32_t verticesCount =
+        Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh.positions
+			.size();
+    const uint32_t indicesCount =
+        Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh.indices
+            .size();
 
     _descPositionsPerSubMesh(p_Ref).resize(subMeshCount);
     _descUV0sPerSubMesh(p_Ref).resize(subMeshCount);
@@ -389,23 +393,35 @@ struct MeshManager
     for (int i = 0; i < verticesCount; i++)
     {
       _descPositionsPerSubMesh(p_Ref)[0][i] =
-          _generatedStaticMeshes.positions[i];
-      _descUV0sPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.uv0[i];
-      _descNormalsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.normals[i];
-      _descTangentsPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.tangents[i];
+          Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh
+		  .positions[i];
+      _descUV0sPerSubMesh(p_Ref)[0][i] =
+          Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh
+          .uv0[i];
+      _descNormalsPerSubMesh(p_Ref)[0][i] =
+          Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh
+		  .normals[i];
+      _descTangentsPerSubMesh(p_Ref)[0][i] =
+          Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh
+		  .tangents[i];
       _descBinormalsPerSubMesh(p_Ref)[0][i] =
-          _generatedStaticMeshes.binormals[i];
+          Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh
+          .binormals[i];
       _descVertexColorsPerSubMesh(p_Ref)[0][i] =
-          _generatedStaticMeshes.colors[i];
+          Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh
+		  .colors[i];
     }
 
     for (int i = 0; i < indicesCount; i++)
     {
-      _descIndicesPerSubMesh(p_Ref)[0][i] = _generatedStaticMeshes.indices[i];
+      _descIndicesPerSubMesh(p_Ref)[0][i] =
+          Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh
+		  .indices[i];
     }
 
     _descMaterialNamesPerSubMesh(p_Ref)[0] =
-        _generatedStaticMeshes.material.c_str();
+        Intrinsic::Core::Resources::PJGeneratedStaticMeshes::mesh
+		.material.c_str();
 
     /*
     _descPositionsPerSubMesh(p_Ref)[0].push_back(glm::vec3(50.0, 0.0, -50.0));
