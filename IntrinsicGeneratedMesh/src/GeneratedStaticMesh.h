@@ -26,7 +26,8 @@ namespace Resources
 	class MeshGenerator
 	{
         public: 
-			static GeneratedStaticMesh mesh; 
+			static std::vector<GeneratedStaticMesh> meshes; 
+			static int meshCount;
 			static void GenerateMeshes();
 	};
 }

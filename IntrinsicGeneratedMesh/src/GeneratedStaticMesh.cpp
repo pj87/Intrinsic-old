@@ -2,10 +2,17 @@
 
 #include "GeneratedStaticMesh.h"
 
-Intrinsic::Core::Resources::GeneratedStaticMesh Intrinsic::Core::Resources::MeshGenerator::mesh;
+int Intrinsic::Core::Resources::MeshGenerator::meshCount = 2;
 
-void Intrinsic::Core::Resources::MeshGenerator::GenerateMeshes()
+
+std::vector <Intrinsic::Core::Resources::GeneratedStaticMesh>
+                  Intrinsic::Core::Resources::MeshGenerator::meshes;
+
+void AddPlane(
+    std::vector<Intrinsic::Core::Resources::GeneratedStaticMesh>& p_Meshes)
 {
+  Intrinsic::Core::Resources::GeneratedStaticMesh mesh;
+
   mesh.name = "PJGeneratedMesh";
   mesh.material = "default";
 
@@ -46,4 +53,11 @@ void Intrinsic::Core::Resources::MeshGenerator::GenerateMeshes()
   mesh.indices.push_back(2);
   mesh.indices.push_back(3);
 
+  p_Meshes.push_back(mesh);
+}
+
+void Intrinsic::Core::Resources::MeshGenerator::GenerateMeshes()
+{
+  Intrinsic::Core::Resources::MeshGenerator::meshes.resize(2);
+  AddPlane(Intrinsic::Core::Resources::MeshGenerator::meshes);
 }
