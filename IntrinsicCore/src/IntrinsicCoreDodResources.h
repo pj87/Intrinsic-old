@@ -469,15 +469,24 @@ protected:
   }
   
   _INTR_INLINE static void _loadMultipleMeshesFromMemory(
+      std::vector<Intrinsic::Core::Resources::GeneratedStaticMesh>& meshes,
       ManagerInitFromMemoryFunction p_InitFunction,
       ManagerResetToDefaultFunction p_ResetToDefaultFunction)
   {
-	  Name name("PJGeneratedMesh");
-      rapidjson::Value resource;
+	  //Name name("PJGeneratedMesh");
+      //rapidjson::Value resource;
 
-      Ref ref = _createResource(name);
-      p_ResetToDefaultFunction(ref);
-      p_InitFunction(ref, name);
+	  // Tutaj petla: 
+	  
+	  for (auto& mesh : meshes)
+	  {
+          Name name;
+          name.setName(mesh.name.c_str());
+
+		  Ref ref = _createResource(name);
+		  p_ResetToDefaultFunction(ref);
+		  p_InitFunction(ref, mesh);
+	  }
   }
 // PJ: Added--
 

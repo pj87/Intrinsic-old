@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <vector>
 #include "GeneratedStaticMesh.h"
 
 //extern Intrinsic::Core::Resources::GeneratedStaticMesh _generatedStaticMeshes;
@@ -356,10 +357,9 @@ struct MeshManager
 
   // PJ: Added++
   // PJ: Tutaj wypelnia danymi z pamieci
-  _INTR_INLINE static void initFromMemory(MeshRef p_Ref, Name& p_Name)
+  _INTR_INLINE static void initFromMemory(MeshRef p_Ref,
+                                          Intrinsic::Core::Resources::GeneratedStaticMesh& mesh)
   {
-	for (auto& mesh : Intrinsic::Core::Resources::MeshGenerator::meshes)
-	{
 	Name name;
     name.setName(mesh.name.c_str());
 
@@ -410,13 +410,15 @@ struct MeshManager
 
     _descMaterialNamesPerSubMesh(p_Ref)[0] =
         mesh.material.c_str();
-	}
   }
 
   _INTR_INLINE static void loadMultipleMeshesFromMemory()
   {
     Dod::Resources::ResourceManagerBase<MeshData, _INTR_MAX_MESH_COUNT>::
-        _loadMultipleMeshesFromMemory(initFromMemory, resetToDefault);
+        _loadMultipleMeshesFromMemory(
+            Intrinsic::Core::Resources::MeshGenerator::meshes, 
+			initFromMemory,
+            resetToDefault);
   }
 
   // PJ: Added--
