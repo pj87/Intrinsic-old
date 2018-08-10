@@ -2,8 +2,6 @@
 
 #include "GeneratedStaticMesh.h"
 
-int Intrinsic::Core::Resources::MeshGenerator::meshCount = 2;
-
 std::vector<Intrinsic::Core::Resources::GeneratedStaticMesh>
     Intrinsic::Core::Resources::MeshGenerator::meshes;
 
