@@ -1,4 +1,5 @@
 #include <vector>
+#include <functional>
 #include <string>
 #include <glm/glm.hpp>
 
@@ -27,6 +28,22 @@ namespace Resources
 	{
         public: 
 			static std::vector<GeneratedStaticMesh> meshes; 
+			//static std::vector<std::unique_ptr<GeneratedStaticMesh()>> funcs;
+            /*
+			// To dziala 
+			std::function<std::unique_ptr<
+				Intrinsic::Core::Resources::GeneratedStaticMesh>()> 
+					func;
+			*/
+
+			static std::vector<
+				std::function<
+					std::unique_ptr<
+						Intrinsic::Core::Resources::GeneratedStaticMesh>()>>
+							funcs;
+
+
+
 			static int meshCount;
 			static void GenerateMeshes();
 	};
