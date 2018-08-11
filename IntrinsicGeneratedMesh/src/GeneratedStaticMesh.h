@@ -54,7 +54,7 @@ namespace Resources
           void operator=(MeshGenerator1 const&) = delete;
 
 		  void InitGeometry();
-          void AddGenerator();
+          void AddGenerator(std::function<std::unique_ptr<GeneratedStaticMesh>()>& p_Generator);
           std::vector<GeneratedStaticMesh>& GetMeshes();
 
         private:
