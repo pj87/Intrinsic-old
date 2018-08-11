@@ -11,6 +11,8 @@ namespace Core
 {
 namespace Resources
 {
+	static void GenerateMeshes();
+
 	typedef struct
 	{
         std::string name;
@@ -26,25 +28,25 @@ namespace Resources
 
 	// Taken from https://stackoverflow.com/questions/1008019/c-singleton-design-pattern
 
-	class MeshGenerator1
+	class MeshGenerator
         {
         public:
-          static MeshGenerator1& GetInstance()
+          static MeshGenerator& GetInstance()
           {
-            static MeshGenerator1 instance; // Guaranteed to be destroyed.
+            static MeshGenerator instance; // Guaranteed to be destroyed.
                                // Instantiated on first use.
             return instance;
           }
 
-		  MeshGenerator1(MeshGenerator1 const&) = delete;
-          void operator=(MeshGenerator1 const&) = delete;
+		  MeshGenerator(MeshGenerator const&) = delete;
+          void operator=(MeshGenerator const&) = delete;
 
 		  void InitGeometry();
           void AddGenerator(std::function<std::unique_ptr<GeneratedStaticMesh>()>& p_Generator);
           std::vector<GeneratedStaticMesh>& GetMeshes();
 
         private:
-          MeshGenerator1() {} // Constructor? (the {} brackets) are needed here.
+          MeshGenerator() {} // Constructor? (the {} brackets) are needed here.
 
 		  //std::vector<std::unique_ptr<GeneratedStaticMesh>> meshes;
           std::vector<GeneratedStaticMesh> meshes;

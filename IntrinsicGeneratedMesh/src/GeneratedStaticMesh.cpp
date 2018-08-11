@@ -1,6 +1,8 @@
 #pragma once
 
 #include "GeneratedStaticMesh.h"
+#include <iostream>
+#include <thread>
 
 std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> AddPlane()
 {
@@ -99,8 +101,10 @@ std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> AddMesh1()
 }
 
 void 
-Intrinsic::Core::Resources::MeshGenerator1::InitGeometry()
+Intrinsic::Core::Resources::MeshGenerator::InitGeometry()
 {
+  GenerateMeshes();
+
   for (auto fun : funcs)
   {
     std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> mesh =
@@ -111,14 +115,18 @@ Intrinsic::Core::Resources::MeshGenerator1::InitGeometry()
 }
 
 void 
-Intrinsic::Core::Resources::MeshGenerator1::AddGenerator(
+Intrinsic::Core::Resources::MeshGenerator::AddGenerator(
     std::function<std::unique_ptr<GeneratedStaticMesh>()>& p_Generator)
 {
   funcs.push_back(p_Generator);
 }
 
 std::vector<Intrinsic::Core::Resources::GeneratedStaticMesh>&
-Intrinsic::Core::Resources::MeshGenerator1::GetMeshes()
+Intrinsic::Core::Resources::MeshGenerator::GetMeshes()
 {
   return meshes;
+}
+
+static void Intrinsic::Core::Resources::GenerateMeshes() { 
+	std::cout << "Dupa" << std::endl;
 }
