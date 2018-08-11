@@ -4,107 +4,107 @@
 #include <iostream>
 #include <thread>
 
-std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> AddPlane()
+void AddPlane()
 {
-  std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> mesh =
-      std::make_unique<Intrinsic::Core::Resources::GeneratedStaticMesh>();
+  Intrinsic::Core::Resources::GeneratedStaticMesh& mesh =
+      Intrinsic::Core::Resources::MeshGenerator::GetInstance().CreateMesh();
 
-  mesh->name = "PJGeneratedMesh";
-  mesh->material = "default";
+  mesh.name = "PJGeneratedMesh";
+  mesh.material = "default";
 
-  mesh->positions.push_back(glm::vec3(50.0, 0.0, -50.0));
-  mesh->positions.push_back(glm::vec3(-50.0, 0.0, -50.0));
-  mesh->positions.push_back(glm::vec3(-50.0, 0.0, 50.0));
-  mesh->positions.push_back(glm::vec3(50.0, 0.0, 50.0));
+  mesh.positions.push_back(glm::vec3(50.0, 0.0, -50.0));
+  mesh.positions.push_back(glm::vec3(-50.0, 0.0, -50.0));
+  mesh.positions.push_back(glm::vec3(-50.0, 0.0, 50.0));
+  mesh.positions.push_back(glm::vec3(50.0, 0.0, 50.0));
 
-  mesh->uv0.push_back(glm::vec2(1.0, 1.0));
-  mesh->uv0.push_back(glm::vec2(0.0, 1.0));
-  mesh->uv0.push_back(glm::vec2(0.0, 0.0));
-  mesh->uv0.push_back(glm::vec2(1.0, 0.0));
+  mesh.uv0.push_back(glm::vec2(1.0, 1.0));
+  mesh.uv0.push_back(glm::vec2(0.0, 1.0));
+  mesh.uv0.push_back(glm::vec2(0.0, 0.0));
+  mesh.uv0.push_back(glm::vec2(1.0, 0.0));
 
-  mesh->normals.push_back(glm::vec3(0.0, 1.0, 0.0));
-  mesh->normals.push_back(glm::vec3(0.0, 1.0, 0.0));
-  mesh->normals.push_back(glm::vec3(0.0, 1.0, 0.0));
-  mesh->normals.push_back(glm::vec3(0.0, 1.0, 0.0));
+  mesh.normals.push_back(glm::vec3(0.0, 1.0, 0.0));
+  mesh.normals.push_back(glm::vec3(0.0, 1.0, 0.0));
+  mesh.normals.push_back(glm::vec3(0.0, 1.0, 0.0));
+  mesh.normals.push_back(glm::vec3(0.0, 1.0, 0.0));
 
-  mesh->tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
-  mesh->tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
-  mesh->tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
-  mesh->tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
+  mesh.tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
+  mesh.tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
+  mesh.tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
+  mesh.tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
 
-  mesh->binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
-  mesh->binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
-  mesh->binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
-  mesh->binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
+  mesh.binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
+  mesh.binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
+  mesh.binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
+  mesh.binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
 
-  mesh->colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
-  mesh->colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
-  mesh->colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
-  mesh->colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+  mesh.colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+  mesh.colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+  mesh.colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+  mesh.colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
 
-  mesh->indices.push_back(0);
-  mesh->indices.push_back(1);
-  mesh->indices.push_back(2);
-  mesh->indices.push_back(0);
-  mesh->indices.push_back(2);
-  mesh->indices.push_back(3);
-
-  return mesh;
+  mesh.indices.push_back(0);
+  mesh.indices.push_back(1);
+  mesh.indices.push_back(2);
+  mesh.indices.push_back(0);
+  mesh.indices.push_back(2);
+  mesh.indices.push_back(3);
 }
 
-std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> AddMesh1()
+void AddMesh1()
 {
+  /*
   std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> mesh =
       std::make_unique<Intrinsic::Core::Resources::GeneratedStaticMesh>();
+  */ 
 
-  mesh->name = "PJGeneratedMesh1";
-  mesh->material = "default";
+  Intrinsic::Core::Resources::GeneratedStaticMesh& mesh =
+      Intrinsic::Core::Resources::MeshGenerator::GetInstance().CreateMesh();
 
-  mesh->positions.push_back(glm::vec3(50.0, 0.0, -50.0));
-  mesh->positions.push_back(glm::vec3(-50.0, 0.0, -50.0));
-  mesh->positions.push_back(glm::vec3(-50.0, 0.0, 50.0));
-  mesh->positions.push_back(glm::vec3(50.0, -50.0, 50.0));
+  mesh.name = "PJGeneratedMesh1";
+  mesh.material = "default";
 
-  mesh->uv0.push_back(glm::vec2(1.0, 1.0));
-  mesh->uv0.push_back(glm::vec2(0.0, 1.0));
-  mesh->uv0.push_back(glm::vec2(0.0, 0.0));
-  mesh->uv0.push_back(glm::vec2(1.0, 0.0));
+  mesh.positions.push_back(glm::vec3(50.0, 0.0, -50.0));
+  mesh.positions.push_back(glm::vec3(-50.0, 0.0, -50.0));
+  mesh.positions.push_back(glm::vec3(-50.0, 0.0, 50.0));
+  mesh.positions.push_back(glm::vec3(50.0, -50.0, 50.0));
 
-  mesh->normals.push_back(glm::vec3(0.0, 1.0, 0.0));
-  mesh->normals.push_back(glm::vec3(0.0, 1.0, 0.0));
-  mesh->normals.push_back(glm::vec3(0.0, 1.0, 0.0));
-  mesh->normals.push_back(glm::vec3(0.0, 1.0, 0.0));
+  mesh.uv0.push_back(glm::vec2(1.0, 1.0));
+  mesh.uv0.push_back(glm::vec2(0.0, 1.0));
+  mesh.uv0.push_back(glm::vec2(0.0, 0.0));
+  mesh.uv0.push_back(glm::vec2(1.0, 0.0));
 
-  mesh->tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
-  mesh->tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
-  mesh->tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
-  mesh->tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
+  mesh.normals.push_back(glm::vec3(0.0, 1.0, 0.0));
+  mesh.normals.push_back(glm::vec3(0.0, 1.0, 0.0));
+  mesh.normals.push_back(glm::vec3(0.0, 1.0, 0.0));
+  mesh.normals.push_back(glm::vec3(0.0, 1.0, 0.0));
 
-  mesh->binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
-  mesh->binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
-  mesh->binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
-  mesh->binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
+  mesh.tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
+  mesh.tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
+  mesh.tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
+  mesh.tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
 
-  mesh->colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
-  mesh->colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
-  mesh->colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
-  mesh->colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+  mesh.binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
+  mesh.binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
+  mesh.binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
+  mesh.binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
 
-  mesh->indices.push_back(0);
-  mesh->indices.push_back(1);
-  mesh->indices.push_back(2);
-  mesh->indices.push_back(0);
-  mesh->indices.push_back(2);
-  mesh->indices.push_back(3);
+  mesh.colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+  mesh.colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+  mesh.colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
+  mesh.colors.push_back(glm::vec4(1.0, 1.0, 1.0, 1.0));
 
-  return mesh;
+  mesh.indices.push_back(0);
+  mesh.indices.push_back(1);
+  mesh.indices.push_back(2);
+  mesh.indices.push_back(0);
+  mesh.indices.push_back(2);
+  mesh.indices.push_back(3);
 }
 
-void 
-Intrinsic::Core::Resources::MeshGenerator::InitGeometry()
+void Intrinsic::Core::Resources::MeshGenerator::InitGeometry()
 {
   GenerateMeshes();
-
+  /*
   for (auto fun : funcs)
   {
     std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> mesh =
@@ -112,21 +112,36 @@ Intrinsic::Core::Resources::MeshGenerator::InitGeometry()
 
     meshes.push_back(*mesh);
   }
+  */
 }
 
-void 
-Intrinsic::Core::Resources::MeshGenerator::AddGenerator(
+/*
+void Intrinsic::Core::Resources::MeshGenerator::AddGenerator(
     std::function<std::unique_ptr<GeneratedStaticMesh>()>& p_Generator)
 {
   funcs.push_back(p_Generator);
 }
+*/
 
-std::vector<Intrinsic::Core::Resources::GeneratedStaticMesh>&
+std::vector<std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh>>&
 Intrinsic::Core::Resources::MeshGenerator::GetMeshes()
 {
   return meshes;
 }
 
-static void Intrinsic::Core::Resources::GenerateMeshes() { 
-	std::cout << "Dupa" << std::endl;
+Intrinsic::Core::Resources::GeneratedStaticMesh&
+Intrinsic::Core::Resources::MeshGenerator::CreateMesh() 
+{
+  std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> mesh =
+      std::make_unique<Intrinsic::Core::Resources::GeneratedStaticMesh>();
+
+  meshes.push_back(std::move(mesh));
+
+  return *meshes.back();
+}
+
+static void Intrinsic::Core::Resources::GenerateMeshes()
+{ 
+	AddPlane();
+	AddMesh1();
 }

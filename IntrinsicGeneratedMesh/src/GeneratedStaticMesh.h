@@ -26,7 +26,8 @@ namespace Resources
 		std::string material;
 	} GeneratedStaticMesh;
 
-	// Taken from https://stackoverflow.com/questions/1008019/c-singleton-design-pattern
+	// Singleton taken from https://stackoverflow.com/questions/1008019/c-singleton-design-pattern
+    // Factory taken from: https://stackoverflow.com/questions/5120768/how-to-implement-the-factory-method-pattern-in-c-correctly
 
 	class MeshGenerator
         {
@@ -42,15 +43,14 @@ namespace Resources
           void operator=(MeshGenerator const&) = delete;
 
 		  void InitGeometry();
-          void AddGenerator(std::function<std::unique_ptr<GeneratedStaticMesh>()>& p_Generator);
-          std::vector<GeneratedStaticMesh>& GetMeshes();
+          //void AddGenerator(std::function<std::unique_ptr<GeneratedStaticMesh>()>& p_Generator);
+          std::vector<std::unique_ptr<GeneratedStaticMesh>>& GetMeshes();
+          GeneratedStaticMesh& CreateMesh();
 
         private:
           MeshGenerator() {} // Constructor? (the {} brackets) are needed here.
-
-		  //std::vector<std::unique_ptr<GeneratedStaticMesh>> meshes;
-          std::vector<GeneratedStaticMesh> meshes;
-          std::vector<std::function<std::unique_ptr<GeneratedStaticMesh>()>> funcs;
+		  std::vector<std::unique_ptr<GeneratedStaticMesh>> meshes;
+          //std::vector<std::function<std::unique_ptr<GeneratedStaticMesh>()>> funcs;
         };
 }
 }
