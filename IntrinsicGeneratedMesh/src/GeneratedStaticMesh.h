@@ -40,32 +40,28 @@ namespace Resources
 
 	// Taken from https://stackoverflow.com/questions/1008019/c-singleton-design-pattern
 
-	class S
+	class MeshGenerator1
         {
         public:
-          static S& getInstance()
+          static MeshGenerator1& GetInstance()
           {
-            static S instance; // Guaranteed to be destroyed.
+            static MeshGenerator1 instance; // Guaranteed to be destroyed.
                                // Instantiated on first use.
             return instance;
           }
 
+		  MeshGenerator1(MeshGenerator1 const&) = delete;
+          void operator=(MeshGenerator1 const&) = delete;
+
+		  void InitGeometry();
+          void AddGenerator();
+          std::vector<GeneratedStaticMesh>& GetMeshes();
+
         private:
-          S() {} // Constructor? (the {} brackets) are needed here.
+          MeshGenerator1() {} // Constructor? (the {} brackets) are needed here.
 
-          // C++ 11
-          // =======
-          // We can use the better technique of deleting the methods
-          // we don't want.
-        public:
-          S(S const&) = delete;
-          void operator=(S const&) = delete;
-
-          // Note: Scott Meyers mentions in his Effective Modern
-          //       C++ book, that deleted functions should generally
-          //       be public as it results in better error messages
-          //       due to the compilers behavior to check accessibility
-          //       before deleted status
+		  std::vector<std::unique_ptr<GeneratedStaticMesh>> meshes;
+          std::vector<std::function<std::unique_ptr<GeneratedStaticMesh>()>> funcs;
         };
 }
 }
