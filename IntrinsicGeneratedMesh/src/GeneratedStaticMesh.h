@@ -60,7 +60,8 @@ namespace Resources
         private:
           MeshGenerator1() {} // Constructor? (the {} brackets) are needed here.
 
-		  std::vector<std::unique_ptr<GeneratedStaticMesh>> meshes;
+		  //std::vector<std::unique_ptr<GeneratedStaticMesh>> meshes;
+          std::vector<GeneratedStaticMesh> meshes;
           std::vector<std::function<std::unique_ptr<GeneratedStaticMesh>()>> funcs;
         };
 }

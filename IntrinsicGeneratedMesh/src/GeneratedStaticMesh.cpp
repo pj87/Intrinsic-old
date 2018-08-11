@@ -131,26 +131,27 @@ void Intrinsic::Core::Resources::MeshGenerator::GenerateMeshes()
   // funcs.push_back(AddMesh1);
 }
 
-
-void Intrinsic::Core::Resources::MeshGenerator1::InitGeometry()
+void 
+Intrinsic::Core::Resources::MeshGenerator1::InitGeometry()
 {
   for (auto fun : funcs)
   {
-    // std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh>
-    // meshes.push_back(fun());
     std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> mesh =
         fun();
-    // std::move(mesh);
-    // meshes.push_back(std::move(mesh));
-    meshes.push_back(std::move(mesh));
+
+    meshes.push_back(*mesh);
   }
 }
 
+void 
+Intrinsic::Core::Resources::MeshGenerator1::AddGenerator(
+    std::function<std::unique_ptr<GeneratedStaticMesh>()>& p_Generator)
+{
+  funcs.push_back(p_Generator);
+}
 
-
-void AddGenerator(
-    std::function<std::unique_ptr<GeneratedStaticMesh>()>& p_Generator);
-
-std::vector<Intrinsic::Core::Resources::GeneratedStaticMesh>& GetMeshes() {
+std::vector<Intrinsic::Core::Resources::GeneratedStaticMesh>&
+Intrinsic::Core::Resources::MeshGenerator1::GetMeshes()
+{
   return meshes;
 }
