@@ -43,14 +43,12 @@ namespace Resources
           void operator=(MeshGenerator const&) = delete;
 
 		  void InitGeometry();
-          //void AddGenerator(std::function<std::unique_ptr<GeneratedStaticMesh>()>& p_Generator);
           std::vector<std::unique_ptr<GeneratedStaticMesh>>& GetMeshes();
           GeneratedStaticMesh& CreateMesh();
 
         private:
           MeshGenerator() {} // Constructor? (the {} brackets) are needed here.
 		  std::vector<std::unique_ptr<GeneratedStaticMesh>> meshes;
-          //std::vector<std::function<std::unique_ptr<GeneratedStaticMesh>()>> funcs;
         };
 }
 }
