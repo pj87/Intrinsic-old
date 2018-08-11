@@ -416,7 +416,7 @@ struct MeshManager
   {
     Dod::Resources::ResourceManagerBase<MeshData, _INTR_MAX_MESH_COUNT>::
         _loadMultipleMeshesFromMemory(
-            Intrinsic::Core::Resources::MeshGenerator::meshes, 
+            Intrinsic::Core::Resources::MeshGenerator1::GetInstance().GetMeshes(), 
 			initFromMemory,
             resetToDefault);
   }

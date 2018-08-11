@@ -24,20 +24,6 @@ namespace Resources
 		std::string material;
 	} GeneratedStaticMesh;
 
-	class MeshGenerator
-	{
-        public: 
-			static std::vector<GeneratedStaticMesh> meshes; 
-
-			static std::vector<
-				std::function<
-					std::unique_ptr<
-						Intrinsic::Core::Resources::GeneratedStaticMesh>()>>
-							funcs;
-
-			static void GenerateMeshes();
-	};
-
 	// Taken from https://stackoverflow.com/questions/1008019/c-singleton-design-pattern
 
 	class MeshGenerator1

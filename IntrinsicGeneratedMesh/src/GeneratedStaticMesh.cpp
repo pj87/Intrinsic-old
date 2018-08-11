@@ -2,13 +2,6 @@
 
 #include "GeneratedStaticMesh.h"
 
-std::vector<Intrinsic::Core::Resources::GeneratedStaticMesh>
-    Intrinsic::Core::Resources::MeshGenerator::meshes;
-
-std::vector<std::function<
-    std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh>()>>
-    Intrinsic::Core::Resources::MeshGenerator::funcs;
-
 std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> AddPlane()
 {
   std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> mesh =
@@ -103,32 +96,6 @@ std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> AddMesh1()
   mesh->indices.push_back(3);
 
   return mesh;
-}
-
-void Intrinsic::Core::Resources::MeshGenerator::GenerateMeshes()
-{
-  // Intrinsic::Core::Resources::MeshGenerator::meshes.resize(2);
-  // AddPlane(Intrinsic::Core::Resources::MeshGenerator::meshes);
-  // AddMesh1(Intrinsic::Core::Resources::MeshGenerator::meshes);
-
-  funcs.push_back(AddMesh1);
-  funcs.push_back(AddPlane);
-
-  for (auto fun : funcs)
-  {
-	//std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh>
-	//meshes.push_back(fun());
-    std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> mesh = fun();
-    //std::move(mesh);
-    //meshes.push_back(std::move(mesh));
-    meshes.push_back(*mesh);
-  }
-
-
-  // std::unique_ptr<std::unique_ptr<GeneratedStaticMesh()>> func = AddMesh1();
-
-  //(GeneratedStaticMesh*)() mesh = AddMesh1();
-  // funcs.push_back(AddMesh1);
 }
 
 void 
