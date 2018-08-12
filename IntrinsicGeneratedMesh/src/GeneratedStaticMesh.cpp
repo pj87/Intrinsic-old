@@ -96,6 +96,62 @@ void AddMesh1()
   mesh.indices.push_back(3);
 }
 
+void AddSphere()
+{
+  // chyba trzeba zmienic triangle strip na triangles!!!!! 
+  // TODO: Change the triagnle strip to triangles (now it is other way round VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST -> VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP) 
+
+  Intrinsic::Core::Resources::GeneratedStaticMesh& mesh =
+      Intrinsic::Core::Resources::MeshGenerator::GetInstance().CreateMesh();
+
+  mesh.name = "PJGeneratedSphere";
+  mesh.material = "default";
+
+  const unsigned int X_SEGMENTS = 64;
+  const unsigned int Y_SEGMENTS = 64;
+  const float PI = 3.14159265359;
+  for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
+  {
+    for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+    {
+      float xSegment = (float)x / (float)X_SEGMENTS;
+      float ySegment = (float)y / (float)Y_SEGMENTS;
+      float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+      float yPos = std::cos(ySegment * PI);
+      float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+
+      mesh.positions.push_back(glm::vec3(xPos, yPos, zPos));
+      mesh.uv0.push_back(glm::vec2(xSegment, ySegment));
+      mesh.normals.push_back(glm::vec3(xPos, yPos, zPos));
+      mesh.colors.push_back(glm::vec4(xPos, yPos, zPos, 1.0));
+      mesh.tangents.push_back(glm::vec3(1.0, 0.0, 0.0));
+      mesh.binormals.push_back(glm::vec3(0.0, 0.0, -1.0));
+    }
+  }
+
+  bool oddRow = false;
+  for (int y = 0; y < Y_SEGMENTS; ++y)
+  {
+    if (!oddRow) // even rows: y == 0, y == 2; and so on
+    {
+      for (int x = 0; x <= X_SEGMENTS; ++x)
+      {
+        mesh.indices.push_back(y * (X_SEGMENTS + 1) + x);
+        mesh.indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+      }
+    }
+    else
+    {
+      for (int x = X_SEGMENTS; x >= 0; --x)
+      {
+        mesh.indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+        mesh.indices.push_back(y * (X_SEGMENTS + 1) + x);
+      }
+    }
+    oddRow = !oddRow;
+  }
+}
+
 void Intrinsic::Core::Resources::MeshGenerator::InitGeometry()
 {
   GenerateMeshes();
@@ -122,4 +178,5 @@ static void Intrinsic::Core::Resources::GenerateMeshes()
 { 
 	AddPlane();
 	AddMesh1();
+    AddSphere();
 }
