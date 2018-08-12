@@ -1,5 +1,4 @@
 #include <vector>
-#include <functional>
 #include <string>
 #include <glm/glm.hpp>
 
