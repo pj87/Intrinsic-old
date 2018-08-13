@@ -53,7 +53,7 @@ void Application::init(void* p_PlatformHandle, void* p_PlatformWindow)
   initManagers();
 
   // Init. generated meshes 
-  Intrinsic::Core::Resources::MeshGenerator::GetInstance().InitGeometry();
+  Intrinsic::Generated::Static::MeshGenerator::GetInstance().InitGeometry();
 
   // Init. renderer
   Renderer::Vulkan::RenderSystem::init(p_PlatformHandle, p_PlatformWindow);

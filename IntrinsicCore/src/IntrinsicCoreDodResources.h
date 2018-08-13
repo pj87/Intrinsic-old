@@ -469,7 +469,7 @@ protected:
   }
   
   _INTR_INLINE static void _loadMultipleMeshesFromMemory(
-      std::vector<std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh>>& meshes,
+      std::vector<std::unique_ptr<Intrinsic::Generated::Static::GeneratedStaticMesh>>& meshes,
       ManagerInitFromMemoryFunction p_InitFunction,
       ManagerResetToDefaultFunction p_ResetToDefaultFunction)
   {

@@ -6,9 +6,9 @@
 
 namespace Intrinsic
 {
-namespace Core
+namespace Generated
 {
-namespace Resources
+namespace Static
 {
 	static void GenerateMeshes();
 

@@ -6,8 +6,8 @@
 
 void AddPlane()
 {
-  Intrinsic::Core::Resources::GeneratedStaticMesh& mesh =
-      Intrinsic::Core::Resources::MeshGenerator::GetInstance().CreateMesh();
+  Intrinsic::Generated::Static::GeneratedStaticMesh& mesh =
+      Intrinsic::Generated::Static::MeshGenerator::GetInstance().CreateMesh();
 
   mesh.name = "PJGeneratedMesh";
   mesh.material = "default";
@@ -52,8 +52,8 @@ void AddPlane()
 
 void AddMesh1()
 {
-  Intrinsic::Core::Resources::GeneratedStaticMesh& mesh =
-      Intrinsic::Core::Resources::MeshGenerator::GetInstance().CreateMesh();
+  Intrinsic::Generated::Static::GeneratedStaticMesh& mesh =
+      Intrinsic::Generated::Static::MeshGenerator::GetInstance().CreateMesh();
 
   mesh.name = "PJGeneratedMesh1";
   mesh.material = "default";
@@ -101,8 +101,8 @@ void AddSphere()
   // chyba trzeba zmienic triangle strip na triangles!!!!! 
   // TODO: Change the triagnle strip to triangles (now it is other way round VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST -> VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP) 
 
-  Intrinsic::Core::Resources::GeneratedStaticMesh& mesh =
-      Intrinsic::Core::Resources::MeshGenerator::GetInstance().CreateMesh();
+  Intrinsic::Generated::Static::GeneratedStaticMesh& mesh =
+      Intrinsic::Generated::Static::MeshGenerator::GetInstance().CreateMesh();
 
   mesh.name = "PJGeneratedSphere";
   mesh.material = "default";
@@ -152,29 +152,29 @@ void AddSphere()
   }
 }
 
-void Intrinsic::Core::Resources::MeshGenerator::InitGeometry()
+void Intrinsic::Generated::Static::MeshGenerator::InitGeometry()
 {
   GenerateMeshes();
 }
 
-std::vector<std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh>>&
-Intrinsic::Core::Resources::MeshGenerator::GetMeshes()
+std::vector<std::unique_ptr<Intrinsic::Generated::Static::GeneratedStaticMesh>>&
+Intrinsic::Generated::Static::MeshGenerator::GetMeshes()
 {
   return meshes;
 }
 
-Intrinsic::Core::Resources::GeneratedStaticMesh&
-Intrinsic::Core::Resources::MeshGenerator::CreateMesh() 
+Intrinsic::Generated::Static::GeneratedStaticMesh&
+Intrinsic::Generated::Static::MeshGenerator::CreateMesh() 
 {
-  std::unique_ptr<Intrinsic::Core::Resources::GeneratedStaticMesh> mesh =
-      std::make_unique<Intrinsic::Core::Resources::GeneratedStaticMesh>();
+  std::unique_ptr<Intrinsic::Generated::Static::GeneratedStaticMesh> mesh =
+      std::make_unique<Intrinsic::Generated::Static::GeneratedStaticMesh>();
 
   meshes.push_back(std::move(mesh));
 
   return *meshes.back();
 }
 
-static void Intrinsic::Core::Resources::GenerateMeshes()
+static void Intrinsic::Generated::Static::GenerateMeshes()
 { 
 	AddPlane();
 	AddMesh1();

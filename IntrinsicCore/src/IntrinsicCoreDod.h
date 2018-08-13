@@ -74,7 +74,7 @@ typedef _INTR_ARRAY(Ref) RefArray;
 typedef void (*ManagerCompileDescriptorFunction)(Ref, bool, rapidjson::Value&,
                                                  rapidjson::Document&);
 typedef void (*ManagerInitFromDescriptorFunction)(Ref, rapidjson::Value&);
-typedef void (*ManagerInitFromMemoryFunction)(Ref, Intrinsic::Core::Resources::GeneratedStaticMesh&); // PJ
+typedef void (*ManagerInitFromMemoryFunction)(Ref, Intrinsic::Generated::Static::GeneratedStaticMesh&); // PJ
 typedef Ref (*ManagerCreateFunction)(Ref);
 typedef void (*ManagerDestroyFunction)(Ref);
 typedef bool (*ManagerIsAliveFunction)(Ref);

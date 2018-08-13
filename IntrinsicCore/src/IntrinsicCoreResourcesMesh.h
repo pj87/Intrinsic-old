@@ -17,7 +17,7 @@
 #include <vector>
 #include "GeneratedStaticMesh.h"
 
-//extern Intrinsic::Core::Resources::GeneratedStaticMesh _generatedStaticMeshes;
+//extern Intrinsic::Generated::Static::GeneratedStaticMesh _generatedStaticMeshes;
 
 // Forward decls.
 namespace physx
@@ -358,7 +358,7 @@ struct MeshManager
   // PJ: Added++
   // PJ: Tutaj wypelnia danymi z pamieci
   _INTR_INLINE static void initFromMemory(MeshRef p_Ref,
-                                          Intrinsic::Core::Resources::GeneratedStaticMesh& mesh)
+                                          Intrinsic::Generated::Static::GeneratedStaticMesh& mesh)
   {
 	Name name;
     name.setName(mesh.name.c_str());
@@ -416,7 +416,7 @@ struct MeshManager
   {
     Dod::Resources::ResourceManagerBase<MeshData, _INTR_MAX_MESH_COUNT>::
         _loadMultipleMeshesFromMemory(
-            Intrinsic::Core::Resources::MeshGenerator::GetInstance().GetMeshes(), 
+            Intrinsic::Generated::Static::MeshGenerator::GetInstance().GetMeshes(), 
 			initFromMemory,
             resetToDefault);
   }
