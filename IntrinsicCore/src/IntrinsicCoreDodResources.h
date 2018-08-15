@@ -14,6 +14,26 @@
 
 #pragma once
 
+// Forward declaration
+//#include "IntrinsicAlgorithms/MarchingCubes.h"
+#include "IntrinsicGeneratedMesh/src/MarchingCubes.h"
+// struct Triangle;
+
+// Forware declaration
+namespace Intrinsic
+{
+namespace Renderer
+{
+namespace Vulkan
+{
+namespace Resources
+{
+typedef Dod::Ref BufferRef;
+typedef _INTR_ARRAY(BufferRef) BufferRefArray;
+}
+}
+}
+}
 namespace Intrinsic
 {
 namespace Core
@@ -138,7 +158,11 @@ struct ResourceManagerBase : Dod::ManagerBase<IdCount, DataType>
 
   static _INTR_HASH_MAP(Name, Ref) _nameResourceMap;
   static DataType _data;
+  static std::vector<Triangle> _triangles;
+  static std::vector<Metaball> _metaballs;
+  static float _time;
   static Name _defaultResourceName;
+  static Intrinsic::Renderer::Vulkan::Resources::BufferRefArray buffersToCreate;
 
 protected:
   _INTR_INLINE static void _initResourceManager()
@@ -171,10 +195,11 @@ protected:
                                               rapidjson::Value& p_Properties,
                                               rapidjson::Document& p_Document)
   {
-    p_Properties.AddMember(
-        "name", _INTR_CREATE_PROP(p_Document, p_GenerateDesc, _N(Resource),
-                                  _N(string), _name(p_Ref), false, false),
-        p_Document.GetAllocator());
+    p_Properties.AddMember("name",
+                           _INTR_CREATE_PROP(p_Document, p_GenerateDesc,
+                                             _N(Resource), _N(string),
+                                             _name(p_Ref), false, false),
+                           p_Document.GetAllocator());
   }
 
   // <-
@@ -461,35 +486,35 @@ protected:
   }
 
   // PJ: Added++
-  
-  _INTR_INLINE static void _initFromDescriptor(Ref p_Ref, Name &name)
+
+  _INTR_INLINE static void _initFromDescriptor(Ref p_Ref, Name& name)
   {
     _name(p_Ref) = name;
     _onNameChanged(p_Ref);
   }
-  
+
   _INTR_INLINE static void _loadMultipleMeshesFromMemory(
-      std::vector<std::unique_ptr<Intrinsic::Generated::Static::GeneratedStaticMesh>>& meshes,
+      std::vector<std::unique_ptr<
+          Intrinsic::Generated::Static::GeneratedStaticMesh>>& meshes,
       ManagerInitFromMemoryFunction p_InitFunction,
       ManagerResetToDefaultFunction p_ResetToDefaultFunction)
   {
-	  //Name name("PJGeneratedMesh");
-      //rapidjson::Value resource;
+    // Name name("PJGeneratedMesh");
+    // rapidjson::Value resource;
 
-	  // Tutaj petla: 
-	  
-	  for (auto& mesh : meshes)
-	  {
-          Name name;
-          name.setName(mesh->name.c_str());
+    // Tutaj petla:
 
-		  Ref ref = _createResource(name);
-		  p_ResetToDefaultFunction(ref);
-		  p_InitFunction(ref, *mesh);
-	  }
+    for (auto& mesh : meshes)
+    {
+      Name name;
+      name.setName(mesh->name.c_str());
+
+      Ref ref = _createResource(name);
+      p_ResetToDefaultFunction(ref);
+      p_InitFunction(ref, *mesh);
+    }
   }
-// PJ: Added--
-
+  // PJ: Added--
 };
 
 template <class DataType, uint32_t IdCount>
@@ -499,6 +524,15 @@ _INTR_HASH_MAP(Name, Ref)
 ResourceManagerBase<DataType, IdCount>::_nameResourceMap;
 template <class DataType, uint32_t IdCount>
 Name ResourceManagerBase<DataType, IdCount>::_defaultResourceName;
+template <class DataType, uint32_t IdCount>
+Intrinsic::Renderer::Vulkan::Resources::BufferRefArray
+    ResourceManagerBase<DataType, IdCount>::buffersToCreate;
+template <class DataType, uint32_t IdCount>
+std::vector<Triangle> ResourceManagerBase<DataType, IdCount>::_triangles;
+template <class DataType, uint32_t IdCount>
+std::vector<Metaball> ResourceManagerBase<DataType, IdCount>::_metaballs;
+template <class DataType, uint32_t IdCount>
+float ResourceManagerBase<DataType, IdCount>::_time;
 }
 }
 }
