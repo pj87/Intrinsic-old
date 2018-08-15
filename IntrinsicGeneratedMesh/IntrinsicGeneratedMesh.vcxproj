@@ -20,9 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GeneratedStaticMesh.h" />
+    <ClInclude Include="src\MarchingCubes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GeneratedStaticMesh.cpp" />
+    <ClCompile Include="src\MarchingCubes.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
