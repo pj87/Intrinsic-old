@@ -203,6 +203,7 @@ struct MaterialManager
         p_Document.GetAllocator());
 
     // General
+    /*
     {
       p_Properties.AddMember(
           "albedoTextureName",
@@ -323,6 +324,7 @@ struct MaterialManager
                                                false, false),
                              p_Document.GetAllocator());
     }
+	*/
   }
 
   // <-
