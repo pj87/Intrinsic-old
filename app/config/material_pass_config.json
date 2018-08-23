@@ -29,19 +29,6 @@
       ]
     },
     {
-      "name": "GBufferWater",
-      "resources" : [
-        ["Buffer", "PerInstance", "PerInstance", "Vertex"],
-        ["Buffer", "PerInstance", "PerInstance", "Fragment"],
-        ["Buffer", "PerMaterial", "PerMaterial", "Fragment"],
-        ["Image", "MaterialAlbedo", "albedoTex", "Fragment"],
-        ["Image", "MaterialNormal", "normalTex", "Fragment"],
-        ["Image", "MaterialRoughness", "roughnessTex", "Fragment"],
-        ["Image", "MaterialFoam", "foamTex", "Fragment"],
-        ["Image", "GBufferDepth", "gbufferDepthTex", "Fragment"]
-      ]
-    },
-    {
       "name": "GBufferLayered",
       "resources" : [
         ["Buffer", "PerInstance", "PerInstance", "Vertex"],
