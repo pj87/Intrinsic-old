@@ -1,7 +1,7 @@
 {
   "initialWorld": "Default.world.json",
 
-  "rendererConfig" : "renderer_config.json",
+  "rendererConfig" : "renderer_config_simple.json",
   "materialPassConfig" : "material_pass_config.json",
 
   "rendererValidationEnabled": false,
