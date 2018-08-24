@@ -30,6 +30,8 @@ _INTR_ARRAY(MaterialPass::BoundResources)
 MaterialManager::_materialPassBoundResources;
 _INTR_HASH_MAP(Name, MaterialResourceFunction)
 MaterialManager::_materialResourceFunctionMapping = {
+    {_N(Dupa), MaterialManager::_descAlbedoTextureName},
+    /*
     {_N(MaterialAlbedo), MaterialManager::_descAlbedoTextureName},
     {_N(MaterialNormal), MaterialManager::_descNormalTextureName},
     {_N(MaterialRoughness), MaterialManager::_descPbrTextureName},
@@ -40,7 +42,9 @@ MaterialManager::_materialResourceFunctionMapping = {
     {_N(MaterialNormal2), MaterialManager::_descNormal2TextureName},
     {_N(MaterialRoughness1), MaterialManager::_descPbr1TextureName},
     {_N(MaterialRoughness2), MaterialManager::_descPbr2TextureName},
-    {_N(MaterialBlendMask), MaterialManager::_descBlendMaskTextureName}};
+    {_N(MaterialBlendMask), MaterialManager::_descBlendMaskTextureName}
+	*/
+	};
 _INTR_HASH_MAP(Name, uint8_t) MaterialManager::_materialPassMapping;
 _INTR_ARRAY(Dod::Ref) MaterialManager::_materialPassPipelines;
 _INTR_ARRAY(Dod::Ref) MaterialManager::_materialPassPipelineLayouts;
