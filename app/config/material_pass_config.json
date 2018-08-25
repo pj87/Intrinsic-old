@@ -63,10 +63,6 @@
     {
       "name": "ShadowFoliage",
       "resources" : [
-        ["Buffer", "PerInstance", "PerInstance", "Vertex"],
-        ["Buffer", "PerInstance", "PerInstance", "Fragment"],
-        ["Buffer", "PerMaterial", "PerMaterial", "Fragment"],
-        ["Image", "MaterialAlbedo", "albedoTex", "Fragment"]
       ]
     }
   ],
