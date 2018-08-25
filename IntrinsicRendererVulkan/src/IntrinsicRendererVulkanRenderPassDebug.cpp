@@ -118,7 +118,8 @@ void Debug::init()
   RenderPassRefArray renderpassesToCreate;
   PipelineLayoutRefArray pipelineLayoutsToCreate;
   BufferRefArray buffersToCreate;
-
+  
+  /*
   // Pipeline layouts
   {
     _debugLinePipelineLayout =
@@ -133,12 +134,12 @@ void Debug::init()
 
     pipelineLayoutsToCreate.push_back(_debugLinePipelineLayout);
   }
-
   // Render passes
+  */
   {
     _renderPassRef = RenderPassManager::createRenderPass(_N(Debug));
     RenderPassManager::resetToDefault(_renderPassRef);
-
+    /*
     AttachmentDescription albedoAttachment = {Format::kR16G16B16A16Float, 0u};
     AttachmentDescription normalAttachment = {Format::kR16G16B16A16Float, 0u};
     AttachmentDescription parameter0Attachment = {Format::kR16G16B16A16Float,
@@ -154,9 +155,11 @@ void Debug::init()
         .push_back(parameter0Attachment);
     RenderPassManager::_descAttachments(_renderPassRef)
         .push_back(depthStencilAttachment);
+	*/
   }
   renderpassesToCreate.push_back(_renderPassRef);
-
+  
+  /*
   {
     BufferRef& lineVertexBuffer = _debugLineVertexBufferRef;
     lineVertexBuffer = BufferManager::createBuffer(_N(LineDebug));
@@ -173,20 +176,21 @@ void Debug::init()
 
     buffersToCreate.push_back(lineVertexBuffer);
   }
-
   PipelineLayoutManager::createResources(pipelineLayoutsToCreate);
   RenderPassManager::createResources(renderpassesToCreate);
   BufferManager::createResources(buffersToCreate);
-
+  
   // Map line buffer memory
   _mappedLineMemory = (DebugLineVertex*)Resources::BufferManager::getGpuMemory(
       _debugLineVertexBufferRef);
+  */
 }
 
 // <-
 
 void Debug::onReinitRendering()
 {
+  /*
   using namespace Resources;
 
   FramebufferRefArray framebuffersToDestroy;
@@ -292,6 +296,7 @@ void Debug::onReinitRendering()
   framebuffersToCreate.push_back(_framebufferRef);
 
   FramebufferManager::createResources(framebuffersToCreate);
+  */
 }
 
 // <-
