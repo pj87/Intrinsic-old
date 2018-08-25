@@ -49,9 +49,6 @@
     {
       "name": "PerPixelPicking",
       "resources" : [
-        ["Buffer", "PerInstance", "PerInstance", "Vertex"],
-        ["Buffer", "PerInstance", "PerInstance", "Fragment"],
-        ["Buffer", "PerMaterial", "PerMaterial", "Fragment"]
       ]
     },
     {
