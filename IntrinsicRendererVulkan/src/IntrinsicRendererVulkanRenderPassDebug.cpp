@@ -138,8 +138,8 @@ void Debug::init()
   */
   {
     _renderPassRef = RenderPassManager::createRenderPass(_N(Debug));
-    RenderPassManager::resetToDefault(_renderPassRef);
     /*
+    RenderPassManager::resetToDefault(_renderPassRef);
     AttachmentDescription albedoAttachment = {Format::kR16G16B16A16Float, 0u};
     AttachmentDescription normalAttachment = {Format::kR16G16B16A16Float, 0u};
     AttachmentDescription parameter0Attachment = {Format::kR16G16B16A16Float,
@@ -157,9 +157,9 @@ void Debug::init()
         .push_back(depthStencilAttachment);
 	*/
   }
+  /*
   renderpassesToCreate.push_back(_renderPassRef);
   
-  /*
   {
     BufferRef& lineVertexBuffer = _debugLineVertexBufferRef;
     lineVertexBuffer = BufferManager::createBuffer(_N(LineDebug));
