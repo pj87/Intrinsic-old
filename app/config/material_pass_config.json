@@ -13,8 +13,6 @@
     {
       "name": "Debug",
       "resources" : [
-        ["Buffer", "PerInstance", "PerInstance", "Vertex"],
-        ["Buffer", "PerInstance", "PerInstance", "Fragment"]
       ]
     },
     {
