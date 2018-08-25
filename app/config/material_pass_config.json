@@ -137,15 +137,6 @@
       "renderPass" : "GBuffer",
       "blendStates" : ["Default", "Default", "Default"],
       "boundResources" : "GBufferLayered"
-    },
-    {
-      "name" : "PerPixelPicking",
-      "baseVertexGpuProgram" : "per_pixel_picking.vert",
-      "baseFragmentGpuProgram" : "per_pixel_picking.frag",
-      "renderPass" : "PerPixelPicking",
-      "viewportSize" : "PerPixelPicking",
-      "blendStates" : ["Default"],
-      "boundResources" : "PerPixelPicking"
     }
   ]
 }
