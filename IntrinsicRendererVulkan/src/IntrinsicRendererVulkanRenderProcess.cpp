@@ -57,6 +57,7 @@ _renderStepTypeMapping = {
     {"RenderPassGBuffer", RenderStepType::kRenderPassGBuffer},
     {"RenderPassFoliage", RenderStepType::kRenderPassFoliage},
     {"RenderPassSky", RenderStepType::kRenderPassSky},
+    /*
     {"RenderPassDebug", RenderStepType::kRenderPassDebug},
     {"RenderPassGBufferTransparents",
      RenderStepType::kRenderPassGBufferTransparents},
@@ -66,7 +67,9 @@ _renderStepTypeMapping = {
     {"RenderPassVolumetricLighting",
      RenderStepType::kRenderPassVolumetricLighting},
     {"RenderPassBloom", RenderStepType::kRenderPassBloom},
-    {"RenderPassLensFlare", RenderStepType::kRenderPassLensFlare}};
+    {"RenderPassLensFlare", RenderStepType::kRenderPassLensFlare}
+	*/
+	};
 
 struct RenderPassInterface
 {
