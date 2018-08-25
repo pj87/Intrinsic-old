@@ -85,7 +85,7 @@ _renderStepFunctionMapping = {
      {RenderPass::Foliage::render, RenderPass::Foliage::onReinitRendering}},
     {RenderStepType::kRenderPassSky,
      {RenderPass::Sky::render, RenderPass::Sky::onReinitRendering}},
-    {RenderStepType::kRenderPassDebug,
+    /*{RenderStepType::kRenderPassDebug,
      {RenderPass::Debug::render, RenderPass::Debug::onReinitRendering}},
     {RenderStepType::kRenderPassGBufferTransparents,
      {RenderPass::GBufferTransparents::render,
@@ -104,7 +104,9 @@ _renderStepFunctionMapping = {
      {RenderPass::Bloom::render, RenderPass::Bloom::onReinitRendering}},
     {RenderStepType::kRenderPassLensFlare,
      {RenderPass::LensFlare::render,
-      RenderPass::LensFlare::onReinitRendering}}};
+      RenderPass::LensFlare::onReinitRendering}}
+	  */
+	  };
 
 struct RenderStep
 {
