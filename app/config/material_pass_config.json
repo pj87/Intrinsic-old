@@ -25,24 +25,6 @@
       ]
     },
     {
-      "name": "GBufferLayered",
-      "resources" : [
-        ["Buffer", "PerInstance", "PerInstance", "Vertex"],
-        ["Buffer", "PerInstance", "PerInstance", "Fragment"],
-        ["Buffer", "PerMaterial", "PerMaterial", "Fragment"],
-        ["Image", "MaterialAlbedo", "albedoTex0", "Fragment"],
-        ["Image", "MaterialNormal", "normalTex0", "Fragment"],
-        ["Image", "MaterialRoughness", "roughnessTex0", "Fragment"],
-        ["Image", "MaterialAlbedo1", "albedoTex1", "Fragment"],
-        ["Image", "MaterialNormal1", "normalTex1", "Fragment"],
-        ["Image", "MaterialRoughness1", "roughnessTex1", "Fragment"],
-        ["Image", "MaterialAlbedo2", "albedoTex2", "Fragment"],
-        ["Image", "MaterialNormal2", "normalTex2", "Fragment"],
-        ["Image", "MaterialRoughness2", "roughnessTex2", "Fragment"],
-        ["Image", "MaterialBlendMask", "blendMaskTex", "Fragment"]
-      ]
-    },
-    {
       "name": "PerPixelPicking",
       "resources" : [
       ]
@@ -102,9 +84,9 @@
     },
     {
       "name" : "GBufferFoliage",
-      "baseVertexGpuProgram" : "foliage.vert",
-      "baseFragmentGpuProgram" : "foliage.frag",
-      "renderPass" : "GBufferFoliage",
+      "baseVertexGpuProgram" : "gbuffer.vert",
+      "baseFragmentGpuProgram" : "gbuffer.frag",
+      "renderPass" : "GBuffer",
       "blendStates" : ["Default", "Default", "Default"],
       "rasterizationState" : "DoubleSided",
       "boundResources" : "GBuffer"
