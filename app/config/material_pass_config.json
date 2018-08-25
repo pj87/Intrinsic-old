@@ -128,11 +128,11 @@
     },
     {
       "name" : "GBufferLayered",
-      "baseVertexGpuProgram" : "gbuffer_layered.vert",
-      "baseFragmentGpuProgram" : "gbuffer_layered.frag",
+      "baseVertexGpuProgram" : "gbuffer.vert",
+      "baseFragmentGpuProgram" : "gbuffer.frag",
       "renderPass" : "GBuffer",
       "blendStates" : ["Default", "Default", "Default"],
-      "boundResources" : "GBufferLayered"
+      "boundResources" : "GBuffer"
     }
   ]
 }
