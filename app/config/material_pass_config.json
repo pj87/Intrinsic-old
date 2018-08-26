@@ -23,11 +23,6 @@
       "name": "Shadow",
       "resources" : [
       ]
-    },
-    {
-      "name": "ShadowFoliage",
-      "resources" : [
-      ]
     }
   ],
   "materialPasses" : [
@@ -85,10 +80,10 @@
       "name" : "ShadowFoliage",
       "baseVertexGpuProgram" : "shadow_foliage.vert",
       "baseFragmentGpuProgram" : "shadow_foliage.frag",
-      "renderPass" : "Shadow",
+      "renderPass" : "GBuffer",
       "viewportSize": "ShadowMap",
       "rasterizationState" : "DoubleSided",
-      "boundResources" : "ShadowFoliage"
+      "boundResources" : "GBuffer"
     },
     {
       "name" : "GBufferWater",
