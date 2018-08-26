@@ -11,11 +11,6 @@
       ]
     },
     {
-      "name": "Debug",
-      "resources" : [
-      ]
-    },
-    {
       "name": "GBufferSky",
       "resources" : [
         ["Buffer", "PerInstance", "PerInstance", "Vertex"],
@@ -65,17 +60,17 @@
       "name" : "DebugGizmo",
       "baseVertexGpuProgram" : "gizmo.vert",
       "baseFragmentGpuProgram" : "gizmo.frag",
-      "renderPass" : "Debug",
+      "renderPass" : "GBuffer",
       "blendStates" : ["Default", "Default", "Default"],
-      "boundResources" : "Debug"
+      "boundResources" : "GBuffer"
     },
     {
       "name" : "DebugGrid",
       "baseVertexGpuProgram" : "grid.vert",
       "baseFragmentGpuProgram" : "grid.frag",
-      "renderPass" : "Debug",
+      "renderPass" : "GBuffer",
       "blendStates" : ["Default", "Default", "Default"],
-      "boundResources" : "Debug"
+      "boundResources" : "GBuffer"
     },
     {
       "name" : "GBufferFoliage",
