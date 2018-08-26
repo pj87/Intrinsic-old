@@ -577,8 +577,8 @@ void Editing::onReinitRendering()
       Resources::MeshManager::getResourceByName(_N(Plane));
 
   Renderer::Vulkan::Resources::DrawCallRefArray drawCallsToDestroy;
-  if (_drawCallRefGizmo.isValid())
-    drawCallsToDestroy.push_back(_drawCallRefGizmo);
+  //if (_drawCallRefGizmo.isValid())
+  //  drawCallsToDestroy.push_back(_drawCallRefGizmo);
   if (_drawCallRefGrid.isValid())
     drawCallsToDestroy.push_back(_drawCallRefGrid);
 

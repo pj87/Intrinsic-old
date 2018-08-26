@@ -948,19 +948,6 @@ void IntrinsicEd::onDebugGeometryChanged()
   {
     Physics::System::setDebugRenderingFlags(0u);
   }
-
-  if (_ui.actionShow_World_Bounding_Spheres->isChecked())
-  {
-    Intrinsic::Renderer::Vulkan::RenderPass::Debug::_activeDebugStageFlags |=
-        Intrinsic::Renderer::Vulkan::RenderPass::DebugStageFlags::
-            kWorldBoundingSpheres;
-  }
-  else
-  {
-    Intrinsic::Renderer::Vulkan::RenderPass::Debug::_activeDebugStageFlags &=
-        ~Intrinsic::Renderer::Vulkan::RenderPass::DebugStageFlags::
-            kWorldBoundingSpheres;
-  }
 }
 
 int IntrinsicEd::enterMainLoop()
