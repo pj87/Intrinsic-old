@@ -18,11 +18,6 @@
         ["Buffer", "PerMaterial", "PerMaterial", "Fragment"],
         ["Image", "MaterialAlbedo", "albedoTex", "Fragment"]
       ]
-    },
-    {
-      "name": "Shadow",
-      "resources" : [
-      ]
     }
   ],
   "materialPasses" : [
@@ -37,9 +32,9 @@
     {
       "name" : "Shadow",
       "baseVertexGpuProgram" : "shadow.vert",
-      "renderPass" : "Shadow",
+      "renderPass" : "GBuffer",
       "viewportSize": "ShadowMap",
-      "boundResources" : "Shadow"
+      "boundResources" : "GBuffer"
     },
     {
       "name" : "GBufferSky",

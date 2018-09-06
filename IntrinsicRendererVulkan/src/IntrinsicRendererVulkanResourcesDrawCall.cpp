@@ -124,7 +124,7 @@ void DrawCallManager::bindImage(DrawCallRef p_DrawCallRef, const Name& p_Name,
     }
   }
 
-  _INTR_ASSERT(found);
+  //_INTR_ASSERT(found);
 }
 
 // <-
@@ -168,7 +168,7 @@ void DrawCallManager::bindBuffer(DrawCallRef p_DrawCallRef, const Name& p_Name,
     }
   }
 
-  _INTR_ASSERT(found);
+  //_INTR_ASSERT(found);
 }
 
 // <-
