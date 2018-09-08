@@ -82,11 +82,11 @@
     },
     {
       "name" : "GBufferWater",
-      "baseVertexGpuProgram" : "gbuffer_water.vert",
-      "baseFragmentGpuProgram" : "gbuffer_water.frag",
+      "baseVertexGpuProgram" : "gbuffer.vert",
+      "baseFragmentGpuProgram" : "gbuffer.frag",
       "renderPass" : "GBufferTransparents",
       "blendStates" : ["Default", "Default", "Default"],
-      "boundResources" : "GBufferWater"
+      "boundResources" : "GBuffer"
     },
     {
       "name" : "GBufferLayered",
