@@ -158,7 +158,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
     RenderPass::GBufferTransparents::init();
     RenderPass::Sky::init();
     RenderPass::Foliage::init();
-    RenderPass::Shadow::init();
+    //RenderPass::Shadow::init();
   }
 
   {
