@@ -22,6 +22,9 @@ namespace Vulkan
 {
 namespace Helper
 {
+struct lambda
+{
+
 /*_INTR_INLINE*/ void initResource(TBuiltInResource& p_Resource);
 /*
 {
@@ -559,8 +562,7 @@ createDebugLineVertexLayout(Dod::Ref& p_VertexLayoutToInit);
                            p_NewImageLayout, range, p_SrcStages, p_DstStages);
 }
 */
-/*_INTR_INLINE*/ static void
-insertBufferMemoryBarrier(
+/*_INTR_INLINE*/ static void insertBufferMemoryBarrier(
     VkCommandBuffer p_CommandBuffer, VkBuffer p_Buffer, uint32_t p_SizeInBytes,
     uint32_t p_OffsetInBytes, VkAccessFlags p_SrcAccessMask,
     VkAccessFlags p_DstAccessMask,
@@ -789,6 +791,7 @@ mapBlendState(const std::string& p_BlendSate);
   return BlendStates::kDefault;
 }
 */
+};
 }
 }
 }
