@@ -42,13 +42,13 @@ struct GpuProgramData : Dod::Resources::ResourceDataBase
     vkPipelineShaderStageCreateInfo.resize(_INTR_MAX_GPU_PROGRAM_COUNT);
   }
 
-  _INTR_ARRAY(_INTR_STRING) descGpuProgramName;
-  _INTR_ARRAY(_INTR_STRING) descEntryPoint;
-  _INTR_ARRAY(uint8_t) descGpuProgramType;
+  std::vector<std::string> descGpuProgramName;
+  std::vector<std::string> descEntryPoint;
+  std::vector<uint8_t> descGpuProgramType;
 
-  _INTR_ARRAY(SpirvBuffer) spirvBuffer;
-  _INTR_ARRAY(VkShaderModule) vkShaderModule;
-  _INTR_ARRAY(VkPipelineShaderStageCreateInfo) vkPipelineShaderStageCreateInfo;
+  std::vector<SpirvBuffer> spirvBuffer;
+  std::vector<VkShaderModule> vkShaderModule;
+  std::vector<VkPipelineShaderStageCreateInfo> vkPipelineShaderStageCreateInfo;
 };
 
 struct GpuProgramManager
@@ -59,37 +59,41 @@ struct GpuProgramManager
 
   // <-
 
-  _INTR_INLINE static GpuProgramRef createGpuProgram(const Name& p_Name)
+  /*_INTR_INLINE*/ static GpuProgramRef createGpuProgram(const Name& p_Name);
+  /*
   {
     GpuProgramRef ref = Dod::Resources::ResourceManagerBase<
         GpuProgramData, _INTR_MAX_GPU_PROGRAM_COUNT>::_createResource(p_Name);
     return ref;
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void resetToDefault(GpuProgramRef p_Ref)
+  /*_INTR_INLINE*/ static void resetToDefault(GpuProgramRef p_Ref);
+  /*
   {
     _descGpuProgramName(p_Ref) = "";
     _descEntryPoint(p_Ref) = "";
     _descGpuProgramType(p_Ref) = GpuProgramType::kVertex;
     _spirvBuffer(p_Ref).clear();
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void destroyGpuProgram(GpuProgramRef p_Ref)
+  /*_INTR_INLINE*/ static void destroyGpuProgram(GpuProgramRef p_Ref);
+  /*
   {
     Dod::Resources::ResourceManagerBase<
         GpuProgramData, _INTR_MAX_GPU_PROGRAM_COUNT>::_destroyResource(p_Ref);
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void compileDescriptor(GpuProgramRef p_Ref,
-                                             bool p_GenerateDesc,
-                                             rapidjson::Value& p_Properties,
-                                             rapidjson::Document& p_Document)
+  /*_INTR_INLINE*/ static void
+  compileDescriptor(GpuProgramRef p_Ref, bool p_GenerateDesc,
+                    rapidjson::Value& p_Properties,
+                    rapidjson::Document& p_Document);
+  /*
   {
     Dod::Resources::ResourceManagerBase<
         GpuProgramData,
@@ -108,17 +112,19 @@ struct GpuProgramManager
                           _N(string), _descEntryPoint(p_Ref), false, false),
         p_Document.GetAllocator());
     p_Properties.AddMember(
-        "gpuProgramType", _INTR_CREATE_PROP_ENUM(
-                              p_Document, p_GenerateDesc, _N(GpuProgram),
-                              _N(enum), _descGpuProgramType(p_Ref),
-                              "Vertex,Fragment,Geometry,Compute", false, false),
+        "gpuProgramType",
+        _INTR_CREATE_PROP_ENUM(p_Document, p_GenerateDesc, _N(GpuProgram),
+                               _N(enum), _descGpuProgramType(p_Ref),
+                               "Vertex,Fragment,Geometry,Compute", false,
+                               false),
         p_Document.GetAllocator());
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void initFromDescriptor(GpuProgramRef p_Ref,
-                                              rapidjson::Value& p_Properties)
+  /*_INTR_INLINE*/ static void
+  initFromDescriptor(GpuProgramRef p_Ref, rapidjson::Value& p_Properties);
+  /*
   {
     Dod::Resources::ResourceManagerBase<
         GpuProgramData,
@@ -135,11 +141,12 @@ struct GpuProgramManager
           (GpuProgramType::Enum)JsonHelper::readPropertyEnum(
               p_Properties["gpuProgramType"]);
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void saveToMultipleFiles(const char* p_Path,
-                                               const char* p_Extension)
+  /*_INTR_INLINE*/ static void saveToMultipleFiles(const char* p_Path,
+                                                   const char* p_Extension);
+  /*
   {
     Dod::Resources::ResourceManagerBase<GpuProgramData,
                                         _INTR_MAX_GPU_PROGRAM_COUNT>::
@@ -147,11 +154,13 @@ struct GpuProgramManager
             rapidjson::PrettyWriter<rapidjson::FileWriteStream>>(
             p_Path, p_Extension, compileDescriptor);
   }
+  */
 
   // <-
 
-  _INTR_INLINE static void loadFromMultipleFiles(const char* p_Path,
-                                                 const char* p_Extension)
+  /*_INTR_INLINE*/ static void loadFromMultipleFiles(const char* p_Path,
+                                                     const char* p_Extension);
+  /*
   {
     Dod::Resources::ResourceManagerBase<
         GpuProgramData,
@@ -160,7 +169,7 @@ struct GpuProgramManager
                                                              initFromDescriptor,
                                                              resetToDefault);
   }
-
+  */
   // <-
 
   static void compileShaders(GpuProgramRefArray p_Refs);
@@ -169,22 +178,26 @@ struct GpuProgramManager
 
   // <-
 
-  _INTR_INLINE static void createAllResources()
+  /*_INTR_INLINE*/ static void createAllResources();
+  /*
   {
     destroyResources(_activeRefs);
     createResources(_activeRefs);
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void destroyAllGpuResources()
+  /*_INTR_INLINE*/ static void destroyAllGpuResources();
+  /*
   {
     destroyResources(_activeRefs);
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void destroyResources(const GpuProgramRefArray& p_Refs)
+  /*_INTR_INLINE*/ static void
+  destroyResources(const GpuProgramRefArray& p_Refs);
+  /*
   {
     for (uint32_t i = 0u; i < p_Refs.size(); ++i)
     {
@@ -200,7 +213,7 @@ struct GpuProgramManager
       }
     }
   }
-
+  */
   // <-
 
   static void createResources(const GpuProgramRefArray& p_Refs);
@@ -215,36 +228,45 @@ struct GpuProgramManager
   // ->
 
   // Description
-  _INTR_INLINE static _INTR_STRING& _descGpuProgramName(GpuProgramRef p_Ref)
+  /*_INTR_INLINE*/ static std::string& _descGpuProgramName(GpuProgramRef p_Ref);
+  /*
   {
     return _data.descGpuProgramName[p_Ref._id];
   }
-  _INTR_INLINE static _INTR_STRING& _descEntryPoint(GpuProgramRef p_Ref)
+  */
+  /*_INTR_INLINE*/ static std::string& _descEntryPoint(GpuProgramRef p_Ref);
+  /*
   {
     return _data.descEntryPoint[p_Ref._id];
   }
-  _INTR_INLINE static uint8_t& _descGpuProgramType(GpuProgramRef p_Ref)
+  */
+  /*_INTR_INLINE*/ static uint8_t& _descGpuProgramType(GpuProgramRef p_Ref);
+  /*
   {
     return _data.descGpuProgramType[p_Ref._id];
   }
-
+  */
   // Int. resources
-  _INTR_INLINE static SpirvBuffer& _spirvBuffer(GpuProgramRef p_Ref)
+  /*_INTR_INLINE*/ static SpirvBuffer& _spirvBuffer(GpuProgramRef p_Ref);
+  /*
   {
     return _data.spirvBuffer[p_Ref._id];
   }
-
+  */
   // GPU resources
-  _INTR_INLINE static VkShaderModule& _vkShaderModule(GpuProgramRef p_Ref)
+  /*_INTR_INLINE*/ static VkShaderModule& _vkShaderModule(GpuProgramRef p_Ref);
+  /*
   {
     return _data.vkShaderModule[p_Ref._id];
   }
-  _INTR_INLINE static VkPipelineShaderStageCreateInfo&
-  _vkPipelineShaderStageCreateInfo(GpuProgramRef p_Ref)
+  */
+  /*_INTR_INLINE*/ static VkPipelineShaderStageCreateInfo&
+  _vkPipelineShaderStageCreateInfo(GpuProgramRef p_Ref);
+  /*
   {
     return _data.vkPipelineShaderStageCreateInfo[p_Ref._id];
   }
-
+  */
   // <-
 };
 }

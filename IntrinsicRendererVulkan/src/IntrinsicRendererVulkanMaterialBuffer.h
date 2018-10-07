@@ -33,23 +33,27 @@ struct MaterialBuffer
 {
   static void init();
 
-  _INTR_INLINE static uint32_t allocateMaterialBufferEntry()
+  static uint32_t allocateMaterialBufferEntry();
+  /*
   {
     const uint32_t idx = _materialBufferEntries.back();
     _materialBufferEntries.pop_back();
 
     return idx;
   }
-
-  _INTR_INLINE static void freeMaterialBufferEntry(uint32_t p_Index)
+  */
+  static void freeMaterialBufferEntry(uint32_t p_Index);
+  /*
   {
     _materialBufferEntries.push_back(p_Index);
   }
+  */
 
-  _INTR_INLINE static void
+  static void
   updateMaterialBufferEntry(const uint32_t p_Index,
-                            const MaterialBufferEntry& p_MaterialBufferEntry)
-  {
+                            const MaterialBufferEntry& p_MaterialBufferEntry);
+
+/*  {
     using namespace Resources;
 
     // Update staging buffer
@@ -73,11 +77,11 @@ struct MaterialBuffer
 
     RenderSystem::flushTemporaryCommandBuffer();
   }
-
+*/
   static Resources::BufferRef _materialBuffer;
 
 private:
-  static _INTR_ARRAY(uint32_t) _materialBufferEntries;
+  static std::vector<uint32_t> _materialBufferEntries;
   static Resources::BufferRef _materialStagingBuffer;
 };
 }

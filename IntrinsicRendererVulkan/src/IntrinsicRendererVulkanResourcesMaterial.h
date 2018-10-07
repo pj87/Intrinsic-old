@@ -69,7 +69,7 @@ struct BoundResourceEntry
 struct BoundResources
 {
   Name name;
-  _INTR_ARRAY(BoundResourceEntry) boundResourceEntries;
+  std::vector<BoundResourceEntry> boundResourceEntries;
 };
 }
 
@@ -113,33 +113,33 @@ struct MaterialData : Dod::Resources::ResourceDataBase
   }
 
   // Description
-  _INTR_ARRAY(Name) descAlbedoTextureName;
-  _INTR_ARRAY(Name) descAlbedo1TextureName;
-  _INTR_ARRAY(Name) descAlbedo2TextureName;
-  _INTR_ARRAY(Name) descNormalTextureName;
-  _INTR_ARRAY(Name) descNormal1TextureName;
-  _INTR_ARRAY(Name) descNormal2TextureName;
-  _INTR_ARRAY(Name) descPbrTextureName;
-  _INTR_ARRAY(Name) descPbr1TextureName;
-  _INTR_ARRAY(Name) descPbr2TextureName;
+  std::vector<Name> descAlbedoTextureName;
+  std::vector<Name> descAlbedo1TextureName;
+  std::vector<Name> descAlbedo2TextureName;
+  std::vector<Name> descNormalTextureName;
+  std::vector<Name> descNormal1TextureName;
+  std::vector<Name> descNormal2TextureName;
+  std::vector<Name> descPbrTextureName;
+  std::vector<Name> descPbr1TextureName;
+  std::vector<Name> descPbr2TextureName;
 
-  _INTR_ARRAY(Name) descBlendMaskTextureName;
-  _INTR_ARRAY(Name) descFoamTextureName;
-  _INTR_ARRAY(float) descFoamFadeDistance;
-  _INTR_ARRAY(float) descRefractionFactor;
+  std::vector<Name> descBlendMaskTextureName;
+  std::vector<Name> descFoamTextureName;
+  std::vector<float> descFoamFadeDistance;
+  std::vector<float> descRefractionFactor;
 
-  _INTR_ARRAY(float) descTranslucencyThickness;
+  std::vector<float> descTranslucencyThickness;
 
-  _INTR_ARRAY(glm::vec4) descUvOffsetScale;
-  _INTR_ARRAY(glm::vec2) descUvAnimation;
-  _INTR_ARRAY(glm::vec3) descPbrBias;
+  std::vector<glm::vec4> descUvOffsetScale;
+  std::vector<glm::vec2> descUvAnimation;
+  std::vector<glm::vec3> descPbrBias;
 
-  _INTR_ARRAY(uint32_t) descMaterialPassMask;
+  std::vector<uint32_t> descMaterialPassMask;
 
   // Resources
-  _INTR_ARRAY(uint32_t) perMaterialDataVertexOffset;
-  _INTR_ARRAY(uint32_t) perMaterialDataFragmentOffset;
-  _INTR_ARRAY(uint32_t) materialBufferEntryIndex;
+  std::vector<uint32_t> perMaterialDataVertexOffset;
+  std::vector<uint32_t> perMaterialDataFragmentOffset;
+  std::vector<uint32_t> materialBufferEntryIndex;
 };
 
 struct MaterialManager
@@ -148,14 +148,14 @@ struct MaterialManager
 {
   static void init();
 
-  _INTR_INLINE static MaterialRef createMaterial(const Name& p_Name)
+  /*_INTR_INLINE*/ static MaterialRef createMaterial(const Name& p_Name)
   {
     MaterialRef ref = Dod::Resources::ResourceManagerBase<
         MaterialData, _INTR_MAX_MATERIAL_COUNT>::_createResource(p_Name);
     return ref;
   }
 
-  _INTR_INLINE static void resetToDefault(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static void resetToDefault(MaterialRef p_Ref)
   {
     _descAlbedoTextureName(p_Ref) = _N(checkerboard);
     _descAlbedo1TextureName(p_Ref) = _N(checkerboard);
@@ -180,13 +180,13 @@ struct MaterialManager
     _descMaterialPassMask(p_Ref) = 3u; // Shadowed surface
   }
 
-  _INTR_INLINE static void destroyMaterial(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static void destroyMaterial(MaterialRef p_Ref)
   {
     Dod::Resources::ResourceManagerBase<
         MaterialData, _INTR_MAX_MATERIAL_COUNT>::_destroyResource(p_Ref);
   }
 
-  _INTR_INLINE static void compileDescriptor(MaterialRef p_Ref,
+  /*_INTR_INLINE*/ static void compileDescriptor(MaterialRef p_Ref,
                                              bool p_GenerateDesc,
                                              rapidjson::Value& p_Properties,
                                              rapidjson::Document& p_Document)
@@ -329,7 +329,7 @@ struct MaterialManager
 
   // <-
 
-  _INTR_INLINE static void initFromDescriptor(MaterialRef p_Ref,
+  /*_INTR_INLINE*/ static void initFromDescriptor(MaterialRef p_Ref,
                                               rapidjson::Value& p_Properties)
   {
     Dod::Resources::ResourceManagerBase<
@@ -398,7 +398,7 @@ struct MaterialManager
 
   // <-
 
-  _INTR_INLINE static void saveToMultipleFiles(const char* p_Path,
+  /*_INTR_INLINE*/ static void saveToMultipleFiles(const char* p_Path,
                                                const char* p_Extension)
   {
     Dod::Resources::ResourceManagerBase<MaterialData,
@@ -410,7 +410,7 @@ struct MaterialManager
 
   // <-
 
-  _INTR_INLINE static void loadFromMultipleFiles(const char* p_Path,
+  /*_INTR_INLINE*/ static void loadFromMultipleFiles(const char* p_Path,
                                                  const char* p_Extension)
   {
     Dod::Resources::ResourceManagerBase<
@@ -422,7 +422,7 @@ struct MaterialManager
 
   // <-
 
-  _INTR_INLINE static void createAllResources()
+  /*_INTR_INLINE*/ static void createAllResources()
   {
     destroyResources(_activeRefs);
     createResources(_activeRefs);
@@ -431,11 +431,11 @@ struct MaterialManager
   static void createResources(const MaterialRefArray& p_Materials);
   static void destroyResources(const MaterialRefArray& p_Materials);
 
-  _INTR_INLINE static uint8_t getMaterialPassId(const Name& p_Name)
+  /*_INTR_INLINE*/ static uint8_t getMaterialPassId(const Name& p_Name)
   {
     return _materialPassMapping[p_Name];
   }
-  _INTR_INLINE static uint32_t getMaterialPassFlag(const Name& p_Name)
+  /*_INTR_INLINE*/ static uint32_t getMaterialPassFlag(const Name& p_Name)
   {
     return (1u << getMaterialPassId(p_Name));
   }
@@ -446,107 +446,107 @@ struct MaterialManager
   // ->
 
   // Description
-  _INTR_INLINE static Name& _descAlbedoTextureName(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static Name& _descAlbedoTextureName(MaterialRef p_Ref)
   {
     return _data.descAlbedoTextureName[p_Ref._id];
   }
-  _INTR_INLINE static Name& _descNormalTextureName(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static Name& _descNormalTextureName(MaterialRef p_Ref)
   {
     return _data.descNormalTextureName[p_Ref._id];
   }
-  _INTR_INLINE static Name& _descPbrTextureName(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static Name& _descPbrTextureName(MaterialRef p_Ref)
   {
     return _data.descPbrTextureName[p_Ref._id];
   }
-  _INTR_INLINE static Name& _descAlbedo1TextureName(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static Name& _descAlbedo1TextureName(MaterialRef p_Ref)
   {
     return _data.descAlbedo1TextureName[p_Ref._id];
   }
-  _INTR_INLINE static Name& _descNormal1TextureName(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static Name& _descNormal1TextureName(MaterialRef p_Ref)
   {
     return _data.descNormal1TextureName[p_Ref._id];
   }
-  _INTR_INLINE static Name& _descPbr1TextureName(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static Name& _descPbr1TextureName(MaterialRef p_Ref)
   {
     return _data.descPbr1TextureName[p_Ref._id];
   }
-  _INTR_INLINE static Name& _descAlbedo2TextureName(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static Name& _descAlbedo2TextureName(MaterialRef p_Ref)
   {
     return _data.descAlbedo2TextureName[p_Ref._id];
   }
-  _INTR_INLINE static Name& _descNormal2TextureName(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static Name& _descNormal2TextureName(MaterialRef p_Ref)
   {
     return _data.descNormal2TextureName[p_Ref._id];
   }
-  _INTR_INLINE static Name& _descPbr2TextureName(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static Name& _descPbr2TextureName(MaterialRef p_Ref)
   {
     return _data.descPbr2TextureName[p_Ref._id];
   }
 
-  _INTR_INLINE static Name& _descBlendMaskTextureName(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static Name& _descBlendMaskTextureName(MaterialRef p_Ref)
   {
     return _data.descBlendMaskTextureName[p_Ref._id];
   }
-  _INTR_INLINE static Name& _descFoamTextureName(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static Name& _descFoamTextureName(MaterialRef p_Ref)
   {
     return _data.descFoamTextureName[p_Ref._id];
   }
-  _INTR_INLINE static float& _descFoamFadeDistance(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static float& _descFoamFadeDistance(MaterialRef p_Ref)
   {
     return _data.descFoamFadeDistance[p_Ref._id];
   }
-  _INTR_INLINE static float& _descRefractionFactor(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static float& _descRefractionFactor(MaterialRef p_Ref)
   {
     return _data.descRefractionFactor[p_Ref._id];
   }
 
-  _INTR_INLINE static glm::vec4& _descUvOffsetScale(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static glm::vec4& _descUvOffsetScale(MaterialRef p_Ref)
   {
     return _data.descUvOffsetScale[p_Ref._id];
   }
-  _INTR_INLINE static glm::vec2& _descUvAnimation(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static glm::vec2& _descUvAnimation(MaterialRef p_Ref)
   {
     return _data.descUvAnimation[p_Ref._id];
   }
-  _INTR_INLINE static glm::vec3& _descPbrBias(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static glm::vec3& _descPbrBias(MaterialRef p_Ref)
   {
     return _data.descPbrBias[p_Ref._id];
   }
 
-  _INTR_INLINE static float& _descTranslucencyThickness(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static float& _descTranslucencyThickness(MaterialRef p_Ref)
   {
     return _data.descTranslucencyThickness[p_Ref._id];
   }
 
-  _INTR_INLINE static uint32_t& _descMaterialPassMask(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static uint32_t& _descMaterialPassMask(MaterialRef p_Ref)
   {
     return _data.descMaterialPassMask[p_Ref._id];
   }
 
   // Resources
-  _INTR_INLINE static uint32_t& _perMaterialDataVertexOffset(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static uint32_t& _perMaterialDataVertexOffset(MaterialRef p_Ref)
   {
     return _data.perMaterialDataVertexOffset[p_Ref._id];
   }
-  _INTR_INLINE static uint32_t&
+  /*_INTR_INLINE*/ static uint32_t&
   _perMaterialDataFragmentOffset(MaterialRef p_Ref)
   {
     return _data.perMaterialDataFragmentOffset[p_Ref._id];
   }
-  _INTR_INLINE static uint32_t& _materialBufferEntryIndex(MaterialRef p_Ref)
+  /*_INTR_INLINE*/ static uint32_t& _materialBufferEntryIndex(MaterialRef p_Ref)
   {
     return _data.materialBufferEntryIndex[p_Ref._id];
   }
 
   // <-
 
-  static _INTR_ARRAY(MaterialPass::MaterialPass) _materialPasses;
-  static _INTR_ARRAY(Dod::Ref) _materialPassPipelines;
-  static _INTR_ARRAY(Dod::Ref) _materialPassPipelineLayouts;
-  static _INTR_HASH_MAP(Name, uint8_t) _materialPassMapping;
+  static std::vector<MaterialPass::MaterialPass> _materialPasses;
+  static std::vector<Dod::Ref> _materialPassPipelines;
+  static std::vector<Dod::Ref> _materialPassPipelineLayouts;
+  static std::map<Name, uint8_t> _materialPassMapping;
 
-  static _INTR_ARRAY(MaterialPass::BoundResources) _materialPassBoundResources;
-  static _INTR_HASH_MAP(Name, MaterialResourceFunction)
+  static std::vector<MaterialPass::BoundResources> _materialPassBoundResources;
+  static std::map<Name, MaterialResourceFunction>
       _materialResourceFunctionMapping;
 };
 }

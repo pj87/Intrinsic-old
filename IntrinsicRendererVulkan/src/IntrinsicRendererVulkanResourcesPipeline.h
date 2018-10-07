@@ -23,7 +23,7 @@ namespace Vulkan
 namespace Resources
 {
 typedef Dod::Ref PipelineRef;
-typedef _INTR_ARRAY(PipelineRef) PipelineRefArray;
+typedef std::vector<PipelineRef> PipelineRefArray;
 
 struct PipelineData : Dod::Resources::ResourceDataBase
 {
@@ -51,33 +51,33 @@ struct PipelineData : Dod::Resources::ResourceDataBase
   }
 
   // Desc.
-  _INTR_ARRAY(VertexLayoutRef) descVertexLayout;
-  _INTR_ARRAY(PipelineLayoutRef) descPipelineLayout;
-  _INTR_ARRAY(RenderPassRef) descRenderPass;
-  _INTR_ARRAY(GpuProgramRef) descVertexProgram;
-  _INTR_ARRAY(GpuProgramRef) descFragmentProgram;
-  _INTR_ARRAY(GpuProgramRef) descGeometryProgram;
-  _INTR_ARRAY(GpuProgramRef) descComputeProgram;
+  std::vector<VertexLayoutRef> descVertexLayout;
+  std::vector<PipelineLayoutRef> descPipelineLayout;
+  std::vector<RenderPassRef> descRenderPass;
+  std::vector<GpuProgramRef> descVertexProgram;
+  std::vector<GpuProgramRef> descFragmentProgram;
+  std::vector<GpuProgramRef> descGeometryProgram;
+  std::vector<GpuProgramRef> descComputeProgram;
 
-  _INTR_ARRAY(uint8_t) descDepthStencilState;
-  _INTR_ARRAY(uint8_t) descInputAssemblyState;
-  _INTR_ARRAY(uint8_t) descRasterizationState;
-  _INTR_ARRAY(_INTR_ARRAY(uint8_t)) descBlendStates;
+  std::vector<uint8_t> descDepthStencilState;
+  std::vector<uint8_t> descInputAssemblyState;
+  std::vector<uint8_t> descRasterizationState;
+  std::vector<std::vector<uint8_t>> descBlendStates;
 
-  _INTR_ARRAY(uint8_t) descScissorRenderSize;
-  _INTR_ARRAY(uint8_t) descViewportRenderSize;
-  _INTR_ARRAY(glm::uvec2) descAbsoluteScissorDimensions;
-  _INTR_ARRAY(glm::uvec2) descAbsoluteViewportDimensions;
+  std::vector<uint8_t> descScissorRenderSize;
+  std::vector<uint8_t> descViewportRenderSize;
+  std::vector<glm::uvec2> descAbsoluteScissorDimensions;
+  std::vector<glm::uvec2> descAbsoluteViewportDimensions;
 
   // GPU resources
-  _INTR_ARRAY(VkPipeline) vkPipeline;
+  std::vector<VkPipeline> vkPipeline;
 };
 
 struct PipelineManager
     : Dod::Resources::ResourceManagerBase<PipelineData,
                                           _INTR_MAX_PIPELINE_COUNT>
 {
-  _INTR_INLINE static void init()
+  /*_INTR_INLINE*/ static void init()
   {
     _INTR_LOG_INFO("Inititializing Pipeline Manager...");
 
@@ -85,14 +85,14 @@ struct PipelineManager
         PipelineData, _INTR_MAX_PIPELINE_COUNT>::_initResourceManager();
   }
 
-  _INTR_INLINE static PipelineRef createPipeline(const Name& p_Name)
+  /*_INTR_INLINE*/ static PipelineRef createPipeline(const Name& p_Name)
   {
     PipelineRef ref = Dod::Resources::ResourceManagerBase<
         PipelineData, _INTR_MAX_PIPELINE_COUNT>::_createResource(p_Name);
     return ref;
   }
 
-  _INTR_INLINE static void resetToDefault(BufferRef p_Ref)
+  /*_INTR_INLINE*/ static void resetToDefault(BufferRef p_Ref)
   {
     _descVertexLayout(p_Ref) = VertexLayoutRef();
     _descPipelineLayout(p_Ref) = PipelineLayoutRef();
@@ -115,13 +115,13 @@ struct PipelineManager
     _descBlendStates(p_Ref).push_back(BlendStates::kDefault);
   }
 
-  _INTR_INLINE static void destroyPipeline(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static void destroyPipeline(PipelineRef p_Ref)
   {
     Dod::Resources::ResourceManagerBase<
         PipelineData, _INTR_MAX_PIPELINE_COUNT>::_destroyResource(p_Ref);
   }
 
-  _INTR_INLINE static void compileDescriptor(PipelineRef p_Ref,
+  /*_INTR_INLINE*/ static void compileDescriptor(PipelineRef p_Ref,
                                              bool p_GenerateDesc,
                                              rapidjson::Value& p_Properties,
                                              rapidjson::Document& p_Document)
@@ -132,7 +132,7 @@ struct PipelineManager
                                                       p_Properties, p_Document);
   }
 
-  _INTR_INLINE static void initFromDescriptor(PipelineRef p_Ref,
+  /*_INTR_INLINE*/ static void initFromDescriptor(PipelineRef p_Ref,
                                               rapidjson::Value& p_Properties)
   {
     Dod::Resources::ResourceManagerBase<
@@ -140,7 +140,7 @@ struct PipelineManager
         _INTR_MAX_PIPELINE_COUNT>::_initFromDescriptor(p_Ref, p_Properties);
   }
 
-  _INTR_INLINE static void saveToSingleFile(const char* p_FileName)
+  /*_INTR_INLINE*/ static void saveToSingleFile(const char* p_FileName)
   {
     Dod::Resources::ResourceManagerBase<
         PipelineData,
@@ -148,7 +148,7 @@ struct PipelineManager
                                                      compileDescriptor);
   }
 
-  _INTR_INLINE static void loadFromSingleFile(const char* p_FileName)
+  /*_INTR_INLINE*/ static void loadFromSingleFile(const char* p_FileName)
   {
     Dod::Resources::ResourceManagerBase<
         PipelineData,
@@ -159,7 +159,7 @@ struct PipelineManager
 
   // <-
 
-  _INTR_INLINE static void createAllResources()
+  /*_INTR_INLINE*/ static void createAllResources()
   {
     destroyResources(_activeRefs);
     createResources(_activeRefs);
@@ -171,7 +171,7 @@ struct PipelineManager
 
   // <-
 
-  _INTR_INLINE static void destroyResources(const PipelineRefArray& p_Pipelines)
+  /*_INTR_INLINE*/ static void destroyResources(const PipelineRefArray& p_Pipelines)
   {
     for (uint32_t i = 0u; i < p_Pipelines.size(); ++i)
     {
@@ -188,7 +188,7 @@ struct PipelineManager
 
   // <-
 
-  _INTR_INLINE static void
+  /*_INTR_INLINE*/ static void
   destroyPipelinesAndResources(const PipelineRefArray& p_Pipelines)
   {
     destroyResources(p_Pipelines);
@@ -202,72 +202,72 @@ struct PipelineManager
   // Getter/Setter
   // ->
 
-  _INTR_INLINE static VertexLayoutRef& _descVertexLayout(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static VertexLayoutRef& _descVertexLayout(PipelineRef p_Ref)
   {
     return _data.descVertexLayout[p_Ref._id];
   }
-  _INTR_INLINE static PipelineLayoutRef& _descPipelineLayout(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static PipelineLayoutRef& _descPipelineLayout(PipelineRef p_Ref)
   {
     return _data.descPipelineLayout[p_Ref._id];
   }
-  _INTR_INLINE static RenderPassRef& _descRenderPass(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static RenderPassRef& _descRenderPass(PipelineRef p_Ref)
   {
     return _data.descRenderPass[p_Ref._id];
   }
-  _INTR_INLINE static GpuProgramRef& _descVertexProgram(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static GpuProgramRef& _descVertexProgram(PipelineRef p_Ref)
   {
     return _data.descVertexProgram[p_Ref._id];
   }
-  _INTR_INLINE static GpuProgramRef& _descFragmentProgram(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static GpuProgramRef& _descFragmentProgram(PipelineRef p_Ref)
   {
     return _data.descFragmentProgram[p_Ref._id];
   }
-  _INTR_INLINE static GpuProgramRef& _descGeometryProgram(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static GpuProgramRef& _descGeometryProgram(PipelineRef p_Ref)
   {
     return _data.descGeometryProgram[p_Ref._id];
   }
-  _INTR_INLINE static GpuProgramRef& _descComputeProgram(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static GpuProgramRef& _descComputeProgram(PipelineRef p_Ref)
   {
     return _data.descComputeProgram[p_Ref._id];
   }
 
-  _INTR_INLINE static uint8_t& _descDepthStencilState(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static uint8_t& _descDepthStencilState(PipelineRef p_Ref)
   {
     return _data.descDepthStencilState[p_Ref._id];
   }
-  _INTR_INLINE static uint8_t& _descInputAssemblyState(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static uint8_t& _descInputAssemblyState(PipelineRef p_Ref)
   {
     return _data.descInputAssemblyState[p_Ref._id];
   }
-  _INTR_INLINE static uint8_t& _descRasterizationState(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static uint8_t& _descRasterizationState(PipelineRef p_Ref)
   {
     return _data.descRasterizationState[p_Ref._id];
   }
-  _INTR_INLINE static _INTR_ARRAY(uint8_t) & _descBlendStates(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static std::vector<uint8_t> & _descBlendStates(PipelineRef p_Ref)
   {
     return _data.descBlendStates[p_Ref._id];
   }
-  _INTR_INLINE static uint8_t& _descScissorRenderSize(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static uint8_t& _descScissorRenderSize(PipelineRef p_Ref)
   {
     return _data.descScissorRenderSize[p_Ref._id];
   }
-  _INTR_INLINE static uint8_t& _descViewportRenderSize(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static uint8_t& _descViewportRenderSize(PipelineRef p_Ref)
   {
     return _data.descViewportRenderSize[p_Ref._id];
   }
-  _INTR_INLINE static glm::uvec2&
+  /*_INTR_INLINE*/ static glm::uvec2&
   _descAbsoluteScissorDimensions(PipelineRef p_Ref)
   {
     return _data.descAbsoluteScissorDimensions[p_Ref._id];
   }
-  _INTR_INLINE static glm::uvec2&
+  /*_INTR_INLINE*/ static glm::uvec2&
   _descAbsoluteViewportDimensions(PipelineRef p_Ref)
   {
     return _data.descAbsoluteViewportDimensions[p_Ref._id];
   }
 
   // GPU resources
-  _INTR_INLINE static VkPipeline& _vkPipeline(PipelineRef p_Ref)
+  /*_INTR_INLINE*/ static VkPipeline& _vkPipeline(PipelineRef p_Ref)
   {
     return _data.vkPipeline[p_Ref._id];
   }

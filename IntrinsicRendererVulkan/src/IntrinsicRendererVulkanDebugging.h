@@ -38,7 +38,8 @@ struct Debugging
 
 struct GpuMarker
 {
-  GpuMarker(const char* p_Name, VkCommandBuffer p_CommandBuffer)
+  GpuMarker(const char* p_Name, VkCommandBuffer p_CommandBuffer);
+  /*
   {
     static float color[4] = {0.0f, 1.0f, 0.0f, 1.0f};
 
@@ -50,11 +51,14 @@ struct GpuMarker
     if (Debugging::_cmdDebugMarkerInsert)
       Debugging::_cmdDebugMarkerInsert(p_CommandBuffer, &markerInfo);
   }
+  */
 };
 
 struct GpuMarkerRegion
 {
-  GpuMarkerRegion(const char* p_Name, VkCommandBuffer p_CommandBuffer = nullptr)
+  GpuMarkerRegion(const char* p_Name,
+                  VkCommandBuffer p_CommandBuffer = nullptr);
+  /*
   {
     if (p_CommandBuffer == nullptr)
     {
@@ -72,7 +76,7 @@ struct GpuMarkerRegion
       Debugging::_cmdDebugMarkerBegin(p_CommandBuffer, &markerInfo);
     _vkCommandBuffer = p_CommandBuffer;
   }
-
+  */
   ~GpuMarkerRegion()
   {
     if (Debugging::_cmdDebugMarkerEnd)

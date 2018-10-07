@@ -38,7 +38,7 @@ struct Samplers
 
   static void init();
 
-  static _INTR_ARRAY(VkSampler) samplers;
+  static std::vector<VkSampler> samplers;
 };
 }
 }

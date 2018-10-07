@@ -95,7 +95,8 @@
 #define _INTR_STRING_STREAM                                                    \
   std::basic_stringstream<char, std::char_traits<char>,                        \
                           Intrinsic::Core::StlAllocator<char>>
-#define _INTR_ARRAY(a) std::vector<a, Intrinsic::Core::StlAllocator<a>>
+//#define _INTR_ARRAY(a) std::vector<a, Intrinsic::Core::StlAllocator<a>>
+#define _INTR_ARRAY(a) std::vector<a>
 #define _INTR_ARRAY_RES_DECL(a, b, c)                                          \
   std::vector<a, Intrinsic::Core::StlAllocator<a>> b;                          \
   b.reserve(c)

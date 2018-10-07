@@ -25,7 +25,7 @@ struct UniformManager
   static void init();
   static void resetPerInstanceAllocators();
 
-  _INTR_INLINE static uint8_t* allocatePerInstanceDataMemory(uint32_t p_Size,
+  /*_INTR_INLINE*/ static uint8_t* allocatePerInstanceDataMemory(uint32_t p_Size,
                                                              uint32_t& p_Offset)
   {
     const uint32_t bufferIdx =
@@ -53,22 +53,24 @@ struct UniformManager
 
   // <-
 
-  _INTR_INLINE static uint32_t allocatePerMaterialDataMemory()
+  /*_INTR_INLINE*/ static uint32_t allocatePerMaterialDataMemory()
   {
     return _perMaterialAllocator.allocate().memoryOffset;
   }
 
   // <-
 
-  _INTR_INLINE static void freePerMaterialDataMemory(uint32_t p_Offset)
+  /*_INTR_INLINE*/ static void freePerMaterialDataMemory(uint32_t p_Offset);
+  /*
   {
     _perMaterialAllocator.free({nullptr, p_Offset});
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void
-  updatePerMaterialDataMemory(void* p_Data, uint32_t p_Size, uint32_t p_Offset)
+  /*_INTR_INLINE*/ static void
+  updatePerMaterialDataMemory(void* p_Data, uint32_t p_Size, uint32_t p_Offset);
+  /*
   {
     using namespace Resources;
 
@@ -94,7 +96,7 @@ struct UniformManager
 
     RenderSystem::flushTemporaryCommandBuffer();
   }
-
+  */
   // <-
 
   // Static members

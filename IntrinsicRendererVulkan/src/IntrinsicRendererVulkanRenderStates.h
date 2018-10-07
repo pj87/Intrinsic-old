@@ -70,12 +70,12 @@ struct RenderStates
 {
   static void init();
 
-  static _INTR_ARRAY(VkPipelineInputAssemblyStateCreateInfo)
+  static std::vector<VkPipelineInputAssemblyStateCreateInfo>
       inputAssemblyStates;
-  static _INTR_ARRAY(VkPipelineRasterizationStateCreateInfo)
+  static std::vector<VkPipelineRasterizationStateCreateInfo>
       rasterizationStates;
-  static _INTR_ARRAY(VkPipelineDepthStencilStateCreateInfo) depthStencilStates;
-  static _INTR_ARRAY(VkPipelineColorBlendAttachmentState) blendStates;
+  static std::vector<VkPipelineDepthStencilStateCreateInfo> depthStencilStates;
+  static std::vector<VkPipelineColorBlendAttachmentState> blendStates;
 };
 }
 }

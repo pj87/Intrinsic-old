@@ -36,24 +36,27 @@ struct RenderSystem
 
   // <-
 
-  _INTR_INLINE static VkCommandBuffer getPrimaryCommandBuffer()
+  /*_INTR_INLINE */static VkCommandBuffer getPrimaryCommandBuffer();
+  /*
   {
     return _vkCommandBuffers[_backbufferIndex];
-  }
+  }*/
 
   // <-
 
-  _INTR_INLINE static VkCommandBuffer*
-  getSecondaryCommandBuffers(uint32_t p_CommandBufferIdx)
+  /*_INTR_INLINE*/ static VkCommandBuffer*
+  getSecondaryCommandBuffers(uint32_t p_CommandBufferIdx);
+  /*
   {
     return &_vkSecondaryCommandBuffers
         [_backbufferIndex * _INTR_VK_SECONDARY_COMMAND_BUFFER_COUNT +
          p_CommandBufferIdx];
   }
-
+  */
   // <-
 
-  _INTR_INLINE static uint32_t requestSecondaryCommandBuffers(uint32_t p_Count)
+  /*_INTR_INLINE*/ static uint32_t requestSecondaryCommandBuffers(uint32_t p_Count);
+  /*
   {
     _INTR_ASSERT((_allocatedSecondaryCmdBufferCount + p_Count) <
                  _INTR_VK_SECONDARY_COMMAND_BUFFER_COUNT);
@@ -61,10 +64,11 @@ struct RenderSystem
     _allocatedSecondaryCmdBufferCount += p_Count;
     return firstIdx;
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void beginPrimaryCommandBuffer()
+  /*_INTR_INLINE*/ static void beginPrimaryCommandBuffer();
+  /*
   {
     VkCommandBufferBeginInfo cmdBufBeginInfo = {};
     {
@@ -78,13 +82,14 @@ struct RenderSystem
                                            &cmdBufBeginInfo);
     _INTR_VK_CHECK_RESULT(result);
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void
+  /*_INTR_INLINE*/ static void
   beginSecondaryCommandBuffer(uint32_t p_CmdBufferIdx,
                               VkRenderPass p_VkRenderPass,
-                              VkFramebuffer p_VkFramebuffer)
+                              VkFramebuffer p_VkFramebuffer);
+  /*
   {
     VkCommandBufferInheritanceInfo inheritanceInfo = {};
     {
@@ -111,8 +116,10 @@ struct RenderSystem
         &commandBufferBeginInfo);
     _INTR_VK_CHECK_RESULT(result);
   }
+  */
 
-  _INTR_INLINE static void beginSecondaryCommandBuffer(uint32_t p_CmdBufferIdx)
+  /*_INTR_INLINE*/ static void beginSecondaryCommandBuffer(uint32_t p_CmdBufferIdx);
+  /*
   {
     VkCommandBufferBeginInfo commandBufferBeginInfo = {};
     {
@@ -130,18 +137,20 @@ struct RenderSystem
         &commandBufferBeginInfo);
     _INTR_VK_CHECK_RESULT(result);
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void endPrimaryCommandBuffer()
+  /*_INTR_INLINE*/ static void endPrimaryCommandBuffer();
+  /*
   {
     VkResult result = vkEndCommandBuffer(_vkCommandBuffers[_backbufferIndex]);
     _INTR_VK_CHECK_RESULT(result);
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void endSecondaryCommandBuffer(uint32_t p_CmdBufferIdx)
+  /*_INTR_INLINE*/ static void endSecondaryCommandBuffer(uint32_t p_CmdBufferIdx);
+  /*
   {
     VkResult result = vkEndCommandBuffer(
         _vkSecondaryCommandBuffers[_backbufferIndex *
@@ -149,10 +158,11 @@ struct RenderSystem
                                    p_CmdBufferIdx]);
     _INTR_VK_CHECK_RESULT(result);
   }
-
+  */
   // <-
 
-  _INTR_INLINE static VkCommandBuffer beginTemporaryCommandBuffer()
+  /*_INTR_INLINE*/ static VkCommandBuffer beginTemporaryCommandBuffer();
+  /*
   {
     VkCommandBufferBeginInfo cmdBufInfo = {};
     {
@@ -166,10 +176,11 @@ struct RenderSystem
 
     return _vkTempCommandBuffer;
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void flushTemporaryCommandBuffer()
+  /*_INTR_INLINE*/ static void flushTemporaryCommandBuffer();
+  /*
   {
     vkEndCommandBuffer(_vkTempCommandBuffer);
 
@@ -193,7 +204,7 @@ struct RenderSystem
         vkResetFences(RenderSystem::_vkDevice, 1u, &_vkTempCommandBufferFence);
     _INTR_VK_CHECK_RESULT(result);
   }
-
+  */
   // <-
 
   static void dispatchComputeCall(Core::Dod::Ref p_ComputeCall,
@@ -207,25 +218,28 @@ struct RenderSystem
       Core::Dod::Ref p_RenderPass, Core::Dod::Ref p_Framebuffer,
       VkSubpassContents p_SubpassContents = VK_SUBPASS_CONTENTS_INLINE,
       uint32_t p_ClearValueCount = 0u, VkClearValue* p_ClearValues = nullptr);
-  static _INTR_INLINE void endRenderPass(Core::Dod::Ref p_RenderPass)
+  static /*_INTR_INLINE*/ void endRenderPass(Core::Dod::Ref p_RenderPass);
+  /*
   {
     vkCmdEndRenderPass(getPrimaryCommandBuffer());
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void
+  /*_INTR_INLINE*/ static void
   releaseResource(const Intrinsic::Core::Name& p_TypeName, void* p_UserData0,
-                  void* p_UserData1)
+                  void* p_UserData1);
+  /*
   {
     ResourceReleaseEntry entry = {p_TypeName, p_UserData0, p_UserData1, 0u};
     _resourcesToFree.push_back(entry);
   }
-
+  */
   // <-
 
-  _INTR_INLINE static glm::uvec2
-  getAbsoluteRenderSize(RenderSize::Enum p_RenderSize)
+  /*_INTR_INLINE*/ static glm::uvec2
+  getAbsoluteRenderSize(RenderSize::Enum p_RenderSize);
+  /*
   {
     switch (p_RenderSize)
     {
@@ -239,7 +253,7 @@ struct RenderSystem
 
     return glm::uvec2(0u);
   }
-
+  */
   // <-
 
   static VkInstance _vkInstance;
@@ -252,8 +266,8 @@ struct RenderSystem
 
   static VkSurfaceKHR _vkSurface;
   static VkSwapchainKHR _vkSwapchain;
-  static _INTR_ARRAY(VkImage) _vkSwapchainImages;
-  static _INTR_ARRAY(VkImageView) _vkSwapchainImageViews;
+  static std::vector<VkImage> _vkSwapchainImages;
+  static std::vector<VkImageView> _vkSwapchainImageViews;
   static glm::uvec2 _backbufferDimensions;
 
   static VkQueue _vkQueue;
@@ -288,7 +302,8 @@ private:
 
   // <-
 
-  _INTR_INLINE static void insertPrePresentBarrier()
+  /*_INTR_INLINE*/ static void insertPrePresentBarrier();
+  /*
   {
     VkCommandBuffer vkCmdBuffer = getPrimaryCommandBuffer();
 
@@ -314,10 +329,11 @@ private:
                            0, nullptr, 1, &prePresentBarrier);
     }
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void insertPostPresentBarrier()
+  /*_INTR_INLINE*/ static void insertPostPresentBarrier();
+  /*
   {
     VkCommandBuffer vkCmdBuffer = getPrimaryCommandBuffer();
 
@@ -344,10 +360,11 @@ private:
                            0, nullptr, 1, &postPresentBarrier);
     }
   }
-
+  */
   // <-
 
-  _INTR_INLINE static bool waitForFrame(uint32_t p_Idx)
+  /*_INTR_INLINE*/ static bool waitForFrame(uint32_t p_Idx);
+  /*
   {
     if ((_activeBackbufferMask & (1u << p_Idx)) > 0u)
     {
@@ -369,10 +386,11 @@ private:
 
     return false;
   }
-
+  */
   // <-
 
-  _INTR_INLINE static bool waitForAllFrames()
+  /*_INTR_INLINE*/ static bool waitForAllFrames();
+  /*
   {
     bool waited = false;
     for (uint32_t idx = 0u; idx < (uint32_t)_vkSwapchainImages.size(); ++idx)
@@ -380,7 +398,7 @@ private:
       waited = waited || waitForFrame(idx);
     }
   }
-
+  */
   // <-
 
   static void releaseQueuedResources();
@@ -389,21 +407,21 @@ private:
   // <-
 
   static VkCommandPool _vkPrimaryCommandPool;
-  static _INTR_ARRAY(VkCommandPool) _vkSecondaryCommandPools;
+  static std::vector<VkCommandPool> _vkSecondaryCommandPools;
 
-  static _INTR_ARRAY(VkCommandBuffer) _vkCommandBuffers;
-  static _INTR_ARRAY(VkCommandBuffer) _vkSecondaryCommandBuffers;
+  static std::vector<VkCommandBuffer> _vkCommandBuffers;
+  static std::vector<VkCommandBuffer> _vkSecondaryCommandBuffers;
 
   static VkCommandBuffer _vkTempCommandBuffer;
   static VkFence _vkTempCommandBufferFence;
 
   static VkSemaphore _vkImageAcquiredSemaphore;
-  static _INTR_ARRAY(VkFence) _vkDrawFences;
+  static std::vector<VkFence> _vkDrawFences;
 
   // <-
 
   static uint32_t _allocatedSecondaryCmdBufferCount;
-  static _INTR_ARRAY(ResourceReleaseEntry) _resourcesToFree;
+  static std::vector<ResourceReleaseEntry> _resourcesToFree;
 };
 }
 }

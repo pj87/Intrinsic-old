@@ -42,7 +42,7 @@ struct GpuMemoryManager
   allocateOffset(MemoryPoolType::Enum p_MemoryPoolType, uint32_t p_Size,
                  uint32_t p_Alignment, uint32_t p_MemoryTypeFlags);
   // <-
-
+  /*
   _INTR_INLINE static void resetPool(MemoryPoolType::Enum p_MemoryPoolType)
   {
     for (uint32_t pageIdx = 0u; pageIdx < _memoryPools[p_MemoryPoolType].size();
@@ -80,7 +80,7 @@ struct GpuMemoryManager
     }
     return totalSizeInBytes;
   }
-
+  */
 private:
   static _INTR_ARRAY(GpuMemoryPage) _memoryPools[MemoryPoolType::kCount];
 

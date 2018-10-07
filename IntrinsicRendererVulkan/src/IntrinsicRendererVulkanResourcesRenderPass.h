@@ -25,7 +25,7 @@ namespace Resources
 typedef Dod::Ref RenderPassRef;
 typedef Dod::RefArray RenderPassRefArray;
 
-typedef _INTR_ARRAY(AttachmentDescription) AttachmentArray;
+typedef std::vector<AttachmentDescription> AttachmentArray;
 
 struct RenderPassData : Dod::Resources::ResourceDataBase
 {
@@ -38,17 +38,17 @@ struct RenderPassData : Dod::Resources::ResourceDataBase
   }
 
   // Description
-  _INTR_ARRAY(_INTR_ARRAY(AttachmentDescription)) descAttachments;
+  std::vector<std::vector<AttachmentDescription>> descAttachments;
 
   // GPU resources
-  _INTR_ARRAY(VkRenderPass) vkRenderPass;
+  std::vector<VkRenderPass> vkRenderPass;
 };
 
 struct RenderPassManager
     : Dod::Resources::ResourceManagerBase<RenderPassData,
                                           _INTR_MAX_RENDER_PASS_COUNT>
 {
-  _INTR_INLINE static void init()
+  /*_INTR_INLINE*/ static void init()
   {
     _INTR_LOG_INFO("Inititializing Render Pass Manager...");
 
@@ -56,25 +56,25 @@ struct RenderPassManager
         RenderPassData, _INTR_MAX_RENDER_PASS_COUNT>::_initResourceManager();
   }
 
-  _INTR_INLINE static RenderPassRef createRenderPass(const Name& p_Name)
+  /*_INTR_INLINE*/ static RenderPassRef createRenderPass(const Name& p_Name)
   {
     RenderPassRef ref = Dod::Resources::ResourceManagerBase<
         RenderPassData, _INTR_MAX_RENDER_PASS_COUNT>::_createResource(p_Name);
     return ref;
   }
 
-  _INTR_INLINE static void resetToDefault(RenderPassRef p_Ref)
+  /*_INTR_INLINE*/ static void resetToDefault(RenderPassRef p_Ref)
   {
     _descAttachments(p_Ref).clear();
   }
 
-  _INTR_INLINE static void destroyRenderPass(RenderPassRef p_Ref)
+  /*_INTR_INLINE*/ static void destroyRenderPass(RenderPassRef p_Ref)
   {
     Dod::Resources::ResourceManagerBase<
         RenderPassData, _INTR_MAX_RENDER_PASS_COUNT>::_destroyResource(p_Ref);
   }
 
-  _INTR_INLINE static void compileDescriptor(RenderPassRef p_Ref,
+  /*_INTR_INLINE*/ static void compileDescriptor(RenderPassRef p_Ref,
                                              bool p_GenerateDesc,
                                              rapidjson::Value& p_Properties,
                                              rapidjson::Document& p_Document)
@@ -86,7 +86,7 @@ struct RenderPassManager
                                                          p_Document);
   }
 
-  _INTR_INLINE static void initFromDescriptor(RenderPassRef p_Ref,
+  /*_INTR_INLINE*/ static void initFromDescriptor(RenderPassRef p_Ref,
                                               rapidjson::Value& p_Properties)
   {
     Dod::Resources::ResourceManagerBase<
@@ -94,7 +94,7 @@ struct RenderPassManager
         _INTR_MAX_RENDER_PASS_COUNT>::_initFromDescriptor(p_Ref, p_Properties);
   }
 
-  _INTR_INLINE static void saveToSingleFile(const char* p_FileName)
+  /*_INTR_INLINE*/ static void saveToSingleFile(const char* p_FileName)
   {
     Dod::Resources::ResourceManagerBase<
         RenderPassData,
@@ -102,7 +102,7 @@ struct RenderPassManager
                                                         compileDescriptor);
   }
 
-  _INTR_INLINE static void loadFromSingleFile(const char* p_FileName)
+  /*_INTR_INLINE*/ static void loadFromSingleFile(const char* p_FileName)
   {
     Dod::Resources::ResourceManagerBase<
         RenderPassData,
@@ -113,7 +113,7 @@ struct RenderPassManager
 
   // <-
 
-  _INTR_INLINE static void createAllResources()
+  /*_INTR_INLINE*/ static void createAllResources()
   {
     destroyResources(_activeRefs);
     createResources(_activeRefs);
@@ -121,7 +121,7 @@ struct RenderPassManager
 
   static void createResources(const RenderPassRefArray& p_RenderPasses);
 
-  _INTR_INLINE static void
+  /*_INTR_INLINE*/ static void
   destroyResources(const RenderPassRefArray& p_RenderPasses)
   {
     for (uint32_t i = 0u; i < p_RenderPasses.size(); ++i)
@@ -141,14 +141,14 @@ struct RenderPassManager
   // ->
 
   // Description
-  _INTR_INLINE static _INTR_ARRAY(AttachmentDescription) &
+  /*_INTR_INLINE*/ static std::vector<AttachmentDescription> &
       _descAttachments(RenderPassRef p_Ref)
   {
     return _data.descAttachments[p_Ref._id];
   }
 
   // GPU resources
-  _INTR_INLINE static VkRenderPass& _vkRenderPass(RenderPassRef p_Ref)
+  /*_INTR_INLINE*/ static VkRenderPass& _vkRenderPass(RenderPassRef p_Ref)
   {
     return _data.vkRenderPass[p_Ref._id];
   }

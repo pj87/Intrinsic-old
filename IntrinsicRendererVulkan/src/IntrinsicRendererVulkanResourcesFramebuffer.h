@@ -23,8 +23,8 @@ namespace Vulkan
 namespace Resources
 {
 typedef Dod::Ref FramebufferRef;
-typedef _INTR_ARRAY(FramebufferRef) FramebufferRefArray;
-typedef _INTR_ARRAY(AttachmentInfo) AttachmentInfoArray;
+typedef std::vector<FramebufferRef> FramebufferRefArray;
+typedef std::vector<AttachmentInfo> AttachmentInfoArray;
 
 struct FramebufferData : Dod::Resources::ResourceDataBase
 {
@@ -38,50 +38,59 @@ struct FramebufferData : Dod::Resources::ResourceDataBase
     vkFramebuffer.resize(_INTR_MAX_FRAMEBUFFER_COUNT);
   }
 
-  _INTR_ARRAY(Resources::RenderPassRef) descRenderPass;
-  _INTR_ARRAY(AttachmentInfoArray) descAttachedImages;
-  _INTR_ARRAY(glm::uvec2) descDimensions;
+  std::vector<Resources::RenderPassRef> descRenderPass;
+  std::vector<AttachmentInfoArray> descAttachedImages;
+  std::vector<glm::uvec2> descDimensions;
 
   // GPU resources
-  _INTR_ARRAY(VkFramebuffer) vkFramebuffer;
+  std::vector<VkFramebuffer> vkFramebuffer;
 };
 
 struct FramebufferManager
     : Dod::Resources::ResourceManagerBase<FramebufferData,
                                           _INTR_MAX_FRAMEBUFFER_COUNT>
 {
-  _INTR_INLINE static void init()
+  /*_INTR_INLINE*/ static void init();
+  /*
   {
     _INTR_LOG_INFO("Inititializing Framebuffer Manager...");
 
     Dod::Resources::ResourceManagerBase<
         FramebufferData, _INTR_MAX_FRAMEBUFFER_COUNT>::_initResourceManager();
   }
+  */
 
-  _INTR_INLINE static FramebufferRef createFramebuffer(const Name& p_Name)
+  /*_INTR_INLINE*/ static FramebufferRef createFramebuffer(const Name& p_Name);
+  /*
   {
     FramebufferRef ref = Dod::Resources::ResourceManagerBase<
         FramebufferData, _INTR_MAX_FRAMEBUFFER_COUNT>::_createResource(p_Name);
     return ref;
   }
+  */
 
-  _INTR_INLINE static void resetToDefault(FramebufferRef p_Ref)
+  /*_INTR_INLINE*/ static void resetToDefault(FramebufferRef p_Ref);
+  /*
   {
     _descRenderPass(p_Ref) = Resources::RenderPassRef();
     _descAttachedImages(p_Ref).clear();
     _descDimensions(p_Ref) = glm::uvec2(0u, 0u);
   }
+  */
 
-  _INTR_INLINE static void destroyFramebuffer(FramebufferRef p_Ref)
+  /*_INTR_INLINE*/ static void destroyFramebuffer(FramebufferRef p_Ref);
+  /*
   {
     Dod::Resources::ResourceManagerBase<
         FramebufferData, _INTR_MAX_FRAMEBUFFER_COUNT>::_destroyResource(p_Ref);
   }
+  */
 
-  _INTR_INLINE static void compileDescriptor(FramebufferRef p_Ref,
-                                             bool p_GenerateDesc,
-                                             rapidjson::Value& p_Properties,
-                                             rapidjson::Document& p_Document)
+  /*_INTR_INLINE*/ static void
+  compileDescriptor(FramebufferRef p_Ref, bool p_GenerateDesc,
+                    rapidjson::Value& p_Properties,
+                    rapidjson::Document& p_Document);
+  /*
   {
     Dod::Resources::ResourceManagerBase<
         FramebufferData,
@@ -89,24 +98,30 @@ struct FramebufferManager
                                                          p_Properties,
                                                          p_Document);
   }
+  */
 
-  _INTR_INLINE static void initFromDescriptor(FramebufferRef p_Ref,
-                                              rapidjson::Value& p_Properties)
+  /*_INTR_INLINE*/ static void
+  initFromDescriptor(FramebufferRef p_Ref, rapidjson::Value& p_Properties);
+  /*
   {
     Dod::Resources::ResourceManagerBase<
         FramebufferData,
         _INTR_MAX_FRAMEBUFFER_COUNT>::_initFromDescriptor(p_Ref, p_Properties);
   }
+  */
 
-  _INTR_INLINE static void saveToSingleFile(const char* p_FileName)
+  /*_INTR_INLINE*/ static void saveToSingleFile(const char* p_FileName);
+  /*
   {
     Dod::Resources::ResourceManagerBase<
         FramebufferData,
         _INTR_MAX_FRAMEBUFFER_COUNT>::_saveToSingleFile(p_FileName,
                                                         compileDescriptor);
   }
+  */
 
-  _INTR_INLINE static void loadFromSingleFile(const char* p_FileName)
+  /*_INTR_INLINE*/ static void loadFromSingleFile(const char* p_FileName);
+  /*
   {
     Dod::Resources::ResourceManagerBase<
         FramebufferData,
@@ -114,19 +129,21 @@ struct FramebufferManager
                                                           initFromDescriptor,
                                                           resetToDefault);
   }
-
+  */
   // <-
 
-  _INTR_INLINE static void createAllResources()
+  /*_INTR_INLINE*/ static void createAllResources();
+  /*
   {
     destroyResources(_activeRefs);
     createResources(_activeRefs);
   }
-
+  */
   static void createResources(const FramebufferRefArray& p_Framebuffers);
 
-  _INTR_INLINE static void
-  destroyResources(const FramebufferRefArray& p_Framebuffers)
+  /*_INTR_INLINE*/ static void
+  destroyResources(const FramebufferRefArray& p_Framebuffers);
+  /*
   {
     for (uint32_t i = 0u; i < p_Framebuffers.size(); ++i)
     {
@@ -140,9 +157,11 @@ struct FramebufferManager
       }
     }
   }
+  */
 
-  _INTR_INLINE static void
-  destroyFramebuffersAndResources(const FramebufferRefArray& p_Framebuffers)
+  /*_INTR_INLINE*/ static void
+  destroyFramebuffersAndResources(const FramebufferRefArray& p_Framebuffers);
+  /*
   {
     destroyResources(p_Framebuffers);
 
@@ -151,29 +170,37 @@ struct FramebufferManager
       destroyFramebuffer(p_Framebuffers[i]);
     }
   }
+  */
 
   // Getter/Setter
   // ->
-  _INTR_INLINE static Resources::RenderPassRef&
-  _descRenderPass(FramebufferRef p_Ref)
+  /*_INTR_INLINE*/ static Resources::RenderPassRef&
+  _descRenderPass(FramebufferRef p_Ref);
+  /*
   {
     return _data.descRenderPass[p_Ref._id];
   }
-  _INTR_INLINE static AttachmentInfoArray&
-  _descAttachedImages(FramebufferRef p_Ref)
+  */
+  /*_INTR_INLINE*/ static AttachmentInfoArray&
+  _descAttachedImages(FramebufferRef p_Ref);
+  /*
   {
     return _data.descAttachedImages[p_Ref._id];
   }
-  _INTR_INLINE static glm::uvec2& _descDimensions(FramebufferRef p_Ref)
+  */
+  /*_INTR_INLINE*/ static glm::uvec2& _descDimensions(FramebufferRef p_Ref);
+  /*
   {
     return _data.descDimensions[p_Ref._id];
   }
-
+  */
   // GPU resources
-  _INTR_INLINE static VkFramebuffer& _vkFrameBuffer(FramebufferRef p_Ref)
+  /*_INTR_INLINE*/ static VkFramebuffer& _vkFrameBuffer(FramebufferRef p_Ref);
+  /*
   {
     return _data.vkFramebuffer[p_Ref._id];
   }
+  */
 };
 }
 }

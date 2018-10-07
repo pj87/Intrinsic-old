@@ -646,6 +646,8 @@ void createTextureFromFile(ImageRef p_Ref)
   gli::texture tex = gli::load(
       ("media/textures/" + ImageManager::_descFileName(p_Ref)).c_str());
 
+  std::cout << "PJ: load texture " << ImageManager::_descFileName(p_Ref).c_str() << std::endl;
+
   if (tex.target() == gli::target::TARGET_2D)
   {
     createTextureFromFile2D(p_Ref, tex);
@@ -656,7 +658,9 @@ void createTextureFromFile(ImageRef p_Ref)
   }
   else
   {
-    _INTR_ASSERT(false && "Unsupported texture type");
+    std::cout << "PJ: wielka kupa "
+              << ImageManager::_descFileName(p_Ref).c_str() << std::endl;
+    //_INTR_ASSERT(false && "Unsupported texture type");
   }
 }
 }

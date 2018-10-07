@@ -37,18 +37,18 @@ struct PipelineLayoutData : Dod::Resources::ResourceDataBase
     vkDescriptorPool.resize(_INTR_MAX_PIPELINE_LAYOUT_COUNT);
   }
 
-  _INTR_ARRAY(_INTR_ARRAY(BindingDescription)) bindingDescs;
+  std::vector<std::vector<BindingDescription>> bindingDescs;
 
-  _INTR_ARRAY(VkPipelineLayout) vkPipelineLayout;
-  _INTR_ARRAY(VkDescriptorSetLayout) vkDescriptorSetLayout;
-  _INTR_ARRAY(VkDescriptorPool) vkDescriptorPool;
+  std::vector<VkPipelineLayout> vkPipelineLayout;
+  std::vector<VkDescriptorSetLayout> vkDescriptorSetLayout;
+  std::vector<VkDescriptorPool> vkDescriptorPool;
 };
 
 struct PipelineLayoutManager
     : Dod::Resources::ResourceManagerBase<PipelineLayoutData,
                                           _INTR_MAX_PIPELINE_LAYOUT_COUNT>
 {
-  _INTR_INLINE static void init()
+  /*_INTR_INLINE*/ static void init()
   {
     _INTR_LOG_INFO("Inititializing Pipeline Layout Manager...");
 
@@ -57,7 +57,7 @@ struct PipelineLayoutManager
         _INTR_MAX_PIPELINE_LAYOUT_COUNT>::_initResourceManager();
   }
 
-  _INTR_INLINE static PipelineLayoutRef createPipelineLayout(const Name& p_Name)
+  /*_INTR_INLINE*/ static PipelineLayoutRef createPipelineLayout(const Name& p_Name)
   {
     PipelineLayoutRef ref = Dod::Resources::ResourceManagerBase<
         PipelineLayoutData,
@@ -65,19 +65,19 @@ struct PipelineLayoutManager
     return ref;
   }
 
-  _INTR_INLINE static void resetToDefault(BufferRef p_Ref)
+  /*_INTR_INLINE*/ static void resetToDefault(BufferRef p_Ref)
   {
     _descBindingDescs(p_Ref).clear();
   }
 
-  _INTR_INLINE static void destroyPipelineLayout(PipelineLayoutRef p_Ref)
+  /*_INTR_INLINE*/ static void destroyPipelineLayout(PipelineLayoutRef p_Ref)
   {
     Dod::Resources::ResourceManagerBase<
         PipelineLayoutData,
         _INTR_MAX_PIPELINE_LAYOUT_COUNT>::_destroyResource(p_Ref);
   }
 
-  _INTR_INLINE static void compileDescriptor(PipelineLayoutRef p_Ref,
+  /*_INTR_INLINE*/ static void compileDescriptor(PipelineLayoutRef p_Ref,
                                              bool p_GenerateDesc,
                                              rapidjson::Value& p_Properties,
                                              rapidjson::Document& p_Document)
@@ -90,7 +90,7 @@ struct PipelineLayoutManager
                                                              p_Document);
   }
 
-  _INTR_INLINE static void initFromDescriptor(PipelineLayoutRef p_Ref,
+  /*_INTR_INLINE*/ static void initFromDescriptor(PipelineLayoutRef p_Ref,
                                               rapidjson::Value& p_Properties)
   {
     Dod::Resources::ResourceManagerBase<
@@ -99,7 +99,7 @@ struct PipelineLayoutManager
                                                               p_Properties);
   }
 
-  _INTR_INLINE static void saveToSingleFile(const char* p_FileName)
+  /*_INTR_INLINE*/ static void saveToSingleFile(const char* p_FileName)
   {
     Dod::Resources::ResourceManagerBase<
         PipelineLayoutData,
@@ -107,7 +107,7 @@ struct PipelineLayoutManager
                                                             compileDescriptor);
   }
 
-  _INTR_INLINE static void loadFromSingleFile(const char* p_FileName)
+  /*_INTR_INLINE*/ static void loadFromSingleFile(const char* p_FileName)
   {
     Dod::Resources::ResourceManagerBase<PipelineLayoutData,
                                         _INTR_MAX_PIPELINE_LAYOUT_COUNT>::
@@ -116,7 +116,7 @@ struct PipelineLayoutManager
 
   // <-
 
-  _INTR_INLINE static void createAllResources()
+  /*_INTR_INLINE*/ static void createAllResources()
   {
     destroyResources(_activeRefs);
     createResources(_activeRefs);
@@ -127,7 +127,7 @@ struct PipelineLayoutManager
 
   // <-
 
-  _INTR_INLINE static void destroyPipelineLayoutsAndResources(
+  /*_INTR_INLINE*/ static void destroyPipelineLayoutsAndResources(
       const PipelineLayoutRefArray& p_PipelineLayouts)
   {
     destroyResources(p_PipelineLayouts);
@@ -140,28 +140,28 @@ struct PipelineLayoutManager
 
   static VkDescriptorSet
   allocateAndWriteDescriptorSet(PipelineLayoutRef p_Ref,
-                                const _INTR_ARRAY(BindingInfo) & p_BindInfos);
+                                const std::vector<BindingInfo> & p_BindInfos);
 
   // Getter/Setter
   // ->
 
-  _INTR_INLINE static _INTR_ARRAY(BindingDescription) &
+  /*_INTR_INLINE*/ static std::vector<BindingDescription> &
       _descBindingDescs(PipelineLayoutRef p_Ref)
   {
     return _data.bindingDescs[p_Ref._id];
   }
 
-  _INTR_INLINE static VkPipelineLayout&
+  /*_INTR_INLINE*/ static VkPipelineLayout&
   _vkPipelineLayout(PipelineLayoutRef p_Ref)
   {
     return _data.vkPipelineLayout[p_Ref._id];
   }
-  _INTR_INLINE static VkDescriptorSetLayout&
+  /*_INTR_INLINE*/ static VkDescriptorSetLayout&
   _vkDescriptorSetLayout(PipelineLayoutRef p_Ref)
   {
     return _data.vkDescriptorSetLayout[p_Ref._id];
   }
-  _INTR_INLINE static VkDescriptorPool&
+  /*_INTR_INLINE*/ static VkDescriptorPool&
   _vkDescriptorPool(PipelineLayoutRef p_Ref)
   {
     return _data.vkDescriptorPool[p_Ref._id];
