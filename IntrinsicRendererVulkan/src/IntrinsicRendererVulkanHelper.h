@@ -22,7 +22,8 @@ namespace Vulkan
 {
 namespace Helper
 {
-/*_INTR_INLINE*/ void initResource(TBuiltInResource& p_Resource)
+/*_INTR_INLINE*/ void initResource(TBuiltInResource& p_Resource);
+/*
 {
   p_Resource.maxLights = 32;
   p_Resource.maxClipPlanes = 6;
@@ -117,32 +118,34 @@ namespace Helper
   p_Resource.limits.generalVariableIndexing = 1;
   p_Resource.limits.generalConstantMatrixVectorIndexing = 1;
 }
-
+*/
 // <-
 
 /*_INTR_INLINE*/ VkShaderStageFlagBits
-mapGpuProgramTypeToVkShaderStage(GpuProgramType::Enum p_Type)
+mapGpuProgramTypeToVkShaderStage(GpuProgramType::Enum p_Type);
+/*
 {
-  switch (p_Type)
-  {
-  case GpuProgramType::kVertex:
-    return VK_SHADER_STAGE_VERTEX_BIT;
-  case GpuProgramType::kFragment:
-    return VK_SHADER_STAGE_FRAGMENT_BIT;
-  case GpuProgramType::kGeometry:
-    return VK_SHADER_STAGE_GEOMETRY_BIT;
-  case GpuProgramType::kCompute:
-    return VK_SHADER_STAGE_COMPUTE_BIT;
-  }
-
-  _INTR_ASSERT(false && "Failed to map GPU program type");
-  return VK_SHADER_STAGE_VERTEX_BIT;
+switch (p_Type)
+{
+case GpuProgramType::kVertex:
+return VK_SHADER_STAGE_VERTEX_BIT;
+case GpuProgramType::kFragment:
+return VK_SHADER_STAGE_FRAGMENT_BIT;
+case GpuProgramType::kGeometry:
+return VK_SHADER_STAGE_GEOMETRY_BIT;
+case GpuProgramType::kCompute:
+return VK_SHADER_STAGE_COMPUTE_BIT;
 }
 
+_INTR_ASSERT(false && "Failed to map GPU program type");
+return VK_SHADER_STAGE_VERTEX_BIT;
+}
+*/
 // <-
 
 /*_INTR_INLINE*/ EShLanguage
-mapGpuProgramTypeToEshLang(GpuProgramType::Enum p_Type)
+mapGpuProgramTypeToEshLang(GpuProgramType::Enum p_Type);
+/*
 {
   switch (p_Type)
   {
@@ -159,11 +162,12 @@ mapGpuProgramTypeToEshLang(GpuProgramType::Enum p_Type)
   _INTR_ASSERT(false && "Failed to map GPU program type");
   return EShLangVertex;
 }
-
+*/
 // <-
 
 /*_INTR_INLINE*/ VkBufferUsageFlagBits
-mapBufferTypeToVkUsageFlagBits(BufferType::Enum p_BufferType)
+mapBufferTypeToVkUsageFlagBits(BufferType::Enum p_BufferType);
+/*
 {
   switch (p_BufferType)
   {
@@ -181,11 +185,12 @@ mapBufferTypeToVkUsageFlagBits(BufferType::Enum p_BufferType)
   _INTR_ASSERT(false && "Failed to map buffer type");
   return VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 }
-
+*/
 // <-
 
 /*_INTR_INLINE*/ VkDescriptorType
-mapBindingTypeToVkDescriptorType(BindingType::Enum p_BindingType)
+mapBindingTypeToVkDescriptorType(BindingType::Enum p_BindingType);
+/*
 {
   switch (p_BindingType)
   {
@@ -208,10 +213,11 @@ mapBindingTypeToVkDescriptorType(BindingType::Enum p_BindingType)
   _INTR_ASSERT(false && "Failed to map binding type");
   return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 }
-
+*/
 // <-
 
-/*_INTR_INLINE*/ VkFormat mapFormatToVkFormat(Format::Enum p_Format)
+/*_INTR_INLINE*/ VkFormat mapFormatToVkFormat(Format::Enum p_Format);
+/*
 {
   switch (p_Format)
   {
@@ -273,10 +279,11 @@ mapBindingTypeToVkDescriptorType(BindingType::Enum p_BindingType)
   _INTR_ASSERT(false && "Failed to map format");
   return VK_FORMAT_R32G32B32_SFLOAT;
 };
-
+*/
 // <-
 
-/*_INTR_INLINE*/ bool isFormatDepthStencilFormat(Format::Enum p_Format)
+/*_INTR_INLINE*/ bool isFormatDepthStencilFormat(Format::Enum p_Format);
+/*
 {
   switch (p_Format)
   {
@@ -290,8 +297,9 @@ mapBindingTypeToVkDescriptorType(BindingType::Enum p_BindingType)
 
   return false;
 };
-
-/*_INTR_INLINE*/ bool isFormatDepthFormat(Format::Enum p_Format)
+*/
+/*_INTR_INLINE*/ bool isFormatDepthFormat(Format::Enum p_Format);
+/*
 {
   switch (p_Format)
   {
@@ -309,7 +317,7 @@ mapBindingTypeToVkDescriptorType(BindingType::Enum p_BindingType)
 
   return false;
 }
-
+*/
 // <-
 
 /*_INTR_INLINE*/ void
@@ -469,7 +477,8 @@ createDebugLineVertexLayout(Dod::Ref& p_VertexLayoutToInit);
 // <-
 
 /*_INTR_INLINE*/ static void updateAccessMask(VkAccessFlags& p_AccessFlags,
-                                              VkImageLayout p_ImageLayout)
+                                              VkImageLayout p_ImageLayout);
+/*
 {
   if (p_ImageLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
   {
@@ -498,7 +507,7 @@ createDebugLineVertexLayout(Dod::Ref& p_VertexLayoutToInit);
     p_AccessFlags = VK_ACCESS_SHADER_READ_BIT;
   }
 }
-
+*/
 // <-
 
 /*_INTR_INLINE*/ static void insertImageMemoryBarrier(
@@ -536,7 +545,8 @@ createDebugLineVertexLayout(Dod::Ref& p_VertexLayoutToInit);
     VkImageAspectFlags p_AspectMask, VkImageLayout p_OldImageLayout,
     VkImageLayout p_NewImageLayout,
     VkPipelineStageFlags p_SrcStages = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-    VkPipelineStageFlags p_DstStages = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
+    VkPipelineStageFlags p_DstStages = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT);
+/*
 {
   VkImageSubresourceRange range;
   range.aspectMask = p_AspectMask;
@@ -548,8 +558,9 @@ createDebugLineVertexLayout(Dod::Ref& p_VertexLayoutToInit);
   insertImageMemoryBarrier(p_CommandBuffer, p_Image, p_OldImageLayout,
                            p_NewImageLayout, range, p_SrcStages, p_DstStages);
 }
-
-/*_INTR_INLINE*/ static void insertBufferMemoryBarrier(
+*/
+/*_INTR_INLINE*/ static void
+insertBufferMemoryBarrier(
     VkCommandBuffer p_CommandBuffer, VkBuffer p_Buffer, uint32_t p_SizeInBytes,
     uint32_t p_OffsetInBytes, VkAccessFlags p_SrcAccessMask,
     VkAccessFlags p_DstAccessMask,
@@ -577,7 +588,8 @@ createDebugLineVertexLayout(Dod::Ref& p_VertexLayoutToInit);
 // <-
 
 /*_INTR_INLINE*/ static uint32_t
-computeGpuMemoryTypeIdx(uint32_t p_TypeBits, VkFlags p_RequirementsMask)
+computeGpuMemoryTypeIdx(uint32_t p_TypeBits, VkFlags p_RequirementsMask);
+/*
 {
   uint32_t memoryTypeIndex = (uint32_t)-1;
 
@@ -600,7 +612,7 @@ computeGpuMemoryTypeIdx(uint32_t p_TypeBits, VkFlags p_RequirementsMask)
   _INTR_ASSERT(false);
   return (uint32_t)-1;
 }
-
+*/
 // <-
 
 /*_INTR_INLINE*/ static Format::Enum mapFormat(const std::string& p_Format);
@@ -687,8 +699,7 @@ mapGpuProgramType(const std::string& p_GpuProgramType);
 */
 // <-
 
-/*_INTR_INLINE*/ static Samplers::Enum
-mapSampler(const std::string& p_Sampler);
+/*_INTR_INLINE*/ static Samplers::Enum mapSampler(const std::string& p_Sampler);
 /*
 {
   static _INTR_HASH_MAP(Name, Samplers::Enum)
