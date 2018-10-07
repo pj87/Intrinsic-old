@@ -33,7 +33,7 @@ struct Shadow
 
   static void render(float p_DeltaT);
 
-  static _INTR_ARRAY(Dod::Ref) _shadowFrustums;
+  static std::vector<Dod::Ref> _shadowFrustums;
   static glm::uvec2 _shadowMapSize;
 };
 }

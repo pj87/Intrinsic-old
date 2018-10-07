@@ -44,7 +44,7 @@ struct Bloom
 
   // <-
 
-  _INTR_INLINE static uint32_t calculateThreadGroups(uint32_t p_WorkItems,
+  /*_INTR_INLINE*/ static uint32_t calculateThreadGroups(uint32_t p_WorkItems,
                                                      uint32_t p_GroupItems)
   {
     uint32_t groups = p_WorkItems / p_GroupItems;

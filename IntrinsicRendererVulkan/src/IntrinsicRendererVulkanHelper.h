@@ -22,7 +22,7 @@ namespace Vulkan
 {
 namespace Helper
 {
-_INTR_INLINE void initResource(TBuiltInResource& p_Resource)
+/*_INTR_INLINE*/ void initResource(TBuiltInResource& p_Resource)
 {
   p_Resource.maxLights = 32;
   p_Resource.maxClipPlanes = 6;
@@ -120,7 +120,7 @@ _INTR_INLINE void initResource(TBuiltInResource& p_Resource)
 
 // <-
 
-_INTR_INLINE VkShaderStageFlagBits
+/*_INTR_INLINE*/ VkShaderStageFlagBits
 mapGpuProgramTypeToVkShaderStage(GpuProgramType::Enum p_Type)
 {
   switch (p_Type)
@@ -141,7 +141,8 @@ mapGpuProgramTypeToVkShaderStage(GpuProgramType::Enum p_Type)
 
 // <-
 
-_INTR_INLINE EShLanguage mapGpuProgramTypeToEshLang(GpuProgramType::Enum p_Type)
+/*_INTR_INLINE*/ EShLanguage
+mapGpuProgramTypeToEshLang(GpuProgramType::Enum p_Type)
 {
   switch (p_Type)
   {
@@ -161,7 +162,7 @@ _INTR_INLINE EShLanguage mapGpuProgramTypeToEshLang(GpuProgramType::Enum p_Type)
 
 // <-
 
-_INTR_INLINE VkBufferUsageFlagBits
+/*_INTR_INLINE*/ VkBufferUsageFlagBits
 mapBufferTypeToVkUsageFlagBits(BufferType::Enum p_BufferType)
 {
   switch (p_BufferType)
@@ -183,7 +184,7 @@ mapBufferTypeToVkUsageFlagBits(BufferType::Enum p_BufferType)
 
 // <-
 
-_INTR_INLINE VkDescriptorType
+/*_INTR_INLINE*/ VkDescriptorType
 mapBindingTypeToVkDescriptorType(BindingType::Enum p_BindingType)
 {
   switch (p_BindingType)
@@ -210,7 +211,7 @@ mapBindingTypeToVkDescriptorType(BindingType::Enum p_BindingType)
 
 // <-
 
-_INTR_INLINE VkFormat mapFormatToVkFormat(Format::Enum p_Format)
+/*_INTR_INLINE*/ VkFormat mapFormatToVkFormat(Format::Enum p_Format)
 {
   switch (p_Format)
   {
@@ -275,7 +276,7 @@ _INTR_INLINE VkFormat mapFormatToVkFormat(Format::Enum p_Format)
 
 // <-
 
-_INTR_INLINE bool isFormatDepthStencilFormat(Format::Enum p_Format)
+/*_INTR_INLINE*/ bool isFormatDepthStencilFormat(Format::Enum p_Format)
 {
   switch (p_Format)
   {
@@ -290,7 +291,7 @@ _INTR_INLINE bool isFormatDepthStencilFormat(Format::Enum p_Format)
   return false;
 };
 
-_INTR_INLINE bool isFormatDepthFormat(Format::Enum p_Format)
+/*_INTR_INLINE*/ bool isFormatDepthFormat(Format::Enum p_Format)
 {
   switch (p_Format)
   {
@@ -311,7 +312,9 @@ _INTR_INLINE bool isFormatDepthFormat(Format::Enum p_Format)
 
 // <-
 
-_INTR_INLINE void createDefaultMeshVertexLayout(Dod::Ref& p_VertexLayoutToInit)
+/*_INTR_INLINE*/ void
+createDefaultMeshVertexLayout(Dod::Ref& p_VertexLayoutToInit);
+/*
 {
   // Position
   VertexBinding bindPos = {};
@@ -423,10 +426,12 @@ _INTR_INLINE void createDefaultMeshVertexLayout(Dod::Ref& p_VertexLayoutToInit)
   vertexAttributes.push_back(attrTangent);
   vertexAttributes.push_back(attrVtxColor);
 }
-
+*/
 // <-
 
-_INTR_INLINE void createDebugLineVertexLayout(Dod::Ref& p_VertexLayoutToInit)
+/*_INTR_INLINE*/ void
+createDebugLineVertexLayout(Dod::Ref& p_VertexLayoutToInit);
+/*
 {
   VertexBinding bind = {};
   {
@@ -460,11 +465,11 @@ _INTR_INLINE void createDebugLineVertexLayout(Dod::Ref& p_VertexLayoutToInit)
   Resources::VertexLayoutManager::_descVertexAttributes(p_VertexLayoutToInit)
       .push_back(attrVtxColor);
 }
-
+*/
 // <-
 
-_INTR_INLINE static void updateAccessMask(VkAccessFlags& p_AccessFlags,
-                                          VkImageLayout p_ImageLayout)
+/*_INTR_INLINE*/ static void updateAccessMask(VkAccessFlags& p_AccessFlags,
+                                              VkImageLayout p_ImageLayout)
 {
   if (p_ImageLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
   {
@@ -496,12 +501,13 @@ _INTR_INLINE static void updateAccessMask(VkAccessFlags& p_AccessFlags,
 
 // <-
 
-_INTR_INLINE static void insertImageMemoryBarrier(
+/*_INTR_INLINE*/ static void insertImageMemoryBarrier(
     VkCommandBuffer p_CommandBuffer, VkImage p_Image,
     VkImageLayout p_OldImageLayout, VkImageLayout p_NewImageLayout,
     VkImageSubresourceRange p_SubresourceRange,
     VkPipelineStageFlags p_SrcStages = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-    VkPipelineStageFlags p_DestStages = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
+    VkPipelineStageFlags p_DestStages = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT);
+/*
 {
   _INTR_ASSERT(p_CommandBuffer != nullptr);
 
@@ -522,10 +528,10 @@ _INTR_INLINE static void insertImageMemoryBarrier(
   vkCmdPipelineBarrier(p_CommandBuffer, p_SrcStages, p_DestStages, 0u, 0u,
                        nullptr, 0u, nullptr, 1u, &imageMemoryBarrier);
 }
-
+*/
 // <-
 
-_INTR_INLINE static void insertImageMemoryBarrier(
+/*_INTR_INLINE*/ static void insertImageMemoryBarrier(
     VkCommandBuffer p_CommandBuffer, VkImage p_Image,
     VkImageAspectFlags p_AspectMask, VkImageLayout p_OldImageLayout,
     VkImageLayout p_NewImageLayout,
@@ -543,12 +549,13 @@ _INTR_INLINE static void insertImageMemoryBarrier(
                            p_NewImageLayout, range, p_SrcStages, p_DstStages);
 }
 
-_INTR_INLINE static void insertBufferMemoryBarrier(
+/*_INTR_INLINE*/ static void insertBufferMemoryBarrier(
     VkCommandBuffer p_CommandBuffer, VkBuffer p_Buffer, uint32_t p_SizeInBytes,
     uint32_t p_OffsetInBytes, VkAccessFlags p_SrcAccessMask,
     VkAccessFlags p_DstAccessMask,
     VkPipelineStageFlags p_SrcStages = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-    VkPipelineStageFlags p_DstStages = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
+    VkPipelineStageFlags p_DstStages = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT);
+/*
 {
   VkBufferMemoryBarrier bufferMemoryBarrier = {};
   {
@@ -566,11 +573,11 @@ _INTR_INLINE static void insertBufferMemoryBarrier(
   vkCmdPipelineBarrier(p_CommandBuffer, p_SrcStages, p_DstStages, 0u, 0u,
                        nullptr, 1u, &bufferMemoryBarrier, 0u, nullptr);
 }
-
+*/
 // <-
 
-_INTR_INLINE static uint32_t computeGpuMemoryTypeIdx(uint32_t p_TypeBits,
-                                                     VkFlags p_RequirementsMask)
+/*_INTR_INLINE*/ static uint32_t
+computeGpuMemoryTypeIdx(uint32_t p_TypeBits, VkFlags p_RequirementsMask)
 {
   uint32_t memoryTypeIndex = (uint32_t)-1;
 
@@ -596,7 +603,8 @@ _INTR_INLINE static uint32_t computeGpuMemoryTypeIdx(uint32_t p_TypeBits,
 
 // <-
 
-_INTR_INLINE static Format::Enum mapFormat(const _INTR_STRING& p_Format)
+/*_INTR_INLINE*/ static Format::Enum mapFormat(const std::string& p_Format);
+/*
 {
   static _INTR_HASH_MAP(Name, Format::Enum)
       formats = {{"R32G32B32SFloat", Format::kR32G32B32SFloat},
@@ -634,11 +642,12 @@ _INTR_INLINE static Format::Enum mapFormat(const _INTR_STRING& p_Format)
   _INTR_ASSERT(false && "Format not supported/found");
   return Format::kB8G8R8A8UNorm;
 }
-
+*/
 // <-
 
-_INTR_INLINE static RenderSize::Enum
-mapRenderSize(const _INTR_STRING& p_RenderSize)
+/*_INTR_INLINE*/ static RenderSize::Enum
+mapRenderSize(const std::string& p_RenderSize);
+/*
 {
   static _INTR_HASH_MAP(Name, RenderSize::Enum)
       renderSizes = {{"Full", RenderSize::kFull},
@@ -654,11 +663,12 @@ mapRenderSize(const _INTR_STRING& p_RenderSize)
   _INTR_ASSERT(false && "Render size not supported/found");
   return RenderSize::kFull;
 }
-
+*/
 // <-
 
-_INTR_INLINE static GpuProgramType::Enum
-mapGpuProgramType(const _INTR_STRING& p_GpuProgramType)
+/*_INTR_INLINE*/ static GpuProgramType::Enum
+mapGpuProgramType(const std::string& p_GpuProgramType);
+/*
 {
   static _INTR_HASH_MAP(Name, GpuProgramType::Enum)
       gpuProgramTypes = {{"Fragment", GpuProgramType::kFragment},
@@ -674,10 +684,12 @@ mapGpuProgramType(const _INTR_STRING& p_GpuProgramType)
   _INTR_ASSERT(false && "GPU program type not supported/found");
   return GpuProgramType::kVertex;
 }
-
+*/
 // <-
 
-_INTR_INLINE static Samplers::Enum mapSampler(const _INTR_STRING& p_Sampler)
+/*_INTR_INLINE*/ static Samplers::Enum
+mapSampler(const std::string& p_Sampler);
+/*
 {
   static _INTR_HASH_MAP(Name, Samplers::Enum)
       samplers = {{"LinearClamp", Samplers::kLinearClamp},
@@ -695,11 +707,12 @@ _INTR_INLINE static Samplers::Enum mapSampler(const _INTR_STRING& p_Sampler)
   _INTR_ASSERT(false && "GPU program type not supported/found");
   return Samplers::kLinearClamp;
 }
-
+*/
 // <-
 
-_INTR_INLINE static VkImageLayout
-mapImageLayout(const _INTR_STRING& p_ImageLayout)
+/*_INTR_INLINE*/ static VkImageLayout
+mapImageLayout(const std::string& p_ImageLayout);
+/*
 {
   static _INTR_HASH_MAP(Name, VkImageLayout) imageLayouts = {
       {"Undefined", VK_IMAGE_LAYOUT_UNDEFINED},
@@ -722,11 +735,12 @@ mapImageLayout(const _INTR_STRING& p_ImageLayout)
   _INTR_ASSERT(false && "Image layout not supported/found");
   return VK_IMAGE_LAYOUT_GENERAL;
 }
-
+*/
 // <-
 
-_INTR_INLINE static DepthStencilStates::Enum
-mapDepthStencilState(const _INTR_STRING& p_DepthStencilState)
+/*_INTR_INLINE*/ static DepthStencilStates::Enum
+mapDepthStencilState(const std::string& p_DepthStencilState);
+/*
 {
   static _INTR_HASH_MAP(Name, DepthStencilStates::Enum) depthStencilStates = {
       {"Default", DepthStencilStates::kDefault},
@@ -744,11 +758,12 @@ mapDepthStencilState(const _INTR_STRING& p_DepthStencilState)
   _INTR_ASSERT(false && "Depth stencil state not supported/found");
   return DepthStencilStates::kDefault;
 }
-
+*/
 // <-
 
-_INTR_INLINE static BlendStates::Enum
-mapBlendState(const _INTR_STRING& p_BlendSate)
+/*_INTR_INLINE*/ static BlendStates::Enum
+mapBlendState(const std::string& p_BlendSate);
+/*
 {
   static _INTR_HASH_MAP(Name, BlendStates::Enum)
       blendStates = {{"Default", BlendStates::kDefault}};
@@ -762,6 +777,7 @@ mapBlendState(const _INTR_STRING& p_BlendSate)
   _INTR_ASSERT(false && "Blend state not supported/found");
   return BlendStates::kDefault;
 }
+*/
 }
 }
 }

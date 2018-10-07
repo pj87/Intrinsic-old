@@ -42,8 +42,8 @@ struct GpuMemoryManager
   allocateOffset(MemoryPoolType::Enum p_MemoryPoolType, uint32_t p_Size,
                  uint32_t p_Alignment, uint32_t p_MemoryTypeFlags);
   // <-
-  /*
-  _INTR_INLINE static void resetPool(MemoryPoolType::Enum p_MemoryPoolType)
+  
+  /*_INTR_INLINE*/ static void resetPool(MemoryPoolType::Enum p_MemoryPoolType)
   {
     for (uint32_t pageIdx = 0u; pageIdx < _memoryPools[p_MemoryPoolType].size();
          ++pageIdx)
@@ -54,7 +54,7 @@ struct GpuMemoryManager
 
   // <-
 
-  _INTR_INLINE static uint32_t
+  /*_INTR_INLINE*/ static uint32_t
   calcAvailablePoolMemoryInBytes(MemoryPoolType::Enum p_MemoryPoolType)
   {
     uint32_t totalAvailableMemoryInBytes = 0u;
@@ -68,7 +68,7 @@ struct GpuMemoryManager
     return totalAvailableMemoryInBytes;
   }
 
-  _INTR_INLINE static uint32_t
+  /*_INTR_INLINE*/ static uint32_t
   calcPoolSizeInBytes(MemoryPoolType::Enum p_MemoryPoolType)
   {
     uint32_t totalSizeInBytes = 0u;
@@ -80,9 +80,9 @@ struct GpuMemoryManager
     }
     return totalSizeInBytes;
   }
-  */
+  
 private:
-  static _INTR_ARRAY(GpuMemoryPage) _memoryPools[MemoryPoolType::kCount];
+  static std::vector<GpuMemoryPage> _memoryPools[MemoryPoolType::kCount];
 
   static MemoryLocation::Enum
       _memoryPoolToMemoryLocation[MemoryPoolType::kCount];
