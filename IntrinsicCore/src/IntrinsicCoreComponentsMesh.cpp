@@ -317,28 +317,26 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
           continue;
         }
 
-        Renderer::Vulkan::Resources::DrawCallRef drawCallMesh =
-            Renderer::Vulkan::Resources::DrawCallManager::createDrawCallForMesh(
-                _N(_MeshComponent), meshRef, matToUse, matPassIdx,
-                sizeof(MeshPerInstanceDataVertex),
-                sizeof(MeshPerInstanceDataFragment));
+		_INTR_LOG_INFO("%s, Mesh: %d, MeshId: %d, MaterialToUse: %d, Material ID: %d, MaterialPass: %d",
+                       meshName._string.c_str(), meshRef, meshRef._id, matToUse, matToUse._id, matPassIdx);
 
-		_INTR_LOG_INFO("%s, Mesh: %d, MaterialToUse: %d, Material ID: %d, MaterialPass: %d",
-                       meshName._string.c_str(), meshRef, matToUse, matToUse._id, matPassIdx);
-
-		if (meshRef._id == 1)
-		{
-                  /*
+		if (meshRef._id == 26)
+		{         
 			_INTR_LOG_WARNING("Before %s, Mesh: %d, MaterialToUse: %d, Material ID: %d, MaterialPass: %d",
                                  Components::MeshManager::_descMeshName(meshRef)._string.c_str(), meshRef, matToUse, matToUse._id, matPassIdx);
             
-			matToUse._id = 5;
-            matPassIdx = 7;
+			matToUse._id = 1;
 
 			_INTR_LOG_WARNING("After %s, Mesh: %d, MaterialToUse: %d, Material ID: %d, MaterialPass: %d",
-								 Components::MeshManager::_descMeshName(meshRef)._string.c_str(), meshRef, matToUse, matToUse._id, matPassIdx);
-								 */
+								 Components::MeshManager::_descMeshName(meshRef)._string.c_str(), meshRef, matToUse, matToUse._id, matPassIdx);						 
 		}
+
+		Renderer::Vulkan::Resources::DrawCallRef drawCallMesh =
+                    Renderer::Vulkan::Resources::DrawCallManager::
+                        createDrawCallForMesh(
+                            _N(_MeshComponent), meshRef, matToUse, matPassIdx,
+                            sizeof(MeshPerInstanceDataVertex),
+                            sizeof(MeshPerInstanceDataFragment));
 
         Renderer::Vulkan::Resources::DrawCallManager::_descMeshComponent(
             drawCallMesh) = meshCompRef;
