@@ -323,8 +323,22 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
                 sizeof(MeshPerInstanceDataVertex),
                 sizeof(MeshPerInstanceDataFragment));
 
-		_INTR_LOG_INFO("%s, Mesh: %d, MaterialToUse: %d, MaterialPass: %d",
-                       Components::MeshManager::_descMeshName(meshRef)._string.c_str(), meshRef, matToUse, matPassIdx);
+		_INTR_LOG_INFO("%s, Mesh: %d, MaterialToUse: %d, Material ID: %d, MaterialPass: %d",
+                       meshName._string.c_str(), meshRef, matToUse, matToUse._id, matPassIdx);
+
+		if (meshRef._id == 1)
+		{
+                  /*
+			_INTR_LOG_WARNING("Before %s, Mesh: %d, MaterialToUse: %d, Material ID: %d, MaterialPass: %d",
+                                 Components::MeshManager::_descMeshName(meshRef)._string.c_str(), meshRef, matToUse, matToUse._id, matPassIdx);
+            
+			matToUse._id = 5;
+            matPassIdx = 7;
+
+			_INTR_LOG_WARNING("After %s, Mesh: %d, MaterialToUse: %d, Material ID: %d, MaterialPass: %d",
+								 Components::MeshManager::_descMeshName(meshRef)._string.c_str(), meshRef, matToUse, matToUse._id, matPassIdx);
+								 */
+		}
 
         Renderer::Vulkan::Resources::DrawCallManager::_descMeshComponent(
             drawCallMesh) = meshCompRef;
