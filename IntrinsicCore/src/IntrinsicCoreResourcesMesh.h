@@ -309,6 +309,8 @@ struct MeshManager
     {
       _descMaterialNamesPerSubMesh(p_Ref)[subMeshIdx] =
           materialNamesPerSubMesh[subMeshIdx].GetString();
+
+      _INTR_LOG_WARNING("PJ: %s", materialNamesPerSubMesh[subMeshIdx].GetString());
     }
   }
 
