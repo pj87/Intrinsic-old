@@ -303,6 +303,21 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
               Resources::MeshManager::_descMaterialNamesPerSubMesh(
                   meshRef)[subMeshIdx]);
 
+	  _INTR_LOG_INFO("%s, Mesh: %d, MeshId: %d, MaterialToUse: %d, Material ID: %d",
+                       meshName._string.c_str(), meshRef, meshRef._id, matToUse, matToUse._id);
+
+		if (meshRef._id == 26)
+		{         
+			_INTR_LOG_WARNING("Before %s, Mesh: %d, MaterialToUse: %d, Material ID: %d",
+                                 Components::MeshManager::_descMeshName(meshRef)._string.c_str(), meshRef, matToUse, matToUse._id);
+            
+			matToUse._id = 1;
+
+			_INTR_LOG_WARNING("After %s, Mesh: %d, MaterialToUse: %d, Material ID: %d",
+								 Components::MeshManager::_descMeshName(meshRef)._string.c_str(), meshRef, matToUse, matToUse._id);						 
+		}
+
+
       const uint32_t matPassMask =
           Renderer::Vulkan::Resources::MaterialManager::_descMaterialPassMask(
               matToUse);
