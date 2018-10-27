@@ -315,12 +315,12 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
           meshName._string.c_str(), meshRef, meshRef._id, matToUse,
           matToUse._id, str.c_str());
 	  
-		if (meshRef._id == 26)
+		if (meshRef._id == 19 || meshRef._id == 30)
 		{         
 			_INTR_LOG_WARNING("Before %s, Mesh: %d, MaterialToUse: %d, Material ID: %d",
                                  Components::MeshManager::_descMeshName(meshRef)._string.c_str(), meshRef, matToUse, matToUse._id);
             
-			matToUse._id = 1;
+			matToUse._id = 8;
 
 			_INTR_LOG_WARNING("After %s, Mesh: %d, MaterialToUse: %d, Material ID: %d",
 								 Components::MeshManager::_descMeshName(meshRef)._string.c_str(), meshRef, matToUse, matToUse._id);						 
@@ -340,6 +340,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
           continue;
         }
         
+		/*
 		_INTR_LOG_INFO("%s, Mesh: %d, MeshId: %d, MaterialToUse: %d, Material ID: %d, MaterialPass: %d",
                        meshName._string.c_str(), meshRef, meshRef._id, matToUse, matToUse._id, matPassIdx);
 
@@ -353,7 +354,8 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 			_INTR_LOG_WARNING("After %s, Mesh: %d, MaterialToUse: %d, Material ID: %d, MaterialPass: %d",
 								 Components::MeshManager::_descMeshName(meshRef)._string.c_str(), meshRef, matToUse, matToUse._id, matPassIdx);						 
 		}
-		
+		*/
+
 		Renderer::Vulkan::Resources::DrawCallRef drawCallMesh =
                     Renderer::Vulkan::Resources::DrawCallManager::
                         createDrawCallForMesh(
