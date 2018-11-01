@@ -2,7 +2,7 @@
     "name": "PJ_Atlas_01",
     "properties": {
         "name": "PJ_Atlas_01",
-        "materialPassMask": 515,
+        "materialPassMask": 1024,
         "albedoTextureName": "PJ_Atlas_01",
         "uvOffsetScale": [
             0.0,

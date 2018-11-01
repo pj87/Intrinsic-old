@@ -249,6 +249,8 @@ void Default::loadRendererConfig()
       _renderStepFunctionMapping[(RenderStepType::Enum)renderStep.getType()]
           .onReinitRendering();
       _renderSteps.push_back(renderStep);
+
+	  _INTR_LOG_INFO("PJ: renderStep %s", renderStepDesc["type"].GetString());
     }
     else
     {

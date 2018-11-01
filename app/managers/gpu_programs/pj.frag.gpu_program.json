@@ -1,0 +1,9 @@
+{
+    "name": "pj.frag",
+    "properties": {
+        "name": "pj.frag",
+        "gpuProgramName": "pj.frag.glsl",
+        "entryPoint": "main",
+        "gpuProgramType": 1
+    }
+}

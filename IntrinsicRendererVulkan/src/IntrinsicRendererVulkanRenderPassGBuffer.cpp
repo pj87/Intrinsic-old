@@ -207,6 +207,10 @@ void GBuffer::render(float p_DeltaT)
   RenderProcess::Default::_visibleDrawCallsPerMaterialPass
       [0u][MaterialManager::getMaterialPassId(_N(GBufferLayered))]
           .copy(visibleDrawCalls);
+  RenderProcess::Default::_visibleDrawCallsPerMaterialPass
+      [0u][MaterialManager::getMaterialPassId(_N(GBufferPJ))]
+          .copy(visibleDrawCalls);
+
 
   DrawCallManager::sortDrawCallsFrontToBack(visibleDrawCalls);
 

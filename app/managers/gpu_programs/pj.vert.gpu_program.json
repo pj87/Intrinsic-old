@@ -1,0 +1,9 @@
+{
+    "name": "pj.vert",
+    "properties": {
+        "name": "pj.vert",
+        "gpuProgramName": "pj.vert.glsl",
+        "entryPoint": "main",
+        "gpuProgramType": 0
+    }
+}
