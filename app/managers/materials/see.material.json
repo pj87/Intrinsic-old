@@ -2,7 +2,7 @@
     "name": "see",
     "properties": {
         "name": "see",
-        "materialPassMask": 128,
+        "materialPassMask": 1,
         "albedoTextureName": "water",
         "uvOffsetScale": [
             0.0,

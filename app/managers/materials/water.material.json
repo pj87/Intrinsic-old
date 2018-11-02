@@ -2,7 +2,7 @@
     "name": "water",
     "properties": {
         "name": "water",
-        "materialPassMask": 128,
+        "materialPassMask": 1,
         "albedoTextureName": "water",
         "uvOffsetScale": [
             0.0,

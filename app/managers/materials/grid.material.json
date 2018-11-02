@@ -2,7 +2,7 @@
     "name": "grid",
     "properties": {
         "name": "grid",
-        "materialPassMask": 16,
+        "materialPassMask": 1,
         "albedoTextureName": "checkerboard",
         "uvOffsetScale": [
             0.0,

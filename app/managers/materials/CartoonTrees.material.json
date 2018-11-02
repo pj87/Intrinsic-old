@@ -2,7 +2,7 @@
     "name": "CartoonTrees",
     "properties": {
         "name": "CartoonTrees",
-        "materialPassMask": 515,
+        "materialPassMask": 1,
         "albedoTextureName": "checkerboard",
         "uvOffsetScale": [
             0.0,
