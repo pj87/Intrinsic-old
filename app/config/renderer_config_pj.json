@@ -743,88 +743,9 @@
 			"outputs" : [
 				["Output"]
 			]
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "Output",
-			"sourceImageLayout" : "ColorAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "SMAAEdge",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		// SMAA
-		{
-			"type" : "RenderPassGenericFullscreen",
-			"name" : "SMAA_Edge",
-			"fragmentGpuProgram" : "smaa_edge.frag",
-			"vertexGpuProgram" : "smaa_edge.vert",
-			"viewportRenderSize" : "Full",
-			"perInstanceDataBufferName" : "PerInstanceDataSMAA",
-			"perInstanceDataVertexBufferName" : "PerInstanceDataSMAA",
-			"inputs" : [
-				["Image", "Output", "inputTex", "Fragment", "LinearClamp", 2]
-			],
-			"outputs" : [
-				["SMAAEdge", [0.0, 0.0, 0.0, 0.0]]
-			]
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "SMAAEdge",
-			"sourceImageLayout" : "ColorAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "SMAABlend",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		{
-			"type" : "RenderPassGenericFullscreen",
-			"name" : "SMAA_Weight",
-			"fragmentGpuProgram" : "smaa_weight.frag",
-			"vertexGpuProgram" : "smaa_weight.vert",
-			"viewportRenderSize" : "Full",
-			"perInstanceDataBufferName" : "PerInstanceDataSMAA",
-			"perInstanceDataVertexBufferName" : "PerInstanceDataSMAA",
-			"inputs" : [
-				["Image", "SMAAEdge", "inputTex", "Fragment", "LinearClamp"],
-				["Image", "smaa_search", "searchTex", "Fragment", "NearestClamp"],
-				["Image", "smaa_area", "areaTex", "Fragment", "LinearClamp"]
-			],
-			"outputs" : [
-				["SMAABlend", [0.0, 0.0, 0.0, 0.0]]
-			]
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "SMAABlend",
-			"sourceImageLayout" : "ColorAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "RenderPassGenericFullscreen",
-			"name" : "SMAA_Blend",
-			"fragmentGpuProgram" : "smaa_blend.frag",
-			"vertexGpuProgram" : "smaa_blend.vert",
-			"perInstanceDataBufferName" : "PerInstanceDataSMAA",
-			"perInstanceDataVertexBufferName" : "PerInstanceDataSMAA",
-			"viewportRenderSize" : "Full",
-			"inputs" : [
-				["Image", "Output", "inputTex", "Fragment", "LinearClamp", 2],
-				["Image", "SMAABlend", "blendTex", "Fragment", "LinearClamp"]
-			],
-			"outputs" : [
-				["Backbuffer"]
-			]
 		}
 		// <-
-		/*,{
+		,{
 			"type" : "RenderPassGenericFullscreen",
 			"name" : "BlitTest",
 			"fragmentGpuProgram" : "blit.frag",
@@ -835,7 +756,7 @@
 			"outputs" : [
 				["Backbuffer"]
 			]
-		}*/
+		}
 		// <-
 	]
 }
