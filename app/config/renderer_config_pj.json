@@ -189,34 +189,6 @@
 	"renderSteps" : [
 		// Offscreen test
 		{
-			"type" : "SwitchCamera",
-			"cameraName" : "GameCamera"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferAlbedo",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferNormal",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferParameter0",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferDepth",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "DepthStencilAttachment"
-		},
-		{
 			"type" : "RenderPassGenericMesh",
 			"name" : "GBuffer",
 			"materialPasses" : ["GBufferDefault", "GBufferTerrain"],
@@ -261,7 +233,7 @@
 				["Image", "GBufferAlbedo", "inputTex", "Fragment", "NearestClamp"]
 			],
 			"outputs" : [
-				["Scene"]
+				["Output"]
 			]
 		},	
 		{
