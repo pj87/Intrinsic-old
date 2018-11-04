@@ -34,13 +34,6 @@
       ]
     },
     {
-      "name": "Debug",
-      "resources" : [
-        ["Buffer", "PerInstance", "PerInstance", "Vertex"],
-        ["Buffer", "PerInstance", "PerInstance", "Fragment"]
-      ]
-    },
-    {
       "name": "GBufferSky",
       "resources" : [
         ["Buffer", "PerInstance", "PerInstance", "Vertex"],
@@ -92,29 +85,6 @@
         ["Image", "MaterialRoughness2", "pbrTex2", "Fragment"],
         ["Image", "MaterialBlendMask", "blendMaskTex", "Fragment"],
         ["Image", "noise", "noiseTex", "Fragment"]
-      ]
-    },
-    {
-      "name": "PerPixelPicking",
-      "resources" : [
-        ["Buffer", "PerInstance", "PerInstance", "Vertex"],
-        ["Buffer", "PerInstance", "PerInstance", "Fragment"],
-        ["Buffer", "PerMaterial", "PerMaterial", "Fragment"]
-      ]
-    },
-    {
-      "name": "Shadow",
-      "resources" : [
-        ["Buffer", "PerInstance", "PerInstance", "Vertex"]
-      ]
-    },
-    {
-      "name": "ShadowFoliage",
-      "resources" : [
-        ["Buffer", "PerInstance", "PerInstance", "Vertex"],
-        ["Buffer", "PerInstance", "PerInstance", "Fragment"],
-        ["Buffer", "PerMaterial", "PerMaterial", "Fragment"],
-        ["Image", "MaterialAlbedo", "albedoTex", "Fragment"]
       ]
     }
   ],
