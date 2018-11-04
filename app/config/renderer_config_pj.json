@@ -329,30 +329,6 @@
 				["GBufferTransparentsDepth", [1.0]]
 			]
 		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferTransparentsAlbedo",
-			"sourceImageLayout" : "ColorAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferTransparentsNormal",
-			"sourceImageLayout" : "ColorAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferTransparentsParameter0",
-			"sourceImageLayout" : "ColorAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferTransparentsDepth",
-			"sourceImageLayout" : "DepthStencilAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
 		// <-
 		{
 			"type" : "RenderPassPerPixelPicking"
