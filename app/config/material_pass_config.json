@@ -238,24 +238,6 @@
       "viewportSize" : "PerPixelPicking",
       "blendStates" : ["Default"],
       "boundResources" : "PerPixelPicking"
-    },
-    {
-      "name" : "GBufferGrassPrePass",
-      "baseVertexGpuProgram" : "gbuffer_grass.vert",
-      "baseFragmentGpuProgram" : "gbuffer_foliage_prepass.frag",
-      "renderPass" : "GBufferPrePassFoliage",
-      "blendStates" : [],
-      "rasterizationState" : "DoubleSided",
-      "boundResources" : "GBufferFoliage"
-    },
-    {
-      "name" : "GBufferFoliagePrePass",
-      "baseVertexGpuProgram" : "gbuffer_foliage.vert",
-      "baseFragmentGpuProgram" : "gbuffer_foliage_prepass.frag",
-      "renderPass" : "GBufferPrePassFoliage",
-      "blendStates" : [],
-      "rasterizationState" : "DoubleSided",
-      "boundResources" : "GBufferFoliage"
     }
   ]
 }

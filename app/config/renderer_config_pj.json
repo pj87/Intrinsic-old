@@ -201,15 +201,6 @@
 		},
 		{
 			"type" : "RenderPassGenericMesh",
-			"name" : "GBufferPrePassFoliage",
-			"materialPasses" : ["GBufferFoliagePrePass", "GBufferGrassPrePass"],
-			"renderOrder" : "FrontToBack",
-			"outputs" : [
-				["GBufferDepth", [1.0]]
-			]
-		},
-		{
-			"type" : "RenderPassGenericMesh",
 			"name" : "GBuffer",
 			"materialPasses" : ["GBufferDefault", "GBufferTerrain", "GBufferFoliage", "GBufferGrass"],
 			"renderOrder" : "FrontToBack",
@@ -217,7 +208,7 @@
 				["GBufferAlbedo", [0.1, 0.5, 1.0, 1.0]],
 				["GBufferNormal", [0.0, 0.0, 0.0, 0.0]],
 				["GBufferParameter0", [0.0, 0.0, 0.0, 0.0]],
-				["GBufferDepth"]
+				["GBufferDepth", [1.0]]
 			]
 		},
 		{
