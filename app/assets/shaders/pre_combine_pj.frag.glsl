@@ -74,7 +74,7 @@ void main()
   {
     const vec3 normTranspVS =
         decodeNormal(textureLod(normTranspTex, inUV0, 0.0).rg);
-    const float depthTransp = textureLod(depthBufferTranspTex, inUV0, 0.0).r;
+    const float depthTransp = 0.00001 * textureLod(depthBufferTranspTex, inUV0, 0.0).r;
 
     // Fresnel
     const vec3 posVS =
@@ -102,7 +102,7 @@ void main()
     const vec3 lightingTransp =
         textureLod(lightBufferTranspTex, inUV0, 0.0).rgb;
     const vec3 lightingDistored =
-        textureLod(lightBufferTex, distortedUV, 0.0).rgb;
+        0.00001 * textureLod(lightBufferTex, distortedUV, 0.0).rgb;
 
     vec3 opaque = lightingDistored;
     float waterFogDepth = depthDistorted;
@@ -169,7 +169,7 @@ void main()
         vec3(inUV0,
              depthToVolumeZ(depthToVSDepth(fogDepth, uboPerInstance.camParams.x,
                                            uboPerInstance.camParams.y))));
-    fog += textureLod(volLightScatteringBufferTex, volLightingCoord, 0.0);
+    fog += 0.00001 * textureLod(volLightScatteringBufferTex, volLightingCoord, 0.0);
   }
 
   outColor.rgb = outColor.rgb * fog.aaa + fog.rgb;
