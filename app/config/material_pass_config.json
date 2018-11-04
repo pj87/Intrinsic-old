@@ -147,23 +147,6 @@
       "boundResources" : "GBufferSky"
     },
     {
-      "name" : "DebugGizmo",
-      "baseVertexGpuProgram" : "gizmo.vert",
-      "baseFragmentGpuProgram" : "gizmo.frag",
-      "renderPass" : "Debug",
-      "rasterizationState" : "DoubleSided",
-      "blendStates" : ["Default", "Default", "Default"],
-      "boundResources" : "Debug"
-    },
-    {
-      "name" : "DebugGrid",
-      "baseVertexGpuProgram" : "grid.vert",
-      "baseFragmentGpuProgram" : "grid.frag",
-      "renderPass" : "Debug",
-      "blendStates" : ["Default", "Default", "Default"],
-      "boundResources" : "Debug"
-    },
-    {
       "name" : "GBufferFoliage",
       "baseVertexGpuProgram" : "gbuffer_foliage.vert",
       "baseFragmentGpuProgram" : "gbuffer_foliage.frag",
