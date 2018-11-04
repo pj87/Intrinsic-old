@@ -271,30 +271,6 @@
 		},
 		{
 			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferAlbedo",
-			"sourceImageLayout" : "ColorAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferNormal",
-			"sourceImageLayout" : "ColorAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferParameter0",
-			"sourceImageLayout" : "ColorAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferDepth",
-			"sourceImageLayout" : "DepthStencilAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
 			"image" : "GBufferTransparentsAlbedo",
 			"sourceImageLayout" : "Undefined",
 			"targetImageLayout" : "ColorAttachment"
