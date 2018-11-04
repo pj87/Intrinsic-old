@@ -1,0 +1,10 @@
+{
+    "name": "pre_combine_pj.frag",
+    "properties": {
+        "name": "pre_combine_pj.frag",
+        "gpuProgramName": "pre_combine_pj.frag.glsl",
+        "entryPoint": "main",
+        "preprocessorDefines": "",
+        "gpuProgramType": 1
+    }
+}

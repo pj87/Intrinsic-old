@@ -131,7 +131,7 @@
 		{
 			"type" : "RenderPassGenericFullscreen",
 			"name" : "PreCombine",
-			"fragmentGpuProgram" : "pre_combine.frag",
+			"fragmentGpuProgram" : "pre_combine_pj.frag",
 			"viewportRenderSize" : "Full",
 			"perInstanceDataBufferName" : "PerInstanceDataPreCombine",
 			"needsPerFrameBufferFragment" : true,
