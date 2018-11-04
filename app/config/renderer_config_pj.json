@@ -11,77 +11,6 @@
 				"CameraParameters",
 				"PostParams0"
 			]
-		},
-		{
-			"name" : "SSAOTemporalReproj",
-			"entries" : [
-				"InverseViewProjectionMatrix",
-				"InverseProjectionMatrix",
-				"ProjectionMatrix",
-				"PrevViewMatrix"
-			]
-		},
-		{
-			"name" : "PerInstanceDataPostCombine",
-			"entries" : [
-				"HaltonSamples",
-				"CameraParameters",
-				"PostParams0"
-			]
-		},
-		{
-			"name" : "BlurX",
-			"entries" : [
-				"BlurParamsXNormal",
-				"CameraParameters"
-			]
-		},
-		{
-			"name" : "BlurY",
-			"entries" : [
-				"BlurParamsYNormal",
-				"CameraParameters"
-			]
-		},
-		{
-			"name" : "BlurMediumX",
-			"entries" : [
-				"BlurParamsXMedium",
-				"CameraParameters"
-			]
-		},
-		{
-			"name" : "BlurMediumY",
-			"entries" : [
-				"BlurParamsYMedium",
-				"CameraParameters"
-			]
-		},
-		{
-			"name" : "BlurLowX",
-			"entries" : [
-				"BlurParamsXLow",
-				"CameraParameters"
-			]
-		},
-		{
-			"name" : "BlurLowY",
-			"entries" : [
-				"BlurParamsYLow",
-				"CameraParameters"
-			]
-		},
-		{
-			"name" : "PerInstanceDataSSAO",
-			"entries" : [
-				"InverseProjectionMatrix"
-			]
-		},
-		{
-			"name" : "PerInstanceDataSMAA",
-			"entries" : [
-				"BackbufferSize"
-			]
 		}
 	],
 	"images" : [
@@ -131,58 +60,8 @@
 			"imageFormat" : "R16G16B16A16Float"
 		},
 		{
-			"name" : "SceneDownSampled",
-			"renderSize" : "Half",
-			"imageFormat" : "B10G11R11UFloat"
-		},
-		{
-			"name" : "LensFlare",
-			"renderSize" : "Quarter",
-			"imageFormat" : "B10G11R11UFloat"
-		},
-		{
-			"name" : "LensFlarePingPong",
-			"renderSize" : "Quarter",
-			"imageFormat" : "B10G11R11UFloat"
-		},
-		{
-			"name" : "SceneBlurred",
-			"renderSize" : "Half",
-			"imageFormat" : "B10G11R11UFloat"
-		},
-		{
-			"name" : "SceneBlurredPingPong",
-			"renderSize" : "Half",
-			"imageFormat" : "B10G11R11UFloat"
-		},
-		{
 			"name" : "SSAO",
 			"renderSize" : "Half",
-			"imageFormat" : "B8G8R8A8UNorm"
-		},
-		{
-			"name" : "SSAOPingPong",
-			"renderSize" : "Half",
-			"imageFormat" : "B8G8R8A8UNorm"
-		},
-		{
-			"name" : "SSAOPrevFrame",
-			"renderSize" : "Half",
-			"imageFormat" : "B8G8R8A8UNorm"
-		},
-		{
-			"name" : "Output",
-			"renderSize" : "Full",
-			"imageFormat" : "B8G8R8A8Srgb"
-		},
-		{
-			"name" : "SMAAEdge",
-			"renderSize" : "Full",
-			"imageFormat" : "B8G8R8A8UNorm"
-		},
-		{
-			"name" : "SMAABlend",
-			"renderSize" : "Full",
 			"imageFormat" : "B8G8R8A8UNorm"
 		}
 	],
