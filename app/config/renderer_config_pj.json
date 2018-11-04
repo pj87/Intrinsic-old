@@ -248,30 +248,6 @@
 		},
 		{
 			"type" : "ImageMemoryBarrier",
-			"image" : "Scene",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		{
-			"type" : "RenderPassGenericFullscreen",
-			"name" : "CopyOffscreenResult",
-			"fragmentGpuProgram" : "blit.frag",
-			"viewportRenderSize" : "Full",
-			"inputs" : [
-				["Image", "GBufferAlbedo", "inputTex", "Fragment", "NearestClamp"]
-			],
-			"outputs" : [
-				["Scene"]
-			]
-		},	
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "Scene",
-			"sourceImageLayout" : "ColorAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
 			"image" : "GBufferAlbedo",
 			"sourceImageLayout" : "ShaderReadOnly",
 			"targetImageLayout" : "ColorAttachment"
