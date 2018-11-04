@@ -192,42 +192,6 @@
 			"type" : "SwitchCamera",
 			"cameraName" : "GameCamera"
 		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferAlbedo",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferNormal",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferParameter0",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferDepth",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "DepthStencilAttachment"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferAlbedo",
-			"sourceImageLayout" : "ColorAttachment",
-			"targetImageLayout" : "ShaderReadOnly"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferAlbedo",
-			"sourceImageLayout" : "ShaderReadOnly",
-			"targetImageLayout" : "ColorAttachment"
-		},
 		// <-
 		// GBuffer passes
 		// ->
@@ -268,30 +232,6 @@
 		},
 		{
 			"type" : "RenderPassDebug"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferTransparentsAlbedo",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferTransparentsNormal",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferTransparentsParameter0",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "ColorAttachment"
-		},
-		{
-			"type" : "ImageMemoryBarrier",
-			"image" : "GBufferTransparentsDepth",
-			"sourceImageLayout" : "Undefined",
-			"targetImageLayout" : "DepthStencilAttachment"
 		},
 		{
 			"type" : "RenderPassGenericMesh",
