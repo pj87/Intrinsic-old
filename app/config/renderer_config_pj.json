@@ -217,30 +217,6 @@
 			"targetImageLayout" : "DepthStencilAttachment"
 		},
 		{
-			"type" : "RenderPassGenericMesh",
-			"name" : "GBuffer",
-			"materialPasses" : ["GBufferDefault", "GBufferTerrain"],
-			"renderOrder" : "FrontToBack",
-			"outputs" : [
-				["GBufferAlbedo", [0.0, 0.0, 0.0, 1.0]],
-				["GBufferNormal", [0.0, 0.0, 0.0, 0.0]],
-				["GBufferParameter0", [0.0, 0.0, 0.0, 0.0]],
-				["GBufferDepth", [1.0, 0.0, 0.0, 0.0]]
-			]
-		},
-		{
-			"type" : "RenderPassGenericMesh",
-			"name" : "GBufferFoliage",
-			"materialPasses" : ["GBufferFoliage", "GBufferGrass"],
-			"renderOrder" : "FrontToBack",
-			"outputs" : [
-				["GBufferAlbedo"],
-				["GBufferNormal"],
-				["GBufferParameter0"],
-				["GBufferDepth"]
-			]
-		},
-		{
 			"type" : "ImageMemoryBarrier",
 			"image" : "GBufferAlbedo",
 			"sourceImageLayout" : "ColorAttachment",
