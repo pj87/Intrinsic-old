@@ -120,14 +120,6 @@
   ],
   "materialPasses" : [
     {
-      "name" : "GBufferEffect",
-      "baseVertexGpuProgram" : "gbuffer_effect.vert",
-      "baseFragmentGpuProgram" : "gbuffer_effect.frag",
-      "renderPass" : "GBufferTransparents",
-      "blendStates" : ["Default", "Default", "Default"],
-      "boundResources" : "GBufferTransparents"
-    },
-    {
       "name" : "GBufferDefault",
       "baseVertexGpuProgram" : "gbuffer.vert",
       "baseFragmentGpuProgram" : "gbuffer.frag",
@@ -143,13 +135,6 @@
       "blendStates" : ["Default", "Default", "Default"],
       "boundResources" : "GBufferSolid",
       "rasterizationState" : "Wireframe"
-    },
-    {
-      "name" : "Shadow",
-      "baseVertexGpuProgram" : "shadow.vert",
-      "renderPass" : "Shadow",
-      "viewportSize": "ShadowMap",
-      "boundResources" : "Shadow"
     },
     {
       "name" : "GBufferSky",
@@ -197,24 +182,6 @@
       "boundResources" : "GBufferFoliage"
     },
     {
-      "name" : "ShadowFoliage",
-      "baseVertexGpuProgram" : "shadow_foliage.vert",
-      "baseFragmentGpuProgram" : "shadow_foliage.frag",
-      "renderPass" : "Shadow",
-      "viewportSize": "ShadowMap",
-      "rasterizationState" : "DoubleSided",
-      "boundResources" : "ShadowFoliage"
-    },
-    {
-      "name" : "ShadowGrass",
-      "baseVertexGpuProgram" : "shadow_grass.vert",
-      "baseFragmentGpuProgram" : "shadow_foliage.frag",
-      "renderPass" : "Shadow",
-      "viewportSize": "ShadowMap",
-      "rasterizationState" : "DoubleSided",
-      "boundResources" : "ShadowFoliage"
-    },
-    {
       "name" : "GBufferWater",
       "baseVertexGpuProgram" : "gbuffer_water.vert",
       "baseFragmentGpuProgram" : "gbuffer_water.frag",
@@ -229,15 +196,6 @@
       "renderPass" : "GBuffer",
       "blendStates" : ["Default", "Default", "Default"],
       "boundResources" : "GBufferTerrain"
-    },
-    {
-      "name" : "PerPixelPicking",
-      "baseVertexGpuProgram" : "per_pixel_picking.vert",
-      "baseFragmentGpuProgram" : "per_pixel_picking.frag",
-      "renderPass" : "PerPixelPicking",
-      "viewportSize" : "PerPixelPicking",
-      "blendStates" : ["Default"],
-      "boundResources" : "PerPixelPicking"
     }
   ]
 }
