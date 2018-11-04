@@ -1,0 +1,95 @@
+{
+	"name" : "Default",
+	"uniformBuffers" : [
+		{
+			"name" : "PerInstanceDataPreCombine",
+			"entries" : [
+				"InverseViewMatrix",
+				"InverseProjectionMatrix",
+				"InverseViewProjectionMatrix",
+				"CameraWorldPosition",
+				"CameraParameters",
+				"PostParams0"
+			]
+		}
+	],
+	"images" : [
+		{
+			"name" : "GBufferDepth",
+			"renderSize" : "Full",
+			"imageFormat" : "Depth"
+		},
+		{
+			"name" : "GBufferAlbedo",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferNormal",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferParameter0",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferTransparentsAlbedo",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferTransparentsNormal",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferTransparentsParameter0",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferTransparentsDepth",
+			"renderSize" : "Full",
+			"imageFormat" : "Depth"
+		},
+		{
+			"name" : "Scene",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "SSAO",
+			"renderSize" : "Half",
+			"imageFormat" : "B8G8R8A8UNorm"
+		}
+	],
+	"renderSteps" : [
+		// Offscreen test
+		{
+			"type" : "SwitchCamera",
+			"cameraName" : "GameCamera"
+		},
+		// <-
+		// GBuffer passes
+		// ->
+		{
+			"type" : "SwitchCamera",
+			"cameraName" : "ActiveCamera"
+		},
+		{
+			"type" : "RenderPassGenericMesh",
+			"name" : "GBuffer",
+			"materialPasses" : ["GBufferDefault", "GBufferTerrain", "GBufferFoliage", "GBufferGrass"],
+			"renderOrder" : "FrontToBack",
+			"outputs" : [
+				//["GBufferDepth", [1.0]],
+				["GBufferAlbedo", [0.1, 0.5, 1.0, 1.0]], 
+				//["GBufferNormal", [0.0, 0.0, 0.0, 0.0]],
+				//["GBufferParameter0", [0.0, 0.0, 0.0, 0.0]],
+				["Backbuffer"]
+			]
+		}
+	]
+}
