@@ -237,9 +237,6 @@
 			]
 		},
 		// <-
-		{
-			"type" : "RenderPassPerPixelPicking"
-		},
 		// Lighting passes
 		// ->
 		{
@@ -248,9 +245,6 @@
 		// <-
 		{
 			"type" : "RenderPassClustering"
-		},
-		{
-			"type" : "RenderPassVolumetricLighting"
 		},
 		// <-
 		// Post processing
