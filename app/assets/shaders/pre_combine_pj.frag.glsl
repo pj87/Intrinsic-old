@@ -68,7 +68,7 @@ void main()
   const uint matBufferEntryIdx = uint(param0.y);
   const MaterialParameters matParams = materialParameters[matBufferEntryIdx];
 
-  const vec3 lighting = textureLod(lightBufferTex, inUV0, 0.0).rgb;
+  const vec3 lighting = textureLod(albedoTex, inUV0, 0.0).rgb + 0.00001 * textureLod(lightBufferTex, inUV0, 0.0).rgb;
 
   if (albedoTransparents.a > EPSILON)
   {
