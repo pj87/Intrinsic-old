@@ -59,80 +59,11 @@ void main()
 {
   outColor = vec4(0.0, 0.0, 0.0, 1.0);
 
-  const float opaqueDepth = textureLod(depthBufferTex, inUV0, 0.0).r;
-  float fogDepth = opaqueDepth.r;
-
   vec4 albedoTransparents = textureLod(albedoTranspTex, inUV0, 0.0).rgba;
-
-  const vec4 param0 = textureLod(param0Tex, inUV0, 0.0).rgba;
-  const uint matBufferEntryIdx = uint(param0.y);
-  const MaterialParameters matParams = materialParameters[matBufferEntryIdx];
-
-  const vec3 lighting = textureLod(albedoTex, inUV0, 0.0).rgb + 0.00001 * textureLod(lightBufferTex, inUV0, 0.0).rgb;
 
   if (albedoTransparents.a > EPSILON)
   {
-    const vec3 normTranspVS =
-        decodeNormal(textureLod(normTranspTex, inUV0, 0.0).rg);
-    const float depthTransp = 0.00001 * textureLod(depthBufferTranspTex, inUV0, 0.0).r;
-
-    // Fresnel
-    const vec3 posVS =
-        unproject(inUV0, depthTransp, uboPerInstance.invProjMatrix);
-    const vec3 V = -normalize(posVS);
-    const float F =
-        F_Schlick(albedoTransparents.a, clamp(dot(V, normTranspVS), 0.0, 1.0));
-
-    const vec4 param0Transp = textureLod(param0TranspTex, inUV0, 0.0).rgba;
-    const uint matBufferEntryIdxTransp = uint(param0Transp.y);
-    const MaterialParameters matParamsTransp =
-        materialParameters[matBufferEntryIdxTransp];
-
-    fogDepth = min(fogDepth, depthTransp.r);
-    const float depthLinTransp = linearizeDepth(
-        depthTransp, uboPerInstance.camParams.x, uboPerInstance.camParams.y);
-
-    // Refraction
-    const float distStrength =
-        albedoTransparents.a * matParamsTransp.refractionFactor;
-
-    const vec2 distortedUV =
-        inUV0 + normTranspVS.xy * (distStrength / -depthLinTransp);
-    const float depthDistorted = textureLod(depthBufferTex, distortedUV, 0.0).r;
-    const vec3 lightingTransp =
-        textureLod(lightBufferTranspTex, inUV0, 0.0).rgb;
-    const vec3 lightingDistored =
-        0.00001 * textureLod(lightBufferTex, distortedUV, 0.0).rgb;
-
-    vec3 opaque = lightingDistored;
-    float waterFogDepth = depthDistorted;
-
-    // Only apply refraction if the opaque object is actually behind the transp.
-    // surface
-    if (depthDistorted.r < depthTransp.r)
-    {
-      opaque = lighting;
-      waterFogDepth = opaqueDepth;
-    }
-
-    // Water fog
-    const vec3 normTranspWS =
-        (uboPerInstance.invViewMatrix * vec4(normTranspVS.xyz, 0.0)).xyz;
-    const vec3 fogIrrad =
-        sampleSH(uboPerFrame.skyLightSH, normTranspWS) / MATH_PI;
-
-    const float linDepthOpaque = linearizeDepth(
-        waterFogDepth, uboPerInstance.camParams.x, uboPerInstance.camParams.y);
-    const float linDepthTransp = linearizeDepth(
-        depthTransp, uboPerInstance.camParams.x, uboPerInstance.camParams.y);
-
-    const float waterFog =
-        1.0 - exp(-(linDepthOpaque - linDepthTransp) * waterFogDensity);
-    const vec4 waterFogColor =
-        mix(waterFogColor0, waterFogColor1, F * 0.5 + 0.5);
-
-    opaque.rgb = mix(opaque.rgb, fogIrrad * waterFogColor.rgb, waterFog);
-    outColor.rgb = mix(opaque, lightingTransp, albedoTransparents.a);
+	outColor.rgb = vec3(0.0, 0.0, 1.0);
   }
   else
   {
