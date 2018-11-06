@@ -60,48 +60,16 @@ void main()
   outColor = vec4(0.0, 0.0, 0.0, 1.0);
 
   vec4 albedoTransparents = textureLod(albedoTranspTex, inUV0, 0.0).rgba;
-
+  const vec3 lighting = textureLod(albedoTex, inUV0, 0.0).rgb;
+  
   if (albedoTransparents.a > EPSILON)
   {
-	outColor.rgb = vec3(0.0, 0.0, 1.0);
+	outColor.rgb = vec3(1.0, 0.0, 0.0);
   }
   else
   {
     outColor.rgb = lighting;
   }
 
-  vec4 fog = vec4(vec3(0.0), 1.0);
-
-  // Distance fog
-  if (fogDepth < 1.0)
-  {
-    const vec3 posWS =
-        unproject(inUV0, fogDepth, uboPerInstance.invViewProjMatrix);
-    const vec3 ray = posWS - uboPerInstance.camPosition.xyz;
-    const float rayDist = length(ray);
-    const vec3 rayDir = ray / rayDist;
-
-    // Generate distance fog as a mixture of skylight irradiance and sunlight
-    // contribution
-    const float sunAmount =
-        fogSunScatteringIntens *
-        max(dot(rayDir, uboPerFrame.sunLightDirWS.xyz), 0.0);
-    vec3 fogColor = sampleSH(uboPerFrame.skyLightSH, rayDir) / MATH_PI;
-    fogColor += fogColor * uboPerFrame.sunLightColorAndIntensity.xyz *
-                uboPerFrame.sunLightColorAndIntensity.w * pow(sunAmount, 8.0);
-
-    fog.a = clamp(exp((-rayDist + fogStart) * fogDensity), 0.0, 1.0);
-    fog.rgb = (1.0 - fog.a) * fogColor;
-  }
-
-  // Volumetrics
-  {
-    const vec3 volLightingCoord = screenSpacePosToCellIndex(
-        vec3(inUV0,
-             depthToVolumeZ(depthToVSDepth(fogDepth, uboPerInstance.camParams.x,
-                                           uboPerInstance.camParams.y))));
-    fog += 0.00001 * textureLod(volLightScatteringBufferTex, volLightingCoord, 0.0);
-  }
-
-  outColor.rgb = outColor.rgb * fog.aaa + fog.rgb;
+  outColor.rgb = outColor.rgb;
 }
