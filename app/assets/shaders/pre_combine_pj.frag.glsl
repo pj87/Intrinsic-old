@@ -44,32 +44,14 @@ PER_FRAME_DATA(13);
 layout(location = 0) in vec2 inUV0;
 layout(location = 0) out vec4 outColor;
 
-const float fogDensity = 0.001;
-const float fogStart = 1200.0;
-const float fogSunScatteringIntens = 0.0;
-
-const float waterFogDensity = 60.0;
-const float waterFogMaxBlendFactor = 1.0;
-const float waterFogDecayExp = 16.0;
-
-const vec4 waterFogColor0 = vec4(0.0, 1.0, 1.0, 1.0);
-const vec4 waterFogColor1 = vec4(0.0, 0.2, 0.2, 1.0);
-
 void main()
 {
-  outColor = vec4(0.0, 0.0, 0.0, 1.0);
+  outColor = vec4(1.0, 0.0, 0.0, 1.0);
 
   vec4 albedoTransparents = textureLod(albedoTranspTex, inUV0, 0.0).rgba;
-  const vec3 lighting = textureLod(albedoTex, inUV0, 0.0).rgb;
   
-  if (albedoTransparents.a > EPSILON)
+  if (albedoTransparents.a <= EPSILON)
   {
-	outColor.rgb = vec3(1.0, 0.0, 0.0);
+    outColor.rgb = textureLod(albedoTex, inUV0, 0.0).rgb;
   }
-  else
-  {
-    outColor.rgb = lighting;
-  }
-
-  outColor.rgb = outColor.rgb;
 }
