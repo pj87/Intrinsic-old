@@ -134,20 +134,11 @@
 			"fragmentGpuProgram" : "pre_combine_pj.frag",
 			"viewportRenderSize" : "Full",
 			"perInstanceDataBufferName" : "PerInstanceDataPreCombine",
-			"needsPerFrameBufferFragment" : true,
 			"inputs" : [
 				["Image", "GBufferAlbedo", "albedoTex", "Fragment", "NearestClamp"],
 				["Image", "GBufferNormal", "normalTex", "Fragment", "NearestClamp"],
 				["Image", "GBufferParameter0", "param0Tex", "Fragment", "NearestClamp"],
-				["Image", "GBufferTransparentsAlbedo", "albedoTranspTex", "Fragment", "NearestClamp"],
-				["Image", "GBufferTransparentsNormal", "normTranspTex", "Fragment", "NearestClamp"],
-				["Image", "GBufferTransparentsParameter0", "param0TranspTex", "Fragment", "NearestClamp"],
-				["Image", "LightBuffer", "lightBufferTex", "Fragment", "NearestClamp"],
-				["Image", "LightBufferTransparents", "lightBufferTranspTex", "Fragment", "NearestClamp"],
-				["Image", "GBufferDepth", "depthBufferTex", "Fragment", "NearestClamp"],
-				["Image", "GBufferTransparentsDepth", "depthBufferTranspTex", "Fragment", "NearestClamp"],
-				["Buffer", "MaterialBuffer", "MaterialBuffer", "Fragment"],
-				["Image", "VolumetricLightingScatteringBuffer", "volLightScatteringBufferTex", "Fragment", "LinearClamp"]
+				["Image", "GBufferTransparentsAlbedo", "albedoTranspTex", "Fragment", "NearestClamp"]
 			],
 			"outputs" : [
 				["Backbuffer"]

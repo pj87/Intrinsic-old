@@ -30,16 +30,6 @@ layout(binding = 1) uniform sampler2D albedoTex;
 layout(binding = 2) uniform sampler2D normalTex;
 layout(binding = 3) uniform sampler2D param0Tex;
 layout(binding = 4) uniform sampler2D albedoTranspTex;
-layout(binding = 5) uniform sampler2D normTranspTex;
-layout(binding = 6) uniform sampler2D param0TranspTex;
-layout(binding = 7) uniform sampler2D lightBufferTex;
-layout(binding = 8) uniform sampler2D lightBufferTranspTex;
-layout(binding = 9) uniform sampler2D depthBufferTex;
-layout(binding = 10) uniform sampler2D depthBufferTranspTex;
-layout(binding = 11) MATERIAL_BUFFER;
-layout(binding = 12) uniform sampler3D volLightScatteringBufferTex;
-
-PER_FRAME_DATA(13);
 
 layout(location = 0) in vec2 inUV0;
 layout(location = 0) out vec4 outColor;
