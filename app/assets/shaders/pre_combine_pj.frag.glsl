@@ -24,12 +24,12 @@
 #include "ubos.inc.glsl"
 #include "lib_lighting.glsl"
 
-PER_INSTANCE_DATA_PRE_COMBINE;
+//PER_INSTANCE_DATA_PRE_COMBINE;
 
-layout(binding = 1) uniform sampler2D albedoTex;
-layout(binding = 2) uniform sampler2D normalTex;
-layout(binding = 3) uniform sampler2D param0Tex;
-layout(binding = 4) uniform sampler2D albedoTranspTex;
+layout(binding = 0) uniform sampler2D albedoTex;
+layout(binding = 1) uniform sampler2D normalTex;
+layout(binding = 2) uniform sampler2D param0Tex;
+layout(binding = 3) uniform sampler2D albedoTranspTex;
 
 layout(location = 0) in vec2 inUV0;
 layout(location = 0) out vec4 outColor;
@@ -40,7 +40,7 @@ void main()
 
   vec4 albedoTransparents = textureLod(albedoTranspTex, inUV0, 0.0).rgba;
   
-  if (albedoTransparents.a <= EPSILON)
+  if (albedoTransparents.a <= 1.0e-6)
   {
     outColor.rgb = textureLod(albedoTex, inUV0, 0.0).rgb;
   }

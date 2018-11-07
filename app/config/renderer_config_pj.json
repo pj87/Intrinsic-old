@@ -119,10 +119,6 @@
 		// Lighting passes
 		// ->
 		{
-			"type" : "RenderPassShadow"
-		},
-		// <-
-		{
 			"type" : "RenderPassClustering"
 		},
 		// <-
@@ -130,10 +126,10 @@
 		// ->
 		{
 			"type" : "RenderPassGenericFullscreen",
-			"name" : "PreCombine",
+			"name" : "PreCombine11",
 			"fragmentGpuProgram" : "pre_combine_pj.frag",
 			"viewportRenderSize" : "Full",
-			"perInstanceDataBufferName" : "PerInstanceDataPreCombine",
+			//"perInstanceDataBufferName" : "PerInstanceDataPreCombine",
 			"inputs" : [
 				["Image", "GBufferAlbedo", "albedoTex", "Fragment", "NearestClamp"],
 				["Image", "GBufferNormal", "normalTex", "Fragment", "NearestClamp"],
@@ -144,19 +140,5 @@
 				["Backbuffer"]
 			]
 		}
-		// <-
-		/*,{
-			"type" : "RenderPassGenericFullscreen",
-			"name" : "BlitTest",
-			"fragmentGpuProgram" : "blit.frag",
-			"viewportRenderSize" : "Full",
-			"inputs" : [
-				["Image", "Output", "inputTex", "Fragment", "NearestClamp", 2]
-			],
-			"outputs" : [
-				["Backbuffer"]
-			]
-		}*/
-		// <-
 	]
 }
