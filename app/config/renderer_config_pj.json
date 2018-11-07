@@ -126,14 +126,11 @@
 		// ->
 		{
 			"type" : "RenderPassGenericFullscreen",
-			"name" : "PreCombine11",
+			"name" : "PreCombine",
 			"fragmentGpuProgram" : "pre_combine_pj.frag",
 			"viewportRenderSize" : "Full",
-			//"perInstanceDataBufferName" : "PerInstanceDataPreCombine",
 			"inputs" : [
 				["Image", "GBufferAlbedo", "albedoTex", "Fragment", "NearestClamp"],
-				["Image", "GBufferNormal", "normalTex", "Fragment", "NearestClamp"],
-				["Image", "GBufferParameter0", "param0Tex", "Fragment", "NearestClamp"],
 				["Image", "GBufferTransparentsAlbedo", "albedoTranspTex", "Fragment", "NearestClamp"]
 			],
 			"outputs" : [
