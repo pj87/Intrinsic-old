@@ -47,16 +47,6 @@
 			"name" : "GBufferTransparentsDepth",
 			"renderSize" : "Full",
 			"imageFormat" : "Depth"
-		},
-		{
-			"name" : "Scene",
-			"renderSize" : "Full",
-			"imageFormat" : "R16G16B16A16Float"
-		},
-		{
-			"name" : "SSAO",
-			"renderSize" : "Half",
-			"imageFormat" : "B8G8R8A8UNorm"
 		}
 	],
 	"renderSteps" : [
@@ -103,12 +93,6 @@
 				["GBufferTransparentsParameter0", [0.0, 0.0, 0.0, 0.0]],
 				["GBufferTransparentsDepth", [1.0]]
 			]
-		},
-		// <-
-		// Lighting passes
-		// ->
-		{
-			"type" : "RenderPassClustering"
 		},
 		// <-
 		// Post processing
