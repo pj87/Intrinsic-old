@@ -4,12 +4,6 @@
 		{
 			"name" : "PerInstanceDataPreCombine",
 			"entries" : [
-				"InverseViewMatrix",
-				"InverseProjectionMatrix",
-				"InverseViewProjectionMatrix",
-				"CameraWorldPosition",
-				"CameraParameters",
-				"PostParams0"
 			]
 		}
 	],
