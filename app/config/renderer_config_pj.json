@@ -60,11 +60,6 @@
 		}
 	],
 	"renderSteps" : [
-		// Offscreen test
-		{
-			"type" : "SwitchCamera",
-			"cameraName" : "GameCamera"
-		},
 		// <-
 		// GBuffer passes
 		// ->
