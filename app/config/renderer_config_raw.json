@@ -1,0 +1,114 @@
+{
+	"name" : "Default",
+	"uniformBuffers" : [
+		{
+			"name" : "PerInstanceDataPreCombine",
+			"entries" : [
+			]
+		}
+	],
+	"images" : [
+		{
+			"name" : "GBufferDepth",
+			"renderSize" : "Full",
+			"imageFormat" : "Depth"
+		},
+		{
+			"name" : "GBufferAlbedo",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferNormal",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferParameter0",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferTransparentsAlbedo",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferTransparentsNormal",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferTransparentsParameter0",
+			"renderSize" : "Full",
+			"imageFormat" : "R16G16B16A16Float"
+		},
+		{
+			"name" : "GBufferTransparentsDepth",
+			"renderSize" : "Full",
+			"imageFormat" : "Depth"
+		}
+	],
+	"renderSteps" : [
+		// <-
+		// GBuffer passes
+		// ->
+		{
+			"type" : "SwitchCamera",
+			"cameraName" : "ActiveCamera"
+		},
+		{
+			"type" : "RenderPassGenericMesh",
+			"name" : "GBuffer",
+			"materialPasses" : ["GBufferDefault", "GBufferTerrain", "GBufferFoliage", "GBufferGrass"],
+			"renderOrder" : "FrontToBack",
+			"outputs" : [
+				["GBufferAlbedo", [0.1, 0.5, 1.0, 1.0]],
+				["GBufferNormal", [0.0, 0.0, 0.0, 0.0]],
+				["GBufferParameter0", [0.0, 0.0, 0.0, 0.0]],
+				["GBufferDepth", [1.0]]
+			]
+		},
+		{
+			"type" : "RenderPassGenericMesh",
+			"name" : "GBufferSky",
+			"materialPasses" : ["GBufferSky"],
+			"renderOrder" : "BackToFront",
+			"outputs" : [
+				["GBufferAlbedo"],
+				["GBufferDepth"]
+			]
+		},
+		{
+			"type" : "RenderPassDebug"
+		},
+		{
+			"type" : "RenderPassGenericMesh",
+			"name" : "GBufferTransparents",
+			"materialPasses" : ["GBufferWater"],
+			"renderOrder" : "BackToFront",
+			"outputs" : [
+				["GBufferTransparentsAlbedo", [0.0, 0.0, 0.0, 0.0]],
+				["GBufferTransparentsNormal", [0.0, 0.0, 0.0, 0.0]],
+				["GBufferTransparentsParameter0", [0.0, 0.0, 0.0, 0.0]],
+				["GBufferTransparentsDepth", [1.0]]
+			]
+		},
+		// <-
+		// Post processing
+		// ->
+		{
+			"type" : "RenderPassGenericFullscreen",
+			"name" : "PreCombine",
+			"fragmentGpuProgram" : "pre_combine_raw.frag", 
+			"viewportRenderSize" : "Full",
+			"inputs" : [
+				["Image", "GBufferAlbedo", "albedoTex", "Fragment", "NearestClamp"],
+				["Image", "GBufferTransparentsAlbedo", "albedoTranspTex", "Fragment", "NearestClamp"]
+			],
+			"outputs" : [
+				["Backbuffer"]
+			]
+		}
+	]
+}

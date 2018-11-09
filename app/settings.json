@@ -1,8 +1,8 @@
 {
   "initialWorld": "Default.world.json",
 
-  "rendererConfig" : "renderer_config.json",
-  "materialPassConfig" : "material_pass_config.json",
+  "rendererConfig" : "renderer_config_raw.json",
+  "materialPassConfig" : "material_pass_config_raw.json",
   "rendererValidationEnabled": false,
 
   "targetFrameRate": 0.016,
