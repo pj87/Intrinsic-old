@@ -1,0 +1,10 @@
+{
+    "name": "pj.vert",
+    "properties": {
+        "name": "pj.vert",
+        "gpuProgramName": "pj.vert.glsl",
+        "entryPoint": "main",
+        "preprocessorDefines": "",
+        "gpuProgramType": 0
+    }
+}

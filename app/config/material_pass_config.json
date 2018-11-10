@@ -256,6 +256,14 @@
       "blendStates" : [],
       "rasterizationState" : "DoubleSided",
       "boundResources" : "GBufferFoliage"
+    },
+    {
+      "name" : "GBufferPJ",
+      "baseVertexGpuProgram" : "pj.vert",
+      "baseFragmentGpuProgram" : "pj.frag",
+      "renderPass" : "GBuffer",
+      "blendStates" : ["Default", "Default", "Default"],
+      "boundResources" : "GBuffer"
     }
   ]
 }

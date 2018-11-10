@@ -3,10 +3,7 @@
     "properties": {
         "name": "house",
         "materialPassMask": [
-            "GBufferDefault",
-            "GBufferWireframe",
-            "Shadow",
-            "PerPixelPicking"
+            "GBufferPJ"
         ],
         "albedoTextureName": "house_01",
         "emissiveTextureName": "house_01_E",
