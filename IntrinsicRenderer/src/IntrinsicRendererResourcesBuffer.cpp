@@ -154,7 +154,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
       //if (i == 133) // house vertex buffer
       {
-        for (int q = 0; q < 10; q++)
+        for (int q = 0; q < 100; q++)
         {
           glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
 
