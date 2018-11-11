@@ -199,13 +199,11 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         }
         BufferManager::_descInitialData(posVertexBuffer) = tempBuffer;
 
-        buffersToCreate.push_back(posVertexBuffer);
-
 		_INTR_LOG_INFO("PJ: AAAA: %d", buffersToCreate.size());
-
         Name& meshName = MeshManager::_name(meshRef);
         _INTR_LOG_INFO("PJ: Mesh Name: %s", meshName.getString().c_str());
 
+        buffersToCreate.push_back(posVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(posVertexBuffer);
       }
 
@@ -415,6 +413,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
   }
 
   BufferManager::createResources(buffersToCreate);
+  BufferManager::updateResources(buffersToCreate);
 
   for (uint32_t i = 0u; i < tempBuffersToRelease.size(); ++i)
   {
