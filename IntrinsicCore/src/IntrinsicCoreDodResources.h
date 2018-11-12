@@ -150,7 +150,7 @@ struct ResourceManagerBase : Dod::ManagerBase<IdCount, DataType>
   static _INTR_HASH_MAP(Name, Ref) _nameResourceMap;
   static DataType _data;
   static Name _defaultResourceName;
-  static Intrinsic::Renderer::Resources::BufferRefArray _buffersToCreate1;
+  static Intrinsic::Renderer::Resources::BufferRefArray _buffersToCreate;
 
 protected:
   _INTR_INLINE static void _initResourceManager()
@@ -491,7 +491,7 @@ template <class DataType, uint32_t IdCount>
 Name ResourceManagerBase<DataType, IdCount>::_defaultResourceName;
 template <class DataType, uint32_t IdCount>
 Intrinsic::Renderer::Resources::BufferRefArray
-ResourceManagerBase<DataType, IdCount>::_buffersToCreate1;
+ResourceManagerBase<DataType, IdCount>::_buffersToCreate;
 }
 }
 }
