@@ -1079,6 +1079,12 @@ void Editing::update(float p_DeltaT)
 {
   _INTR_PROFILE_CPU("Game States", "Editing");
 
+  if (BufferManager::_buffersToCreate.size() > 0)
+  {
+    Intrinsic::Renderer::Resources::BufferManager::updateResources(
+        BufferManager::_buffersToCreate);
+  }
+
   // Avoid time mod.
   const float deltaT = TaskManager::_lastDeltaT;
 
