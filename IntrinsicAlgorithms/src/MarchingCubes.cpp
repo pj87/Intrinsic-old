@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "MarchingCubes.h"
 
 struct Vector
