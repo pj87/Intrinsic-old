@@ -1086,8 +1086,10 @@ void Editing::update(float p_DeltaT)
   }
 
   std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
+  float time = Core::Resources::MeshManager::_time;
 
-  vMarchCube(1.0f, 1.0f, 1.0f, 0.1f, triangles);
+  time += 10.1;
+  vSetTime(time);
 
   vMarchingCubes(triangles);
 
