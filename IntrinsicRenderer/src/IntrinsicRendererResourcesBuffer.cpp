@@ -133,8 +133,8 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
       std::vector<Triangle>& triangles =
           Core::Resources::MeshManager::_triangles;
 
-      // for (int i = 0; i < triangles.size(); i++)
-      for (int i = 0; i < 200; i++)
+       for (int i = 0; i < triangles.size(); i++)
+      // for (int i = 0; i < 200; i++)
       {
         std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
 
