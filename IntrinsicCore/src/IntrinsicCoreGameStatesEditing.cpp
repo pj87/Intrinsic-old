@@ -1085,6 +1085,12 @@ void Editing::update(float p_DeltaT)
         BufferManager::_buffersToCreate);
   }
 
+  std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
+
+  vMarchCube(1.0f, 1.0f, 1.0f, 0.1f, triangles);
+
+  vMarchingCubes(triangles);
+
   // Avoid time mod.
   const float deltaT = TaskManager::_lastDeltaT;
 

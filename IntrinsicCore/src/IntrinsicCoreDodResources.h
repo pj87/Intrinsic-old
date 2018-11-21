@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include "IntrinsicAlgorithms/src/MarchingCubes.h"
+
 // Forware declaration
 namespace Intrinsic
 {
@@ -149,6 +151,8 @@ struct ResourceManagerBase : Dod::ManagerBase<IdCount, DataType>
 
   static _INTR_HASH_MAP(Name, Ref) _nameResourceMap;
   static DataType _data;
+  static std::vector<Triangle> _triangles;
+  static std::vector<Metaball> _metaballs;
   static Name _defaultResourceName;
   static Intrinsic::Renderer::Resources::BufferRefArray _buffersToCreate;
 
@@ -492,6 +496,10 @@ Name ResourceManagerBase<DataType, IdCount>::_defaultResourceName;
 template <class DataType, uint32_t IdCount>
 Intrinsic::Renderer::Resources::BufferRefArray
 ResourceManagerBase<DataType, IdCount>::_buffersToCreate;
+template <class DataType, uint32_t IdCount>
+std::vector<Triangle> ResourceManagerBase<DataType, IdCount>::_triangles;
+template <class DataType, uint32_t IdCount>
+std::vector<Metaball> ResourceManagerBase<DataType, IdCount>::_metaballs;
 }
 }
 }

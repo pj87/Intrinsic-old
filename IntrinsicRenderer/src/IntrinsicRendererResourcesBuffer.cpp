@@ -13,7 +13,9 @@
 // limitations under the License.
 
 // Precompiled header file
+#include "IntrinsicAlgorithms/src/MarchingCubes.h"
 #include "stdafx.h"
+#include <vector>
 
 namespace Intrinsic
 {
@@ -55,7 +57,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
-  //for (uint32_t i = 0u; i < p_Buffers.size(); i += 7*8)
+  // for (uint32_t i = 0u; i < p_Buffers.size(); i += 7*8)
 
   uint32_t i = 322;
   {
@@ -128,7 +130,22 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
       // Copy initial data to staging memory
 
-      //if (i == 133) // house vertex buffer
+      std::vector<Triangle>& triangles =
+          Core::Resources::MeshManager::_triangles;
+
+      // for (int i = 0; i < triangles.size(); i++)
+      for (int i = 0; i < 200; i++)
+      {
+        std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
+
+        pos->x = triangles[i].pos.x;
+        pos->y = triangles[i].pos.y;
+        pos->z = triangles[i].pos.z;
+
+        storeVertexValueToRawBuffer(initialData, i, *pos);
+      }
+
+      // if (i == 133) // house vertex buffer
       {
         for (int q = 0; q < 100; q++)
         {
@@ -143,7 +160,8 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
           glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
 
-          //_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y, pos1->z);
+          //_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y,
+          //pos1->z);
         }
       }
 

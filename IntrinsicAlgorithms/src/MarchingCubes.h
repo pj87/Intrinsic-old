@@ -2,6 +2,13 @@
 
 #include <vector>
 
+// wzoruj sie na commit'cie: ac24394 
+
+struct Metaball
+{
+	float x, y, z, scale;
+};
+
 struct Vec3
 {
 	float x, y, z;
