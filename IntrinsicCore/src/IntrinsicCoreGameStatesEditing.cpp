@@ -1080,9 +1080,9 @@ void Editing::update(float p_DeltaT)
   _INTR_PROFILE_CPU("Game States", "Editing");
 
   std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
-  float time = Core::Resources::MeshManager::_time;
+  float& time = Core::Resources::MeshManager::_time;
 
-  time += 10.1;
+  time += 0.1;
   vSetTime(time);
 
   vMarchingCubes(triangles);

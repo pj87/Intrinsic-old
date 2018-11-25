@@ -31,9 +31,9 @@ glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
   uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
   glm::vec3* pos = new glm::vec3();
 
-  pos->x = glm::detail::toFloat32(ptr[i * 3u]);
-  pos->y = glm::detail::toFloat32(ptr[i * 3u + 1u]);
-  pos->z = glm::detail::toFloat32(ptr[i * 3u + 2u]);
+  pos->x = 1000.0 * glm::detail::toFloat32(ptr[i * 3u]);
+  pos->y = 1000.0 * glm::detail::toFloat32(ptr[i * 3u + 1u]);
+  pos->z = 1000.0 * glm::detail::toFloat32(ptr[i * 3u + 2u]);
 
   //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
@@ -44,7 +44,7 @@ uint16_t* BufferManager::readIndexValueFromRawBuffer(void* initialData, int i)
 {
   uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
 
-  _INTR_LOG_INFO("PJ: Reading: %i", ptr[i]);
+  //_INTR_LOG_INFO("PJ: Reading: %i", ptr[i]);
 
   return nullptr;
 }
@@ -60,6 +60,13 @@ void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i,
   ptr[i * 3u] = packedPosition0;
   ptr[i * 3u + 1u] = packedPosition0 >> 16u;
   ptr[i * 3u + 2u] = packedPosition1;
+}
+
+void BufferManager::storeIndexValueToRawBuffer(void* initialData, int i,
+                                               int& value)
+{
+  uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
+  ptr[i] = value;
 }
 
 void BufferManager::updateResources(const BufferRefArray& p_Buffers)
@@ -142,8 +149,9 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
       std::vector<Triangle>& triangles =
           Core::Resources::MeshManager::_triangles;
 
-       for (int i = 0; i < triangles.size(); i++)
-      // for (int i = 0; i < 200; i++)
+	  
+       //for (int i = 0; i < triangles.size(); i++)
+      for (int i = 0; i < 200; i++)
       {
         std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
 
@@ -153,7 +161,8 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
         storeVertexValueToRawBuffer(initialData, i, *pos);
       }
-
+	  
+      /*
       // if (i == 133) // house vertex buffer
       {
         for (int q = 0; q < 100; q++)
@@ -167,12 +176,13 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
           storeVertexValueToRawBuffer(initialData, q, *pos);
 
-          glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
+          //glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
 
           //_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y,
           //pos1->z);
         }
       }
+	  */
 
       {
 
@@ -265,8 +275,12 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers)
 
       // uint16_t* tempIndexBuffer =
 
-      for (int i = 0; i < 100; i++)
-        readIndexValueFromRawBuffer(initialData, i);
+      for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++)
+      {
+        int zero = 0;
+        storeIndexValueToRawBuffer(initialData, i, i);
+      }
+
 
       // Copy initial data to staging memory{
       {
