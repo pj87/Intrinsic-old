@@ -129,7 +129,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 {
   // Create vertex/index buffers - we're using a separate buffer for each vertex
   // attribute
-  //BufferRefArray buffersToCreate;
+  // BufferRefArray buffersToCreate;
   _INTR_ARRAY(void*) tempBuffersToRelease;
 
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
@@ -155,6 +155,8 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
     indexBuffers.resize(subMeshCount);
     _aabbPerSubMesh(meshRef).resize(subMeshCount);
 
+    unsigned multiplier = 1u;
+
     for (uint32_t subMeshIdx = 0u; subMeshIdx < subMeshCount; ++subMeshIdx)
     {
       // Build AABB
@@ -179,7 +181,8 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(posVertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(posVertexBuffer) =
-            (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+            (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 4u *
+            multiplier;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -199,7 +202,19 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         }
         BufferManager::_descInitialData(posVertexBuffer) = tempBuffer;
 
-		_INTR_LOG_INFO("PJ: AAAA: %d", BufferManager::_buffersToCreate.size());
+        _INTR_LOG_INFO("PJ: AAAA: %d", BufferManager::_buffersToCreate.size());
+
+        if (BufferManager::_buffersToCreate.size() == 322)
+        {
+          _INTR_LOG_INFO("PJ: Zwiekszam bufor");
+          multiplier = 100u;
+        }
+		else
+		{
+          _INTR_LOG_INFO("PJ: Zmniejszam bufor");
+		  multiplier = 1u;
+		}
+
         Name& meshName = MeshManager::_name(meshRef);
         _INTR_LOG_INFO("PJ: Mesh Name: %s", meshName.getString().c_str());
 
@@ -380,7 +395,8 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         if (indices[subMeshIdx].size() <= 0xFFFF)
         {
           uint32_t indexBufferSizeInBytes =
-              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t);
+              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t) *
+              multiplier;
           uint16_t* tempIndexBuffer =
               (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
                   indexBufferSizeInBytes);
