@@ -420,6 +420,8 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
               (void*)indices[subMeshIdx].data();
         }
 
+		_INTR_LOG_INFO("PJ: BBBB: %d", BufferManager::_buffersToCreate.size());
+
         BufferManager::_buffersToCreate.push_back(indexBuffer);
         indexBuffers[subMeshIdx] = indexBuffer;
       }

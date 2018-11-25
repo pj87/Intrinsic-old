@@ -31,9 +31,9 @@ glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
   uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
   glm::vec3* pos = new glm::vec3();
 
-  pos->x = 1000.0 * glm::detail::toFloat32(ptr[i * 3u]);
-  pos->y = 1000.0 * glm::detail::toFloat32(ptr[i * 3u + 1u]);
-  pos->z = 1000.0 * glm::detail::toFloat32(ptr[i * 3u + 2u]);
+  pos->x = glm::detail::toFloat32(ptr[i * 3u]);
+  pos->y = glm::detail::toFloat32(ptr[i * 3u + 1u]);
+  pos->z = glm::detail::toFloat32(ptr[i * 3u + 2u]);
 
   //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
 
@@ -151,13 +151,13 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
 	  
        //for (int i = 0; i < triangles.size(); i++)
-      for (int i = 0; i < 200; i++)
+      for (int i = 0; i < 500; i++)
       {
         std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
 
-        pos->x = triangles[i].pos.x;
-        pos->y = triangles[i].pos.y;
-        pos->z = triangles[i].pos.z;
+        pos->x = 10.0 * triangles[i].pos.x;
+        pos->y = 10.0 * triangles[i].pos.y;
+        pos->z = 10.0 * triangles[i].pos.z;
 
         storeVertexValueToRawBuffer(initialData, i, *pos);
       }
@@ -210,7 +210,7 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
-  uint32_t index = 327;
+  uint32_t index = 328;
   // for (uint32_t i = 0u; i < p_Buffers.size(); ++i)
   {
     BufferRef bufferRef = p_Buffers[index];

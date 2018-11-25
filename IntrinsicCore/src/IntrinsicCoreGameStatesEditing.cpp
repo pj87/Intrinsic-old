@@ -1084,7 +1084,6 @@ void Editing::update(float p_DeltaT)
 
   time += 0.1;
   vSetTime(time);
-
   vMarchingCubes(triangles);
 
   if (BufferManager::_buffersToCreate.size() > 0)
