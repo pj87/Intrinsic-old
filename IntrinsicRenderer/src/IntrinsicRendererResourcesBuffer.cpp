@@ -206,6 +206,142 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
   GpuMemoryManager::resetPool(MemoryPoolType::kVolatileStagingBuffers);
 }
 
+void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers)
+{
+  VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
+
+  // for (uint32_t i = 0u; i < p_Buffers.size(); i += 7*8)
+
+  uint32_t i = 324;
+  {
+    //_INTR_LOG_INFO("PJ: BBBBBB: %d", i);
+
+    BufferRef bufferRef = p_Buffers[i];
+
+    VkBufferCreateInfo bufferCreateInfo = {};
+    {
+      bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+      bufferCreateInfo.pNext = nullptr;
+      bufferCreateInfo.usage =
+          Helper::mapBufferTypeToVkUsageFlagBits(_descBufferType(bufferRef)) |
+          VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+      bufferCreateInfo.size = _descSizeInBytes(bufferRef);
+      bufferCreateInfo.queueFamilyIndexCount = 0;
+      bufferCreateInfo.pQueueFamilyIndices = nullptr;
+      bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+      bufferCreateInfo.flags = 0u;
+    }
+
+    VkBuffer& buffer = _vkBuffer(bufferRef);
+    //_INTR_ASSERT(buffer == VK_NULL_HANDLE);
+
+    // VkResult result = vkCreateBuffer(RenderSystem::_vkDevice,
+    // &bufferCreateInfo,
+    //                                 nullptr, &buffer);
+    //_INTR_VK_CHECK_RESULT(result);
+
+    VkMemoryRequirements memReqs;
+    vkGetBufferMemoryRequirements(RenderSystem::_vkDevice, buffer, &memReqs);
+
+    MemoryPoolType::Enum memoryPoolType = _descMemoryPoolType(bufferRef);
+    GpuMemoryAllocationInfo& memoryAllocationInfo =
+        _memoryAllocationInfo(bufferRef);
+
+    VkResult result;
+    result = vkBindBufferMemory(RenderSystem::_vkDevice, buffer,
+                                memoryAllocationInfo._vkDeviceMemory,
+                                memoryAllocationInfo._offset);
+    _INTR_VK_CHECK_RESULT(result);
+
+    void* initialData = _descInitialData(bufferRef);
+    if (initialData)
+    {
+      VkBufferCreateInfo stagingBufferCreateInfo = bufferCreateInfo;
+      {
+        stagingBufferCreateInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+      }
+
+      VkBuffer stagingBuffer;
+      result = vkCreateBuffer(RenderSystem::_vkDevice, &stagingBufferCreateInfo,
+                              nullptr, &stagingBuffer);
+      _INTR_VK_CHECK_RESULT(result);
+
+      VkMemoryRequirements stagingMemReqs;
+      vkGetBufferMemoryRequirements(RenderSystem::_vkDevice, stagingBuffer,
+                                    &stagingMemReqs);
+
+      const GpuMemoryAllocationInfo stagingGpuAllocInfo =
+          GpuMemoryManager::allocateOffset(
+              MemoryPoolType::kVolatileStagingBuffers,
+              (uint32_t)stagingMemReqs.size, (uint32_t)stagingMemReqs.alignment,
+              stagingMemReqs.memoryTypeBits);
+
+      result = vkBindBufferMemory(RenderSystem::_vkDevice, stagingBuffer,
+                                  stagingGpuAllocInfo._vkDeviceMemory,
+                                  stagingGpuAllocInfo._offset);
+      _INTR_VK_CHECK_RESULT(result);
+
+      // Copy initial data to staging memory
+
+      std::vector<Triangle>& triangles =
+          Core::Resources::MeshManager::_triangles;
+
+      // for (int i = 0; i < triangles.size(); i++)
+      for (int i = 0; i < 500; i++)
+      {
+        std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
+
+        pos->x = triangles[i].normal.x;
+        pos->y = triangles[i].normal.y;
+        pos->z = triangles[i].normal.z;
+
+        storeVertexValueToRawBuffer(initialData, i, *pos);
+      }
+
+      /*
+      // if (i == 133) // house vertex buffer
+      {
+        for (int q = 0; q < 100; q++)
+        {
+          glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
+
+          //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
+
+          pos->x *= 1.01f;
+          pos->z *= 1.01f;
+
+          storeVertexValueToRawBuffer(initialData, q, *pos);
+
+          //glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
+
+          //_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y,
+          //pos1->z);
+        }
+      }
+          */
+
+      {
+
+        memcpy(stagingGpuAllocInfo._mappedMemory, initialData,
+               _descSizeInBytes(bufferRef));
+      }
+
+      VkBufferCopy bufferCopy = {};
+      {
+        bufferCopy.dstOffset = 0u;
+        bufferCopy.srcOffset = 0u;
+        bufferCopy.size = _descSizeInBytes(bufferRef);
+      }
+
+      // Finally copy from the staging buffer to the actual buffer
+      vkCmdCopyBuffer(copyCmd, stagingBuffer, buffer, 1u, &bufferCopy);
+    }
+  }
+
+  RenderSystem::flushTemporaryCommandBuffer();
+  GpuMemoryManager::resetPool(MemoryPoolType::kVolatileStagingBuffers);
+}
+
 void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
