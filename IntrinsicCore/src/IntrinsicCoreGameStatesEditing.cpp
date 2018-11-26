@@ -1081,8 +1081,8 @@ void Editing::update(float p_DeltaT)
 
   std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
   float& time = Core::Resources::MeshManager::_time;
-
   time += 0.1;
+
   vSetTime(time);
   vMarchingCubes(triangles);
 
@@ -1093,6 +1093,8 @@ void Editing::update(float p_DeltaT)
     Intrinsic::Renderer::Resources::BufferManager::updateResourcesIndices(
         BufferManager::_buffersToCreate);
   }
+
+  triangles.clear();
 
   // Avoid time mod.
   const float deltaT = TaskManager::_lastDeltaT;
