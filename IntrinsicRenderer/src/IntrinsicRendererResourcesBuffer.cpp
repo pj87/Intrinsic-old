@@ -149,9 +149,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
       std::vector<Triangle>& triangles =
           Core::Resources::MeshManager::_triangles;
 
-	  
-       //for (int i = 0; i < triangles.size(); i++)
-      for (int i = 0; i < 500; i++)
+      for (int i = 0; i < triangles.size(); i++)
       {
         std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
 
@@ -161,28 +159,6 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
 
         storeVertexValueToRawBuffer(initialData, i, *pos);
       }
-	  
-      /*
-      // if (i == 133) // house vertex buffer
-      {
-        for (int q = 0; q < 100; q++)
-        {
-          glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
-
-          //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
-
-          pos->x *= 1.01f;
-          pos->z *= 1.01f;
-
-          storeVertexValueToRawBuffer(initialData, q, *pos);
-
-          //glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
-
-          //_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y,
-          //pos1->z);
-        }
-      }
-	  */
 
       {
 
@@ -210,11 +186,8 @@ void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
-  // for (uint32_t i = 0u; i < p_Buffers.size(); i += 7*8)
-
   uint32_t i = 324;
   {
-    //_INTR_LOG_INFO("PJ: BBBBBB: %d", i);
 
     BufferRef bufferRef = p_Buffers[i];
 
@@ -286,8 +259,7 @@ void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers)
       std::vector<Triangle>& triangles =
           Core::Resources::MeshManager::_triangles;
 
-      // for (int i = 0; i < triangles.size(); i++)
-      for (int i = 0; i < 500; i++)
+      for (int i = 0; i < triangles.size(); i++)
       {
         std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
 
@@ -297,28 +269,6 @@ void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers)
 
         storeVertexValueToRawBuffer(initialData, i, *pos);
       }
-
-      /*
-      // if (i == 133) // house vertex buffer
-      {
-        for (int q = 0; q < 100; q++)
-        {
-          glm::vec3* pos = readVertexValueFromRawBuffer(initialData, q);
-
-          //_INTR_LOG_INFO("PJ: Reading: %f, %f, %f", pos->x, pos->y, pos->z);
-
-          pos->x *= 1.01f;
-          pos->z *= 1.01f;
-
-          storeVertexValueToRawBuffer(initialData, q, *pos);
-
-          //glm::vec3* pos1 = readVertexValueFromRawBuffer(initialData, q);
-
-          //_INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y,
-          //pos1->z);
-        }
-      }
-          */
 
       {
 
@@ -347,7 +297,6 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers)
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
   uint32_t index = 328;
-  // for (uint32_t i = 0u; i < p_Buffers.size(); ++i)
   {
     BufferRef bufferRef = p_Buffers[index];
     uint32_t bufSize = _descSizeInBytes(bufferRef) / 8;
@@ -409,16 +358,13 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers)
                                   stagingGpuAllocInfo._offset);
       _INTR_VK_CHECK_RESULT(result);
 
-      // uint16_t* tempIndexBuffer =
+      std::vector<Triangle>& triangles =
+          Core::Resources::MeshManager::_triangles;
 
-      for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++)
-      {
-        int zero = 0;
+      for (int i = 0; i < triangles.size() * 3; i++)
         storeIndexValueToRawBuffer(initialData, i, i);
-      }
 
-
-      // Copy initial data to staging memory{
+      // Copy initial data to staging memory
       {
 
         memcpy(stagingGpuAllocInfo._mappedMemory, initialData,

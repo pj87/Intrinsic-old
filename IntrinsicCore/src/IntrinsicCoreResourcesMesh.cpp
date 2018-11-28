@@ -262,7 +262,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(normalVertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(normalVertexBuffer) =
-            (uint32_t)normals[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+            (uint32_t)normals[subMeshIdx].size() * sizeof(uint16_t) * 4u * multiplier;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
