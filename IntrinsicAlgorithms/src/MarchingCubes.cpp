@@ -30,7 +30,7 @@ static const float a2fEdgeDirection[12][3] =
 	{ 0.0, 0.0, 1.0 },{ 0.0, 0.0, 1.0 },{ 0.0, 0.0, 1.0 },{ 0.0,  0.0, 1.0 }
 };
 
-const int sourcePointNumbers = 15;
+const int sourcePointNumbers = 3;
 
 int     iDataSetSize = 25;
 float   fStepSize = 1.0 / iDataSetSize;
