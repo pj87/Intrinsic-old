@@ -361,8 +361,16 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers)
       std::vector<Triangle>& triangles =
           Core::Resources::MeshManager::_triangles;
 
-      for (int i = 0; i < triangles.size() * 3; i++)
-        storeIndexValueToRawBuffer(initialData, i, i);
+      int treshold = triangles.size() < bufSize ? triangles.size() : bufSize;
+      int zero = 0;
+
+      for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++)
+      {
+        if (i < treshold)
+          storeIndexValueToRawBuffer(initialData, i, i);
+        else
+          storeIndexValueToRawBuffer(initialData, i, zero);
+      }
 
       // Copy initial data to staging memory
       {
