@@ -104,7 +104,7 @@ void vSetTime(float fNewTime)
 		fOffsetZ = fOffsetX*fOffsetY;
 
 		sSourcePoint[iSourceNum].fX = 0.25 * fOffsetX;
-		sSourcePoint[iSourceNum].fY = 0.25 * fOffsetY;
+		sSourcePoint[iSourceNum].fY = 0.1 * fOffsetY;
 		sSourcePoint[iSourceNum].fZ = 0.25 * fOffsetZ + 0.25;
 	}
 
