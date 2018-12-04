@@ -22,6 +22,8 @@
 #include "PxScene.h"
 #include "extensions/PxJoint.h"
 
+#include "IntrinsicCoreDynamicMesh.h"
+
 using namespace RResources;
 
 namespace Intrinsic
@@ -1078,6 +1080,8 @@ void Editing::findVisibleEditingDrawCalls(Dod::RefArray& p_DrawCalls)
 void Editing::update(float p_DeltaT)
 {
   _INTR_PROFILE_CPU("Game States", "Editing");
+
+  addCube();
 
   // Avoid time mod.
   const float deltaT = TaskManager::_lastDeltaT;
