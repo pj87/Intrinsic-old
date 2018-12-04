@@ -48,6 +48,36 @@ spawnDefaultEntity(const Name& p_Name,
 
   return entityRef;
 }
+
+_INTR_INLINE Dod::Ref addComponentToEntity(Entity::EntityRef p_EntityRef,
+                                           const Name& p_ComponentName)
+{
+  Dod::Components::ComponentManagerEntry& entry =
+      Application::_componentManagerMapping[p_ComponentName];
+
+  _INTR_ASSERT(entry.createFunction);
+  Dod::Ref compRef = entry.createFunction(p_EntityRef);
+
+  if (entry.resetToDefaultFunction)
+  {
+    entry.resetToDefaultFunction(compRef);
+  }
+
+  return compRef;
+}
+
+}
+
+void addCube()
+{
+  Entity::EntityRef entityRef = 
+	  spawnDefaultEntity(_N(Cube));  
+  Dod::Ref compRef =
+      addComponentToEntity(entityRef, _N(Mesh));
+
+  Components::MeshManager::_descMeshName(compRef) = _N(cube);
+  Components::NodeManager::rebuildTreeAndUpdateTransforms();
+  Components::MeshManager::createResources(compRef);
 }
 
 namespace Intrinsic
@@ -56,18 +86,7 @@ namespace Core
 {
 namespace DynamicMesh
 {
-	void addCube()
-	{
-          //Intrinsic::Core::Entity::EntityRef entityRef = spawnDefaultEntity(_N(Cube));
-          //Intrinsic::Core::Dod::Ref compRef =
-          //    addComponentToEntity(entityRef, _N(Mesh));
-          
-          //Intrinsic::Core::Components::MeshManager::_descMeshName(compRef) = _N(cube);
-
-          //Intrinsic::Core::Components::NodeManager::rebuildTreeAndUpdateTransforms();
-          //Intrinsic::Core::Components::MeshManager::createResources(compRef);
-		  
-	}
+	
 }
 }
 }
