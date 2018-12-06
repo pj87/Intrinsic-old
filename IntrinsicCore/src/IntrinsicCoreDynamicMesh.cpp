@@ -68,25 +68,21 @@ _INTR_INLINE Dod::Ref addComponentToEntity(Entity::EntityRef p_EntityRef,
 
 }
 
-void addCube()
-{
-  Entity::EntityRef entityRef = 
-	  spawnDefaultEntity(_N(Cube));  
-  Dod::Ref compRef =
-      addComponentToEntity(entityRef, _N(Mesh));
-
-  Components::MeshManager::_descMeshName(compRef) = _N(cube);
-  Components::NodeManager::rebuildTreeAndUpdateTransforms();
-  Components::MeshManager::createResources(compRef);
-}
-
 namespace Intrinsic
 {
 namespace Core
 {
 namespace DynamicMesh
 {
-	
+	void addCube()
+	{
+	  Entity::EntityRef entityRef = spawnDefaultEntity(_N(Cube));
+	  Dod::Ref compRef = addComponentToEntity(entityRef, _N(Mesh));
+
+	  Components::MeshManager::_descMeshName(compRef) = _N(cube);
+	  Components::NodeManager::rebuildTreeAndUpdateTransforms();
+	  Components::MeshManager::createResources(compRef);
+	}
 }
 }
 }

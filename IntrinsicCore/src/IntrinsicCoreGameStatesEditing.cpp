@@ -1081,7 +1081,7 @@ void Editing::update(float p_DeltaT)
 {
   _INTR_PROFILE_CPU("Game States", "Editing");
 
-  addCube();
+  Intrinsic::Core::DynamicMesh::addCube();
 
   // Avoid time mod.
   const float deltaT = TaskManager::_lastDeltaT;
