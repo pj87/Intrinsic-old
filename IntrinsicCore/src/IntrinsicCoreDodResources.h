@@ -14,6 +14,21 @@
 
 #pragma once
 
+#include "IntrinsicAlgorithms/src/MarchingCubes.h"
+
+// Forward declaration
+namespace Intrinsic
+{
+namespace Renderer
+{
+namespace Resources
+{
+typedef Dod::Ref BufferRef;
+typedef _INTR_ARRAY(BufferRef) BufferRefArray;
+} // namespace Resources
+} // namespace Renderer
+} // namespace Intrinsic
+
 namespace Intrinsic
 {
 namespace Core
@@ -136,7 +151,11 @@ struct ResourceManagerBase : Dod::ManagerBase<IdCount, DataType>
 
   static _INTR_HASH_MAP(Name, Ref) _nameResourceMap;
   static DataType _data;
+  static std::vector<Triangle> _triangles;
+  static std::vector<Metaball> _metaballs;
   static Name _defaultResourceName;
+  static float _time;
+  static Intrinsic::Renderer::Resources::BufferRefArray _buffersToCreate;
 
 protected:
   _INTR_INLINE static void _initResourceManager()
@@ -475,6 +494,15 @@ _INTR_HASH_MAP(Name, Ref)
 ResourceManagerBase<DataType, IdCount>::_nameResourceMap;
 template <class DataType, uint32_t IdCount>
 Name ResourceManagerBase<DataType, IdCount>::_defaultResourceName;
+template <class DataType, uint32_t IdCount>
+Intrinsic::Renderer::Resources::BufferRefArray
+ResourceManagerBase<DataType, IdCount>::_buffersToCreate;
+template <class DataType, uint32_t IdCount>
+std::vector<Triangle> ResourceManagerBase<DataType, IdCount>::_triangles;
+template <class DataType, uint32_t IdCount>
+std::vector<Metaball> ResourceManagerBase<DataType, IdCount>::_metaballs;
+template <class DataType, uint32_t IdCount>
+float ResourceManagerBase<DataType, IdCount>::_time;
 }
 }
 }

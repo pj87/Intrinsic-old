@@ -1079,6 +1079,26 @@ void Editing::update(float p_DeltaT)
 {
   _INTR_PROFILE_CPU("Game States", "Editing");
 
+  std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
+  float& time = Core::Resources::MeshManager::_time;
+  time += 0.1;
+
+  vSetTime(time);
+  vMarchingCubes(triangles);
+
+
+  if (BufferManager::_buffersToCreate.size() > 0)
+  {
+    Intrinsic::Renderer::Resources::BufferManager::updateResources(
+        BufferManager::_buffersToCreate);
+    Intrinsic::Renderer::Resources::BufferManager::updateResourcesNormal(
+        BufferManager::_buffersToCreate);
+    Intrinsic::Renderer::Resources::BufferManager::updateResourcesIndices(
+        BufferManager::_buffersToCreate);
+  }
+
+  triangles.clear();
+
   // Avoid time mod.
   const float deltaT = TaskManager::_lastDeltaT;
 

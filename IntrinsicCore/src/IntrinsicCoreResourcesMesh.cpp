@@ -129,7 +129,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 {
   // Create vertex/index buffers - we're using a separate buffer for each vertex
   // attribute
-  BufferRefArray buffersToCreate;
+  //BufferRefArray buffersToCreate;
   _INTR_ARRAY(void*) tempBuffersToRelease;
 
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
@@ -199,7 +199,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         }
         BufferManager::_descInitialData(posVertexBuffer) = tempBuffer;
 
-        buffersToCreate.push_back(posVertexBuffer);
+        BufferManager::_buffersToCreate.push_back(posVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(posVertexBuffer);
       }
 
@@ -228,7 +228,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         }
         BufferManager::_descInitialData(uv0VertexBuffer) = tempBuffer;
 
-        buffersToCreate.push_back(uv0VertexBuffer);
+        BufferManager::_buffersToCreate.push_back(uv0VertexBuffer);
         vertexBuffers[subMeshIdx].push_back(uv0VertexBuffer);
       }
 
@@ -263,7 +263,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         }
         BufferManager::_descInitialData(normalVertexBuffer) = tempBuffer;
 
-        buffersToCreate.push_back(normalVertexBuffer);
+        BufferManager::_buffersToCreate.push_back(normalVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(normalVertexBuffer);
       }
 
@@ -298,7 +298,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         }
         BufferManager::_descInitialData(tangentVertexBuffer) = tempBuffer;
 
-        buffersToCreate.push_back(tangentVertexBuffer);
+        BufferManager::_buffersToCreate.push_back(tangentVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(tangentVertexBuffer);
       }
 
@@ -333,7 +333,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         }
         BufferManager::_descInitialData(binormalVertexBuffer) = tempBuffer;
 
-        buffersToCreate.push_back(binormalVertexBuffer);
+        BufferManager::_buffersToCreate.push_back(binormalVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(binormalVertexBuffer);
       }
 
@@ -362,7 +362,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         }
         BufferManager::_descInitialData(vtxColorVertexBuffer) = tempBuffer;
 
-        buffersToCreate.push_back(vtxColorVertexBuffer);
+        BufferManager::_buffersToCreate.push_back(vtxColorVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(vtxColorVertexBuffer);
       }
 
@@ -400,7 +400,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
               (void*)indices[subMeshIdx].data();
         }
 
-        buffersToCreate.push_back(indexBuffer);
+        BufferManager::_buffersToCreate.push_back(indexBuffer);
         indexBuffers[subMeshIdx] = indexBuffer;
       }
     }
@@ -408,7 +408,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
     createOrLoadPhysicsMeshes(meshRef);
   }
 
-  BufferManager::createResources(buffersToCreate);
+  BufferManager::createResources(BufferManager::_buffersToCreate);
 
   for (uint32_t i = 0u; i < tempBuffersToRelease.size(); ++i)
   {
