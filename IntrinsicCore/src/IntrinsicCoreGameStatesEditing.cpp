@@ -1086,17 +1086,16 @@ void Editing::update(float p_DeltaT)
   vSetTime(time);
   vMarchingCubes(triangles);
 
-  uint32_t bufferNumber =
-      BufferManager::_nameToInitlialBufferMap[_N(pbr_test_1)];
+  const Name& name = _N(pbr_test_1);
 
   if (BufferManager::_buffersToCreate.size() > 0)
   {
     Intrinsic::Renderer::Resources::BufferManager::updateResources(
-        BufferManager::_buffersToCreate, bufferNumber); 
+        BufferManager::_buffersToCreate, name); 
     Intrinsic::Renderer::Resources::BufferManager::updateResourcesNormal(
-        BufferManager::_buffersToCreate, bufferNumber + 2); 
+        BufferManager::_buffersToCreate, name); 
     Intrinsic::Renderer::Resources::BufferManager::updateResourcesIndices(
-        BufferManager::_buffersToCreate, bufferNumber + 6); 
+        BufferManager::_buffersToCreate, name); 
   }
 
   triangles.clear();

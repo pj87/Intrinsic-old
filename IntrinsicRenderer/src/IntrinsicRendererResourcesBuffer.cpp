@@ -69,9 +69,11 @@ void BufferManager::storeIndexValueToRawBuffer(void* initialData, int i,
   ptr[i] = value;
 }
 
-void BufferManager::updateResources(const BufferRefArray& p_Buffers, uint32_t index)
+void BufferManager::updateResources(const BufferRefArray& p_Buffers, const Name& name)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
+
+  const uint32_t index = BufferManager::_nameToInitlialBufferMap[name];
 
   // for (uint32_t i = 0u; i < p_Buffers.size(); i += 7*8)
 
@@ -182,9 +184,11 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers, uint32_t in
   GpuMemoryManager::resetPool(MemoryPoolType::kVolatileStagingBuffers);
 }
 
-void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers, uint32_t index)
+void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers, const Name& name)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
+
+  const uint32_t index = BufferManager::_nameToInitlialBufferMap[name] + 2;
 
   //uint32_t i = 324;
   {
@@ -292,9 +296,11 @@ void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers, uint3
   GpuMemoryManager::resetPool(MemoryPoolType::kVolatileStagingBuffers);
 }
 
-void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers, uint32_t index)
+void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers, const Name& name)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
+
+  const uint32_t index = BufferManager::_nameToInitlialBufferMap[name] + 6;
 
   //uint32_t index = 328;
   {
