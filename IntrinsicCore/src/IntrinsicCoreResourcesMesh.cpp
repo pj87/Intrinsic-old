@@ -125,11 +125,26 @@ _INTR_INLINE void MeshManager::updateDependentResources(MeshRef p_Ref)
   CComponents::MeshManager::createResources(componentsToRecreate);
 }
 
+int32_t MeshManager::getMeshInitialBufferNumber(const MeshRefArray& p_Meshes, Name& name)
+{
+  for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
+  {
+    MeshRef meshRef = p_Meshes[meshIdx];
+
+    Name& meshName = MeshManager::_name(meshRef);
+    _INTR_LOG_INFO("PJ: Mesh Name: %s", meshName.getString().c_str());
+
+    if (meshName == name)
+      return meshIdx;
+  }
+  return -1;
+}
+
 void MeshManager::createResources(const MeshRefArray& p_Meshes)
 {
   // Create vertex/index buffers - we're using a separate buffer for each vertex
   // attribute
-  //BufferRefArray buffersToCreate;
+  // BufferRefArray buffersToCreate;
   _INTR_ARRAY(void*) tempBuffersToRelease;
 
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
@@ -198,6 +213,13 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
           tempBuffer[i * 3u + 2u] = packedPosition1;
         }
         BufferManager::_descInitialData(posVertexBuffer) = tempBuffer;
+
+		const Name& name = _name(meshRef);
+
+		_INTR_LOG_INFO("%s", name.getString().c_str());
+
+		BufferManager::_nameToInitlialBufferMap[name] = 
+			BufferManager::_buffersToCreate.size();
 
         BufferManager::_buffersToCreate.push_back(posVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(posVertexBuffer);

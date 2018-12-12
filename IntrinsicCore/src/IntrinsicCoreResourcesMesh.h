@@ -404,6 +404,10 @@ struct MeshManager
     createResources(_activeRefs);
   }
 
+  //PJ: Added++ 
+  static int32_t getMeshInitialBufferNumber(const MeshRefArray& p_Meshes, Name& name);
+  //PJ: Added-- 
+
   // <-
 
   static void createResources(const MeshRefArray& p_Meshes);
