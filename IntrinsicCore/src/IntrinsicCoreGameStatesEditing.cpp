@@ -1086,7 +1086,7 @@ void Editing::update(float p_DeltaT)
   vSetTime(time);
   vMarchingCubes(triangles);
 
-  const Name& name = _N(house);
+  const Name& name = _N(pbr_test_1);
 
   if (BufferManager::_buffersToCreate.size() > 0)
   {
