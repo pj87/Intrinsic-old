@@ -1086,7 +1086,7 @@ void Editing::update(float p_DeltaT)
   vSetTime(time);
   vMarchingCubes(triangles);
 
-  const Name& name = _N(pbr_test_1);
+  const Name& name = _N(water_sphere);
 
   if (BufferManager::_buffersToCreate.size() > 0)
   {
