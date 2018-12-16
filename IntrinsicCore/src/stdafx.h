@@ -206,5 +206,7 @@ namespace CComponents = Intrinsic::Core::Components;
 #include "IntrinsicCoreComponentsScript.h"
 #include "IntrinsicCorePhysicsHelper.h"
 
+#include "IntrinsicCoreDynamicMesh.h"
+
 // Renderer includes
 #include "stdafx_renderer.h"
