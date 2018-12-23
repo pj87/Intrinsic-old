@@ -773,8 +773,6 @@ void VolumetricLighting::render(float p_DeltaT, CameraRef p_CameraRef)
       RenderProcess::Default::_shadowFrustums[p_CameraRef];
 
   const uint32_t shadowMapCount = (uint32_t)shadowFrustums.size();
-  generateExponentialShadowMaps(shadowMapCount);
-  blurExponentialShadowMaps(shadowMapCount);
 
   ComputeCallRef accumComputeCallRefToUse = _computeCallAccumRef;
   if ((TaskManager::_frameCounter % 2u) != 0u)
