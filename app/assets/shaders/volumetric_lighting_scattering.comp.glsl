@@ -45,13 +45,13 @@ layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 1u) in;
 void main()
 {
   vec4 currentValue =
-      texelFetch(volLightBufferTex, ivec3(gl_GlobalInvocationID.xy, 0), 0);
+      texelFetch(volLightBufferTex, ivec3(gl_GlobalInvocationID.xy, 0), 0) + vec4(0.0, 0.5, 0.0, 0.0);
   write(ivec3(gl_GlobalInvocationID.xy, 0), currentValue);
 
   for (int z = 1; z < VOLUME_DEPTH; ++z)
   {
     const ivec3 cellIdx = ivec3(gl_GlobalInvocationID.xy, z);
-    const vec4 nextValue = texelFetch(volLightBufferTex, cellIdx, 0);
+    const vec4 nextValue = texelFetch(volLightBufferTex, cellIdx, 0) + vec4(0.0, 0.5, 0.0, 0.0);
     currentValue = accum(currentValue, nextValue);
     write(cellIdx, currentValue);
   }

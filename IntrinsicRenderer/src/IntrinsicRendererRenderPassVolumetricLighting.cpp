@@ -791,8 +791,8 @@ void VolumetricLighting::render(float p_DeltaT, CameraRef p_CameraRef)
   VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
 
   {
-    RenderSystem::dispatchComputeCall(accumComputeCallRefToUse,
-                                      primaryCmdBuffer);
+    //RenderSystem::dispatchComputeCall(accumComputeCallRefToUse,
+    //                                  primaryCmdBuffer);
   }
 
   ComputeCallRef scatteringComputeCalltoUse = _computeCallScatteringRef;
