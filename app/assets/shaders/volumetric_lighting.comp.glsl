@@ -140,7 +140,7 @@ void main()
   density *= heightAttenuation;
 
   // Lighting
-  vec3 lighting = vec3(1000.0);
+  vec3 lighting = vec3(1.0);
 
   // Sunlight
   {
@@ -211,5 +211,7 @@ void main()
   }
 
   const vec4 fog = vec4(density * lighting, density);
-  imageStore(output0Tex, ivec3(cellIndex), mix(fog, reprojFog, reprojWeight));
+  //imageStore(output0Tex, ivec3(cellIndex), mix(fog, reprojFog, reprojWeight));
+  imageStore(output0Tex, ivec3(cellIndex), vec4(1.0, 0.0, 0.0, 0.0));
+  
 }
