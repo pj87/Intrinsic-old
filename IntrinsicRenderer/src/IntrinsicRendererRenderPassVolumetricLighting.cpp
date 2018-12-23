@@ -780,30 +780,9 @@ void VolumetricLighting::render(float p_DeltaT, CameraRef p_CameraRef)
   if ((TaskManager::_frameCounter % 2u) != 0u)
   {
     accumComputeCallRefToUse = _computeCallAccumPrevFrameRef;
-
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferPrevFrameImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-        VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
   }
   else
   {
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-        VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferPrevFrameImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
   }
 
   {
@@ -822,35 +801,15 @@ void VolumetricLighting::render(float p_DeltaT, CameraRef p_CameraRef)
   if ((TaskManager::_frameCounter % 2u) != 0u)
   {
     scatteringComputeCalltoUse = _computeCallScatteringPrevFrameRef;
-
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferPrevFrameImageRef, VK_IMAGE_LAYOUT_GENERAL,
-        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
   }
   else
   {
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferImageRef, VK_IMAGE_LAYOUT_GENERAL,
-        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
   }
-
-  ImageManager::insertImageMemoryBarrier(
-      _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-      VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 
   {
     RenderSystem::dispatchComputeCall(scatteringComputeCalltoUse,
                                       primaryCmdBuffer);
   }
-  ImageManager::insertImageMemoryBarrier(
-      _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_GENERAL,
-      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 }
 }
 }
