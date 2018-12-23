@@ -140,7 +140,7 @@ void main()
   density *= heightAttenuation;
 
   // Lighting
-  vec3 lighting = vec3(0.0);
+  vec3 lighting = vec3(1000.0);
 
   // Sunlight
   {
