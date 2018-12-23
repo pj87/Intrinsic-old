@@ -796,13 +796,6 @@ void VolumetricLighting::render(float p_DeltaT, CameraRef p_CameraRef)
   }
 
   ComputeCallRef scatteringComputeCalltoUse = _computeCallScatteringRef;
-  if ((TaskManager::_frameCounter % 2u) != 0u)
-  {
-    scatteringComputeCalltoUse = _computeCallScatteringPrevFrameRef;
-  }
-  else
-  {
-  }
 
   {
     RenderSystem::dispatchComputeCall(scatteringComputeCalltoUse,
