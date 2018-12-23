@@ -63,13 +63,6 @@ layout(binding = 7) buffer IrradProbeBuffer { IrradProbe irradProbes[]; };
 layout(binding = 8) buffer IrradProbeIndexBuffer { uint irradProbeIndices[]; };
 layout(binding = 9) uniform sampler2DArray shadowBufferExpTex;
 layout(binding = 10) uniform sampler2D kelvinLutTex;
-
-#include "volumetric_lighting.inc.glsl"
-
-// TODO
-const vec3 heightRefPosWS = vec3(0.0, 700.0, 0.0);
-const float heightAttenuationFactor = 0.025;
-
 // Based on AC4 volumetric fog
 layout(local_size_x = 4u, local_size_y = 4u, local_size_z = 4u) in;
 void main()
