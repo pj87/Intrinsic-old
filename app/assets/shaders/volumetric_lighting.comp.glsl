@@ -56,13 +56,6 @@ PER_FRAME_DATA(1);
 
 layout(binding = 2) uniform sampler2DArrayShadow shadowBufferTex;
 layout(binding = 3, r11f_g11f_b10f) uniform image3D output0Tex;
-layout(binding = 4) uniform sampler3D prevVolLightBufferTex;
-layout(binding = 5) buffer LightBuffer { Light lights[]; };
-layout(binding = 6) buffer LightIndexBuffer { uint lightIndices[]; };
-layout(binding = 7) buffer IrradProbeBuffer { IrradProbe irradProbes[]; };
-layout(binding = 8) buffer IrradProbeIndexBuffer { uint irradProbeIndices[]; };
-layout(binding = 9) uniform sampler2DArray shadowBufferExpTex;
-layout(binding = 10) uniform sampler2D kelvinLutTex;
 // Based on AC4 volumetric fog
 layout(local_size_x = 4u, local_size_y = 4u, local_size_z = 4u) in;
 void main()

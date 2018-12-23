@@ -193,35 +193,9 @@ _INTR_INLINE ComputeCallRef createComputeCallAccumulation(
     ComputeCallManager::bindImage(
         computeCallRef, _N(shadowBufferTex), GpuProgramType::kCompute,
         ImageManager::getResourceByName(_N(ShadowBuffer)), Samplers::kShadow);
-    ComputeCallManager::bindImage(computeCallRef, _N(shadowBufferExpTex),
-                                  GpuProgramType::kCompute, _shadowBufferExp,
-                                  Samplers::kLinearClamp);
     ComputeCallManager::bindImage(
         computeCallRef, _N(output0Tex), GpuProgramType::kCompute,
         p_CurrentVolLightingBuffer, Samplers::kInvalidSampler);
-    ComputeCallManager::bindImage(
-        computeCallRef, _N(prevVolLightBufferTex), GpuProgramType::kCompute,
-        p_PrevVolLightingBuffer, Samplers::kLinearClamp);
-    ComputeCallManager::bindImage(
-        computeCallRef, _N(kelvinLutTex), GpuProgramType::kCompute,
-        ImageManager::getResourceByName(_N(kelvin_rgb_LUT)),
-        Samplers::kLinearClamp);
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(LightBuffer), GpuProgramType::kCompute,
-        p_LightBuffer, UboType::kInvalidUbo,
-        BufferManager::_descSizeInBytes(p_LightBuffer));
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(LightIndexBuffer), GpuProgramType::kCompute,
-        p_LightIndexBuffer, UboType::kInvalidUbo,
-        BufferManager::_descSizeInBytes(p_LightIndexBuffer));
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(IrradProbeBuffer), GpuProgramType::kCompute,
-        p_IrradProbeBuffer, UboType::kInvalidUbo,
-        BufferManager::_descSizeInBytes(p_IrradProbeBuffer));
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(IrradProbeIndexBuffer), GpuProgramType::kCompute,
-        p_IrradProbeIndexBuffer, UboType::kInvalidUbo,
-        BufferManager::_descSizeInBytes(p_IrradProbeIndexBuffer));
   }
 
   return computeCallRef;
