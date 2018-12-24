@@ -644,31 +644,7 @@ void VolumetricLighting::render(float p_DeltaT, CameraRef p_CameraRef)
   _INTR_PROFILE_CPU("Render Pass", "Render Volumetric Lighting");
   _INTR_PROFILE_GPU("Render Volumetric Lighting");
 
-  const _INTR_ARRAY(FrustumRef)& shadowFrustums =
-      RenderProcess::Default::_shadowFrustums[p_CameraRef];
-
-  const uint32_t shadowMapCount = (uint32_t)shadowFrustums.size();
-
-  ComputeCallRef accumComputeCallRefToUse = _computeCallAccumRef;
-  if ((TaskManager::_frameCounter % 2u) != 0u)
-  {
-    accumComputeCallRefToUse = _computeCallAccumPrevFrameRef;
-  }
-  else
-  {
-  }
-
-  {
-    // Update per instance data
-    updatePerInstanceData(p_CameraRef, accumComputeCallRefToUse);
-  }
-
   VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
-
-  {
-    //RenderSystem::dispatchComputeCall(accumComputeCallRefToUse,
-    //                                  primaryCmdBuffer);
-  }
 
   ComputeCallRef scatteringComputeCalltoUse = _computeCallScatteringRef;
 
