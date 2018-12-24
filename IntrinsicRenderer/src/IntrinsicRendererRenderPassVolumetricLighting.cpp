@@ -27,16 +27,6 @@ namespace RenderPass
 {
 namespace
 {
-struct PerInstanceDataESMGenerate
-{
-  glm::uvec4 arrayIdx;
-};
-
-struct PerInstanceDataESMBlur
-{
-  glm::vec4 blurParams;
-  glm::uvec4 arrayIdx;
-};
 
 struct PerInstanceData
 {
@@ -66,26 +56,11 @@ struct PerInstanceData
 glm::mat4 prevViewProjMatrix;
 
 ImageRef _volLightingBufferImageRef;
-ImageRef _volLightingBufferPrevFrameImageRef;
 ImageRef _volLightingScatteringBufferImageRef;
-ImageRef _shadowBufferExp;
-ImageRef _shadowBufferExpPingPong;
 
-RenderPassRef _renderPassRef;
-FramebufferRefArray _framebufferRefs;
-FramebufferRefArray _framebufferPingPongRefs;
-
-PipelineRef _pipelineAccumRef;
 PipelineRef _pipelineScatteringRef;
 
-DrawCallRef _drawCallEsmGenerateRef;
-DrawCallRef _drawCallEsmBlurRef;
-DrawCallRef _drawCallEsmBlurPingPongRef;
-
-ComputeCallRef _computeCallAccumRef;
-ComputeCallRef _computeCallAccumPrevFrameRef;
 ComputeCallRef _computeCallScatteringRef;
-ComputeCallRef _computeCallScatteringPrevFrameRef;
 
 _INTR_INLINE ComputeCallRef createComputeCallScattering(
     glm::vec3 p_Dim, BufferRef p_CurrentVolLightingBuffer)
@@ -125,12 +100,8 @@ void VolumetricLighting::init()
 {
   PipelineRefArray pipelinesToCreate;
   PipelineLayoutRefArray pipelineLayoutsToCreate;
-  DrawCallRefArray drawCallsToCreate;
 
-  // Pipeline layouts
-  PipelineLayoutRef pipelineLayoutAccum;
   PipelineLayoutRef pipelineLayoutScattering;
-  PipelineLayoutRef pipelineLayoutEsm;
   {
     {
       pipelineLayoutScattering = PipelineLayoutManager::createPipelineLayout(
@@ -146,9 +117,6 @@ void VolumetricLighting::init()
     pipelineLayoutsToCreate.push_back(pipelineLayoutScattering);
   }
 
-  // Pipeline
-  PipelineRef pipelineEsmGenerateRef;
-  PipelineRef pipelineEsmBlurRef;
   {
     {
       _pipelineScatteringRef =
@@ -194,9 +162,6 @@ void VolumetricLighting::init()
     imgsToCreate.push_back(_volLightingScatteringBufferImageRef);
   }
   ImageManager::createResources(imgsToCreate);
-
-  // Draw calls
-  DrawCallManager::createResources(drawCallsToCreate);
 
   // Compute calls
   {
