@@ -220,10 +220,6 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(
         UniformManager::_perInstanceUniformBuffer, UboType::kPerInstanceCompute,
         sizeof(PerInstanceData));
     ComputeCallManager::bindImage(
-        computeCallScatteringRef, _N(volLightBufferTex),
-        GpuProgramType::kCompute, p_CurrentVolLightingBuffer,
-        Samplers::kNearestClamp);
-    ComputeCallManager::bindImage(
         computeCallScatteringRef, _N(volLightScatterBufferTex),
         GpuProgramType::kCompute, _volLightingScatteringBufferImageRef,
         Samplers::kInvalidSampler);
