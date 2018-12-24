@@ -87,19 +87,6 @@ ComputeCallRef _computeCallAccumPrevFrameRef;
 ComputeCallRef _computeCallScatteringRef;
 ComputeCallRef _computeCallScatteringPrevFrameRef;
 
-_INTR_INLINE ComputeCallRef createComputeCallAccumulation(
-    glm::vec3 p_Dim, BufferRef p_LightBuffer, BufferRef p_LightIndexBuffer,
-    BufferRef p_IrradProbeBuffer, BufferRef p_IrradProbeIndexBuffer,
-    BufferRef p_CurrentVolLightingBuffer, BufferRef p_PrevVolLightingBuffer)
-{
-  ComputeCallRef computeCallRef =
-      ComputeCallManager::createComputeCall(_N(VolumetricLighting));
-  {
-  }
-
-  return computeCallRef;
-}
-
 _INTR_INLINE ComputeCallRef createComputeCallScattering(
     glm::vec3 p_Dim, BufferRef p_CurrentVolLightingBuffer)
 {
@@ -460,8 +447,6 @@ void VolumetricLighting::init()
     // Scattering
     _computeCallScatteringRef =
         createComputeCallScattering(computeDim, _volLightingBufferImageRef);
-    _computeCallScatteringPrevFrameRef = createComputeCallScattering(
-        computeDim, _volLightingBufferPrevFrameImageRef);
 
     computeCallsToCreate.push_back(_computeCallScatteringRef);
   }
