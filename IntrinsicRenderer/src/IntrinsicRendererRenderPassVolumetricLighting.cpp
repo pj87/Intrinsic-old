@@ -87,83 +87,6 @@ ComputeCallRef _computeCallAccumPrevFrameRef;
 ComputeCallRef _computeCallScatteringRef;
 ComputeCallRef _computeCallScatteringPrevFrameRef;
 
-_INTR_INLINE void
-updatePerInstanceData(CameraRef p_CameraRef,
-                      ComputeCallRef p_CurrentAccumComputeCallRef)
-{
-  NodeRef camNodeRef =
-      NodeManager::getComponentForEntity(CameraManager::_entity(p_CameraRef));
-
-  // Post effect data
-  {
-    const glm::vec2 scattering =
-        PostEffectManager::_descVolumetricLightingScatteringDayNight(
-            PostEffectManager::_blendTargetRef);
-
-    _perInstanceData.data0.x =
-        glm::mix(scattering.y, scattering.x, World::_currentDayNightFactor) *
-        VolumetricLighting::_globalScatteringFactor;
-    _perInstanceData.data0.z = Clustering::_globalIrradianceFactor;
-  }
-
-  _perInstanceData.haltonSamples =
-      RenderProcess::UniformManager::_uniformDataSource.haltonSamples32;
-
-  _perInstanceData.prevViewProjMatrix = prevViewProjMatrix;
-  prevViewProjMatrix = CameraManager::_viewProjectionMatrix(p_CameraRef);
-  _perInstanceData.projMatrix = CameraManager::_projectionMatrix(p_CameraRef);
-
-  _perInstanceData.camPos = glm::vec4(NodeManager::_worldPosition(camNodeRef),
-                                      TaskManager::_frameCounter);
-
-  _perInstanceData.eyeVSVectorX = glm::vec4(
-      glm::vec3(1.0 / _perInstanceData.projMatrix[0][0], 0.0, 0.0), 0.0);
-  _perInstanceData.eyeVSVectorY = glm::vec4(
-      glm::vec3(0.0, 1.0 / _perInstanceData.projMatrix[1][1], 0.0), 0.0);
-  _perInstanceData.eyeVSVectorZ = glm::vec4(glm::vec3(0.0, 0.0, -1.0), 0.0);
-  _perInstanceData.eyeWSVectorX =
-      CameraManager::_inverseViewMatrix(p_CameraRef) *
-      _perInstanceData.eyeVSVectorX;
-  _perInstanceData.eyeWSVectorX.w = TaskManager::_totalTimePassed;
-  _perInstanceData.eyeWSVectorY =
-      CameraManager::_inverseViewMatrix(p_CameraRef) *
-      _perInstanceData.eyeVSVectorY;
-  _perInstanceData.eyeWSVectorZ =
-      CameraManager::_inverseViewMatrix(p_CameraRef) *
-      _perInstanceData.eyeVSVectorZ;
-
-  _perInstanceData.nearFar =
-      glm::vec4(CameraManager::_descNearPlane(p_CameraRef),
-                CameraManager::_descFarPlane(p_CameraRef), 0.0f, 0.0f);
-
-  Math::FrustumCorners viewSpaceCorners;
-  Math::extractFrustumsCorners(
-      CameraManager::_inverseProjectionMatrix(p_CameraRef), viewSpaceCorners);
-
-  _perInstanceData.nearFarWidthHeight = glm::vec4(
-      viewSpaceCorners.c[3].x - viewSpaceCorners.c[2].x /* Near Width */,
-      viewSpaceCorners.c[2].y - viewSpaceCorners.c[1].y /* Near Height */,
-      viewSpaceCorners.c[7].x - viewSpaceCorners.c[6].x /* Far Width */,
-      viewSpaceCorners.c[6].y - viewSpaceCorners.c[5].y /* Far Height */);
-
-  const _INTR_ARRAY(FrustumRef)& shadowFrustums =
-      RenderProcess::Default::_shadowFrustums[p_CameraRef];
-
-  for (uint32_t i = 0u; i < shadowFrustums.size(); ++i)
-  {
-    FrustumRef shadowFrustumRef = shadowFrustums[i];
-
-    // Transform from camera view space => light proj. space
-    _perInstanceData.shadowViewProjMatrix[i] =
-        FrustumManager::_viewProjectionMatrix(shadowFrustumRef) *
-        CameraManager::_inverseViewMatrix(p_CameraRef);
-  }
-
-  ComputeCallManager::updateUniformMemory({p_CurrentAccumComputeCallRef},
-                                          &_perInstanceData,
-                                          sizeof(PerInstanceData));
-}
-
 _INTR_INLINE ComputeCallRef createComputeCallAccumulation(
     glm::vec3 p_Dim, BufferRef p_LightBuffer, BufferRef p_LightIndexBuffer,
     BufferRef p_IrradProbeBuffer, BufferRef p_IrradProbeIndexBuffer,
@@ -172,27 +95,6 @@ _INTR_INLINE ComputeCallRef createComputeCallAccumulation(
   ComputeCallRef computeCallRef =
       ComputeCallManager::createComputeCall(_N(VolumetricLighting));
   {
-    ComputeCallManager::resetToDefault(computeCallRef);
-    ComputeCallManager::addResourceFlags(
-        computeCallRef, Dod::Resources::ResourceFlags::kResourceVolatile);
-
-    ComputeCallManager::_descDimensions(computeCallRef) =
-        glm::uvec3(Math::divideByMultiple(p_Dim.x, 4u),
-                   Math::divideByMultiple(p_Dim.y, 4u),
-                   Math::divideByMultiple(p_Dim.z, 4u));
-    ComputeCallManager::_descPipeline(computeCallRef) = _pipelineAccumRef;
-
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(PerInstance), GpuProgramType::kCompute,
-        UniformManager::_perInstanceUniformBuffer, UboType::kPerInstanceCompute,
-        sizeof(PerInstanceData));
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(PerFrame), GpuProgramType::kCompute,
-        UniformManager::_perFrameUniformBuffer, UboType::kPerFrameFragment,
-        sizeof(RenderProcess::PerFrameDataFrament));
-    ComputeCallManager::bindImage(
-        computeCallRef, _N(output0Tex), GpuProgramType::kCompute,
-        p_CurrentVolLightingBuffer, Samplers::kInvalidSampler);
   }
 
   return computeCallRef;
@@ -555,28 +457,6 @@ void VolumetricLighting::init()
 
   // Compute calls
   {
-    BufferRef lightBuffer = BufferManager::getResourceByName(_N(LightBuffer));
-    BufferRef lightIndexBuffer =
-        BufferManager::getResourceByName(_N(LightIndexBuffer));
-    BufferRef irradProbeBuffer =
-        BufferManager::getResourceByName(_N(IrradProbeBuffer));
-    BufferRef irradProbeIndexBuffer =
-        BufferManager::getResourceByName(_N(IrradProbeIndexBuffer));
-
-    // Accumulation
-    _computeCallAccumRef = createComputeCallAccumulation(
-        computeDim, lightBuffer, lightIndexBuffer, irradProbeBuffer,
-        irradProbeIndexBuffer, _volLightingBufferImageRef,
-        _volLightingBufferPrevFrameImageRef);
-
-    _computeCallAccumPrevFrameRef = createComputeCallAccumulation(
-        computeDim, lightBuffer, lightIndexBuffer, irradProbeBuffer,
-        irradProbeIndexBuffer, _volLightingBufferPrevFrameImageRef,
-        _volLightingBufferImageRef);
-
-    computeCallsToCreate.push_back(_computeCallAccumRef);
-    computeCallsToCreate.push_back(_computeCallAccumPrevFrameRef);
-
     // Scattering
     _computeCallScatteringRef =
         createComputeCallScattering(computeDim, _volLightingBufferImageRef);
@@ -584,7 +464,6 @@ void VolumetricLighting::init()
         computeDim, _volLightingBufferPrevFrameImageRef);
 
     computeCallsToCreate.push_back(_computeCallScatteringRef);
-    computeCallsToCreate.push_back(_computeCallScatteringPrevFrameRef);
   }
   ComputeCallManager::createResources(computeCallsToCreate);
 
