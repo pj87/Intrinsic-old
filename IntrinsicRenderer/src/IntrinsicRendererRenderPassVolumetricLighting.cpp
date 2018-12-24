@@ -133,18 +133,6 @@ void VolumetricLighting::init()
   PipelineLayoutRef pipelineLayoutEsm;
   {
     {
-      pipelineLayoutAccum =
-          PipelineLayoutManager::createPipelineLayout(_N(VolumetricLighting));
-      PipelineLayoutManager::resetToDefault(pipelineLayoutAccum);
-
-      GpuProgramManager::reflectPipelineLayout(
-          8u,
-          {GpuProgramManager::getResourceByName("volumetric_lighting.comp")},
-          pipelineLayoutAccum);
-    }
-    pipelineLayoutsToCreate.push_back(pipelineLayoutAccum);
-
-    {
       pipelineLayoutScattering = PipelineLayoutManager::createPipelineLayout(
           _N(VolumetricLightingScattering));
       PipelineLayoutManager::resetToDefault(pipelineLayoutScattering);
@@ -156,52 +144,12 @@ void VolumetricLighting::init()
           pipelineLayoutScattering);
     }
     pipelineLayoutsToCreate.push_back(pipelineLayoutScattering);
-
-    {
-      pipelineLayoutEsm =
-          PipelineLayoutManager::createPipelineLayout(_N(ESMGenerate));
-      PipelineLayoutManager::resetToDefault(pipelineLayoutEsm);
-
-      GpuProgramManager::reflectPipelineLayout(
-          8u, {GpuProgramManager::getResourceByName("esm_generate.frag")},
-          pipelineLayoutEsm);
-    }
-    pipelineLayoutsToCreate.push_back(pipelineLayoutEsm);
   }
-
-  const glm::uvec2 expShadowBufferDim = glm::uvec2(256u, 256u);
-
-  // Render passes
-  RenderPassRefArray renderPassesToCreate;
-  {
-    _renderPassRef = RenderPassManager::createRenderPass(_N(ShadowESM));
-    RenderPassManager::resetToDefault(_renderPassRef);
-
-    AttachmentDescription shadowBufferExpAttachment = {
-        (uint8_t)Format::kR32G32B32A32SFloat, 0u};
-    RenderPassManager::_descAttachments(_renderPassRef)
-        .push_back(shadowBufferExpAttachment);
-  }
-  renderPassesToCreate.push_back(_renderPassRef);
-
-  RenderPassManager::createResources(renderPassesToCreate);
 
   // Pipeline
   PipelineRef pipelineEsmGenerateRef;
   PipelineRef pipelineEsmBlurRef;
   {
-    {
-      _pipelineAccumRef =
-          PipelineManager::createPipeline(_N(VolumetricLighting));
-      PipelineManager::resetToDefault(_pipelineAccumRef);
-
-      PipelineManager::_descComputeProgram(_pipelineAccumRef) =
-          GpuProgramManager::getResourceByName("volumetric_lighting.comp");
-      PipelineManager::_descPipelineLayout(_pipelineAccumRef) =
-          pipelineLayoutAccum;
-    }
-    pipelinesToCreate.push_back(_pipelineAccumRef);
-
     {
       _pipelineScatteringRef =
           PipelineManager::createPipeline(_N(VolumetricLighting));
@@ -214,58 +162,6 @@ void VolumetricLighting::init()
           pipelineLayoutScattering;
     }
     pipelinesToCreate.push_back(_pipelineScatteringRef);
-
-    pipelineEsmGenerateRef = PipelineManager::createPipeline(_N(ESMGenerate));
-    {
-
-      PipelineManager::resetToDefault(pipelineEsmGenerateRef);
-
-      PipelineManager::_descFragmentProgram(pipelineEsmGenerateRef) =
-          GpuProgramManager::getResourceByName("esm_generate.frag");
-      PipelineManager::_descVertexProgram(pipelineEsmGenerateRef) =
-          GpuProgramManager::getResourceByName("fullscreen_triangle.vert");
-      PipelineManager::_descRenderPass(pipelineEsmGenerateRef) = _renderPassRef;
-      PipelineManager::_descPipelineLayout(pipelineEsmGenerateRef) =
-          pipelineLayoutEsm;
-      PipelineManager::_descVertexLayout(pipelineEsmGenerateRef) = Dod::Ref();
-      PipelineManager::_descDepthStencilState(pipelineEsmGenerateRef) =
-          DepthStencilStates::kDefaultNoDepthTestAndWrite;
-      PipelineManager::_descViewportRenderSize(pipelineEsmGenerateRef) =
-          (uint8_t)RenderSize::kCustom;
-      PipelineManager::_descScissorRenderSize(pipelineEsmGenerateRef) =
-          (uint8_t)RenderSize::kCustom;
-      PipelineManager::_descAbsoluteViewportDimensions(pipelineEsmGenerateRef) =
-          expShadowBufferDim;
-      PipelineManager::_descAbsoluteScissorDimensions(pipelineEsmGenerateRef) =
-          expShadowBufferDim;
-    }
-    pipelinesToCreate.push_back(pipelineEsmGenerateRef);
-
-    pipelineEsmBlurRef = PipelineManager::createPipeline(_N(ESMBLur));
-    {
-
-      PipelineManager::resetToDefault(pipelineEsmBlurRef);
-
-      PipelineManager::_descFragmentProgram(pipelineEsmBlurRef) =
-          GpuProgramManager::getResourceByName("esm_blur.frag");
-      PipelineManager::_descVertexProgram(pipelineEsmBlurRef) =
-          GpuProgramManager::getResourceByName("fullscreen_triangle.vert");
-      PipelineManager::_descRenderPass(pipelineEsmBlurRef) = _renderPassRef;
-      PipelineManager::_descPipelineLayout(pipelineEsmBlurRef) =
-          pipelineLayoutEsm;
-      PipelineManager::_descVertexLayout(pipelineEsmBlurRef) = Dod::Ref();
-      PipelineManager::_descDepthStencilState(pipelineEsmBlurRef) =
-          DepthStencilStates::kDefaultNoDepthTestAndWrite;
-      PipelineManager::_descViewportRenderSize(pipelineEsmBlurRef) =
-          (uint8_t)RenderSize::kCustom;
-      PipelineManager::_descScissorRenderSize(pipelineEsmBlurRef) =
-          (uint8_t)RenderSize::kCustom;
-      PipelineManager::_descAbsoluteViewportDimensions(pipelineEsmBlurRef) =
-          expShadowBufferDim;
-      PipelineManager::_descAbsoluteScissorDimensions(pipelineEsmBlurRef) =
-          expShadowBufferDim;
-    }
-    pipelinesToCreate.push_back(pipelineEsmBlurRef);
   }
 
   PipelineLayoutManager::createResources(pipelineLayoutsToCreate);
@@ -278,41 +174,6 @@ void VolumetricLighting::init()
 
   // Images
   {
-    _shadowBufferExp = ImageManager::createImage(_N(ShadowBufferExp));
-    {
-      ImageManager::resetToDefault(_shadowBufferExp);
-      ImageManager::addResourceFlags(
-          _shadowBufferExp, Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      ImageManager::_descDimensions(_shadowBufferExp) =
-          glm::uvec3(expShadowBufferDim, 1u);
-      ImageManager::_descImageFormat(_shadowBufferExp) =
-          Format::kR32G32B32A32SFloat;
-      ImageManager::_descImageType(_shadowBufferExp) = ImageType::kTexture;
-      ImageManager::_descArrayLayerCount(_shadowBufferExp) =
-          _INTR_MAX_SHADOW_MAP_COUNT;
-    }
-    imgsToCreate.push_back(_shadowBufferExp);
-
-    _shadowBufferExpPingPong =
-        ImageManager::createImage(_N(ShadowBufferExpPingPong));
-    {
-      ImageManager::resetToDefault(_shadowBufferExpPingPong);
-      ImageManager::addResourceFlags(
-          _shadowBufferExpPingPong,
-          Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      ImageManager::_descDimensions(_shadowBufferExpPingPong) =
-          glm::uvec3(expShadowBufferDim, 1u);
-      ImageManager::_descImageFormat(_shadowBufferExpPingPong) =
-          Format::kR32G32B32A32SFloat;
-      ImageManager::_descImageType(_shadowBufferExpPingPong) =
-          ImageType::kTexture;
-      ImageManager::_descArrayLayerCount(_shadowBufferExpPingPong) =
-          _INTR_MAX_SHADOW_MAP_COUNT;
-    }
-    imgsToCreate.push_back(_shadowBufferExpPingPong);
-
     _volLightingScatteringBufferImageRef =
         ImageManager::createImage(_N(VolumetricLightingScatteringBuffer));
     {
@@ -346,46 +207,6 @@ void VolumetricLighting::init()
     computeCallsToCreate.push_back(_computeCallScatteringRef);
   }
   ComputeCallManager::createResources(computeCallsToCreate);
-
-  // Create framebuffers
-  for (uint32_t shadowMapIdx = 0u; shadowMapIdx < _INTR_MAX_SHADOW_MAP_COUNT;
-       ++shadowMapIdx)
-  {
-    FramebufferRef frameBufferRef =
-        FramebufferManager::createFramebuffer(_N(ShadowESM));
-    {
-      FramebufferManager::resetToDefault(frameBufferRef);
-      FramebufferManager::addResourceFlags(
-          frameBufferRef, Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      FramebufferManager::_descAttachedImages(frameBufferRef)
-          .push_back(AttachmentInfo(_shadowBufferExp, shadowMapIdx));
-      FramebufferManager::_descDimensions(frameBufferRef) = expShadowBufferDim;
-      FramebufferManager::_descRenderPass(frameBufferRef) = _renderPassRef;
-    }
-    _framebufferRefs.push_back(frameBufferRef);
-  }
-
-  for (uint32_t shadowMapIdx = 0u; shadowMapIdx < _INTR_MAX_SHADOW_MAP_COUNT;
-       ++shadowMapIdx)
-  {
-    FramebufferRef frameBufferRef =
-        FramebufferManager::createFramebuffer(_N(ShadowESMPingPong));
-    {
-      FramebufferManager::resetToDefault(frameBufferRef);
-      FramebufferManager::addResourceFlags(
-          frameBufferRef, Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      FramebufferManager::_descAttachedImages(frameBufferRef)
-          .push_back(AttachmentInfo(_shadowBufferExpPingPong, shadowMapIdx));
-      FramebufferManager::_descDimensions(frameBufferRef) = expShadowBufferDim;
-      FramebufferManager::_descRenderPass(frameBufferRef) = _renderPassRef;
-    }
-    _framebufferPingPongRefs.push_back(frameBufferRef);
-  }
-
-  FramebufferManager::createResources(_framebufferRefs);
-  FramebufferManager::createResources(_framebufferPingPongRefs);
 }
 
 // <-
