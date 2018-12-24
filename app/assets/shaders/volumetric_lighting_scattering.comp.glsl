@@ -21,10 +21,10 @@
 #include "lib_math.glsl"
 #include "lib_vol_lighting.glsl"
 
-layout(binding = 0) uniform PerInstance { float _dummy; }
-uboPerInstance;
+//layout(binding = 0) uniform PerInstance { float _dummy; }
+//uboPerInstance;
 
-layout(binding = 1, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex;
+layout(binding = 0, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex;
 
 // Based on AC4 volumetric fog
 // https://goo.gl/xEgT9O

@@ -27,34 +27,6 @@ namespace RenderPass
 {
 namespace
 {
-
-struct PerInstanceData
-{
-  glm::mat4 projMatrix;
-  glm::mat4 prevViewProjMatrix;
-
-  glm::vec4 eyeVSVectorX;
-  glm::vec4 eyeVSVectorY;
-  glm::vec4 eyeVSVectorZ;
-
-  glm::vec4 eyeWSVectorX;
-  glm::vec4 eyeWSVectorY;
-  glm::vec4 eyeWSVectorZ;
-
-  glm::vec4 data0;
-
-  glm::vec4 camPos;
-
-  glm::mat4 shadowViewProjMatrix[_INTR_MAX_SHADOW_MAP_COUNT];
-
-  glm::vec4 nearFar;
-  glm::vec4 nearFarWidthHeight;
-
-  glm::vec4 haltonSamples;
-} _perInstanceData;
-
-glm::mat4 prevViewProjMatrix;
-
 ImageRef _volLightingBufferImageRef;
 ImageRef _volLightingScatteringBufferImageRef;
 
@@ -78,11 +50,6 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(
                    Math::divideByMultiple(p_Dim.y, 8u), 1u);
     ComputeCallManager::_descPipeline(computeCallScatteringRef) =
         _pipelineScatteringRef;
-
-    ComputeCallManager::bindBuffer(
-        computeCallScatteringRef, _N(PerInstance), GpuProgramType::kCompute,
-        UniformManager::_perInstanceUniformBuffer, UboType::kPerInstanceCompute,
-        sizeof(PerInstanceData));
     ComputeCallManager::bindImage(
         computeCallScatteringRef, _N(volLightScatterBufferTex),
         GpuProgramType::kCompute, _volLightingScatteringBufferImageRef,
