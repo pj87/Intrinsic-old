@@ -191,9 +191,6 @@ _INTR_INLINE ComputeCallRef createComputeCallAccumulation(
         UniformManager::_perFrameUniformBuffer, UboType::kPerFrameFragment,
         sizeof(RenderProcess::PerFrameDataFrament));
     ComputeCallManager::bindImage(
-        computeCallRef, _N(shadowBufferTex), GpuProgramType::kCompute,
-        ImageManager::getResourceByName(_N(ShadowBuffer)), Samplers::kShadow);
-    ComputeCallManager::bindImage(
         computeCallRef, _N(output0Tex), GpuProgramType::kCompute,
         p_CurrentVolLightingBuffer, Samplers::kInvalidSampler);
   }
