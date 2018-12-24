@@ -169,7 +169,7 @@ void main()
         vec3(inUV0,
              depthToVolumeZ(depthToVSDepth(fogDepth, uboPerInstance.camParams.x,
                                            uboPerInstance.camParams.y))));
-    fog += textureLod(volLightScatteringBufferTex, volLightingCoord, 0.0);
+    fog += 0.005 * textureLod(volLightScatteringBufferTex, volLightingCoord, 0.0);
   }
 
   outColor.rgb = outColor.rgb * fog.aaa + fog.rgb;
