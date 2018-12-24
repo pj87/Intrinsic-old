@@ -313,43 +313,6 @@ void VolumetricLighting::init()
     }
     imgsToCreate.push_back(_shadowBufferExpPingPong);
 
-    _volLightingBufferImageRef =
-        ImageManager::createImage(_N(VolumetricLightingBuffer));
-    {
-      ImageManager::resetToDefault(_volLightingBufferImageRef);
-      ImageManager::addResourceFlags(
-          _volLightingBufferImageRef,
-          Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      ImageManager::_descDimensions(_volLightingBufferImageRef) = computeDim;
-      ImageManager::_descImageFormat(_volLightingBufferImageRef) =
-          Format::kR16G16B16A16Float;
-      ImageManager::_descImageType(_volLightingBufferImageRef) =
-          ImageType::kTexture;
-      ImageManager::_descImageFlags(_volLightingBufferImageRef) =
-          ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
-    }
-    imgsToCreate.push_back(_volLightingBufferImageRef);
-
-    _volLightingBufferPrevFrameImageRef =
-        ImageManager::createImage(_N(VolumetricLightingBufferPrevFrame));
-    {
-      ImageManager::resetToDefault(_volLightingBufferPrevFrameImageRef);
-      ImageManager::addResourceFlags(
-          _volLightingBufferPrevFrameImageRef,
-          Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      ImageManager::_descDimensions(_volLightingBufferPrevFrameImageRef) =
-          computeDim;
-      ImageManager::_descImageFormat(_volLightingBufferPrevFrameImageRef) =
-          Format::kR16G16B16A16Float;
-      ImageManager::_descImageType(_volLightingBufferPrevFrameImageRef) =
-          ImageType::kTexture;
-      ImageManager::_descImageFlags(_volLightingBufferPrevFrameImageRef) =
-          ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
-    }
-    imgsToCreate.push_back(_volLightingBufferPrevFrameImageRef);
-
     _volLightingScatteringBufferImageRef =
         ImageManager::createImage(_N(VolumetricLightingScatteringBuffer));
     {
@@ -372,74 +335,6 @@ void VolumetricLighting::init()
   ImageManager::createResources(imgsToCreate);
 
   // Draw calls
-  {
-    _drawCallEsmGenerateRef = DrawCallManager::createDrawCall(_N(ESMGenerate));
-    {
-      DrawCallManager::resetToDefault(_drawCallEsmGenerateRef);
-      DrawCallManager::addResourceFlags(
-          _drawCallEsmGenerateRef,
-          Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      DrawCallManager::_descPipeline(_drawCallEsmGenerateRef) =
-          pipelineEsmGenerateRef;
-      DrawCallManager::_descVertexCount(_drawCallEsmGenerateRef) = 3u;
-
-      DrawCallManager::bindBuffer(
-          _drawCallEsmGenerateRef, _N(PerInstance), GpuProgramType::kFragment,
-          UniformManager::_perInstanceUniformBuffer,
-          UboType::kPerInstanceFragment, sizeof(PerInstanceDataESMGenerate));
-      DrawCallManager::bindImage(
-          _drawCallEsmGenerateRef, _N(inputTex), GpuProgramType::kFragment,
-          ImageManager::getResourceByName(_N(ShadowBuffer)),
-          Samplers::kLinearClamp);
-
-      drawCallsToCreate.push_back(_drawCallEsmGenerateRef);
-    }
-
-    _drawCallEsmBlurRef = DrawCallManager::createDrawCall(_N(ESMBlur));
-    {
-      DrawCallManager::resetToDefault(_drawCallEsmBlurRef);
-      DrawCallManager::addResourceFlags(
-          _drawCallEsmBlurRef,
-          Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      DrawCallManager::_descPipeline(_drawCallEsmBlurRef) = pipelineEsmBlurRef;
-      DrawCallManager::_descVertexCount(_drawCallEsmBlurRef) = 3u;
-
-      DrawCallManager::bindBuffer(
-          _drawCallEsmBlurRef, _N(PerInstance), GpuProgramType::kFragment,
-          UniformManager::_perInstanceUniformBuffer,
-          UboType::kPerInstanceFragment, sizeof(PerInstanceDataESMGenerate));
-      DrawCallManager::bindImage(_drawCallEsmBlurRef, _N(inputTex),
-                                 GpuProgramType::kFragment, _shadowBufferExp,
-                                 Samplers::kLinearClamp);
-
-      drawCallsToCreate.push_back(_drawCallEsmBlurRef);
-    }
-
-    _drawCallEsmBlurPingPongRef =
-        DrawCallManager::createDrawCall(_N(ESMBlurPingPong));
-    {
-      DrawCallManager::resetToDefault(_drawCallEsmBlurPingPongRef);
-      DrawCallManager::addResourceFlags(
-          _drawCallEsmBlurPingPongRef,
-          Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      DrawCallManager::_descPipeline(_drawCallEsmBlurPingPongRef) =
-          pipelineEsmBlurRef;
-      DrawCallManager::_descVertexCount(_drawCallEsmBlurPingPongRef) = 3u;
-
-      DrawCallManager::bindBuffer(
-          _drawCallEsmBlurPingPongRef, _N(PerInstance),
-          GpuProgramType::kFragment, UniformManager::_perInstanceUniformBuffer,
-          UboType::kPerInstanceFragment, sizeof(PerInstanceDataESMGenerate));
-      DrawCallManager::bindImage(
-          _drawCallEsmBlurPingPongRef, _N(inputTex), GpuProgramType::kFragment,
-          _shadowBufferExpPingPong, Samplers::kLinearClamp);
-
-      drawCallsToCreate.push_back(_drawCallEsmBlurPingPongRef);
-    }
-  }
   DrawCallManager::createResources(drawCallsToCreate);
 
   // Compute calls
