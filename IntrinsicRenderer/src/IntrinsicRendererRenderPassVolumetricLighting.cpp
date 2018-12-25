@@ -51,7 +51,7 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(
     ComputeCallManager::_descPipeline(computeCallScatteringRef) =
         _pipelineScatteringRef;
     ComputeCallManager::bindImage(
-        computeCallScatteringRef, _N(volLightScatterBufferTex),
+        computeCallScatteringRef, _N(volLightScatterBufferTex1),
         GpuProgramType::kCompute, _volLightingScatteringBufferImageRef,
         Samplers::kInvalidSampler);
   }

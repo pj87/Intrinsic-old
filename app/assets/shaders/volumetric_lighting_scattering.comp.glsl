@@ -24,14 +24,14 @@
 //layout(binding = 0) uniform PerInstance { float _dummy; }
 //uboPerInstance;
 
-layout(binding = 0, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex;
+layout(binding = 0, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex1;
 
 // Based on AC4 volumetric fog
 // https://goo.gl/xEgT9O
 void write(ivec3 cellIdx, vec4 accum)
 {
   const vec4 result = vec4(accum.rgb, clamp(exp(-accum.a), 0.0, 1.0));
-  imageStore(volLightScatterBufferTex, cellIdx, result);
+  imageStore(volLightScatterBufferTex1, cellIdx, result);
 }
 
 vec4 accum(vec4 prev, vec4 next)
