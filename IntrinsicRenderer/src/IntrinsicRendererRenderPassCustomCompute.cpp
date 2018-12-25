@@ -388,7 +388,7 @@ void CustomCompute::init()
       GpuProgramManager::reflectPipelineLayout(
           8u,
           {GpuProgramManager::getResourceByName(
-              "volumetric_lighting_scattering.comp")},
+              "custom_compute.comp")},
           pipelineLayoutScattering);
     }
     pipelineLayoutsToCreate.push_back(pipelineLayoutScattering);
@@ -445,7 +445,7 @@ void CustomCompute::init()
 
       PipelineManager::_descComputeProgram(_pipelineScatteringRef) =
           GpuProgramManager::getResourceByName(
-              "volumetric_lighting_scattering.comp");
+              "custom_compute.comp");
       PipelineManager::_descPipelineLayout(_pipelineScatteringRef) =
           pipelineLayoutScattering;
     }
