@@ -554,6 +554,15 @@
 			"sourceImageLayout" : "ShaderReadOnly",
 			"targetImageLayout" : "ColorAttachment"
 		},
+		{
+			"type" : "RenderPassCustomCompute"
+		},
+		{
+			"type" : "ImageMemoryBarrier",
+			"image" : "Scene",
+			"sourceImageLayout" : "ShaderReadOnly",
+			"targetImageLayout" : "ColorAttachment"
+		},
 		// <-
 		// Post processing
 		// ->
