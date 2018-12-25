@@ -1,0 +1,10 @@
+{
+    "name": "custom_compute.comp",
+    "properties": {
+        "name": "custom_compute.comp",
+        "gpuProgramName": "custom_compute.comp.glsl",
+        "entryPoint": "main",
+        "preprocessorDefines": "",
+        "gpuProgramType": 3
+    }
+}
