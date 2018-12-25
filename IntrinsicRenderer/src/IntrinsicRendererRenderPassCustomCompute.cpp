@@ -164,69 +164,6 @@ updatePerInstanceData(CameraRef p_CameraRef,
                                           sizeof(PerInstanceData));
 }
 
-_INTR_INLINE ComputeCallRef createComputeCallAccumulation(
-    glm::vec3 p_Dim, BufferRef p_LightBuffer, BufferRef p_LightIndexBuffer,
-    BufferRef p_IrradProbeBuffer, BufferRef p_IrradProbeIndexBuffer,
-    BufferRef p_CurrentVolLightingBuffer, BufferRef p_PrevVolLightingBuffer)
-{
-  ComputeCallRef computeCallRef =
-      ComputeCallManager::createComputeCall(_N(VolumetricLighting));
-  {
-    ComputeCallManager::resetToDefault(computeCallRef);
-    ComputeCallManager::addResourceFlags(
-        computeCallRef, Dod::Resources::ResourceFlags::kResourceVolatile);
-
-    ComputeCallManager::_descDimensions(computeCallRef) =
-        glm::uvec3(Math::divideByMultiple(p_Dim.x, 4u),
-                   Math::divideByMultiple(p_Dim.y, 4u),
-                   Math::divideByMultiple(p_Dim.z, 4u));
-    ComputeCallManager::_descPipeline(computeCallRef) = _pipelineAccumRef;
-
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(PerInstance), GpuProgramType::kCompute,
-        UniformManager::_perInstanceUniformBuffer, UboType::kPerInstanceCompute,
-        sizeof(PerInstanceData));
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(PerFrame), GpuProgramType::kCompute,
-        UniformManager::_perFrameUniformBuffer, UboType::kPerFrameFragment,
-        sizeof(RenderProcess::PerFrameDataFrament));
-    ComputeCallManager::bindImage(
-        computeCallRef, _N(shadowBufferTex), GpuProgramType::kCompute,
-        ImageManager::getResourceByName(_N(ShadowBuffer)), Samplers::kShadow);
-    ComputeCallManager::bindImage(computeCallRef, _N(shadowBufferExpTex),
-                                  GpuProgramType::kCompute, _shadowBufferExp,
-                                  Samplers::kLinearClamp);
-    ComputeCallManager::bindImage(
-        computeCallRef, _N(output0Tex), GpuProgramType::kCompute,
-        p_CurrentVolLightingBuffer, Samplers::kInvalidSampler);
-    ComputeCallManager::bindImage(
-        computeCallRef, _N(prevVolLightBufferTex), GpuProgramType::kCompute,
-        p_PrevVolLightingBuffer, Samplers::kLinearClamp);
-    ComputeCallManager::bindImage(
-        computeCallRef, _N(kelvinLutTex), GpuProgramType::kCompute,
-        ImageManager::getResourceByName(_N(kelvin_rgb_LUT)),
-        Samplers::kLinearClamp);
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(LightBuffer), GpuProgramType::kCompute,
-        p_LightBuffer, UboType::kInvalidUbo,
-        BufferManager::_descSizeInBytes(p_LightBuffer));
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(LightIndexBuffer), GpuProgramType::kCompute,
-        p_LightIndexBuffer, UboType::kInvalidUbo,
-        BufferManager::_descSizeInBytes(p_LightIndexBuffer));
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(IrradProbeBuffer), GpuProgramType::kCompute,
-        p_IrradProbeBuffer, UboType::kInvalidUbo,
-        BufferManager::_descSizeInBytes(p_IrradProbeBuffer));
-    ComputeCallManager::bindBuffer(
-        computeCallRef, _N(IrradProbeIndexBuffer), GpuProgramType::kCompute,
-        p_IrradProbeIndexBuffer, UboType::kInvalidUbo,
-        BufferManager::_descSizeInBytes(p_IrradProbeIndexBuffer));
-  }
-
-  return computeCallRef;
-}
-
 _INTR_INLINE ComputeCallRef createComputeCallScattering(
     glm::vec3 p_Dim, BufferRef p_CurrentVolLightingBuffer)
 {
@@ -300,52 +237,10 @@ void CustomCompute::init()
           pipelineLayoutScattering);
     }
     pipelineLayoutsToCreate.push_back(pipelineLayoutScattering);
-
-    {
-      pipelineLayoutEsm =
-          PipelineLayoutManager::createPipelineLayout(_N(ESMGenerate));
-      PipelineLayoutManager::resetToDefault(pipelineLayoutEsm);
-
-      GpuProgramManager::reflectPipelineLayout(
-          8u, {GpuProgramManager::getResourceByName("esm_generate.frag")},
-          pipelineLayoutEsm);
-    }
-    pipelineLayoutsToCreate.push_back(pipelineLayoutEsm);
   }
-
-  const glm::uvec2 expShadowBufferDim = glm::uvec2(256u, 256u);
-
-  // Render passes
-  RenderPassRefArray renderPassesToCreate;
-  {
-    _renderPassRef = RenderPassManager::createRenderPass(_N(ShadowESM));
-    RenderPassManager::resetToDefault(_renderPassRef);
-
-    AttachmentDescription shadowBufferExpAttachment = {
-        (uint8_t)Format::kR32G32B32A32SFloat, 0u};
-    RenderPassManager::_descAttachments(_renderPassRef)
-        .push_back(shadowBufferExpAttachment);
-  }
-  renderPassesToCreate.push_back(_renderPassRef);
-
-  RenderPassManager::createResources(renderPassesToCreate);
 
   // Pipeline
-  PipelineRef pipelineEsmGenerateRef;
-  PipelineRef pipelineEsmBlurRef;
   {
-    {
-      _pipelineAccumRef =
-          PipelineManager::createPipeline(_N(VolumetricLighting));
-      PipelineManager::resetToDefault(_pipelineAccumRef);
-
-      PipelineManager::_descComputeProgram(_pipelineAccumRef) =
-          GpuProgramManager::getResourceByName("volumetric_lighting.comp");
-      PipelineManager::_descPipelineLayout(_pipelineAccumRef) =
-          pipelineLayoutAccum;
-    }
-    pipelinesToCreate.push_back(_pipelineAccumRef);
-
     {
       _pipelineScatteringRef =
           PipelineManager::createPipeline(_N(VolumetricLighting));
@@ -358,58 +253,6 @@ void CustomCompute::init()
           pipelineLayoutScattering;
     }
     pipelinesToCreate.push_back(_pipelineScatteringRef);
-
-    pipelineEsmGenerateRef = PipelineManager::createPipeline(_N(ESMGenerate));
-    {
-
-      PipelineManager::resetToDefault(pipelineEsmGenerateRef);
-
-      PipelineManager::_descFragmentProgram(pipelineEsmGenerateRef) =
-          GpuProgramManager::getResourceByName("esm_generate.frag");
-      PipelineManager::_descVertexProgram(pipelineEsmGenerateRef) =
-          GpuProgramManager::getResourceByName("fullscreen_triangle.vert");
-      PipelineManager::_descRenderPass(pipelineEsmGenerateRef) = _renderPassRef;
-      PipelineManager::_descPipelineLayout(pipelineEsmGenerateRef) =
-          pipelineLayoutEsm;
-      PipelineManager::_descVertexLayout(pipelineEsmGenerateRef) = Dod::Ref();
-      PipelineManager::_descDepthStencilState(pipelineEsmGenerateRef) =
-          DepthStencilStates::kDefaultNoDepthTestAndWrite;
-      PipelineManager::_descViewportRenderSize(pipelineEsmGenerateRef) =
-          (uint8_t)RenderSize::kCustom;
-      PipelineManager::_descScissorRenderSize(pipelineEsmGenerateRef) =
-          (uint8_t)RenderSize::kCustom;
-      PipelineManager::_descAbsoluteViewportDimensions(pipelineEsmGenerateRef) =
-          expShadowBufferDim;
-      PipelineManager::_descAbsoluteScissorDimensions(pipelineEsmGenerateRef) =
-          expShadowBufferDim;
-    }
-    pipelinesToCreate.push_back(pipelineEsmGenerateRef);
-
-    pipelineEsmBlurRef = PipelineManager::createPipeline(_N(ESMBLur));
-    {
-
-      PipelineManager::resetToDefault(pipelineEsmBlurRef);
-
-      PipelineManager::_descFragmentProgram(pipelineEsmBlurRef) =
-          GpuProgramManager::getResourceByName("esm_blur.frag");
-      PipelineManager::_descVertexProgram(pipelineEsmBlurRef) =
-          GpuProgramManager::getResourceByName("fullscreen_triangle.vert");
-      PipelineManager::_descRenderPass(pipelineEsmBlurRef) = _renderPassRef;
-      PipelineManager::_descPipelineLayout(pipelineEsmBlurRef) =
-          pipelineLayoutEsm;
-      PipelineManager::_descVertexLayout(pipelineEsmBlurRef) = Dod::Ref();
-      PipelineManager::_descDepthStencilState(pipelineEsmBlurRef) =
-          DepthStencilStates::kDefaultNoDepthTestAndWrite;
-      PipelineManager::_descViewportRenderSize(pipelineEsmBlurRef) =
-          (uint8_t)RenderSize::kCustom;
-      PipelineManager::_descScissorRenderSize(pipelineEsmBlurRef) =
-          (uint8_t)RenderSize::kCustom;
-      PipelineManager::_descAbsoluteViewportDimensions(pipelineEsmBlurRef) =
-          expShadowBufferDim;
-      PipelineManager::_descAbsoluteScissorDimensions(pipelineEsmBlurRef) =
-          expShadowBufferDim;
-    }
-    pipelinesToCreate.push_back(pipelineEsmBlurRef);
   }
 
   PipelineLayoutManager::createResources(pipelineLayoutsToCreate);
@@ -422,41 +265,6 @@ void CustomCompute::init()
 
   // Images
   {
-    _shadowBufferExp = ImageManager::createImage(_N(ShadowBufferExp));
-    {
-      ImageManager::resetToDefault(_shadowBufferExp);
-      ImageManager::addResourceFlags(
-          _shadowBufferExp, Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      ImageManager::_descDimensions(_shadowBufferExp) =
-          glm::uvec3(expShadowBufferDim, 1u);
-      ImageManager::_descImageFormat(_shadowBufferExp) =
-          Format::kR32G32B32A32SFloat;
-      ImageManager::_descImageType(_shadowBufferExp) = ImageType::kTexture;
-      ImageManager::_descArrayLayerCount(_shadowBufferExp) =
-          _INTR_MAX_SHADOW_MAP_COUNT;
-    }
-    imgsToCreate.push_back(_shadowBufferExp);
-
-    _shadowBufferExpPingPong =
-        ImageManager::createImage(_N(ShadowBufferExpPingPong));
-    {
-      ImageManager::resetToDefault(_shadowBufferExpPingPong);
-      ImageManager::addResourceFlags(
-          _shadowBufferExpPingPong,
-          Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      ImageManager::_descDimensions(_shadowBufferExpPingPong) =
-          glm::uvec3(expShadowBufferDim, 1u);
-      ImageManager::_descImageFormat(_shadowBufferExpPingPong) =
-          Format::kR32G32B32A32SFloat;
-      ImageManager::_descImageType(_shadowBufferExpPingPong) =
-          ImageType::kTexture;
-      ImageManager::_descArrayLayerCount(_shadowBufferExpPingPong) =
-          _INTR_MAX_SHADOW_MAP_COUNT;
-    }
-    imgsToCreate.push_back(_shadowBufferExpPingPong);
-
     _volLightingBufferImageRef =
         ImageManager::createImage(_N(VolumetricLightingBuffer));
     {
