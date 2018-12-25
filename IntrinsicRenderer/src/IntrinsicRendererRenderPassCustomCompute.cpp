@@ -769,54 +769,7 @@ void CustomCompute::render(float p_DeltaT, CameraRef p_CameraRef)
   _INTR_PROFILE_CPU("Render Pass", "Render Volumetric Lighting");
   _INTR_PROFILE_GPU("Render Volumetric Lighting");
 
-  const _INTR_ARRAY(FrustumRef)& shadowFrustums =
-      RenderProcess::Default::_shadowFrustums[p_CameraRef];
-
-  const uint32_t shadowMapCount = (uint32_t)shadowFrustums.size();
-  generateExponentialShadowMaps(shadowMapCount);
-  blurExponentialShadowMaps(shadowMapCount);
-
-  ComputeCallRef accumComputeCallRefToUse = _computeCallAccumRef;
-  if ((TaskManager::_frameCounter % 2u) != 0u)
-  {
-    accumComputeCallRefToUse = _computeCallAccumPrevFrameRef;
-
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferPrevFrameImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-        VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-  }
-  else
-  {
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-        VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferPrevFrameImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-  }
-
-  {
-    // Update per instance data
-    updatePerInstanceData(p_CameraRef, accumComputeCallRefToUse);
-  }
-
   VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
-
-  {
-    RenderSystem::dispatchComputeCall(accumComputeCallRefToUse,
-                                      primaryCmdBuffer);
-  }
 
   ComputeCallRef scatteringComputeCalltoUse = _computeCallScatteringRef;
   if ((TaskManager::_frameCounter % 2u) != 0u)
