@@ -68,22 +68,9 @@ glm::mat4 prevViewProjMatrix;
 ImageRef _volLightingBufferImageRef;
 ImageRef _volLightingBufferPrevFrameImageRef;
 ImageRef _volLightingScatteringBufferImageRef;
-ImageRef _shadowBufferExp;
-ImageRef _shadowBufferExpPingPong;
 
-RenderPassRef _renderPassRef;
-FramebufferRefArray _framebufferRefs;
-FramebufferRefArray _framebufferPingPongRefs;
-
-PipelineRef _pipelineAccumRef;
 PipelineRef _pipelineScatteringRef;
 
-DrawCallRef _drawCallEsmGenerateRef;
-DrawCallRef _drawCallEsmBlurRef;
-DrawCallRef _drawCallEsmBlurPingPongRef;
-
-ComputeCallRef _computeCallAccumRef;
-ComputeCallRef _computeCallAccumPrevFrameRef;
 ComputeCallRef _computeCallScatteringRef;
 ComputeCallRef _computeCallScatteringPrevFrameRef;
 
@@ -206,25 +193,10 @@ void CustomCompute::init()
 {
   PipelineRefArray pipelinesToCreate;
   PipelineLayoutRefArray pipelineLayoutsToCreate;
-  DrawCallRefArray drawCallsToCreate;
 
   // Pipeline layouts
-  PipelineLayoutRef pipelineLayoutAccum;
   PipelineLayoutRef pipelineLayoutScattering;
-  PipelineLayoutRef pipelineLayoutEsm;
   {
-    {
-      pipelineLayoutAccum =
-          PipelineLayoutManager::createPipelineLayout(_N(VolumetricLighting));
-      PipelineLayoutManager::resetToDefault(pipelineLayoutAccum);
-
-      GpuProgramManager::reflectPipelineLayout(
-          8u,
-          {GpuProgramManager::getResourceByName("volumetric_lighting.comp")},
-          pipelineLayoutAccum);
-    }
-    pipelineLayoutsToCreate.push_back(pipelineLayoutAccum);
-
     {
       pipelineLayoutScattering = PipelineLayoutManager::createPipelineLayout(
           _N(VolumetricLightingScattering));
