@@ -38,8 +38,9 @@ layout(binding = 9) uniform sampler2D depthBufferTex;
 layout(binding = 10) uniform sampler2D depthBufferTranspTex;
 layout(binding = 11) MATERIAL_BUFFER;
 layout(binding = 12) uniform sampler3D volLightScatteringBufferTex;
+layout(binding = 13) uniform sampler3D computeCallBufferTex;
 
-PER_FRAME_DATA(13);
+PER_FRAME_DATA(14);
 
 layout(location = 0) in vec2 inUV0;
 layout(location = 0) out vec4 outColor;
@@ -169,7 +170,8 @@ void main()
         vec3(inUV0,
              depthToVolumeZ(depthToVSDepth(fogDepth, uboPerInstance.camParams.x,
                                            uboPerInstance.camParams.y))));
-    fog += textureLod(volLightScatteringBufferTex, volLightingCoord, 0.0);
+    fog += textureLod(volLightScatteringBufferTex, volLightingCoord, 0.0) + 
+           textureLod(computeCallBufferTex, volLightingCoord, 0.0);
   }
 
   outColor.rgb = outColor.rgb * fog.aaa + fog.rgb;

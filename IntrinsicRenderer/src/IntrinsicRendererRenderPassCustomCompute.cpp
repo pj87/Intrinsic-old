@@ -142,7 +142,7 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(
     glm::vec3 p_Dim, BufferRef p_CurrentVolLightingBuffer)
 {
   ComputeCallRef computeCallScatteringRef =
-      ComputeCallManager::createComputeCall(_N(VolumetricLighting));
+      ComputeCallManager::createComputeCall(_N(CustomCompute));
   {
     ComputeCallManager::resetToDefault(computeCallScatteringRef);
     ComputeCallManager::addResourceFlags(
@@ -164,7 +164,7 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(
         GpuProgramType::kCompute, p_CurrentVolLightingBuffer,
         Samplers::kNearestClamp);
     ComputeCallManager::bindImage(
-        computeCallScatteringRef, _N(volLightScatterBufferTex),
+        computeCallScatteringRef, _N(computeCallBufferTex),
         GpuProgramType::kCompute, _volLightingScatteringBufferImageRef,
         Samplers::kInvalidSampler);
   }
@@ -186,7 +186,7 @@ void CustomCompute::init()
   {
     {
       pipelineLayoutScattering = PipelineLayoutManager::createPipelineLayout(
-          _N(VolumetricLightingScattering));
+          _N(CustomCompute));
       PipelineLayoutManager::resetToDefault(pipelineLayoutScattering);
 
       GpuProgramManager::reflectPipelineLayout(
@@ -202,7 +202,7 @@ void CustomCompute::init()
   {
     {
       _pipelineScatteringRef =
-          PipelineManager::createPipeline(_N(VolumetricLighting));
+          PipelineManager::createPipeline(_N(CustomCompute));
       PipelineManager::resetToDefault(_pipelineScatteringRef);
 
       PipelineManager::_descComputeProgram(_pipelineScatteringRef) =
@@ -243,7 +243,7 @@ void CustomCompute::init()
     imgsToCreate.push_back(_volLightingBufferImageRef);
 
     _volLightingScatteringBufferImageRef =
-        ImageManager::createImage(_N(VolumetricLightingScatteringBuffer));
+        ImageManager::createImage(_N(ComputeCallBuffer));
     {
       ImageManager::resetToDefault(_volLightingScatteringBufferImageRef);
       ImageManager::addResourceFlags(
