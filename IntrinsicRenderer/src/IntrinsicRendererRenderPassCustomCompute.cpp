@@ -27,17 +27,6 @@ namespace RenderPass
 {
 namespace
 {
-struct PerInstanceDataESMGenerate
-{
-  glm::uvec4 arrayIdx;
-};
-
-struct PerInstanceDataESMBlur
-{
-  glm::vec4 blurParams;
-  glm::uvec4 arrayIdx;
-};
-
 struct PerInstanceData
 {
   glm::mat4 projMatrix;
