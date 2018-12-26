@@ -293,6 +293,14 @@ void CustomCompute::render(float p_DeltaT, CameraRef p_CameraRef)
 
   ComputeCallRef scatteringComputeCalltoUse = _computeCallScatteringRef;
 
+  // Maybe it will be useful in the future...
+  /*
+  {
+    // Update per instance data
+    updatePerInstanceData(p_CameraRef, scatteringComputeCalltoUse);
+  }
+  */
+
   ImageManager::insertImageMemoryBarrier(
       _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
       VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
