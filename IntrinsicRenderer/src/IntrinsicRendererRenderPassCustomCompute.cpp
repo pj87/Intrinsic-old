@@ -55,13 +55,11 @@ struct PerInstanceData
 glm::mat4 prevViewProjMatrix;
 
 ImageRef _volLightingBufferImageRef;
-ImageRef _volLightingBufferPrevFrameImageRef;
 ImageRef _volLightingScatteringBufferImageRef;
 
 PipelineRef _pipelineScatteringRef;
 
 ComputeCallRef _computeCallScatteringRef;
-ComputeCallRef _computeCallScatteringPrevFrameRef;
 
 _INTR_INLINE void
 updatePerInstanceData(CameraRef p_CameraRef,
@@ -244,25 +242,6 @@ void CustomCompute::init()
     }
     imgsToCreate.push_back(_volLightingBufferImageRef);
 
-    _volLightingBufferPrevFrameImageRef =
-        ImageManager::createImage(_N(VolumetricLightingBufferPrevFrame));
-    {
-      ImageManager::resetToDefault(_volLightingBufferPrevFrameImageRef);
-      ImageManager::addResourceFlags(
-          _volLightingBufferPrevFrameImageRef,
-          Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      ImageManager::_descDimensions(_volLightingBufferPrevFrameImageRef) =
-          computeDim;
-      ImageManager::_descImageFormat(_volLightingBufferPrevFrameImageRef) =
-          Format::kR16G16B16A16Float;
-      ImageManager::_descImageType(_volLightingBufferPrevFrameImageRef) =
-          ImageType::kTexture;
-      ImageManager::_descImageFlags(_volLightingBufferPrevFrameImageRef) =
-          ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
-    }
-    imgsToCreate.push_back(_volLightingBufferPrevFrameImageRef);
-
     _volLightingScatteringBufferImageRef =
         ImageManager::createImage(_N(VolumetricLightingScatteringBuffer));
     {
@@ -289,11 +268,8 @@ void CustomCompute::init()
     // Scattering
     _computeCallScatteringRef =
         createComputeCallScattering(computeDim, _volLightingBufferImageRef);
-    _computeCallScatteringPrevFrameRef = createComputeCallScattering(
-        computeDim, _volLightingBufferPrevFrameImageRef);
 
     computeCallsToCreate.push_back(_computeCallScatteringRef);
-    computeCallsToCreate.push_back(_computeCallScatteringPrevFrameRef);
   }
   ComputeCallManager::createResources(computeCallsToCreate);
 }
@@ -316,24 +292,6 @@ void CustomCompute::render(float p_DeltaT, CameraRef p_CameraRef)
   VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
 
   ComputeCallRef scatteringComputeCalltoUse = _computeCallScatteringRef;
-  if ((TaskManager::_frameCounter % 2u) != 0u)
-  {
-    scatteringComputeCalltoUse = _computeCallScatteringPrevFrameRef;
-
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferPrevFrameImageRef, VK_IMAGE_LAYOUT_GENERAL,
-        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-  }
-  else
-  {
-    ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferImageRef, VK_IMAGE_LAYOUT_GENERAL,
-        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-  }
 
   ImageManager::insertImageMemoryBarrier(
       _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
