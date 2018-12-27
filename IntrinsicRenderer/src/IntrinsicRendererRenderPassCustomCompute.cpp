@@ -63,6 +63,12 @@ PipelineRef _pipelineScatteringRef;
 
 ComputeCallRef _computeCallScatteringRef;
 
+typedef struct Position {
+  glm::vec3 pos;
+};
+
+float* _positionBufferGpuMemory = nullptr;
+
 _INTR_INLINE void
 updatePerInstanceData(CameraRef p_CameraRef,
                       ComputeCallRef p_CurrentAccumComputeCallRef)
@@ -169,7 +175,6 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(
         computeCallScatteringRef, _N(computeCallBufferTex),
         GpuProgramType::kCompute, _volLightingScatteringBufferImageRef,
         Samplers::kInvalidSampler);
-
     ComputeCallManager::bindBuffer(
         computeCallScatteringRef, _N(positionBuffer), GpuProgramType::kCompute,
         _positionBuffer, UboType::kPerInstanceCompute, sizeof(_positionBuffer));
@@ -276,7 +281,7 @@ void CustomCompute::init()
     BufferManager::_descBufferType(_positionBuffer) = BufferType::kStorage;
     BufferManager::_descMemoryPoolType(_positionBuffer) =
         MemoryPoolType::kStaticStagingBuffers;
-    BufferManager::_descSizeInBytes(_positionBuffer) = 10;
+    BufferManager::_descSizeInBytes(_positionBuffer) = sizeof(float);
     buffersToCreate.push_back(_positionBuffer);
   }
   BufferManager::createResources(buffersToCreate);
@@ -318,21 +323,41 @@ void CustomCompute::render(float p_DeltaT, CameraRef p_CameraRef)
   }
   */
 
-  ImageManager::insertImageMemoryBarrier(
-      _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-      VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+  //ImageManager::insertImageMemoryBarrier(
+  //    _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
+  //    VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+  //    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 
   {
     RenderSystem::dispatchComputeCall(scatteringComputeCalltoUse,
                                       primaryCmdBuffer);
   }
-  ImageManager::insertImageMemoryBarrier(
-      _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_GENERAL,
-      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+  //ImageManager::insertImageMemoryBarrier(
+  //    _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_GENERAL,
+  //    VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+  //    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+
+  BufferManager::insertBufferMemoryBarrier(
+      _positionBuffer, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT,
+      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+      VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
 
   // W PassClusteting.cpp jest opis jak dostac sie do pamieci GPU!!!!! 
+
+  _positionBufferGpuMemory = (float *) BufferManager::getGpuMemory(_positionBuffer);
+  _INTR_LOG_WARNING("%f", *_positionBufferGpuMemory);
+
+  /*
+  {
+    _lightBufferGpuMemory = (Light*)BufferManager::getGpuMemory(_lightBuffer);
+    _lightIndexBufferGpuMemory =
+        (uint16_t*)BufferManager::getGpuMemory(_lightIndexBuffer);
+    memset(_lightIndexBufferGpuMemory, 0x00,
+           sizeof(uint16_t) * _totalLightGridSize);
+
+    _lightBufferMemory = (Light*)malloc(_totalLightGridSize * sizeof(Light));
+  }
+  */
 }
 } // namespace RenderPass
 } // namespace Renderer

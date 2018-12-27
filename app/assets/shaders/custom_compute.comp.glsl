@@ -28,7 +28,7 @@ layout(binding = 1) uniform sampler3D volLightBufferTex;
 layout(binding = 2, r11f_g11f_b10f) uniform image3D computeCallBufferTex;
 layout(binding = 3) buffer positionBuffer 
 {
-    vec3 pos;
+    float pos;
 };
 
 // Based on AC4 volumetric fog
@@ -62,6 +62,6 @@ void main()
     currentValue = accum(currentValue, nextValue);
     write(cellIdx, currentValue);
 
-    pos = vec3(1.0, 0.0, 0.0); 
+    pos = 0.75f; 
   }
 }
