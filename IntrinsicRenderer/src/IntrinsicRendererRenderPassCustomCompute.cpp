@@ -67,7 +67,7 @@ typedef struct Position {
   glm::vec3 pos;
 };
 
-float* _positionBufferGpuMemory = nullptr;
+Position* _positionBufferGpuMemory = nullptr;
 
 _INTR_INLINE void
 updatePerInstanceData(CameraRef p_CameraRef,
@@ -344,20 +344,10 @@ void CustomCompute::render(float p_DeltaT, CameraRef p_CameraRef)
 
   // W PassClusteting.cpp jest opis jak dostac sie do pamieci GPU!!!!! 
 
-  _positionBufferGpuMemory = (float *) BufferManager::getGpuMemory(_positionBuffer);
-  _INTR_LOG_WARNING("%f", *_positionBufferGpuMemory);
-
-  /*
-  {
-    _lightBufferGpuMemory = (Light*)BufferManager::getGpuMemory(_lightBuffer);
-    _lightIndexBufferGpuMemory =
-        (uint16_t*)BufferManager::getGpuMemory(_lightIndexBuffer);
-    memset(_lightIndexBufferGpuMemory, 0x00,
-           sizeof(uint16_t) * _totalLightGridSize);
-
-    _lightBufferMemory = (Light*)malloc(_totalLightGridSize * sizeof(Light));
-  }
-  */
+  _positionBufferGpuMemory = (Position*)BufferManager::getGpuMemory(_positionBuffer);
+  _INTR_LOG_WARNING("%f %f %f", _positionBufferGpuMemory->pos.x,
+								_positionBufferGpuMemory->pos.y, 
+								_positionBufferGpuMemory->pos.z);
 }
 } // namespace RenderPass
 } // namespace Renderer
