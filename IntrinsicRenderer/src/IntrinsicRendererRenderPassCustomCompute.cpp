@@ -54,6 +54,8 @@ struct PerInstanceData
 
 glm::mat4 prevViewProjMatrix;
 
+BufferRef _positionBuffer;
+
 ImageRef _volLightingBufferImageRef;
 ImageRef _volLightingScatteringBufferImageRef;
 
@@ -167,11 +169,15 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(
         computeCallScatteringRef, _N(computeCallBufferTex),
         GpuProgramType::kCompute, _volLightingScatteringBufferImageRef,
         Samplers::kInvalidSampler);
+
+    ComputeCallManager::bindBuffer(
+        computeCallScatteringRef, _N(positionBuffer), GpuProgramType::kCompute,
+        _positionBuffer, UboType::kPerInstanceCompute, sizeof(_positionBuffer));
   }
 
   return computeCallScatteringRef;
 }
-}
+} // namespace
 
 // Static members
 float CustomCompute::_globalScatteringFactor = 1.0f;
@@ -185,14 +191,12 @@ void CustomCompute::init()
   PipelineLayoutRef pipelineLayoutScattering;
   {
     {
-      pipelineLayoutScattering = PipelineLayoutManager::createPipelineLayout(
-          _N(CustomCompute));
+      pipelineLayoutScattering =
+          PipelineLayoutManager::createPipelineLayout(_N(CustomCompute));
       PipelineLayoutManager::resetToDefault(pipelineLayoutScattering);
 
       GpuProgramManager::reflectPipelineLayout(
-          8u,
-          {GpuProgramManager::getResourceByName(
-              "custom_compute.comp")},
+          8u, {GpuProgramManager::getResourceByName("custom_compute.comp")},
           pipelineLayoutScattering);
     }
     pipelineLayoutsToCreate.push_back(pipelineLayoutScattering);
@@ -206,8 +210,7 @@ void CustomCompute::init()
       PipelineManager::resetToDefault(_pipelineScatteringRef);
 
       PipelineManager::_descComputeProgram(_pipelineScatteringRef) =
-          GpuProgramManager::getResourceByName(
-              "custom_compute.comp");
+          GpuProgramManager::getResourceByName("custom_compute.comp");
       PipelineManager::_descPipelineLayout(_pipelineScatteringRef) =
           pipelineLayoutScattering;
     }
@@ -219,6 +222,7 @@ void CustomCompute::init()
 
   ImageRefArray imgsToCreate;
   ComputeCallRefArray computeCallsToCreate;
+  BufferRefArray buffersToCreate;
 
   const glm::uvec3 computeDim = glm::uvec3(160u, 90u, 128u);
 
@@ -262,7 +266,20 @@ void CustomCompute::init()
     imgsToCreate.push_back(_volLightingScatteringBufferImageRef);
   }
   ImageManager::createResources(imgsToCreate);
-
+  
+  _positionBuffer = BufferManager::createBuffer(_N(positionBuffer));
+  {
+    BufferManager::resetToDefault(_positionBuffer);
+    BufferManager::addResourceFlags(
+        _positionBuffer,
+        Dod::Resources::ResourceFlags::kResourceVolatile);
+    BufferManager::_descBufferType(_positionBuffer) = BufferType::kStorage;
+    BufferManager::_descMemoryPoolType(_positionBuffer) =
+        MemoryPoolType::kStaticStagingBuffers;
+    BufferManager::_descSizeInBytes(_positionBuffer) = 10;
+    buffersToCreate.push_back(_positionBuffer);
+  }
+  BufferManager::createResources(buffersToCreate);
   // Compute calls
   {
     // Scattering
@@ -314,7 +331,9 @@ void CustomCompute::render(float p_DeltaT, CameraRef p_CameraRef)
       _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_GENERAL,
       VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
       VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+
+  // W PassClusteting.cpp jest opis jak dostac sie do pamieci GPU!!!!! 
 }
-}
-}
-}
+} // namespace RenderPass
+} // namespace Renderer
+} // namespace Intrinsic

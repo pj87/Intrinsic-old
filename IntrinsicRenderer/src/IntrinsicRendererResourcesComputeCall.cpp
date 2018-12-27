@@ -166,6 +166,11 @@ void ComputeCallManager::bindBuffer(ComputeCallRef p_DrawCallRef,
   {
     BindingDescription& desc = bindingDescs[i];
 
+	_INTR_LOG_WARNING("%s == %s %d == %d", desc.name.getString().c_str(),
+										   p_Name.getString().c_str(), 
+										   desc.shaderStage, 
+										   p_ShaderStage);
+
     if (desc.name == p_Name && desc.shaderStage == p_ShaderStage)
     {
       if (bindingInfos.size() <= desc.binding)
