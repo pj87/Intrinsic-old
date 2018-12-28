@@ -28,7 +28,7 @@ layout(binding = 1) uniform sampler3D volLightBufferTex;
 layout(binding = 2, r11f_g11f_b10f) uniform image3D computeCallBufferTex;
 layout(binding = 3) buffer positionBuffer 
 {
-    fvec3 pos;
+    vec3 pos;
 };
 
 // Based on AC4 volumetric fog
