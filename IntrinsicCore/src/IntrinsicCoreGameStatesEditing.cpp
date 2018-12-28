@@ -811,7 +811,7 @@ _INTR_INLINE void handleGizmo(float p_DeltaT)
     _leftMouseButtonPressed = false;
   }
 }
-}
+} // namespace
 
 // Static members
 Entity::EntityRef Editing::_currentlySelectedEntity;
@@ -1078,7 +1078,8 @@ void Editing::findVisibleEditingDrawCalls(Dod::RefArray& p_DrawCalls)
 void Editing::update(float p_DeltaT)
 {
   _INTR_PROFILE_CPU("Game States", "Editing");
-
+	
+  /*
   std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
   float& time = Core::Resources::MeshManager::_time;
   time += 0.1;
@@ -1091,14 +1092,15 @@ void Editing::update(float p_DeltaT)
   if (BufferManager::_buffersToCreate.size() > 0)
   {
     Intrinsic::Renderer::Resources::BufferManager::updateResources(
-        BufferManager::_buffersToCreate, name); 
+        BufferManager::_buffersToCreate, name);
     Intrinsic::Renderer::Resources::BufferManager::updateResourcesNormal(
-        BufferManager::_buffersToCreate, name); 
+        BufferManager::_buffersToCreate, name);
     Intrinsic::Renderer::Resources::BufferManager::updateResourcesIndices(
-        BufferManager::_buffersToCreate, name); 
+        BufferManager::_buffersToCreate, name);
   }
 
   triangles.clear();
+  */
 
   // Avoid time mod.
   const float deltaT = TaskManager::_lastDeltaT;
@@ -1333,6 +1335,6 @@ void Editing::update(float p_DeltaT)
     updateCameraFreeFlight(deltaT);
   }
 }
-}
-}
-}
+} // namespace GameStates
+} // namespace Core
+} // namespace Intrinsic

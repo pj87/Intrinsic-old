@@ -28,7 +28,7 @@ layout(binding = 1) uniform sampler3D volLightBufferTex;
 layout(binding = 2, r11f_g11f_b10f) uniform image3D computeCallBufferTex;
 layout(binding = 3) buffer positionBuffer 
 {
-    vec3 pos;
+    float pos[];
 };
 
 // Based on AC4 volumetric fog
@@ -50,7 +50,7 @@ void main()
 {
   //vec4 currentValue =
     //  texelFetch(volLightBufferTex, ivec3(gl_GlobalInvocationID.xy, 0), 0);
-   vec4 currentValue = vec4(0.5, 0.0, 0.0, 0.0);
+   vec4 currentValue = vec4(0.0005, 0.0, 0.0, 0.0);
   write(ivec3(gl_GlobalInvocationID.xy, 0), currentValue);
 
   for (int z = 1; z < VOLUME_DEPTH; ++z)
@@ -58,10 +58,21 @@ void main()
     const ivec3 cellIdx = ivec3(gl_GlobalInvocationID.xy, z);
     //const vec4 nextValue = 
     //texelFetch(volLightBufferTex, cellIdx, 0);
-    const vec4 nextValue = vec4(0.5, 0.0, 0.0, 0.0);
+    const vec4 nextValue = vec4(0.0005, 0.0, 0.0, 0.0);
     currentValue = accum(currentValue, nextValue);
     write(cellIdx, currentValue);
 
-    pos = vec3(0.75f, 0.5f, 0.25f); 
+    pos[0] = 1.0f;
+    pos[1] = 1.0f;
+    pos[2] = 1.0f;
+
+    pos[3] = -1.0f;
+    pos[4] = 1.0f;
+    pos[5] = 1.0f;
+
+    pos[6] = 1.0f;
+    pos[7] = -1.0f;
+    pos[8] = 1.0f;
+ 
   }
 }

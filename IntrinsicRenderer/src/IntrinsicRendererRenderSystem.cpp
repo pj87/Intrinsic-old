@@ -178,7 +178,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 
     RenderPass::Clustering::init();
     RenderPass::VolumetricLighting::init();
-    RenderPass::CustomCompute::init();
+    //RenderPass::CustomCompute::init();
 
     RenderPass::Bloom::init();
 

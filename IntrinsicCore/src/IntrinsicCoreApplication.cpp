@@ -85,6 +85,9 @@ void Application::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "managers/post_effects/", ".post_effect.json");
   }
 
+  // A dirty hack 
+  Renderer::RenderPass::CustomCompute::init();
+
   // Initializes world
   {
     World::init();
