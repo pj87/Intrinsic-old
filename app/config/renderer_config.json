@@ -187,6 +187,16 @@
 		}
 	],
 	"renderSteps" : [
+		// Custom Geometry Generation
+		{
+			"type" : "RenderPassGeometryGeneration"
+		},
+		{
+			"type" : "ImageMemoryBarrier",
+			"image" : "Scene",
+			"sourceImageLayout" : "ShaderReadOnly",
+			"targetImageLayout" : "ColorAttachment"
+		},
 		// Offscreen test
 		{
 			"type" : "SwitchCamera",
