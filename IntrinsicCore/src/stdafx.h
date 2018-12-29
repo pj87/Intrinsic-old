@@ -208,5 +208,7 @@ namespace CComponents = Intrinsic::Core::Components;
 
 #include "IntrinsicCoreDynamicMesh.h"
 
+#include "IntrinsicRendererRenderPassGeometryGeneration.h"
+
 // Renderer includes
 #include "stdafx_renderer.h"
