@@ -173,6 +173,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
   // Initializes render passes
   {
     _INTR_PROFILE_AUTO("Initializes Render Passes");
+    RenderPass::GeometryGeneration::init();
 
     RenderPass::Shadow::init();
 
