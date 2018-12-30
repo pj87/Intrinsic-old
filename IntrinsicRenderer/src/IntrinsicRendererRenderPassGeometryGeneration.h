@@ -25,6 +25,7 @@ struct GeometryGeneration
   static void init();
   static void onReinitRendering();
 
+  static void postInit();
   static void destroy();
 
   static void render(float p_DeltaT, Components::CameraRef p_CameraRef);
