@@ -19,8 +19,8 @@ struct Vert
 	vec4 position;
 	vec3 normal;
 };
-float _Target;
-int _Width = 16, _Height = 16, _Depth = 16, _Border = 2;
+float _Target = 0.0f;
+int _Width = 64, _Height = 64, _Depth = 64, _Border = 1;
 
 layout(binding = 0) uniform PerInstance { float _dummy; }
 uboPerInstance;
@@ -395,7 +395,7 @@ Vert CreateVertex(vec3 position, vec3 centre, vec3 size)
 	return vert;
 }
 							
-layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 1u) in;
+layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
 {
 	uvec3 id = gl_GlobalInvocationID;
@@ -421,9 +421,9 @@ void main()
 		if (cube[i] <= _Target) flagIndex |= 1 << i;
 
 	//Find which edges are intersected by the surface
-	//int edgeFlags = _CubeEdgeFlags[flagIndex];
+	int edgeFlags = _CubeEdgeFlags[flagIndex];
 	// HERE IS THE ERROR: 
-	int edgeFlags = _CubeEdgeFlags[0];
+	//int edgeFlags = _CubeEdgeFlags[0];
 	
 	// no connections, return
 	if (edgeFlags == 0) return;
@@ -448,7 +448,7 @@ void main()
 	for (i = 0; i < 5; i++)
 	{
 		vec3 position;
-			
+		/*
 		//If the connection table is not -1 then this a triangle.
 		if (_TriangleConnectionTable[flagIndex][3 * i] >= 0)
 		{	
@@ -460,6 +460,14 @@ void main()
 
 			position = edgeVertex[_TriangleConnectionTable[flagIndex][3 * i + 2]];
 			_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size);
+		}
+		*/
+		
+		//If the connection table is not -1 then this a triangle.
+		//if (_TriangleConnectionTable[2][3 * i] >= 0)
+		{	
+			position = edgeVertex[_TriangleConnectionTable[1][3 * i + 0]];
+			_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
 		}
 	}
 }

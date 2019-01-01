@@ -227,7 +227,7 @@ void GeometryGeneration::postInit()
   ComputeCallRefArray computeCallsToCreate;
   BufferRefArray buffersToCreate;
 
-  const glm::uvec3 computeDim = glm::uvec3(160u, 90u, 128u);
+  const glm::uvec3 computeDim = glm::uvec3(8u, 8u, 8u);
 
   // Compute calls
   {
