@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// https://devblogs.nvidia.com/introduction-turing-mesh-shaders/ <- explanaion on why Compute Shaders are better suited for mesh generation
+
 // Precompiled header file
 #include "stdafx.h"
 
@@ -240,7 +242,8 @@ void GeometryGeneration::postInit()
   ComputeCallRefArray computeCallsToCreate;
   BufferRefArray buffersToCreate;
 
-  const glm::uvec3 computeDim = glm::uvec3(160u, 90u, 128u);
+  // 384 shading units 
+  const glm::uvec3 computeDim = glm::uvec3(2u, 2u, 2u);
 
   // Images
   {

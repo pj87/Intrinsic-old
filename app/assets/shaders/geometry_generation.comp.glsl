@@ -45,7 +45,7 @@ vec4 accum(vec4 prev, vec4 next)
   return vec4(l.rgb, prev.a + next.a);
 }
 
-layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 1u) in;
+layout(local_size_x = 4u, local_size_y = 4u, local_size_z = 4u) in;
 void main()
 {
   //vec4 currentValue =
@@ -62,17 +62,18 @@ void main()
     currentValue = accum(currentValue, nextValue);
     write(cellIdx, currentValue);
 
-    pos[0] = 1.0f;
-    pos[1] = 1.0f;
-    pos[2] = 1.0f;
+    pos[0] = gl_GlobalInvocationID.x * 1.0f;
+    pos[1] = gl_GlobalInvocationID.y * 1.0f;
+    pos[2] = gl_GlobalInvocationID.z * 1.0f;
 
-    pos[3] = -1.0f;
-    pos[4] = 1.0f;
-    pos[5] = 1.0f;
+    pos[3] = gl_GlobalInvocationID.x * -1.0f;
+    pos[4] = gl_GlobalInvocationID.y * 1.0f;
+    pos[5] = gl_GlobalInvocationID.z * 1.0f;
 
-    pos[6] = 1.0f;
-    pos[7] = -1.0f;
-    pos[8] = 1.0f;
+    pos[6] = gl_GlobalInvocationID.x * 1.0f;
+    pos[7] = gl_GlobalInvocationID.y * -1.0f;
+    pos[8] = gl_GlobalInvocationID.z * 1.0f;
  
   }
 }
+
