@@ -56,9 +56,6 @@ glm::mat4 prevViewProjMatrix;
 
 BufferRef _positionBuffer;
 
-ImageRef _volLightingBufferImageRef;
-ImageRef _volLightingScatteringBufferImageRef;
-
 PipelineRef _pipelineScatteringRef;
 
 ComputeCallRef _computeCallScatteringRef;
@@ -149,8 +146,7 @@ updatePerInstanceData(CameraRef p_CameraRef,
                                           sizeof(PerInstanceData));
 }
 
-_INTR_INLINE ComputeCallRef createComputeCallScattering(
-    glm::vec3 p_Dim, BufferRef p_CurrentVolLightingBuffer)
+_INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
 {
   const Name& name = _N(water_sphere);
   const uint32_t index = BufferManager::_nameToInitlialBufferMap[name];
@@ -237,7 +233,7 @@ void GeometryGeneration::postInit()
   {
     // Scattering
     _computeCallScatteringRef =
-        createComputeCallScattering(computeDim, _volLightingBufferImageRef);
+        createComputeCallScattering(computeDim);
 
     computeCallsToCreate.push_back(_computeCallScatteringRef);
   }

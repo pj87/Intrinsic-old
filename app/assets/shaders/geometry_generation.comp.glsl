@@ -14,18 +14,8 @@
 
 #version 450
 
-#extension GL_ARB_separate_shader_objects : enable
-#extension GL_ARB_shading_language_420pack : enable
-#extension GL_GOOGLE_include_directive : enable
-
-#include "lib_math.glsl"
-#include "lib_vol_lighting.glsl"
-
 layout(binding = 0) uniform PerInstance { float _dummy; }
 uboPerInstance;
-
-//layout(binding = 1) uniform sampler3D volLightBufferTex;
-//layout(binding = 2, r11f_g11f_b10f) uniform image3D computeCallBufferTex;
 layout(binding = 1) buffer positionBuffer 
 {
     float pos[];
