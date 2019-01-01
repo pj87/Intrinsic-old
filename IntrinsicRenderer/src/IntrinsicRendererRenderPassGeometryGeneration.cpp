@@ -176,14 +176,6 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(
         computeCallScatteringRef, _N(PerInstance), GpuProgramType::kCompute,
         UniformManager::_perInstanceUniformBuffer, UboType::kPerInstanceCompute,
         sizeof(PerInstanceData));
-    ComputeCallManager::bindImage(
-        computeCallScatteringRef, _N(volLightBufferTex),
-        GpuProgramType::kCompute, p_CurrentVolLightingBuffer,
-        Samplers::kNearestClamp);
-    ComputeCallManager::bindImage(
-        computeCallScatteringRef, _N(computeCallBufferTex),
-        GpuProgramType::kCompute, _volLightingScatteringBufferImageRef,
-        Samplers::kInvalidSampler);
     ComputeCallManager::bindBuffer(computeCallScatteringRef, _N(positionBuffer),
                                    GpuProgramType::kCompute, bufferRef,
                                    UboType::kPerInstanceCompute,
@@ -236,67 +228,11 @@ void GeometryGeneration::postInit()
   PipelineLayoutManager::createResources(pipelineLayoutsToCreate);
   PipelineManager::createResources(pipelinesToCreate);
 
-  ImageRefArray imgsToCreate;
   ComputeCallRefArray computeCallsToCreate;
   BufferRefArray buffersToCreate;
 
   const glm::uvec3 computeDim = glm::uvec3(160u, 90u, 128u);
 
-  // Images
-  {
-    _volLightingBufferImageRef =
-        ImageManager::createImage(_N(VolumetricLightingBuffer));
-    {
-      ImageManager::resetToDefault(_volLightingBufferImageRef);
-      ImageManager::addResourceFlags(
-          _volLightingBufferImageRef,
-          Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      ImageManager::_descDimensions(_volLightingBufferImageRef) = computeDim;
-      ImageManager::_descImageFormat(_volLightingBufferImageRef) =
-          Format::kR16G16B16A16Float;
-      ImageManager::_descImageType(_volLightingBufferImageRef) =
-          ImageType::kTexture;
-      ImageManager::_descImageFlags(_volLightingBufferImageRef) =
-          ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
-    }
-    imgsToCreate.push_back(_volLightingBufferImageRef);
-
-    _volLightingScatteringBufferImageRef =
-        ImageManager::createImage(_N(ComputeCallBuffer));
-    {
-      ImageManager::resetToDefault(_volLightingScatteringBufferImageRef);
-      ImageManager::addResourceFlags(
-          _volLightingScatteringBufferImageRef,
-          Dod::Resources::ResourceFlags::kResourceVolatile);
-
-      ImageManager::_descDimensions(_volLightingScatteringBufferImageRef) =
-          computeDim;
-      ImageManager::_descImageFormat(_volLightingScatteringBufferImageRef) =
-          Format::kR16G16B16A16Float;
-      ImageManager::_descImageType(_volLightingScatteringBufferImageRef) =
-          ImageType::kTexture;
-      ImageManager::_descImageFlags(_volLightingScatteringBufferImageRef) =
-          ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
-    }
-    imgsToCreate.push_back(_volLightingScatteringBufferImageRef);
-  }
-  ImageManager::createResources(imgsToCreate);
-  /*
-  _positionBuffer = BufferManager::createBuffer(_N(positionBuffer));
-  {
-    BufferManager::resetToDefault(_positionBuffer);
-    BufferManager::addResourceFlags(
-        _positionBuffer,
-        Dod::Resources::ResourceFlags::kResourceVolatile);
-    BufferManager::_descBufferType(_positionBuffer) = BufferType::kStorage;
-    BufferManager::_descMemoryPoolType(_positionBuffer) =
-        MemoryPoolType::kStaticStagingBuffers;
-    BufferManager::_descSizeInBytes(_positionBuffer) = sizeof(Position);
-    buffersToCreate.push_back(_positionBuffer);
-  }
-  BufferManager::createResources(buffersToCreate);
-  */
   // Compute calls
   {
     // Scattering
