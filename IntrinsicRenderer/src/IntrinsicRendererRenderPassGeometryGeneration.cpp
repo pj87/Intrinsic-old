@@ -14,6 +14,7 @@
 
 // Precompiled header file
 #include "stdafx.h"
+#include <random>
 
 using namespace RResources;
 using namespace CComponents;
@@ -54,6 +55,7 @@ struct PerInstanceData
 
 glm::mat4 prevViewProjMatrix;
 
+BufferRef _voxelBuffer;
 BufferRef _triangleConnectionBuffer;
 BufferRef _positionBuffer;
 
@@ -288,6 +290,8 @@ uint16_t triangleConnectionTable[4096] = {
     8,  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
+float voxelTable[64 * 64 * 64];
+
 _INTR_INLINE void
 updatePerInstanceData(CameraRef p_CameraRef,
                       ComputeCallRef p_CurrentAccumComputeCallRef)
@@ -365,6 +369,19 @@ updatePerInstanceData(CameraRef p_CameraRef,
                                           sizeof(PerInstanceData));
 }
 
+_INTR_INLINE void createVoxels(float* voxels) {
+
+	float lower_bound = 0.0;
+	float upper_bound = 1.0;
+    std::uniform_real_distribution<float> unif(lower_bound, upper_bound);
+    std::default_random_engine re;
+
+	for (int i = 0; i < 64 * 64 * 64; i++)
+	{
+          voxels[i] = unif(re);
+	}
+}
+
 _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
 {
   const Name& name = _N(water_sphere);
@@ -400,6 +417,11 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
         GpuProgramType::kCompute, _triangleConnectionBuffer,
         UboType::kPerInstanceCompute,
         BufferManager::_descSizeInBytes(_triangleConnectionBuffer));
+    ComputeCallManager::bindBuffer(
+        computeCallScatteringRef, _N(voxelBuffer),
+        GpuProgramType::kCompute, _voxelBuffer,
+        UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(_voxelBuffer));
   }
 
   return computeCallScatteringRef;
@@ -487,8 +509,25 @@ void GeometryGeneration::init()
       BufferManager::_descInitialData(_triangleConnectionBuffer) =
           triangleConnectionTable;
     }
-
     buffersToCreate.push_back(_triangleConnectionBuffer);
+
+	_voxelBuffer = 
+		BufferManager::createBuffer(_N(_Voxels));
+	{
+          BufferManager::resetToDefault(_voxelBuffer);
+          BufferManager::addResourceFlags(
+              _voxelBuffer,
+              Dod::Resources::ResourceFlags::kResourceVolatile);
+
+          BufferManager::_descBufferType(_voxelBuffer) =
+              BufferType::kStorage;
+          BufferManager::_descSizeInBytes(_voxelBuffer) =
+              64 * 64 * 64 * sizeof(float);
+          BufferManager::_descInitialData(_voxelBuffer) =
+              triangleConnectionTable;
+	}
+    buffersToCreate.push_back(_voxelBuffer);
+
   }
   BufferManager::createResources(buffersToCreate);
 }

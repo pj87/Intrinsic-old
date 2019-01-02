@@ -33,17 +33,10 @@ layout(binding = 2) buffer triangleConnectionBuffer
 {
 	int _TriangleConnectionTable[];
 };
-
-/*
-layout(binding = 4) buffer VOXELS 
+layout(binding = 3) buffer voxelBuffer 
 {
-    int _Voxels[];
+	int _Voxels[];
 };
-*/
-
-//int _Voxels[14] = {1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0}; 
-
-int _Voxels[1400];
 
 // For any edge, if one vertex is inside of the surface and the other is outside
 // of the surface
