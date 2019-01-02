@@ -54,7 +54,7 @@ struct PerInstanceData
 
 glm::mat4 prevViewProjMatrix;
 
-BufferRef _triangleConnectionTable;
+BufferRef _triangleConnectionBuffer;
 BufferRef _positionBuffer;
 
 PipelineRef _pipelineScatteringRef;
@@ -395,11 +395,11 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
                                    GpuProgramType::kCompute, bufferRef,
                                    UboType::kPerInstanceCompute,
                                    BufferManager::_descSizeInBytes(bufferRef));
-    ComputeCallManager::bindBuffer(computeCallScatteringRef, _N(triangleConnectionBuffer),
-								   GpuProgramType::kCompute, _triangleConnectionTable,
-                                   UboType::kPerInstanceCompute,
-								   BufferManager::_descSizeInBytes(_triangleConnectionTable));
-
+    ComputeCallManager::bindBuffer(
+        computeCallScatteringRef, _N(triangleConnectionBuffer),
+        GpuProgramType::kCompute, _triangleConnectionBuffer,
+        UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(_triangleConnectionBuffer));
   }
 
   return computeCallScatteringRef;
@@ -465,33 +465,31 @@ void GeometryGeneration::postInit()
 
 void GeometryGeneration::init()
 {
+  createVoxels(voxelTable);
+
   // Buffers
   BufferRefArray buffersToCreate;
   {
     uint32_t indexBufferSizeInBytes = 4096 * sizeof(int16_t);
 
-    int16_t* tempBuffer =
-        (int16_t*)Memory::Tlsf::MainAllocator::allocate(indexBufferSizeInBytes);
-
-	memcpy(tempBuffer, triangleConnectionTable, indexBufferSizeInBytes);
-
-    _triangleConnectionTable =
+    _triangleConnectionBuffer =
         BufferManager::createBuffer(_N(_TriangleConnectionTable));
     {
-      BufferManager::resetToDefault(_triangleConnectionTable);
+      BufferManager::resetToDefault(_triangleConnectionBuffer);
       BufferManager::addResourceFlags(
-          _triangleConnectionTable,
+          _triangleConnectionBuffer,
           Dod::Resources::ResourceFlags::kResourceVolatile);
 
-      BufferManager::_descBufferType(_triangleConnectionTable) =
+      BufferManager::_descBufferType(_triangleConnectionBuffer) =
           BufferType::kStorage;
-      BufferManager::_descSizeInBytes(_triangleConnectionTable) =
+      BufferManager::_descSizeInBytes(_triangleConnectionBuffer) =
           indexBufferSizeInBytes;
-      BufferManager::_descInitialData(_triangleConnectionTable) = tempBuffer;
+      BufferManager::_descInitialData(_triangleConnectionBuffer) =
+          triangleConnectionTable;
     }
     Memory::Tlsf::MainAllocator::free(tempBuffer);
 
-    buffersToCreate.push_back(_triangleConnectionTable);
+    buffersToCreate.push_back(_triangleConnectionBuffer);
   }
   BufferManager::createResources(buffersToCreate);
 }
