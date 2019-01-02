@@ -17,7 +17,8 @@
 struct Vert
 {
 	vec4 position;
-	vec3 normal;
+	//vec4 position;
+	//vec3 normal;
 };
 float _Target = 0.0f;
 int _Width = 64, _Height = 64, _Depth = 64, _Border = 1;
@@ -181,13 +182,16 @@ void main()
 		if (_TriangleConnectionTable[flagIndex * 16 + 3 * i] >= 0)
 		{	
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + 3 * i]];
-			_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
-
+			//_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
+			_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size).position.xyzw;
+			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + 3 * i]];
-			_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size);
-
+			//_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size);
+			_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size).position.xyzw;
+			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + 3 * i]];
-			_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size);
+			//_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size);
+			_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size).position.xyzw;
 		}
 	}
 }

@@ -359,10 +359,10 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers, cons
 
     for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++)
     {
-      if (i < treshold)
+      //if (i < treshold)
         storeIndexValueToRawBuffer(initialData, i, i);
-      else
-        storeIndexValueToRawBuffer(initialData, i, zero);
+      //else
+      //  storeIndexValueToRawBuffer(initialData, i, zero);
     }
 
     // Copy initial data to staging memory
