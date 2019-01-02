@@ -162,7 +162,7 @@ void main()
 	FillCube(id.x, id.y, id.z, cube);
 
 	int i = 0;
-	int flagIndex = 0;
+	uint flagIndex = 0;
 	vec3 edgeVertex[12];
 
 	//Find which vertices are inside of the surface and which are outside
@@ -171,8 +171,6 @@ void main()
 
 	//Find which edges are intersected by the surface
 	int edgeFlags = _CubeEdgeFlags[flagIndex];
-	// HERE IS THE ERROR: 
-	//int edgeFlags = _CubeEdgeFlags[0];
 	
 	// no connections, return
 	if (edgeFlags == 0) return;
@@ -197,7 +195,7 @@ void main()
 	for (i = 0; i < 5; i++)
 	{
 		vec3 position;
-		/*
+
 		//If the connection table is not -1 then this a triangle.
 		if (_TriangleConnectionTable[flagIndex][3 * i] >= 0)
 		{	
@@ -209,14 +207,6 @@ void main()
 
 			position = edgeVertex[_TriangleConnectionTable[flagIndex][3 * i + 2]];
 			_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size);
-		}
-		*/
-		
-		//If the connection table is not -1 then this a triangle.
-		//if (_TriangleConnectionTable[2][3 * i] >= 0)
-		{	
-			position = edgeVertex[_TriangleConnectionTable[1][3 * i + 0]];
-			_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
 		}
 	}
 }
