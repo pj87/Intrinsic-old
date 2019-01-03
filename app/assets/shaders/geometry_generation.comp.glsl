@@ -181,17 +181,20 @@ void main()
 		//If the connection table is not -1 then this a triangle.
 		if (_TriangleConnectionTable[flagIndex * 16 + 3 * i] >= 0)
 		{	
-			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + 3 * i]];
-			_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
-			//_Buffer[idx + (3 * i + 0)] = CreateVertex(position, centre, size);
+			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
+			//_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
+			//_Buffer[idx * 11 + (3 * i + 0)] = CreateVertex(position, centre, size);
+			_Buffer[idx + (3 * i + 0)] = CreateVertex(position, centre, size);
 			
-			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + 3 * i]];
-			_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size);
-			//_Buffer[idx + (3 * i + 1)] = CreateVertex(position, centre, size);
+			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
+			//_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size);
+			//_Buffer[idx * 11 + (3 * i + 1)] = CreateVertex(position, centre, size);
+			_Buffer[idx + (3 * i + 1)] = CreateVertex(position, centre, size);
 			
-			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + 3 * i]];
-			_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size);
-			//_Buffer[idx + (3 * i + 2)] = CreateVertex(position, centre, size);
+			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
+			//_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size);
+			//_Buffer[idx * 11 + (3 * i + 2)] = CreateVertex(position, centre, size);
+			_Buffer[idx + (3 * i + 2)] = CreateVertex(position, centre, size);
 		}
 	}
 }
