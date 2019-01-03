@@ -16,8 +16,8 @@
 
 struct Vert
 {
-	vec4 position;
-	//vec3 normal;
+	mediump vec4 position;
+	vec3 normal;
 };
 
 float _Target = 0.0f;
@@ -28,7 +28,7 @@ uboPerInstance;
 
 layout(binding = 1) buffer positionBuffer 
 {
-	uint _Buffer[];
+	mediump vec4 _Buffer[];
 };
 layout(binding = 2) buffer triangleConnectionBuffer 
 {
@@ -38,6 +38,11 @@ layout(binding = 3) buffer voxelBuffer
 {
 	float _Voxels[];
 };
+
+// edgeConnection lists the index of the endpoint vertices for each of the 12 edges of the cube
+ivec2 edgeConnection[12] = {ivec2(0, 1), ivec2(1, 2), ivec2(2, 3), ivec2(3, 0),
+						    ivec2(4, 5), ivec2(5, 6), ivec2(6, 7), ivec2(7, 4),
+                            ivec2(0, 4), ivec2(1, 5), ivec2(2, 6), ivec2(3, 7)};
 
 // For any edge, if one vertex is inside of the surface and the other is outside
 // of the surface
@@ -73,11 +78,6 @@ int _CubeEdgeFlags[256] = {
     0x99c, 0x69c, 0x795, 0x49f, 0x596, 0x29a, 0x393, 0x099, 0x190, 0xf00, 0xe09,
     0xd03, 0xc0a, 0xb06, 0xa0f, 0x905, 0x80c, 0x70c, 0x605, 0x50f, 0x406, 0x30a,
     0x203, 0x109, 0x000};
-
-// edgeConnection lists the index of the endpoint vertices for each of the 12 edges of the cube
-uvec2 edgeConnection[12] = {uvec2(0, 1), uvec2(1, 2), uvec2(2, 3), uvec2(3, 0),
-						    uvec2(4, 5), uvec2(5, 6), uvec2(6, 7), uvec2(7, 4),
-                            uvec2(0, 4), uvec2(1, 5), uvec2(2, 6), uvec2(3, 7)};
 
 // edgeDirection lists the direction vector (vertex1-vertex0) for each edge in the cube
 vec3 edgeDirection[12] =
@@ -133,8 +133,9 @@ uint convert(vec2 pos0, vec2 pos1)
 							
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
-{
+{	
 	uvec3 id = gl_GlobalInvocationID;
+
 	//Dont generate verts at the edge as they dont have 
 	//neighbours to make a cube from and the normal will 
 	//not be correct around border.
@@ -177,7 +178,7 @@ void main()
 	vec3 size = vec3(_Width - 1, _Height - 1, _Depth - 1);
 
 	uint idx = id.x + id.y * _Width + id.z * _Width * _Height;
-	/*
+	
 	//Save the triangles that were found. There can be up to five per cube
 	for (i = 0; i < 5; i++)
 	{
@@ -188,32 +189,13 @@ void main()
 		{	
 			//packHalf2x16
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
-			
-			//output.xy = packHalf2x16(CreateVertex(position, centre, size).position.xy);
-			//output.zw = packHalf2x16(CreateVertex(position, centre, size).position.zw);
-			
-			_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
-			//_Buffer[idx * 11 + (3 * i + 0)] = CreateVertex(position, centre, size);
-			//_Buffer[idx + (3 * i + 0)] = CreateVertex(position, centre, size);
+			_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size).position;
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
-			_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size);
-			//_Buffer[idx * 11 + (3 * i + 1)] = CreateVertex(position, centre, size);
-			//_Buffer[idx + (3 * i + 1)] = CreateVertex(position, centre, size);
+			_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size).position;
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
-			_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size);
-			//_Buffer[idx * 11 + (3 * i + 2)] = CreateVertex(position, centre, size);
-			//_Buffer[idx + (3 * i + 2)] = CreateVertex(position, centre, size);
+			_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size).position;
 		}
 	}
-	*/
-	
-	vec4 pos0 = vec4(10.0, 0.0, 0.0, 0.0); 
-	vec4 pos1 = vec4(0.0, 10.0, 0.0, 0.0); 
-	vec4 pos2 = vec4(0.0, 0.0, 10.0, 0.0); 
-	
-	_Buffer[0] = convert(pos0.xy, pos0.zw);
-	_Buffer[1] = convert(pos1.xy, pos1.zw);
-	_Buffer[2] = convert(pos2.xy, pos2.zw);
 }

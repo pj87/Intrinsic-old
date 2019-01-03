@@ -1079,26 +1079,34 @@ void Editing::update(float p_DeltaT)
 {
   _INTR_PROFILE_CPU("Game States", "Editing");
 
-  //std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
-  //float& time = Core::Resources::MeshManager::_time;
-  //time += 0.1;
+  const Name& name = _N(house);
+  Intrinsic::Renderer::Resources::BufferManager::updateResources(
+      BufferManager::_buffersToCreate, name); 
+  Intrinsic::Renderer::Resources::BufferManager::updateResourcesIndices(
+      BufferManager::_buffersToCreate, name); 
 
-  //vSetTime(time);
-  //vMarchingCubes(triangles);
+  /*
+  std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
+  float& time = Core::Resources::MeshManager::_time;
+  time += 0.1;
+
+  vSetTime(time);
+  vMarchingCubes(triangles);
 
   const Name& name = _N(water_sphere);
 
-  //if (BufferManager::_buffersToCreate.size() > 0)
+  if (BufferManager::_buffersToCreate.size() > 0)
   {
-    //Intrinsic::Renderer::Resources::BufferManager::updateResources(
-    //    BufferManager::_buffersToCreate, name); 
-    //Intrinsic::Renderer::Resources::BufferManager::updateResourcesNormal(
-    //    BufferManager::_buffersToCreate, name); 
+    Intrinsic::Renderer::Resources::BufferManager::updateResources(
+        BufferManager::_buffersToCreate, name); 
+    Intrinsic::Renderer::Resources::BufferManager::updateResourcesNormal(
+        BufferManager::_buffersToCreate, name); 
     Intrinsic::Renderer::Resources::BufferManager::updateResourcesIndices(
         BufferManager::_buffersToCreate, name); 
   }
 
-  //triangles.clear();
+  triangles.clear();
+  */
 
   // Avoid time mod.
   const float deltaT = TaskManager::_lastDeltaT;

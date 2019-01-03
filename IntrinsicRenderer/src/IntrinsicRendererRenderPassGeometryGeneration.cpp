@@ -72,6 +72,9 @@ typedef struct Position
 
 Position* _positionBufferGpuMemory = nullptr;
 
+const int N = 20;
+const int SIZE = N * N * N * 3 * 5;
+
 int triangleConnectionTable[4096] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0,  8,  3,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0,  1,  9,  -1, -1, -1,
@@ -290,7 +293,7 @@ int triangleConnectionTable[4096] = {
     8,  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
-float voxelTable[64 * 64 * 64];
+float voxelTable[N * N * N];
 
 _INTR_INLINE void
 updatePerInstanceData(CameraRef p_CameraRef,
@@ -371,20 +374,27 @@ updatePerInstanceData(CameraRef p_CameraRef,
 
 _INTR_INLINE void createVoxels(float* voxels) {
 
-	float lower_bound = 0.0;
+	float lower_bound = -1.0;
 	float upper_bound = 1.0;
     std::uniform_real_distribution<float> unif(lower_bound, upper_bound);
     std::default_random_engine re;
 
-	for (int i = 0; i < 64 * 64 * 64; i++)
+	//memset(voxels, 0.0f, N * N * N * sizeof(float)); 
+
+	
+	for (int i = 0; i < N * N * N; i++)
 	{
-          voxels[i] = unif(re);
+          if (i > 100 && i < 1000)
+            voxels[i] = -1.0;
+          else
+            voxels[i] = 1.0;
 	}
+	
 }
 
 _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
 {
-  const Name& name = _N(water_sphere);
+  const Name& name = _N(house);
   const uint32_t index = BufferManager::_nameToInitlialBufferMap[name];
 
   // BufferRef bufferRef = p_Buffers[index];
@@ -522,9 +532,9 @@ void GeometryGeneration::init()
           BufferManager::_descBufferType(_voxelBuffer) =
               BufferType::kStorage;
           BufferManager::_descSizeInBytes(_voxelBuffer) =
-              64 * 64 * 64 * sizeof(float);
+              N * N * N * sizeof(float);
           BufferManager::_descInitialData(_voxelBuffer) =
-              triangleConnectionTable;
+              voxelTable;
 	}
     buffersToCreate.push_back(_voxelBuffer);
 
@@ -563,7 +573,7 @@ void GeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   //    _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
   //    VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
   //    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-
+  
   {
     RenderSystem::dispatchComputeCall(scatteringComputeCalltoUse,
                                       primaryCmdBuffer);
@@ -574,17 +584,19 @@ void GeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   //    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 
   BufferManager::insertBufferMemoryBarrier(
-      bufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT,
-      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
-      VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+      bufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
 
   // W PassClusteting.cpp jest opis jak dostac sie do pamieci GPU!!!!!
 
-  //_positionBufferGpuMemory =
-  //(Position*)BufferManager::getGpuMemory(_positionBuffer);
-  //_INTR_LOG_WARNING("%f %f %f", _positionBufferGpuMemory->pos[0],
-  //   							  _positionBufferGpuMemory->pos[1],
-  //							  _positionBufferGpuMemory->pos[2]);
+  //_INTR_LOG_WARNING("%d", BufferManager::_descSizeInBytes(bufferRef));
+
+  /*
+  _positionBufferGpuMemory =
+  (Position*)BufferManager::getGpuMemory(bufferRef);
+  _INTR_LOG_WARNING("%f %f %f", _positionBufferGpuMemory->pos[0],
+     							_positionBufferGpuMemory->pos[1],
+   							    _positionBufferGpuMemory->pos[2]);
+  */
 }
 } // namespace RenderPass
 } // namespace Renderer
