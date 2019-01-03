@@ -492,7 +492,7 @@ void GeometryGeneration::init()
   // Buffers
   BufferRefArray buffersToCreate;
   {
-    uint32_t indexBufferSizeInBytes = 4096 * sizeof(int16_t);
+    uint32_t indexBufferSizeInBytes = 4096 * sizeof(int);
 
     _triangleConnectionBuffer =
         BufferManager::createBuffer(_N(_TriangleConnectionTable));
