@@ -16,14 +16,8 @@
 
 struct Vert
 {
-	//vec4 position;
-	vec4 position;
-	vec3 normal;
-};
-
-struct Vert1
-{
 	vec3 position;
+	//vec3 normal;
 };
 
 float _Target = 0.0f;
@@ -34,7 +28,7 @@ uboPerInstance;
 
 layout(binding = 1) buffer positionBuffer 
 {
-	Vert1 _Buffer[];
+	Vert _Buffer[];
 };
 layout(binding = 2) buffer triangleConnectionBuffer 
 {
@@ -124,9 +118,9 @@ float GetOffset(float v1, float v2)
 Vert CreateVertex(vec3 position, vec3 centre, vec3 size)
 {
 	Vert vert;
-	vert.position = vec4(position - centre, 1.0);
+	vert.position = vec3(position - centre);
 
-	vec3 uv = position / size;
+	//vec3 uv = position / size;
 	//vert.normal = _Normals.SampleLevel(_LinearClamp, uv, 0);
 
 	return vert;
@@ -188,16 +182,16 @@ void main()
 		if (_TriangleConnectionTable[flagIndex * 16 + 3 * i] >= 0)
 		{	
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + 3 * i]];
-			//_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
-			_Buffer[idx + (3 * i + 0)] = CreateVertex(position, centre, size).position.xyz;
+			_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
+			//_Buffer[idx + (3 * i + 0)] = CreateVertex(position, centre, size);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + 3 * i]];
-			//_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size);
-			_Buffer[idx + (3 * i + 1)] = CreateVertex(position, centre, size).position.xyz;
+			_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size);
+			//_Buffer[idx + (3 * i + 1)] = CreateVertex(position, centre, size);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + 3 * i]];
-			//_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size);
-			_Buffer[idx + (3 * i + 2)] = CreateVertex(position, centre, size).position.xyz;
+			_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size);
+			//_Buffer[idx + (3 * i + 2)] = CreateVertex(position, centre, size);
 		}
 	}
 }

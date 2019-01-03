@@ -72,7 +72,7 @@ typedef struct Position
 
 Position* _positionBufferGpuMemory = nullptr;
 
-uint16_t triangleConnectionTable[4096] = {
+int triangleConnectionTable[4096] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0,  8,  3,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0,  1,  9,  -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1,  8,  3,  9,  8,  1,  -1, -1, -1,
