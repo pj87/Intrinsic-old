@@ -16,7 +16,7 @@
 
 struct Vert
 {
-	int position;
+	vec4 position;
 	//vec3 normal;
 };
 
@@ -28,7 +28,7 @@ uboPerInstance;
 
 layout(binding = 1) buffer positionBuffer 
 {
-	Vert _Buffer[];
+	uint _Buffer[];
 };
 layout(binding = 2) buffer triangleConnectionBuffer 
 {
@@ -126,9 +126,9 @@ Vert CreateVertex(vec3 position, vec3 centre, vec3 size)
 	return vert;
 }
 
-int convert(vec2 pos0, vec2 pos1)
+uint convert(vec2 pos0, vec2 pos1)
 {
-	int output = packHalf2x16(pos0) >> 16 | packHalf2x16(pos1);
+	return(packHalf2x16(pos0) << 16 | packHalf2x16(pos1));
 }
 							
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
@@ -182,8 +182,6 @@ void main()
 	for (i = 0; i < 5; i++)
 	{
 		vec3 position;
-
-		int output;
 		
 		//If the connection table is not -1 then this a triangle.
 		if (_TriangleConnectionTable[flagIndex * 16 + 3 * i] >= 0)
@@ -191,8 +189,8 @@ void main()
 			//packHalf2x16
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
 			
-			output.xy = packHalf2x16(CreateVertex(position, centre, size).position.xy);
-			output.zw = packHalf2x16(CreateVertex(position, centre, size).position.zw);
+			//output.xy = packHalf2x16(CreateVertex(position, centre, size).position.xy);
+			//output.zw = packHalf2x16(CreateVertex(position, centre, size).position.zw);
 			
 			_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
 			//_Buffer[idx * 11 + (3 * i + 0)] = CreateVertex(position, centre, size);
@@ -211,11 +209,11 @@ void main()
 	}
 	*/
 	
-	vec3 pos0(1.0, 0.0, 0.0, 0.0); 
-	vec3 pos1(0.0, 1.0, 0.0, 0.0); 
-	vec3 pos2(0.0, 0.0, 1.0, 0.0); 
+	vec4 pos0 = vec4(10.0, 0.0, 0.0, 0.0); 
+	vec4 pos1 = vec4(0.0, 10.0, 0.0, 0.0); 
+	vec4 pos2 = vec4(0.0, 0.0, 10.0, 0.0); 
 	
-	_Buffer[idx] = convert(pos0.xy, pos0.zw);
-	_Buffer[idx + 1] = convert(pos1.xy, pos1.zw);
-	_Buffer[idx + 2] = convert(pos2.xy, pos2.zw);
+	_Buffer[0] = convert(pos0.xy, pos0.zw);
+	_Buffer[1] = convert(pos1.xy, pos1.zw);
+	_Buffer[2] = convert(pos2.xy, pos2.zw);
 }
