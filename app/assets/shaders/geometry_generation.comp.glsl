@@ -16,7 +16,7 @@
 
 struct Vert
 {
-	vec3 position;
+	int position;
 	//vec3 normal;
 };
 
@@ -118,7 +118,7 @@ float GetOffset(float v1, float v2)
 Vert CreateVertex(vec3 position, vec3 centre, vec3 size)
 {
 	Vert vert;
-	vert.position = vec3(position - centre);
+	vert.position = vec4(position - centre, 1.0);
 
 	//vec3 uv = position / size;
 	//vert.normal = _Normals.SampleLevel(_LinearClamp, uv, 0);
@@ -178,23 +178,30 @@ void main()
 	{
 		vec3 position;
 
+		vec4 output;
+		
 		//If the connection table is not -1 then this a triangle.
 		if (_TriangleConnectionTable[flagIndex * 16 + 3 * i] >= 0)
 		{	
+			//packHalf2x16
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
-			//_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
+			
+			output.xy = packHalf2x16(CreateVertex(position, centre, size).position.xy);
+			output.zw = packHalf2x16(CreateVertex(position, centre, size).position.zw);
+			
+			_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size);
 			//_Buffer[idx * 11 + (3 * i + 0)] = CreateVertex(position, centre, size);
-			_Buffer[idx + (3 * i + 0)] = CreateVertex(position, centre, size);
+			//_Buffer[idx + (3 * i + 0)] = CreateVertex(position, centre, size);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
-			//_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size);
+			_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size);
 			//_Buffer[idx * 11 + (3 * i + 1)] = CreateVertex(position, centre, size);
-			_Buffer[idx + (3 * i + 1)] = CreateVertex(position, centre, size);
+			//_Buffer[idx + (3 * i + 1)] = CreateVertex(position, centre, size);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
-			//_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size);
+			_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size);
 			//_Buffer[idx * 11 + (3 * i + 2)] = CreateVertex(position, centre, size);
-			_Buffer[idx + (3 * i + 2)] = CreateVertex(position, centre, size);
+			//_Buffer[idx + (3 * i + 2)] = CreateVertex(position, centre, size);
 		}
 	}
 }
