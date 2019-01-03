@@ -125,6 +125,11 @@ Vert CreateVertex(vec3 position, vec3 centre, vec3 size)
 
 	return vert;
 }
+
+int convert(vec2 pos0, vec2 pos1)
+{
+	int output = packHalf2x16(pos0) >> 16 | packHalf2x16(pos1);
+}
 							
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
@@ -172,13 +177,13 @@ void main()
 	vec3 size = vec3(_Width - 1, _Height - 1, _Depth - 1);
 
 	uint idx = id.x + id.y * _Width + id.z * _Width * _Height;
-	
+	/*
 	//Save the triangles that were found. There can be up to five per cube
 	for (i = 0; i < 5; i++)
 	{
 		vec3 position;
 
-		vec4 output;
+		int output;
 		
 		//If the connection table is not -1 then this a triangle.
 		if (_TriangleConnectionTable[flagIndex * 16 + 3 * i] >= 0)
@@ -204,4 +209,13 @@ void main()
 			//_Buffer[idx + (3 * i + 2)] = CreateVertex(position, centre, size);
 		}
 	}
+	*/
+	
+	vec3 pos0(1.0, 0.0, 0.0, 0.0); 
+	vec3 pos1(0.0, 1.0, 0.0, 0.0); 
+	vec3 pos2(0.0, 0.0, 1.0, 0.0); 
+	
+	_Buffer[idx] = convert(pos0.xy, pos0.zw);
+	_Buffer[idx + 1] = convert(pos1.xy, pos1.zw);
+	_Buffer[idx + 2] = convert(pos2.xy, pos2.zw);
 }
