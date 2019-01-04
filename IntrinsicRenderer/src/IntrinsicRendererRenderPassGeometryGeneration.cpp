@@ -15,6 +15,7 @@
 // Precompiled header file
 #include "stdafx.h"
 #include <random>
+#include <fstream>
 
 using namespace RResources;
 using namespace CComponents;
@@ -72,7 +73,7 @@ typedef struct Position
 
 Position* _positionBufferGpuMemory = nullptr;
 
-const int N = 20;
+const int N = 64;
 const int SIZE = N * N * N * 3 * 5;
 
 int triangleConnectionTable[4096] = {
@@ -372,24 +373,23 @@ updatePerInstanceData(CameraRef p_CameraRef,
                                           sizeof(PerInstanceData));
 }
 
-_INTR_INLINE void createVoxels(float* voxels) {
+_INTR_INLINE void createVoxels(float* voxels)
+{
 
-	float lower_bound = -1.0;
-	float upper_bound = 1.0;
-    std::uniform_real_distribution<float> unif(lower_bound, upper_bound);
-    std::default_random_engine re;
+  float lower_bound = -1.0;
+  float upper_bound = 1.0;
+  std::uniform_real_distribution<float> unif(lower_bound, upper_bound);
+  std::default_random_engine re;
 
-	//memset(voxels, 0.0f, N * N * N * sizeof(float)); 
+  // memset(voxels, 0.0f, N * N * N * sizeof(float));
 
-	
-	for (int i = 0; i < N * N * N; i++)
-	{
-          if (i > 100 && i < 1000)
-            voxels[i] = -1.0;
-          else
-            voxels[i] = 1.0;
-	}
-	
+  for (int i = 0; i < N * N * N; i++)
+  {
+    if (i > 100 && i < 1000)
+      voxels[i] = -1.0;
+    else
+      voxels[i] = 1.0;
+  }
 }
 
 _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
@@ -428,9 +428,8 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
         UboType::kPerInstanceCompute,
         BufferManager::_descSizeInBytes(_triangleConnectionBuffer));
     ComputeCallManager::bindBuffer(
-        computeCallScatteringRef, _N(voxelBuffer),
-        GpuProgramType::kCompute, _voxelBuffer,
-        UboType::kPerInstanceCompute,
+        computeCallScatteringRef, _N(voxelBuffer), GpuProgramType::kCompute,
+        _voxelBuffer, UboType::kPerInstanceCompute,
         BufferManager::_descSizeInBytes(_voxelBuffer));
   }
 
@@ -497,7 +496,21 @@ void GeometryGeneration::postInit()
 
 void GeometryGeneration::init()
 {
-  createVoxels(voxelTable);
+  std::ifstream infile("data.txt");
+  float a;
+  int i = 0;
+  while (infile >> a)
+  {
+    // process pair (a,b)
+    //std::cout << a < std::endl;
+    //_INTR_LOG_INFO("%f", a);
+    voxelTable[i] = a;
+    i++;
+    if (i > N * N * N)
+      break;
+  }
+
+  //createVoxels(voxelTable);
 
   // Buffers
   BufferRefArray buffersToCreate;
@@ -521,23 +534,17 @@ void GeometryGeneration::init()
     }
     buffersToCreate.push_back(_triangleConnectionBuffer);
 
-	_voxelBuffer = 
-		BufferManager::createBuffer(_N(_Voxels));
-	{
-          BufferManager::resetToDefault(_voxelBuffer);
-          BufferManager::addResourceFlags(
-              _voxelBuffer,
-              Dod::Resources::ResourceFlags::kResourceVolatile);
+    _voxelBuffer = BufferManager::createBuffer(_N(_Voxels));
+    {
+      BufferManager::resetToDefault(_voxelBuffer);
+      BufferManager::addResourceFlags(
+          _voxelBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
 
-          BufferManager::_descBufferType(_voxelBuffer) =
-              BufferType::kStorage;
-          BufferManager::_descSizeInBytes(_voxelBuffer) =
-              N * N * N * sizeof(float);
-          BufferManager::_descInitialData(_voxelBuffer) =
-              voxelTable;
-	}
+      BufferManager::_descBufferType(_voxelBuffer) = BufferType::kStorage;
+      BufferManager::_descSizeInBytes(_voxelBuffer) = N * N * N * sizeof(float);
+      BufferManager::_descInitialData(_voxelBuffer) = voxelTable;
+    }
     buffersToCreate.push_back(_voxelBuffer);
-
   }
   BufferManager::createResources(buffersToCreate);
 }
@@ -573,7 +580,7 @@ void GeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   //    _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
   //    VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
   //    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-  
+
   {
     RenderSystem::dispatchComputeCall(scatteringComputeCalltoUse,
                                       primaryCmdBuffer);
@@ -594,8 +601,8 @@ void GeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   _positionBufferGpuMemory =
   (Position*)BufferManager::getGpuMemory(bufferRef);
   _INTR_LOG_WARNING("%f %f %f", _positionBufferGpuMemory->pos[0],
-     							_positionBufferGpuMemory->pos[1],
-   							    _positionBufferGpuMemory->pos[2]);
+                                                        _positionBufferGpuMemory->pos[1],
+                                                            _positionBufferGpuMemory->pos[2]);
   */
 }
 } // namespace RenderPass
