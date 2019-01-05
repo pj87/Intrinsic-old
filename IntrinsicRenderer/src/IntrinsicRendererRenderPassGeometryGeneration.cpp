@@ -167,8 +167,7 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(
         Dod::Resources::ResourceFlags::kResourceVolatile);
 
     ComputeCallManager::_descDimensions(computeCallScatteringRef) =
-        glm::uvec3(Math::divideByMultiple(p_Dim.x, 8u),
-                   Math::divideByMultiple(p_Dim.y, 8u), 1u);
+        glm::uvec3(8u, 8u, 8u);
     ComputeCallManager::_descPipeline(computeCallScatteringRef) =
         _pipelineScatteringRef;
 
@@ -240,7 +239,7 @@ void GeometryGeneration::postInit()
   ComputeCallRefArray computeCallsToCreate;
   BufferRefArray buffersToCreate;
 
-  const glm::uvec3 computeDim = glm::uvec3(160u, 90u, 128u);
+  const glm::uvec3 computeDim = glm::uvec3(8u, 8u, 8u);
 
   // Images
   {

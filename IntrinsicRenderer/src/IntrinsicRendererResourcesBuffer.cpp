@@ -39,7 +39,7 @@ glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
 
   return pos;
 }
-
+ 
 uint16_t* BufferManager::readIndexValueFromRawBuffer(void* initialData, int i)
 {
   uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
