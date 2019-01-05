@@ -16,7 +16,7 @@
 
 struct Vert
 {
-	mediump vec4 position;
+	vec4 position;
 	vec3 normal;
 };
 
@@ -28,7 +28,7 @@ uboPerInstance;
 
 layout(binding = 1) buffer positionBuffer 
 {
-	mediump vec4 _Buffer[];
+	uint _Buffer[];
 };
 layout(binding = 2) buffer triangleConnectionBuffer 
 {
@@ -130,6 +130,20 @@ uint convert(vec2 pos0, vec2 pos1)
 {
 	return(packHalf2x16(pos0) << 16 | packHalf2x16(pos1));
 }
+
+void ffff1(uint i, vec3 pos1)
+{
+	if (i % 2 == 0)
+	{
+		_Buffer[i] = packHalf2x16(pos1.xy);
+		_Buffer[i + 1] |= (packHalf2x16(vec2(pos1.z, 0.0)) & 0xFF00);
+	}
+	else
+	{
+		_Buffer[i] |= (packHalf2x16(vec2(0.0, pos1.x)) & 0x00FF);
+		_Buffer[i + 1] = packHalf2x16(pos1.yz);
+	}
+}
 							
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
@@ -189,13 +203,16 @@ void main()
 		{	
 			//packHalf2x16
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
-			_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size).position;
+			//_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size).position;
+			ffff1(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).position.xyz / 10.0);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
-			_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size).position;
+			//_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size).position;
+			ffff1(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).position.xyz / 10.0);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
-			_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size).position;
+			//_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size).position;
+			ffff1(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).position.xyz / 10.0);
 		}
 	}
 }

@@ -409,8 +409,7 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
         Dod::Resources::ResourceFlags::kResourceVolatile);
 
     ComputeCallManager::_descDimensions(computeCallScatteringRef) =
-        glm::uvec3(Math::divideByMultiple(p_Dim.x, 8u),
-                   Math::divideByMultiple(p_Dim.y, 8u), 1u);
+        glm::uvec3(8u, 8u, 8u);
     ComputeCallManager::_descPipeline(computeCallScatteringRef) =
         _pipelineScatteringRef;
 
