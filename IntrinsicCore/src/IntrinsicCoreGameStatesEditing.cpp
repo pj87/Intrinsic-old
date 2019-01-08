@@ -1090,8 +1090,8 @@ void Editing::update(float p_DeltaT)
 
   if (BufferManager::_buffersToCreate.size() > 0)
   {
-    //Intrinsic::Renderer::Resources::BufferManager::updateResources(
-    //    BufferManager::_buffersToCreate, name); 
+    Intrinsic::Renderer::Resources::BufferManager::updateResources(
+        BufferManager::_buffersToCreate, name); 
     //Intrinsic::Renderer::Resources::BufferManager::updateResourcesNormal(
     //    BufferManager::_buffersToCreate, name); 
     Intrinsic::Renderer::Resources::BufferManager::updateResourcesIndices(

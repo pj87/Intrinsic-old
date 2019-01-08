@@ -17,6 +17,7 @@
 
 #include "IntrinsicAlgorithms/src/MarchingCubes.h"
 #include <vector>
+#include <memory>
 
 namespace Intrinsic
 {
@@ -39,12 +40,12 @@ glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
 
   return pos;
 }
- 
+
 uint16_t* BufferManager::readIndexValueFromRawBuffer(void* initialData, int i)
 {
   uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
 
-  //_INTR_LOG_INFO("PJ: Reading: %i", ptr[i]);
+  _INTR_LOG_INFO("PJ: Reading: %i", ptr[i]);
 
   return nullptr;
 }
@@ -69,7 +70,8 @@ void BufferManager::storeIndexValueToRawBuffer(void* initialData, int i,
   ptr[i] = value;
 }
 
-void BufferManager::updateResources(const BufferRefArray& p_Buffers, const Name& name)
+void BufferManager::updateResources(const BufferRefArray& p_Buffers,
+                                    const Name& name)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
@@ -82,7 +84,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers, const Name&
     bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     bufferCreateInfo.pNext = nullptr;
     bufferCreateInfo.usage =
-      Helper::mapBufferTypeToVkUsageFlagBits(_descBufferType(bufferRef)) |
+        Helper::mapBufferTypeToVkUsageFlagBits(_descBufferType(bufferRef)) |
         VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
     bufferCreateInfo.size = _descSizeInBytes(bufferRef);
     bufferCreateInfo.queueFamilyIndexCount = 0;
@@ -136,30 +138,43 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers, const Name&
             stagingMemReqs.memoryTypeBits);
 
     result = vkBindBufferMemory(RenderSystem::_vkDevice, stagingBuffer,
-                                  stagingGpuAllocInfo._vkDeviceMemory,
-                                  stagingGpuAllocInfo._offset);
+                                stagingGpuAllocInfo._vkDeviceMemory,
+                                stagingGpuAllocInfo._offset);
     _INTR_VK_CHECK_RESULT(result);
 
     // Copy initial data to staging memory
 
-    std::vector<Triangle>& triangles =
-        Core::Resources::MeshManager::_triangles;
-
-    for (int i = 0; i < triangles.size(); i++)
+    for (int i = 0; i < 2000; i++)
     {
       std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
-	  
-	  pos->x = 10.0 * triangles[i].pos.x;
-      pos->y = 10.0 * triangles[i].pos.y;
-      pos->z = 10.0 * triangles[i].pos.z;
 
-      storeVertexValueToRawBuffer(initialData, i, *pos);
+      pos->x = 0.0;
+      pos->y = 0.0;
+      pos->z = 0.0;
+
+	  storeVertexValueToRawBuffer(initialData, i, *pos);
     }
+
+    /*
+std::vector<Triangle>& triangles =
+    Core::Resources::MeshManager::_triangles;
+
+for (int i = 0; i < triangles.size(); i++)
+{
+  std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
+      
+      pos->x = 10.0 * triangles[i].pos.x;
+  pos->y = 10.0 * triangles[i].pos.y;
+  pos->z = 10.0 * triangles[i].pos.z;
+
+  storeVertexValueToRawBuffer(initialData, i, *pos);
+}
+    */
 
     {
 
       memcpy(stagingGpuAllocInfo._mappedMemory, initialData,
-               _descSizeInBytes(bufferRef));
+             _descSizeInBytes(bufferRef));
     }
 
     VkBufferCopy bufferCopy = {};
@@ -177,7 +192,8 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers, const Name&
   GpuMemoryManager::resetPool(MemoryPoolType::kVolatileStagingBuffers);
 }
 
-void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers, const Name& name)
+void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers,
+                                          const Name& name)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
@@ -216,8 +232,8 @@ void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers, const
 
   VkResult result;
   result = vkBindBufferMemory(RenderSystem::_vkDevice, buffer,
-                                memoryAllocationInfo._vkDeviceMemory,
-                                memoryAllocationInfo._offset);
+                              memoryAllocationInfo._vkDeviceMemory,
+                              memoryAllocationInfo._offset);
   _INTR_VK_CHECK_RESULT(result);
 
   void* initialData = _descInitialData(bufferRef);
@@ -230,7 +246,7 @@ void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers, const
 
     VkBuffer stagingBuffer;
     result = vkCreateBuffer(RenderSystem::_vkDevice, &stagingBufferCreateInfo,
-                              nullptr, &stagingBuffer);
+                            nullptr, &stagingBuffer);
     _INTR_VK_CHECK_RESULT(result);
 
     VkMemoryRequirements stagingMemReqs;
@@ -250,8 +266,7 @@ void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers, const
 
     // Copy initial data to staging memory
 
-    std::vector<Triangle>& triangles =
-        Core::Resources::MeshManager::_triangles;
+    std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
 
     for (int i = 0; i < triangles.size(); i++)
     {
@@ -285,7 +300,8 @@ void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers, const
   GpuMemoryManager::resetPool(MemoryPoolType::kVolatileStagingBuffers);
 }
 
-void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers, const Name& name)
+void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers,
+                                           const Name& name)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
@@ -351,18 +367,22 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers, cons
                                 stagingGpuAllocInfo._offset);
     _INTR_VK_CHECK_RESULT(result);
 
-    std::vector<Triangle>& triangles =
-        Core::Resources::MeshManager::_triangles;
+    std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
 
     int treshold = triangles.size() < bufSize ? triangles.size() : bufSize;
     int zero = 0;
 
     for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++)
-    {
-      if (i < treshold)
-        storeIndexValueToRawBuffer(initialData, i, i);
-      else
-        storeIndexValueToRawBuffer(initialData, i, zero);
+	{
+		if (i < 6)
+		{
+			storeIndexValueToRawBuffer(initialData, i, i);
+		}
+		else
+			storeIndexValueToRawBuffer(initialData, i, zero);
+
+		if (i < 20)
+			readIndexValueFromRawBuffer(initialData, i);
     }
 
     // Copy initial data to staging memory

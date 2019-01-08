@@ -30,6 +30,12 @@ layout(binding = 3) buffer positionBuffer
 {
     uint pos[];
 };
+/*
+layout(binding = 4) buffer indexBuffer 
+{
+    uint indices[];
+};
+*/
 
 // Based on AC4 volumetric fog
 // https://goo.gl/xEgT9O
@@ -57,14 +63,17 @@ void ffff1(uint i, vec3 pos1)
 	if (i % 2 == 0)
 	{
 		pos[i] = packHalf2x16(pos1.xy);
-		pos[i + 1] = packHalf2x16(vec2(pos1.z, 0.0));
+		vec2 tmp = unpackHalf2x16(pos[i + 1]);
+		pos[i + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
 	}
 	else
-	{
-		pos[i] |= (packHalf2x16(vec2(0.0, pos1.x)) & 0x00FF);
-		pos[i + 1] = packHalf2x16(pos1.yz);
+	{	
+		vec2 tmp = unpackHalf2x16(pos[i]);
+		pos[i] = packHalf2x16(vec2(tmp.x, pos1.x));
+		pos[i + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
+
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
@@ -86,18 +95,141 @@ void main()
     //currentValue = accum(currentValue, nextValue);
     //write(cellIdx, currentValue);
 	/*
-	ffff1(0, vec3(-1.0, 1.0, 1.0));
-	ffff1(1, vec3(2.0, -2.0, 2.0));
-	ffff1(2, vec3(3.0, 3.0, -3.0));
-	ffff1(3, vec3(-4.0, 4.0, 4.0));
-	ffff1(4, vec3(4.0, -4.0, 4.0));
-	ffff1(5, vec3(5.0, 5.0, -5.0));
+	if (idx == 0)
+	{
+		ffff1(idx * 3 + 0, vec3(-1.0, -1.0, 0.0));
+		ffff1(idx * 3 + 1, vec3( 1.0, -1.0, 0.0));
+		ffff1(idx * 3 + 2, vec3( 0.0,  1.0, 0.0));
+	}
+	else if(idx == 1)
+	{
+		ffff1(idx * 3 + 0, vec3( 0.0,  0.0, 1.0));
+		ffff1(idx * 3 + 1, vec3( 2.0,  0.0, 1.0));
+		ffff1(idx * 3 + 2, vec3( 1.0,  2.0, 1.0));
+	}
+	else
+	{
+		ffff1(idx * 3 + 0, vec3(0.0, 0.0, 0.0));
+		ffff1(idx * 3 + 1, vec3(0.0, 0.0, 0.0));
+		ffff1(idx * 3 + 2, vec3(0.0, 0.0, 0.0));
+	}
 	*/
 	
-	ffff1(idx * 3 + 0, vec3(id.x + 1.0, id.y + 0.0, id.z + 0.0));
-	ffff1(idx * 3 + 1, vec3(id.x + 0.0, id.y + 1.0, id.z + 0.0));
-	ffff1(idx * 3 + 2, vec3(id.x + 0.0, id.y + 0.0, id.z + 1.0));
+	ffff1(0, vec3(-1.0, -1.0, 0.0)); 
+	ffff1(1, vec3( 1.0, -1.0, 0.0)); 
+	ffff1(2, vec3( 0.0,  1.0, 0.0)); 
 	
+	ffff1(3, vec3( 0.0,  0.0, 1.0)); 
+	ffff1(4, vec3( 2.0,  0.0, 1.0)); 
+	ffff1(5, vec3( 1.0,  2.0, 1.0)); 
+	
+	vec2 tmp; 
+	
+	tmp = unpackHalf2x16(pos[0]);
+	tmp.x = -1.0;
+	tmp.y = -1.0;
+	pos[0] = packHalf2x16(tmp);
+	
+	tmp = unpackHalf2x16(pos[1]);
+	tmp.x = 0.0;
+	tmp.y = 1.0;
+	pos[1] = packHalf2x16(tmp);
+	
+	tmp = unpackHalf2x16(pos[2]);
+	tmp.x = -1.0;
+	tmp.y = 0.0;
+	pos[2] = packHalf2x16(tmp);
+	
+	tmp = unpackHalf2x16(pos[3]);
+	tmp.x = 0.0;
+	tmp.y = 1.0;
+	pos[3] = packHalf2x16(tmp);
+	
+	tmp = unpackHalf2x16(pos[4]);
+	tmp.x = 0.0;
+	tmp.y = 0.0;
+	pos[4] = packHalf2x16(tmp);
+	
+	tmp = unpackHalf2x16(pos[5]);
+	tmp.x = 0.0;
+	tmp.y = 1.0;
+	pos[5] = packHalf2x16(tmp);
+	
+	tmp = unpackHalf2x16(pos[6]);
+	tmp.x = 2.0;
+	tmp.y = 0.0;
+	pos[6] = packHalf2x16(tmp);
+	
+	tmp = unpackHalf2x16(pos[7]);
+	tmp.x = 1.0;
+	tmp.y = 1.0;
+	pos[7] = packHalf2x16(tmp);
+	
+	tmp = unpackHalf2x16(pos[8]);
+	tmp.x = 2.0;
+	tmp.y = 1.0;
+	pos[8] = packHalf2x16(tmp);
+	
+	//ffff1(3, vec3(-4.0, 4.0, 4.0));
+	//ffff1(4, vec3(4.0, -4.0, 4.0));
+	//ffff1(5, vec3(5.0, 5.0, -5.0));
+	
+	
+	//ffff1(idx * 3 + 0, vec3(id.x + 1.0, id.y + 0.0, id.z + 0.0));
+	//ffff1(idx * 3 + 1, vec3(id.x + 0.0, id.y + 1.0, id.z + 0.0));
+	//ffff1(idx * 3 + 2, vec3(id.x + 0.0, id.y + 0.0, id.z + 1.0));
+	
+	/*
+	if (idx < 9)
+	{
+		//ffff1(idx * 3 + 0, vec3(id.x + 1.0, id.y + 0.0, id.z + 0.0));
+		//ffff1(idx * 3 + 1, vec3(id.x + 0.0, id.y + 1.0, id.z + 0.0));
+		//ffff1(idx * 3 + 2, vec3(id.x + 0.0, id.y + 0.0, id.z + 1.0));
+		
+		ffff1(idx * 3 + 0, vec3(1.0, float(idx * 3), 0.0));
+		ffff1(idx * 3 + 1, vec3(0.0, float(idx * 3), 0.0));
+		ffff1(idx * 3 + 2, vec3(0.0, float(idx * 3), 1.0));
+	}
+	else
+	{
+		ffff1(idx * 3 + 0, vec3(0.0, 0.0, 0.0));
+		ffff1(idx * 3 + 1, vec3(0.0, 0.0, 0.0));
+		ffff1(idx * 3 + 2, vec3(0.0, 0.0, 0.0));
+	}
+	*/
+	/*
+	vec2 tmp; 
+	
+	tmp = unpackHalf2x16(pos[idx * 3 + i]);
+	tmp.x *= 1.001;
+	tmp.y *= 1.001;
+	pos[idx * 3 + i] = packHalf2x16(tmp);
+	barrier();
+	
+	*/
+	
+	/*
+	if (idx == 0)
+	{
+		for (int i = 0; i < 384; i++)
+		{
+			vec2 tmp = unpackHalf2x16(pos[i]);
+			tmp.x *= 1.001;
+			tmp.y *= 1.001;
+			pos[i] = packHalf2x16(tmp);
+		}
+	}
+	*/
+	
+	/*
+	ffff1(3, vec3(1.0, 0.0, 0.0));
+	ffff1(4, vec3(0.0, 1.0, 0.0));
+	ffff1(5, vec3(0.0, 0.0, 1.0));
+	
+	ffff1(6, vec3(1.0, 0.0, 0.0));
+	ffff1(7, vec3(0.0, 1.0, 0.0));
+	ffff1(8, vec3(0.0, 0.0, 1.0));
+	*/
 	//pos[idx] = idx;
   }
 }
