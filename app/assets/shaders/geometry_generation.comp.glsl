@@ -135,15 +135,20 @@ void ffff1(uint i, vec3 pos1)
 {
 	if (i % 2 == 0)
 	{
-		_Buffer[i] = packHalf2x16(pos1.xy);
-		_Buffer[i + 1] |= (packHalf2x16(vec2(pos1.z, 0.0)) & 0xFF00);
+		uint iiii = i + i / 2;
+		_Buffer[iiii] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_Buffer[iiii + 1]);
+		_Buffer[iiii + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
 	}
 	else
-	{
-		_Buffer[i] |= (packHalf2x16(vec2(0.0, pos1.x)) & 0x00FF);
-		_Buffer[i + 1] = packHalf2x16(pos1.yz);
+	{	
+		uint iiii = i + (i - 1) / 2;
+		vec2 tmp = unpackHalf2x16(_Buffer[iiii]);
+		_Buffer[iiii] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_Buffer[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
+
 							
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()

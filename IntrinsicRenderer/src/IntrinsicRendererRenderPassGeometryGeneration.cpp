@@ -381,15 +381,7 @@ _INTR_INLINE void createVoxels(float* voxels)
   std::uniform_real_distribution<float> unif(lower_bound, upper_bound);
   std::default_random_engine re;
 
-  // memset(voxels, 0.0f, N * N * N * sizeof(float));
-
-  for (int i = 0; i < N * N * N; i++)
-  {
-    if (i > 100 && i < 1000)
-      voxels[i] = -1.0;
-    else
-      voxels[i] = 1.0;
-  }
+  memset(voxels, 0.0f, N * N * N * sizeof(float));
 }
 
 _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
