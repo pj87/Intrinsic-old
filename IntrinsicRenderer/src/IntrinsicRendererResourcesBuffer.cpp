@@ -25,7 +25,33 @@ namespace Renderer
 {
 namespace Resources
 {
+/*
+static uint32_t dupa[100];
 
+void ffff1(uint32_t i, glm::vec3 pos1)
+{
+  int idx = i + i / 2;
+  if (i % 2 == 1)
+  {
+    idx = i + (i - 1) / 2;
+  }
+
+  _INTR_LOG_INFO("i = %d, idx1 = %d, idx2 = %d", i, idx, (idx + 1));
+
+  if (i % 2 == 0)
+  {
+    dupa[i] = glm::packHalf2x16(glm::vec2(pos1.x, pos1.y));
+    glm::vec2 tmp = glm::unpackHalf2x16(dupa[i + 1]);
+    dupa[i + 1] = glm::packHalf2x16(glm::vec2(pos1.z, tmp.y));
+  }
+  else
+  {
+    glm::vec2 tmp = glm::unpackHalf2x16(dupa[i]);
+    dupa[i] = glm::packHalf2x16(glm::vec2(tmp.x, pos1.x));
+    dupa[i + 1] = glm::packHalf2x16(glm::vec2(pos1.y, pos1.z));
+  }
+}
+*/
 // PJ: Added++
 glm::vec3* BufferManager::readVertexValueFromRawBuffer(void* initialData, int i)
 {
@@ -73,6 +99,16 @@ void BufferManager::storeIndexValueToRawBuffer(void* initialData, int i,
 void BufferManager::updateResources(const BufferRefArray& p_Buffers,
                                     const Name& name)
 {
+  /*
+  ffff1(0, glm::vec3(1.0, 1.0, 0.0));
+  ffff1(1, glm::vec3(1.0, 1.0, 0.0));
+  ffff1(2, glm::vec3(1.0, 1.0, 0.0));
+  ffff1(3, glm::vec3(1.0, 1.0, 0.0));
+  ffff1(4, glm::vec3(1.0, 1.0, 0.0));
+  ffff1(5, glm::vec3(1.0, 1.0, 0.0));
+  ffff1(6, glm::vec3(1.0, 1.0, 0.0));
+  */
+
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
   const uint32_t index = BufferManager::_nameToInitlialBufferMap[name];
@@ -152,7 +188,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers,
       pos->y = 0.0;
       pos->z = 0.0;
 
-	  storeVertexValueToRawBuffer(initialData, i, *pos);
+      storeVertexValueToRawBuffer(initialData, i, *pos);
     }
 
     /*
@@ -162,7 +198,7 @@ std::vector<Triangle>& triangles =
 for (int i = 0; i < triangles.size(); i++)
 {
   std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
-      
+      
       pos->x = 10.0 * triangles[i].pos.x;
   pos->y = 10.0 * triangles[i].pos.y;
   pos->z = 10.0 * triangles[i].pos.z;
@@ -373,16 +409,18 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers,
     int zero = 0;
 
     for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++)
-	{
-		if (i < 6)
-		{
-			storeIndexValueToRawBuffer(initialData, i, i);
-		}
-		else
-			storeIndexValueToRawBuffer(initialData, i, zero);
+    {
+      //if (i < 6)
+      {
+        storeIndexValueToRawBuffer(initialData, i, i);
+      }
+      /*
+      else
+        storeIndexValueToRawBuffer(initialData, i, zero);
 
-		if (i < 20)
-			readIndexValueFromRawBuffer(initialData, i);
+      if (i < 20)
+        readIndexValueFromRawBuffer(initialData, i);
+	  */
     }
 
     // Copy initial data to staging memory

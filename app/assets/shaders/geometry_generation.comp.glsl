@@ -62,15 +62,17 @@ void ffff1(uint i, vec3 pos1)
 {
 	if (i % 2 == 0)
 	{
-		pos[i] = packHalf2x16(pos1.xy);
-		vec2 tmp = unpackHalf2x16(pos[i + 1]);
-		pos[i + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+		uint iiii = i + i / 2;
+		pos[iiii] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(pos[iiii + 1]);
+		pos[iiii + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
 	}
 	else
 	{	
-		vec2 tmp = unpackHalf2x16(pos[i]);
-		pos[i] = packHalf2x16(vec2(tmp.x, pos1.x));
-		pos[i + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+		uint iiii = i + (i - 1) / 2;
+		vec2 tmp = unpackHalf2x16(pos[iiii]);
+		pos[iiii] = packHalf2x16(vec2(tmp.x, pos1.x));
+		pos[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
 
@@ -114,7 +116,7 @@ void main()
 		ffff1(idx * 3 + 2, vec3(0.0, 0.0, 0.0));
 	}
 	*/
-	
+	/*
 	ffff1(0, vec3(-1.0, -1.0, 0.0)); 
 	ffff1(1, vec3( 1.0, -1.0, 0.0)); 
 	ffff1(2, vec3( 0.0,  1.0, 0.0)); 
@@ -122,7 +124,8 @@ void main()
 	ffff1(3, vec3( 0.0,  0.0, 1.0)); 
 	ffff1(4, vec3( 2.0,  0.0, 1.0)); 
 	ffff1(5, vec3( 1.0,  2.0, 1.0)); 
-	
+	*/
+	/*
 	vec2 tmp; 
 	
 	tmp = unpackHalf2x16(pos[0]);
@@ -169,15 +172,16 @@ void main()
 	tmp.x = 2.0;
 	tmp.y = 1.0;
 	pos[8] = packHalf2x16(tmp);
+	*/
 	
 	//ffff1(3, vec3(-4.0, 4.0, 4.0));
 	//ffff1(4, vec3(4.0, -4.0, 4.0));
 	//ffff1(5, vec3(5.0, 5.0, -5.0));
 	
 	
-	//ffff1(idx * 3 + 0, vec3(id.x + 1.0, id.y + 0.0, id.z + 0.0));
-	//ffff1(idx * 3 + 1, vec3(id.x + 0.0, id.y + 1.0, id.z + 0.0));
-	//ffff1(idx * 3 + 2, vec3(id.x + 0.0, id.y + 0.0, id.z + 1.0));
+	ffff1(idx * 3 + 0, vec3(id.x + 1.0, id.y + 0.0, id.z + 0.0));
+	ffff1(idx * 3 + 1, vec3(id.x + 0.0, id.y + 1.0, id.z + 0.0));
+	ffff1(idx * 3 + 2, vec3(id.x + 0.0, id.y + 0.0, id.z + 1.0));
 	
 	/*
 	if (idx < 9)
