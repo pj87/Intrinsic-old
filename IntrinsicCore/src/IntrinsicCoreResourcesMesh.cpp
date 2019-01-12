@@ -194,7 +194,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(posVertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(posVertexBuffer) =
-            (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+            (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 5u;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -234,7 +234,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(uv0VertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(uv0VertexBuffer) =
-            (uint32_t)uv0s[subMeshIdx].size() * sizeof(uint16_t) * 2u;
+            (uint32_t)uv0s[subMeshIdx].size() * sizeof(uint16_t) * 5u;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -265,7 +265,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(normalVertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(normalVertexBuffer) =
-            (uint32_t)normals[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+            (uint32_t)normals[subMeshIdx].size() * sizeof(uint16_t) * 5u;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -300,7 +300,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(tangentVertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(tangentVertexBuffer) =
-            (uint32_t)tangents[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+            (uint32_t)tangents[subMeshIdx].size() * sizeof(uint16_t) * 5u;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -335,7 +335,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(binormalVertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(binormalVertexBuffer) =
-            (uint32_t)binormals[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+            (uint32_t)binormals[subMeshIdx].size() * sizeof(uint16_t) * 5u;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -398,7 +398,10 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         if (indices[subMeshIdx].size() <= 0xFFFF)
         {
           uint32_t indexBufferSizeInBytes =
-              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t);
+              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t) * 5u;
+
+		  _INTR_LOG_WARNING("size = %d", indexBufferSizeInBytes);
+
           uint16_t* tempIndexBuffer =
               (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
                   indexBufferSizeInBytes);

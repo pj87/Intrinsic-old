@@ -59,6 +59,7 @@ glm::mat4 prevViewProjMatrix;
 BufferRef _voxelBuffer;
 BufferRef _triangleConnectionBuffer;
 BufferRef _positionBuffer;
+BufferRef _debugBuffer; 
 
 PipelineRef _pipelineScatteringRef;
 
@@ -422,6 +423,10 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
         computeCallScatteringRef, _N(voxelBuffer), GpuProgramType::kCompute,
         _voxelBuffer, UboType::kPerInstanceCompute,
         BufferManager::_descSizeInBytes(_voxelBuffer));
+    ComputeCallManager::bindBuffer(
+        computeCallScatteringRef, _N(debugBuffer), GpuProgramType::kCompute,
+        _debugBuffer, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(_debugBuffer));
   }
 
   return computeCallScatteringRef;
@@ -536,7 +541,21 @@ void GeometryGeneration::init()
       BufferManager::_descInitialData(_voxelBuffer) = voxelTable;
     }
     buffersToCreate.push_back(_voxelBuffer);
+
+	_debugBuffer = BufferManager::createBuffer(_N(_DebugBuffer));
+    {
+      BufferManager::resetToDefault(_debugBuffer);
+      BufferManager::addResourceFlags(
+          _debugBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
+
+      BufferManager::_descBufferType(_debugBuffer) = BufferType::kStorage;
+      BufferManager::_descSizeInBytes(_debugBuffer) =
+          150000 * 8 * sizeof(float);
+      // BufferManager::_descInitialData(_debugBuffer) = voxelTable;
+    }
+    buffersToCreate.push_back(_debugBuffer);
   }
+
   BufferManager::createResources(buffersToCreate);
 }
 

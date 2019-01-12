@@ -20,6 +20,12 @@ struct Vert
 	vec3 normal;
 };
 
+struct Debug
+{
+	vec4 debug1;
+	vec4 debug2;
+};
+
 float _Target = 0.0f;
 int _Width = 64, _Height = 64, _Depth = 64, _Border = 1;
 
@@ -37,6 +43,10 @@ layout(binding = 2) buffer triangleConnectionBuffer
 layout(binding = 3) buffer voxelBuffer 
 {
 	float _Voxels[];
+};
+layout(binding = 4) buffer debugBuffer 
+{
+	Debug _DebugBuffer[];
 };
 
 // edgeConnection lists the index of the endpoint vertices for each of the 12 edges of the cube
@@ -154,7 +164,8 @@ layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
 {	
 	uvec3 id = gl_GlobalInvocationID;
-
+	uint idx = id.x + id.y * _Width + id.z * _Width * _Height;
+	
 	//Dont generate verts at the edge as they dont have 
 	//neighbours to make a cube from and the normal will 
 	//not be correct around border.
@@ -169,19 +180,25 @@ void main()
 	FillCube(id.x, id.y, id.z, cube);
 
 	int i = 0;
-	uint flagIndex = 0;
+	int flagIndex = 0;
 	vec3 edgeVertex[12];
 
 	//Find which vertices are inside of the surface and which are outside
 	for (i = 0; i < 8; i++)
+	{
+		_DebugBuffer[idx].debug1 = vec4(cube[0], cube[1], cube[2], cube[3]);
+		_DebugBuffer[idx].debug2 = vec4(cube[4], cube[5], cube[6], cube[7]);
 		if (cube[i] <= _Target) flagIndex |= 1 << i;
+	}
 
 	//Find which edges are intersected by the surface
 	int edgeFlags = _CubeEdgeFlags[flagIndex];
 	
+	_Buffer[idx] = edgeFlags;
+	
 	// no connections, return
 	if (edgeFlags == 0) return;
-
+	
 	//Find the point of intersection of the surface with each edge
 	for (i = 0; i < 12; i++)
 	{
@@ -195,9 +212,7 @@ void main()
 	}
 
 	vec3 size = vec3(_Width - 1, _Height - 1, _Depth - 1);
-
-	uint idx = id.x + id.y * _Width + id.z * _Width * _Height;
-	
+	/*
 	//Save the triangles that were found. There can be up to five per cube
 	for (i = 0; i < 5; i++)
 	{
@@ -220,4 +235,6 @@ void main()
 			ffff1(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).position.xyz / 10.0);
 		}
 	}
+	*/
+	//_Buffer[idx] = idx;
 }
