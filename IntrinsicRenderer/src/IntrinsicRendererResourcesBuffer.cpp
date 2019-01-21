@@ -65,7 +65,9 @@ void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i,
 void BufferManager::storeIndexValueToRawBuffer(void* initialData, int i,
                                                int& value)
 {
-  uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
+  //uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
+  uint32_t* ptr = reinterpret_cast<uint32_t*>(initialData);
+
   ptr[i] = value;
 }
 
@@ -355,10 +357,15 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers, cons
     std::vector<Triangle>& triangles =
         Core::Resources::MeshManager::_triangles;
 
+	_INTR_LOG_WARNING("Wielkosc bufora: %d", _descSizeInBytes(bufferRef));
+
     int treshold = triangles.size() < bufSize ? triangles.size() : bufSize;
     int zero = 0;
 
-    for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++)
+	_INTR_LOG_WARNING("Ilosc indeksow: %d", _descSizeInBytes(bufferRef) / 4);
+
+
+    for (int i = 0; i < _descSizeInBytes(bufferRef) / 4; i++)
     {
       //if (i < treshold)
         storeIndexValueToRawBuffer(initialData, i, i);

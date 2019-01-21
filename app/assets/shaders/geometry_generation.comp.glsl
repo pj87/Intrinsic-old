@@ -194,7 +194,7 @@ void main()
 	//Find which edges are intersected by the surface
 	int edgeFlags = _CubeEdgeFlags[flagIndex];
 	
-	_Buffer[idx] = edgeFlags;
+	//_Buffer[idx] = edgeFlags;
 	
 	// no connections, return
 	if (edgeFlags == 0) return;
@@ -212,7 +212,7 @@ void main()
 	}
 
 	vec3 size = vec3(_Width - 1, _Height - 1, _Depth - 1);
-	/*
+	
 	//Save the triangles that were found. There can be up to five per cube
 	for (i = 0; i < 5; i++)
 	{
@@ -235,6 +235,6 @@ void main()
 			ffff1(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).position.xyz / 10.0);
 		}
 	}
-	*/
+	
 	//_Buffer[idx] = idx;
 }
