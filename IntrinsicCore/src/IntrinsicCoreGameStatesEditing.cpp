@@ -1082,8 +1082,8 @@ void Editing::update(float p_DeltaT)
   const Name& name = _N(house);
   Intrinsic::Renderer::Resources::BufferManager::updateResources(
       BufferManager::_buffersToCreate, name); 
-  Intrinsic::Renderer::Resources::BufferManager::updateResourcesIndices(
-      BufferManager::_buffersToCreate, name); 
+  //Intrinsic::Renderer::Resources::BufferManager::updateResourcesIndices(
+  //    BufferManager::_buffersToCreate, name); 
 
   /*
   std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;

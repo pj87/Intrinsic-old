@@ -425,11 +425,34 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         {
           BufferManager::_descBufferType(indexBuffer) = R::BufferType::kIndex32;
           BufferManager::_descSizeInBytes(indexBuffer) =
-              (uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t);
-          BufferManager::_descInitialData(indexBuffer) =
-              (void*)indices[subMeshIdx].data();
+              (uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t) * 10u;
 
 		  _INTR_LOG_WARNING("Duzy bufor");
+          
+		  if (indices[subMeshIdx].size() != 15561)
+		  {
+			BufferManager::_descInitialData(indexBuffer) =
+				(void*)indices[subMeshIdx].data();
+          }
+          else
+          {
+            uint32_t* tempIndexBuffer =
+                (uint32_t*)Memory::Tlsf::MainAllocator::allocate(65535 * 4u);
+                    //indexBufferSizeInBytes);
+            tempBuffersToRelease.push_back(tempIndexBuffer);
+
+			uint32_t i;
+
+            for (i = 0u; i < 65535; ++i)
+            {
+              tempIndexBuffer[i] = i;
+            }
+
+			_INTR_LOG_WARNING("%d", i);
+
+			BufferManager::_descInitialData(indexBuffer) = tempIndexBuffer;
+          }
+		  
         }
 
         BufferManager::_buffersToCreate.push_back(indexBuffer);
