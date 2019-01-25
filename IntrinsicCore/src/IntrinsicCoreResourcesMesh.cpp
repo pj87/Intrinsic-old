@@ -439,10 +439,6 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         BufferManager::addResourceFlags(
             indexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
 
-		// 124488
-
-		_INTR_LOG_WARNING("indices = %d", indices[subMeshIdx].size());
-
         if (indices[subMeshIdx].size() <= 0xFFFF &&
             name != _N(house))
         {
@@ -474,37 +470,19 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 		  if (name != _N(house))
 		  {
             BufferManager::_descSizeInBytes(indexBuffer) =
-                (uint32_t)indices[subMeshIdx].size() *
-                sizeof(uint32_t) * 10u;
+                (uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t);
 
 			BufferManager::_descInitialData(indexBuffer) =
 				(void*)indices[subMeshIdx].data();
           }
-          else
-          {
-            BufferManager::_descSizeInBytes(indexBuffer) = 4000000 * 4u;
-
-            uint32_t* tempIndexBuffer =
-                (uint32_t*)Memory::Tlsf::MainAllocator::allocate(4000000 * 4u);
-                    //indexBufferSizeInBytes);
-            tempBuffersToRelease.push_back(tempIndexBuffer);
-
-			uint32_t i;
-
-            for (i = 0u; i < 4000000; ++i)
-            {
-              tempIndexBuffer[i] = i;
-            }
-
-			_INTR_LOG_WARNING("%d", i);
-
-			BufferManager::_descInitialData(indexBuffer) = tempIndexBuffer;
-          }
-		  
         }
 
-        BufferManager::_buffersToCreate.push_back(indexBuffer);
-        indexBuffers[subMeshIdx] = indexBuffer;
+		if (name != _N(house))
+        {
+		   BufferManager::_buffersToCreate.push_back(indexBuffer);
+           indexBuffers[subMeshIdx] = indexBuffer;
+		}
+
       }
     }
 
