@@ -154,7 +154,6 @@ struct ResourceManagerBase : Dod::ManagerBase<IdCount, DataType>
   static std::vector<Triangle> _triangles;
   static std::vector<Metaball> _metaballs;
   static Name _defaultResourceName;
-  static float _time;
   static Intrinsic::Renderer::Resources::BufferRefArray _buffersToCreate;
   static _INTR_HASH_MAP(Name, uint32_t) _nameToInitlialBufferMap;
 
@@ -502,8 +501,6 @@ template <class DataType, uint32_t IdCount>
 std::vector<Triangle> ResourceManagerBase<DataType, IdCount>::_triangles;
 template <class DataType, uint32_t IdCount>
 std::vector<Metaball> ResourceManagerBase<DataType, IdCount>::_metaballs;
-template <class DataType, uint32_t IdCount>
-float ResourceManagerBase<DataType, IdCount>::_time;
 template <class DataType, uint32_t IdCount>
 _INTR_HASH_MAP(Name, uint32_t) 
 ResourceManagerBase<DataType, IdCount>::_nameToInitlialBufferMap;
