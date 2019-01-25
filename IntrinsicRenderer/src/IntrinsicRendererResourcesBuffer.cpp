@@ -65,7 +65,9 @@ void BufferManager::storeVertexValueToRawBuffer(void* initialData, int i,
 void BufferManager::storeIndexValueToRawBuffer(void* initialData, int i,
                                                int& value)
 {
-  uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
+  //uint16_t* ptr = reinterpret_cast<uint16_t*>(initialData);
+  uint32_t* ptr = reinterpret_cast<uint32_t*>(initialData);
+
   ptr[i] = value;
 }
 
@@ -145,13 +147,14 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers, const Name&
     std::vector<Triangle>& triangles =
         Core::Resources::MeshManager::_triangles;
 
-    for (int i = 0; i < triangles.size(); i++)
+    //for (int i = 0; i < triangles.size(); i++)
+    for (int i = 0; i < _descSizeInBytes(bufferRef) / 4; i++)
     {
       std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
 	  
-	  pos->x = 10.0 * triangles[i].pos.x;
-      pos->y = 10.0 * triangles[i].pos.y;
-      pos->z = 10.0 * triangles[i].pos.z;
+	  pos->x = 0.0;
+      pos->y = 0.0;
+      pos->z = 0.0;
 
       storeVertexValueToRawBuffer(initialData, i, *pos);
     }
@@ -354,15 +357,20 @@ void BufferManager::updateResourcesIndices(const BufferRefArray& p_Buffers, cons
     std::vector<Triangle>& triangles =
         Core::Resources::MeshManager::_triangles;
 
+	_INTR_LOG_WARNING("Wielkosc bufora: %d", _descSizeInBytes(bufferRef));
+
     int treshold = triangles.size() < bufSize ? triangles.size() : bufSize;
     int zero = 0;
 
-    for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++)
+	_INTR_LOG_WARNING("Ilosc indeksow: %d", _descSizeInBytes(bufferRef) / 4);
+
+
+    for (int i = 0; i < _descSizeInBytes(bufferRef) / 4; i++)
     {
-      if (i < treshold)
+      //if (i < treshold)
         storeIndexValueToRawBuffer(initialData, i, i);
-      else
-        storeIndexValueToRawBuffer(initialData, i, zero);
+      //else
+      //  storeIndexValueToRawBuffer(initialData, i, zero);
     }
 
     // Copy initial data to staging memory

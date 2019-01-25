@@ -170,6 +170,9 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
     indexBuffers.resize(subMeshCount);
     _aabbPerSubMesh(meshRef).resize(subMeshCount);
 
+    const Name& name = _name(meshRef);
+    _INTR_LOG_INFO("%s", name.getString().c_str());
+
     for (uint32_t subMeshIdx = 0u; subMeshIdx < subMeshCount; ++subMeshIdx)
     {
       // Build AABB
@@ -193,8 +196,16 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
             posVertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
         BufferManager::_descBufferType(posVertexBuffer) =
             R::BufferType::kVertex;
-        BufferManager::_descSizeInBytes(posVertexBuffer) =
-            (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+        
+        if (name == _N(house))
+        {
+			BufferManager::_descSizeInBytes(posVertexBuffer) = 1000000 * 4u;
+        }
+        else 
+        {
+			BufferManager::_descSizeInBytes(posVertexBuffer) =
+              (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+        }
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -214,9 +225,6 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         }
         BufferManager::_descInitialData(posVertexBuffer) = tempBuffer;
 
-		const Name& name = _name(meshRef);
-
-		_INTR_LOG_INFO("%s", name.getString().c_str());
 
 		BufferManager::_nameToInitlialBufferMap[name] = 
 			BufferManager::_buffersToCreate.size();
@@ -233,8 +241,16 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
             uv0VertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
         BufferManager::_descBufferType(uv0VertexBuffer) =
             R::BufferType::kVertex;
-        BufferManager::_descSizeInBytes(uv0VertexBuffer) =
-            (uint32_t)uv0s[subMeshIdx].size() * sizeof(uint16_t) * 2u;
+        
+        if (name == _N(house))
+        {
+          BufferManager::_descSizeInBytes(uv0VertexBuffer) = 1000000 * 4u;
+        }
+        else
+        {
+          BufferManager::_descSizeInBytes(uv0VertexBuffer) =
+              (uint32_t)uv0s[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+        }
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -264,8 +280,16 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
             Dod::Resources::ResourceFlags::kResourceVolatile);
         BufferManager::_descBufferType(normalVertexBuffer) =
             R::BufferType::kVertex;
-        BufferManager::_descSizeInBytes(normalVertexBuffer) =
-            (uint32_t)normals[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+        
+        if (name == _N(house))
+        {
+          BufferManager::_descSizeInBytes(normalVertexBuffer) = 1000000 * 4u;
+        }
+        else
+        {
+          BufferManager::_descSizeInBytes(normalVertexBuffer) =
+              (uint32_t)normals[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+        }
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -299,9 +323,16 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
             Dod::Resources::ResourceFlags::kResourceVolatile);
         BufferManager::_descBufferType(tangentVertexBuffer) =
             R::BufferType::kVertex;
-        BufferManager::_descSizeInBytes(tangentVertexBuffer) =
-            (uint32_t)tangents[subMeshIdx].size() * sizeof(uint16_t) * 4u;
-
+        
+        if (name == _N(house))
+        {
+          BufferManager::_descSizeInBytes(tangentVertexBuffer) = 1000000 * 4u;
+        }
+        else
+        {
+			BufferManager::_descSizeInBytes(tangentVertexBuffer) =
+              (uint32_t)tangents[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+        }
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
             BufferManager::_descSizeInBytes(tangentVertexBuffer));
@@ -334,9 +365,16 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
             Dod::Resources::ResourceFlags::kResourceVolatile);
         BufferManager::_descBufferType(binormalVertexBuffer) =
             R::BufferType::kVertex;
-        BufferManager::_descSizeInBytes(binormalVertexBuffer) =
-            (uint32_t)binormals[subMeshIdx].size() * sizeof(uint16_t) * 4u;
-
+        
+		if (name == _N(house))
+        {
+			BufferManager::_descSizeInBytes(binormalVertexBuffer) = 1000000 * 4u;
+        }
+        else
+        {
+			BufferManager::_descSizeInBytes(binormalVertexBuffer) =
+              (uint32_t)binormals[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+        }
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
             BufferManager::_descSizeInBytes(binormalVertexBuffer));
@@ -369,10 +407,16 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
             Dod::Resources::ResourceFlags::kResourceVolatile);
         BufferManager::_descBufferType(vtxColorVertexBuffer) =
             R::BufferType::kVertex;
-
-        BufferManager::_descSizeInBytes(vtxColorVertexBuffer) =
-            (uint32_t)vtxColors[subMeshIdx].size() * sizeof(uint32_t);
-
+        
+		if (name == _N(house))
+        {
+			BufferManager::_descSizeInBytes(vtxColorVertexBuffer) = 1000000 * 4u;
+        }
+        else
+        {
+			BufferManager::_descSizeInBytes(vtxColorVertexBuffer) =
+              (uint32_t)vtxColors[subMeshIdx].size() * sizeof(uint32_t) * 4u;
+        }
         // Convert color
         uint32_t* tempBuffer = (uint32_t*)Memory::Tlsf::MainAllocator::allocate(
             BufferManager::_descSizeInBytes(vtxColorVertexBuffer));
@@ -395,10 +439,18 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         BufferManager::addResourceFlags(
             indexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
 
-        if (indices[subMeshIdx].size() <= 0xFFFF)
+		// 124488
+
+		_INTR_LOG_WARNING("indices = %d", indices[subMeshIdx].size());
+
+        if (indices[subMeshIdx].size() <= 0xFFFF &&
+            name != _N(house))
         {
           uint32_t indexBufferSizeInBytes =
-              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t);
+              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+
+		  //_INTR_LOG_WARNING("size = %d", indexBufferSizeInBytes);
+
           uint16_t* tempIndexBuffer =
               (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
                   indexBufferSizeInBytes);
@@ -416,10 +468,39 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         else
         {
           BufferManager::_descBufferType(indexBuffer) = R::BufferType::kIndex32;
-          BufferManager::_descSizeInBytes(indexBuffer) =
-              (uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t);
-          BufferManager::_descInitialData(indexBuffer) =
-              (void*)indices[subMeshIdx].data();
+          
+		  _INTR_LOG_WARNING("Duzy bufor");
+          
+		  if (name != _N(house))
+		  {
+            BufferManager::_descSizeInBytes(indexBuffer) =
+                (uint32_t)indices[subMeshIdx].size() *
+                sizeof(uint32_t) * 10u;
+
+			BufferManager::_descInitialData(indexBuffer) =
+				(void*)indices[subMeshIdx].data();
+          }
+          else
+          {
+            BufferManager::_descSizeInBytes(indexBuffer) = 4000000 * 4u;
+
+            uint32_t* tempIndexBuffer =
+                (uint32_t*)Memory::Tlsf::MainAllocator::allocate(4000000 * 4u);
+                    //indexBufferSizeInBytes);
+            tempBuffersToRelease.push_back(tempIndexBuffer);
+
+			uint32_t i;
+
+            for (i = 0u; i < 4000000; ++i)
+            {
+              tempIndexBuffer[i] = i;
+            }
+
+			_INTR_LOG_WARNING("%d", i);
+
+			BufferManager::_descInitialData(indexBuffer) = tempIndexBuffer;
+          }
+		  
         }
 
         BufferManager::_buffersToCreate.push_back(indexBuffer);

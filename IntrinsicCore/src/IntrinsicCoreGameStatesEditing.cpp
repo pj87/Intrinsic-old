@@ -820,6 +820,7 @@ float Editing::_gridSize = 1.0f;
 float Editing::_gizmoSize = 0.1f;
 float Editing::_cameraSpeed = 150.0f;
 float Editing::_rotationStepSize = 5.0f;
+bool Editing::_generatedGeometry = false;
 
 // <-
 
@@ -1079,6 +1080,16 @@ void Editing::update(float p_DeltaT)
 {
   _INTR_PROFILE_CPU("Game States", "Editing");
 
+  if (!Editing::_generatedGeometry)
+  {
+    const Name& name = _N(house);
+    Intrinsic::Renderer::Resources::BufferManager::updateResources(
+        BufferManager::_buffersToCreate, name);
+    Editing::_generatedGeometry = true;
+    // Intrinsic::Renderer::Resources::BufferManager::updateResourcesIndices(
+    //    BufferManager::_buffersToCreate, name);
+  }
+  /*
   std::vector<Triangle>& triangles = Core::Resources::MeshManager::_triangles;
   float& time = Core::Resources::MeshManager::_time;
   time += 0.1;
@@ -1099,6 +1110,7 @@ void Editing::update(float p_DeltaT)
   }
 
   triangles.clear();
+  */
 
   // Avoid time mod.
   const float deltaT = TaskManager::_lastDeltaT;
