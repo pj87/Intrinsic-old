@@ -481,7 +481,6 @@ void GeometryGeneration::postInit()
   PipelineManager::createResources(pipelinesToCreate);
 
   ComputeCallRefArray computeCallsToCreate;
-  BufferRefArray buffersToCreate;
 
   const glm::uvec3 computeDim = glm::uvec3(8u, 8u, 8u);
 
