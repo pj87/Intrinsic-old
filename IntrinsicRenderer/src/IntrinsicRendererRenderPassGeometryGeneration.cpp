@@ -60,6 +60,7 @@ BufferRef _voxelBuffer;
 BufferRef _triangleConnectionBuffer;
 BufferRef _positionBuffer;
 BufferRef _debugBuffer; 
+ImageRef _volLightingScatteringBufferImageRef;
 
 PipelineRef _pipelineScatteringRef;
 
@@ -427,6 +428,10 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
         computeCallScatteringRef, _N(debugBuffer), GpuProgramType::kCompute,
         _debugBuffer, UboType::kPerInstanceCompute,
         BufferManager::_descSizeInBytes(_debugBuffer));
+    ComputeCallManager::bindImage(
+        computeCallScatteringRef, _N(volLightScatterBufferTex1),
+        GpuProgramType::kCompute, _volLightingScatteringBufferImageRef,
+        Samplers::kInvalidSampler);
   }
 
   return computeCallScatteringRef;

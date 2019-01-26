@@ -48,6 +48,7 @@ layout(binding = 4) buffer debugBuffer
 {
 	Debug _DebugBuffer[];
 };
+layout(binding = 5, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex1;
 
 // edgeConnection lists the index of the endpoint vertices for each of the 12 edges of the cube
 ivec2 edgeConnection[12] = {ivec2(0, 1), ivec2(1, 2), ivec2(2, 3), ivec2(3, 0),
