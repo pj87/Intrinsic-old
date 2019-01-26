@@ -110,10 +110,9 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
                     Resources::DrawCallManager::_descInstanceCount(drawCallRef),
                     0u, 0u);
 		  */
-
-		  vkCmdDraw(secondCmdBuffer,
-                    20000000u,
-                    Resources::DrawCallManager::_descInstanceCount(drawCallRef),
+		  vkCmdDraw(secondCmdBuffer, 
+					60000000u,
+                    1u,
                     0u, 0u);
         }
 
