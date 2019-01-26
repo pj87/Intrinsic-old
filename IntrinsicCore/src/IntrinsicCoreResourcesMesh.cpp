@@ -199,7 +199,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-			BufferManager::_descSizeInBytes(posVertexBuffer) = 4000000 * sizeof(uint32_t);
+			BufferManager::_descSizeInBytes(posVertexBuffer) = 20000000 * sizeof(uint32_t);
         }
         else 
         {
@@ -243,7 +243,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-          BufferManager::_descSizeInBytes(uv0VertexBuffer) = 4000000 * sizeof(uint32_t);
+          BufferManager::_descSizeInBytes(uv0VertexBuffer) = 20000000 * sizeof(uint32_t);
         }
         else
         {
@@ -281,7 +281,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-          BufferManager::_descSizeInBytes(normalVertexBuffer) = 4000000 * sizeof(uint32_t);
+          BufferManager::_descSizeInBytes(normalVertexBuffer) = 20000000 * sizeof(uint32_t);
         }
         else
         {
@@ -323,7 +323,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-          BufferManager::_descSizeInBytes(tangentVertexBuffer) = 4000000 * sizeof(uint32_t);
+          BufferManager::_descSizeInBytes(tangentVertexBuffer) = 20000000 * sizeof(uint32_t);
         }
         else
         {
@@ -407,7 +407,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
 		if (name == _N(house))
         {
-			BufferManager::_descSizeInBytes(vtxColorVertexBuffer) = 4000000 * sizeof(uint32_t);
+			BufferManager::_descSizeInBytes(vtxColorVertexBuffer) = 20000000 * sizeof(uint32_t);
         }
         else
         {
