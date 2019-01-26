@@ -48,7 +48,8 @@ layout(binding = 4) buffer debugBuffer
 {
 	Debug _DebugBuffer[];
 };
-layout(binding = 5, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex1;
+layout(binding = 5) uniform sampler3D volLightScatterBufferTex1; // do odczytu
+//layout(binding = 6, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex1; // do zapisu
 
 // edgeConnection lists the index of the endpoint vertices for each of the 12 edges of the cube
 ivec2 edgeConnection[12] = {ivec2(0, 1), ivec2(1, 2), ivec2(2, 3), ivec2(3, 0),
@@ -225,15 +226,15 @@ void main()
 			//packHalf2x16
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
 			//_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size).position;
-			ffff1(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).position.xyz / 10.0);
+			ffff1(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).position.xyz / 10.0 + 0.01 * texelFetch(volLightScatterBufferTex1, ivec3(0), 0).x);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
 			//_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size).position;
-			ffff1(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).position.xyz / 10.0);
+			ffff1(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).position.xyz / 10.0 + 0.01 * texelFetch(volLightScatterBufferTex1, ivec3(0), 0).y);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
 			//_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size).position;
-			ffff1(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).position.xyz / 10.0);
+			ffff1(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).position.xyz / 10.0 + 0.01 * texelFetch(volLightScatterBufferTex1, ivec3(0), 0).z);
 		}
 	}
 	
