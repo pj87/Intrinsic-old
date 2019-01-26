@@ -199,32 +199,31 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-			BufferManager::_descSizeInBytes(posVertexBuffer) = 3000000 * sizeof(uint32_t);
+			BufferManager::_descSizeInBytes(posVertexBuffer) = 4000000 * sizeof(uint32_t);
         }
         else 
         {
 			BufferManager::_descSizeInBytes(posVertexBuffer) =
               (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 4u;
-        }
 
-        // Convert to half
-        uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
-            BufferManager::_descSizeInBytes(posVertexBuffer));
-        tempBuffersToRelease.push_back(tempBuffer);
+			// Convert to half
+			uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
+				BufferManager::_descSizeInBytes(posVertexBuffer));
+			tempBuffersToRelease.push_back(tempBuffer);
 
-        for (uint32_t i = 0u; i < positions[subMeshIdx].size(); ++i)
-        {
-          uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(
-              positions[subMeshIdx][i].x, positions[subMeshIdx][i].y));
-          uint32_t packedPosition1 =
-              glm::packHalf2x16(glm::vec2(positions[subMeshIdx][i].z, 0.0f));
+			for (uint32_t i = 0u; i < positions[subMeshIdx].size(); ++i)
+			{
+			  uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(
+				  positions[subMeshIdx][i].x, positions[subMeshIdx][i].y));
+			  uint32_t packedPosition1 =
+				  glm::packHalf2x16(glm::vec2(positions[subMeshIdx][i].z, 0.0f));
 
-          tempBuffer[i * 3u] = packedPosition0;
-          tempBuffer[i * 3u + 1u] = packedPosition0 >> 16u;
-          tempBuffer[i * 3u + 2u] = packedPosition1;
-        }
-        BufferManager::_descInitialData(posVertexBuffer) = tempBuffer;
-
+			  tempBuffer[i * 3u] = packedPosition0;
+			  tempBuffer[i * 3u + 1u] = packedPosition0 >> 16u;
+			  tempBuffer[i * 3u + 2u] = packedPosition1;
+			}
+			BufferManager::_descInitialData(posVertexBuffer) = tempBuffer;
+		}
 
 		BufferManager::_nameToInitlialBufferMap[name] = 
 			BufferManager::_buffersToCreate.size();
@@ -244,28 +243,27 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-          BufferManager::_descSizeInBytes(uv0VertexBuffer) = 3000000 * sizeof(uint32_t);
+          BufferManager::_descSizeInBytes(uv0VertexBuffer) = 4000000 * sizeof(uint32_t);
         }
         else
         {
-          BufferManager::_descSizeInBytes(uv0VertexBuffer) =
-              (uint32_t)uv0s[subMeshIdx].size() * sizeof(uint16_t) * 4u;
-        }
+			BufferManager::_descSizeInBytes(uv0VertexBuffer) =
+              (uint32_t)uv0s[subMeshIdx].size() * sizeof(uint16_t) * 2u;
 
-        // Convert to half
-        uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
-            BufferManager::_descSizeInBytes(uv0VertexBuffer));
-        tempBuffersToRelease.push_back(tempBuffer);
+			// Convert to half
+			uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
+				BufferManager::_descSizeInBytes(uv0VertexBuffer));
+			tempBuffersToRelease.push_back(tempBuffer);
 
-        for (uint32_t i = 0u; i < uv0s[subMeshIdx].size(); ++i)
-        {
-          uint32_t packedUv = glm::packHalf2x16(uv0s[subMeshIdx][i]);
+			for (uint32_t i = 0u; i < uv0s[subMeshIdx].size(); ++i)
+			{
+			  uint32_t packedUv = glm::packHalf2x16(uv0s[subMeshIdx][i]);
 
-          tempBuffer[i * 2u] = packedUv;
-          tempBuffer[i * 2u + 1u] = packedUv >> 16u;
-        }
-        BufferManager::_descInitialData(uv0VertexBuffer) = tempBuffer;
-
+			  tempBuffer[i * 2u] = packedUv;
+			  tempBuffer[i * 2u + 1u] = packedUv >> 16u;
+			}
+			BufferManager::_descInitialData(uv0VertexBuffer) = tempBuffer;
+		}
         BufferManager::_buffersToCreate.push_back(uv0VertexBuffer);
         vertexBuffers[subMeshIdx].push_back(uv0VertexBuffer);
       }
@@ -283,32 +281,31 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-          BufferManager::_descSizeInBytes(normalVertexBuffer) = 3000000 * sizeof(uint32_t);
+          BufferManager::_descSizeInBytes(normalVertexBuffer) = 4000000 * sizeof(uint32_t);
         }
         else
         {
-          BufferManager::_descSizeInBytes(normalVertexBuffer) =
+			BufferManager::_descSizeInBytes(normalVertexBuffer) =
               (uint32_t)normals[subMeshIdx].size() * sizeof(uint16_t) * 4u;
-        }
 
-        // Convert to half
-        uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
-            BufferManager::_descSizeInBytes(normalVertexBuffer));
-        tempBuffersToRelease.push_back(tempBuffer);
+			// Convert to half
+			uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
+				BufferManager::_descSizeInBytes(normalVertexBuffer));
+			tempBuffersToRelease.push_back(tempBuffer);
 
-        for (uint32_t i = 0u; i < normals[subMeshIdx].size(); ++i)
-        {
-          uint32_t packedNormal0 = glm::packHalf2x16(
-              glm::vec2(normals[subMeshIdx][i].x, normals[subMeshIdx][i].y));
-          uint32_t packedNormal1 =
-              glm::packHalf2x16(glm::vec2(normals[subMeshIdx][i].z, 0.0f));
+			for (uint32_t i = 0u; i < normals[subMeshIdx].size(); ++i)
+			{
+			  uint32_t packedNormal0 = glm::packHalf2x16(
+				  glm::vec2(normals[subMeshIdx][i].x, normals[subMeshIdx][i].y));
+			  uint32_t packedNormal1 =
+				  glm::packHalf2x16(glm::vec2(normals[subMeshIdx][i].z, 0.0f));
 
-          tempBuffer[i * 3u] = packedNormal0;
-          tempBuffer[i * 3u + 1u] = packedNormal0 >> 16u;
-          tempBuffer[i * 3u + 2u] = packedNormal1;
-        }
-        BufferManager::_descInitialData(normalVertexBuffer) = tempBuffer;
-
+			  tempBuffer[i * 3u] = packedNormal0;
+			  tempBuffer[i * 3u + 1u] = packedNormal0 >> 16u;
+			  tempBuffer[i * 3u + 2u] = packedNormal1;
+			}
+			BufferManager::_descInitialData(normalVertexBuffer) = tempBuffer;
+		}
         BufferManager::_buffersToCreate.push_back(normalVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(normalVertexBuffer);
       }
@@ -326,31 +323,31 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-          BufferManager::_descSizeInBytes(tangentVertexBuffer) = 3000000 * sizeof(uint32_t);
+          BufferManager::_descSizeInBytes(tangentVertexBuffer) = 4000000 * sizeof(uint32_t);
         }
         else
         {
 			BufferManager::_descSizeInBytes(tangentVertexBuffer) =
               (uint32_t)tangents[subMeshIdx].size() * sizeof(uint16_t) * 4u;
-        }
-        // Convert to half
-        uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
-            BufferManager::_descSizeInBytes(tangentVertexBuffer));
-        tempBuffersToRelease.push_back(tempBuffer);
+        
+			// Convert to half
+			uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
+				BufferManager::_descSizeInBytes(tangentVertexBuffer));
+			tempBuffersToRelease.push_back(tempBuffer);
 
-        for (uint32_t i = 0u; i < tangents[subMeshIdx].size(); ++i)
-        {
-          uint32_t packedTangent0 = glm::packHalf2x16(
-              glm::vec2(tangents[subMeshIdx][i].x, tangents[subMeshIdx][i].y));
-          uint32_t packedTangent1 =
-              glm::packHalf2x16(glm::vec2(tangents[subMeshIdx][i].z, 0.0f));
+			for (uint32_t i = 0u; i < tangents[subMeshIdx].size(); ++i)
+			{
+			  uint32_t packedTangent0 = glm::packHalf2x16(
+				  glm::vec2(tangents[subMeshIdx][i].x, tangents[subMeshIdx][i].y));
+			  uint32_t packedTangent1 =
+				  glm::packHalf2x16(glm::vec2(tangents[subMeshIdx][i].z, 0.0f));
 
-          tempBuffer[i * 3u] = packedTangent0;
-          tempBuffer[i * 3u + 1u] = packedTangent0 >> 16u;
-          tempBuffer[i * 3u + 2u] = packedTangent1;
-        }
-        BufferManager::_descInitialData(tangentVertexBuffer) = tempBuffer;
-
+			  tempBuffer[i * 3u] = packedTangent0;
+			  tempBuffer[i * 3u + 1u] = packedTangent0 >> 16u;
+			  tempBuffer[i * 3u + 2u] = packedTangent1;
+			}
+			BufferManager::_descInitialData(tangentVertexBuffer) = tempBuffer;
+		}
         BufferManager::_buffersToCreate.push_back(tangentVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(tangentVertexBuffer);
       }
@@ -374,25 +371,25 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         {
 			BufferManager::_descSizeInBytes(binormalVertexBuffer) =
               (uint32_t)binormals[subMeshIdx].size() * sizeof(uint16_t) * 4u;
-        }
-        // Convert to half
-        uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
-            BufferManager::_descSizeInBytes(binormalVertexBuffer));
-        tempBuffersToRelease.push_back(tempBuffer);
+        
+			// Convert to half
+			uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
+				BufferManager::_descSizeInBytes(binormalVertexBuffer));
+			tempBuffersToRelease.push_back(tempBuffer);
 
-        for (uint32_t i = 0u; i < binormals[subMeshIdx].size(); ++i)
-        {
-          uint32_t packedBinormal0 = glm::packHalf2x16(glm::vec2(
-              binormals[subMeshIdx][i].x, binormals[subMeshIdx][i].y));
-          uint32_t packedBinormal1 =
-              glm::packHalf2x16(glm::vec2(binormals[subMeshIdx][i].z, 0.0f));
+			for (uint32_t i = 0u; i < binormals[subMeshIdx].size(); ++i)
+			{
+			  uint32_t packedBinormal0 = glm::packHalf2x16(glm::vec2(
+				  binormals[subMeshIdx][i].x, binormals[subMeshIdx][i].y));
+			  uint32_t packedBinormal1 =
+				  glm::packHalf2x16(glm::vec2(binormals[subMeshIdx][i].z, 0.0f));
 
-          tempBuffer[i * 3u] = packedBinormal0;
-          tempBuffer[i * 3u + 1u] = packedBinormal0 >> 16u;
-          tempBuffer[i * 3u + 2u] = packedBinormal1;
-        }
-        BufferManager::_descInitialData(binormalVertexBuffer) = tempBuffer;
-
+			  tempBuffer[i * 3u] = packedBinormal0;
+			  tempBuffer[i * 3u + 1u] = packedBinormal0 >> 16u;
+			  tempBuffer[i * 3u + 2u] = packedBinormal1;
+			}
+			BufferManager::_descInitialData(binormalVertexBuffer) = tempBuffer;
+		}
         BufferManager::_buffersToCreate.push_back(binormalVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(binormalVertexBuffer);
       }
@@ -410,24 +407,24 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
 		if (name == _N(house))
         {
-			BufferManager::_descSizeInBytes(vtxColorVertexBuffer) = 3000000 * sizeof(uint32_t);
+			BufferManager::_descSizeInBytes(vtxColorVertexBuffer) = 4000000 * sizeof(uint32_t);
         }
         else
         {
 			BufferManager::_descSizeInBytes(vtxColorVertexBuffer) =
               (uint32_t)vtxColors[subMeshIdx].size() * sizeof(uint32_t) * 4u;
-        }
-        // Convert color
-        uint32_t* tempBuffer = (uint32_t*)Memory::Tlsf::MainAllocator::allocate(
-            BufferManager::_descSizeInBytes(vtxColorVertexBuffer));
-        tempBuffersToRelease.push_back(tempBuffer);
+        
+			// Convert color
+			uint32_t* tempBuffer = (uint32_t*)Memory::Tlsf::MainAllocator::allocate(
+				BufferManager::_descSizeInBytes(vtxColorVertexBuffer));
+			tempBuffersToRelease.push_back(tempBuffer);
 
-        for (uint32_t i = 0u; i < vtxColors[subMeshIdx].size(); ++i)
-        {
-          tempBuffer[i] = Math::convertColorToBGRA(vtxColors[subMeshIdx][i]);
-        }
-        BufferManager::_descInitialData(vtxColorVertexBuffer) = tempBuffer;
-
+			for (uint32_t i = 0u; i < vtxColors[subMeshIdx].size(); ++i)
+			{
+			  tempBuffer[i] = Math::convertColorToBGRA(vtxColors[subMeshIdx][i]);
+			}
+			BufferManager::_descInitialData(vtxColorVertexBuffer) = tempBuffer;
+		}
         BufferManager::_buffersToCreate.push_back(vtxColorVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(vtxColorVertexBuffer);
       }
@@ -482,7 +479,6 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 		   BufferManager::_buffersToCreate.push_back(indexBuffer);
            indexBuffers[subMeshIdx] = indexBuffer;
 		}
-
       }
     }
 
