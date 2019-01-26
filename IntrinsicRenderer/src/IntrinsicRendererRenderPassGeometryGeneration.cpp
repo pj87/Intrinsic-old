@@ -557,6 +557,32 @@ void GeometryGeneration::init()
   }
 
   BufferManager::createResources(buffersToCreate);
+
+  ImageRefArray imgsToCreate;
+
+  // Images 
+  {
+    _volLightingScatteringBufferImageRef =
+	  ImageManager::createImage(_N(VolumetricLightingScatteringBuffer1));
+	{
+	  ImageManager::resetToDefault(_volLightingScatteringBufferImageRef);
+	  ImageManager::addResourceFlags(
+		_volLightingScatteringBufferImageRef,
+		Dod::Resources::ResourceFlags::kResourceVolatile);
+
+	  ImageManager::_descDimensions(_volLightingScatteringBufferImageRef) =
+        glm::uvec3(160u, 90u, 128u);
+	  ImageManager::_descImageFormat(_volLightingScatteringBufferImageRef) =
+		Format::kR16G16B16A16Float;
+	  ImageManager::_descImageType(_volLightingScatteringBufferImageRef) =
+		ImageType::kTexture;
+	  ImageManager::_descImageFlags(_volLightingScatteringBufferImageRef) =
+		ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
+	}
+	imgsToCreate.push_back(_volLightingScatteringBufferImageRef);
+  }
+
+  ImageManager::createResources(imgsToCreate);
 }
 
 // <-
