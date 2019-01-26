@@ -199,7 +199,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-			BufferManager::_descSizeInBytes(posVertexBuffer) = 2000000 * 4u;
+			BufferManager::_descSizeInBytes(posVertexBuffer) = 3000000 * sizeof(uint32_t);
         }
         else 
         {
@@ -244,7 +244,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-          BufferManager::_descSizeInBytes(uv0VertexBuffer) = 2000000 * 4u;
+          BufferManager::_descSizeInBytes(uv0VertexBuffer) = 3000000 * sizeof(uint32_t);
         }
         else
         {
@@ -283,7 +283,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-          BufferManager::_descSizeInBytes(normalVertexBuffer) = 2000000 * 4u;
+          BufferManager::_descSizeInBytes(normalVertexBuffer) = 3000000 * sizeof(uint32_t);
         }
         else
         {
@@ -326,7 +326,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
         if (name == _N(house))
         {
-          BufferManager::_descSizeInBytes(tangentVertexBuffer) = 2000000 * 4u;
+          BufferManager::_descSizeInBytes(tangentVertexBuffer) = 3000000 * sizeof(uint32_t);
         }
         else
         {
@@ -368,7 +368,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
 		if (name == _N(house))
         {
-			BufferManager::_descSizeInBytes(binormalVertexBuffer) = 2000000 * 4u;
+			BufferManager::_descSizeInBytes(binormalVertexBuffer) = 3000000 * sizeof(uint32_t);
         }
         else
         {
@@ -410,7 +410,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
 		if (name == _N(house))
         {
-			BufferManager::_descSizeInBytes(vtxColorVertexBuffer) = 2000000 * 4u;
+			BufferManager::_descSizeInBytes(vtxColorVertexBuffer) = 3000000 * sizeof(uint32_t);
         }
         else
         {
@@ -443,7 +443,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
             name != _N(house))
         {
           uint32_t indexBufferSizeInBytes =
-              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t) * 4u;
+              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t);
 
 		  //_INTR_LOG_WARNING("size = %d", indexBufferSizeInBytes);
 
