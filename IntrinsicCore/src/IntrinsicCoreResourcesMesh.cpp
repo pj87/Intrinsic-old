@@ -365,7 +365,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         
 		if (name == _N(house))
         {
-			BufferManager::_descSizeInBytes(binormalVertexBuffer) = 3000000 * sizeof(uint32_t);
+			BufferManager::_descSizeInBytes(binormalVertexBuffer) = 20000000 * sizeof(uint32_t);
         }
         else
         {
