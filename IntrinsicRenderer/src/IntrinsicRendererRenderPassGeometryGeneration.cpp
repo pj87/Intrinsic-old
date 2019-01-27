@@ -434,6 +434,14 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
         computeCallScatteringRef, _N(volLightScatterBufferTex1),
         GpuProgramType::kCompute, _volLightingScatteringBufferImageRef,
         Samplers::kNearestClamp);
+    ComputeCallManager::bindImage(
+        computeCallScatteringRef, _N(gradient3DTex),
+        GpuProgramType::kCompute, _gradient3d,
+        Samplers::kLinearClamp);
+    ComputeCallManager::bindImage(
+        computeCallScatteringRef, _N(permTable2DTex),
+        GpuProgramType::kCompute, _permTable2d,
+        Samplers::kLinearClamp);
   }
 
   return computeCallScatteringRef;

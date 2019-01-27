@@ -51,6 +51,10 @@ layout(binding = 4) buffer debugBuffer
 layout(binding = 5) uniform sampler3D volLightScatterBufferTex1; // do odczytu
 //layout(binding = 6, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex1; // do zapisu
 
+layout(binding = 6) uniform sampler2D gradient3DTex;
+layout(binding = 7) uniform sampler2D permTable2DTex;
+
+
 // edgeConnection lists the index of the endpoint vertices for each of the 12 edges of the cube
 ivec2 edgeConnection[12] = {ivec2(0, 1), ivec2(1, 2), ivec2(2, 3), ivec2(3, 0),
 						    ivec2(4, 5), ivec2(5, 6), ivec2(6, 7), ivec2(7, 4),
