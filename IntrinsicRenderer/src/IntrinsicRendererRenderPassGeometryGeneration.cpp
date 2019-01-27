@@ -435,7 +435,7 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
     ComputeCallManager::bindImage(
         computeCallScatteringRef, _N(volLightScatterBufferTex1),
         GpuProgramType::kCompute, _volLightingScatteringBufferImageRef,
-        Samplers::kNearestClamp);
+        Samplers::kLinearClamp);
     ComputeCallManager::bindImage(
         computeCallScatteringRef, _N(gradient3DTex),
         GpuProgramType::kCompute, _gradient3d,
@@ -712,6 +712,14 @@ void GeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   //    _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
   //    VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
   //    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+
+  {
+    RenderSystem::dispatchComputeCall(_computeCallPerlinRef,
+                                      primaryCmdBuffer);
+  }
+
+  BufferManager::insertBufferMemoryBarrier(
+      _voxelBuffer, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
 
   {
     RenderSystem::dispatchComputeCall(scatteringComputeCalltoUse,
