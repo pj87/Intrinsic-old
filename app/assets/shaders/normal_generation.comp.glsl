@@ -14,7 +14,7 @@ layout(binding = 1) buffer _NoiseBuffer
 	float _Noise[];
 };
 //layout(binding = 2, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex;
-layout(binding = 2, r11f_g11f_b10f) uniform image3D _NormalBuffer;
+layout(binding = 2, r11f_g11f_b10f) uniform image3D _NormalTex;
 
 int _Width = 64, _Height = 64;
 
@@ -33,5 +33,5 @@ void main()
 	
 
 	//_Result[id] = normalize(vec3(dx,dy,dz));
-	imageStore(_NormalBuffer, id, vec4(normalize(vec3(dx,dy,dz)), 0.0));
+	imageStore(_NormalTex, id, vec4(normalize(vec3(dx,dy,dz)), 0.0));
 }

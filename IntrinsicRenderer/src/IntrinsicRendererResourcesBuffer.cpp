@@ -148,7 +148,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers, const Name&
         Core::Resources::MeshManager::_triangles;
 
     //for (int i = 0; i < triangles.size(); i++)
-    for (int i = 0; i < _descSizeInBytes(bufferRef) / 4; i++)
+    for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++)
     {
       std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
 	  
@@ -256,13 +256,13 @@ void BufferManager::updateResourcesNormal(const BufferRefArray& p_Buffers, const
     std::vector<Triangle>& triangles =
         Core::Resources::MeshManager::_triangles;
 
-    for (int i = 0; i < triangles.size(); i++)
+    for (int i = 0; i < _descSizeInBytes(bufferRef) / 2; i++)
     {
       std::unique_ptr<glm::vec3> pos = std::make_unique<glm::vec3>();
 
-      pos->x = triangles[i].normal.x;
-      pos->y = triangles[i].normal.y;
-      pos->z = triangles[i].normal.z;
+      pos->x = 0;
+      pos->y = 0;
+      pos->z = 0;
 
       storeVertexValueToRawBuffer(initialData, i, *pos);
     }

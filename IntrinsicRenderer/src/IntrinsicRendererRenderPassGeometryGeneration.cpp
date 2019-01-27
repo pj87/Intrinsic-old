@@ -66,11 +66,14 @@ ImageRef _permTable2d;
 
 PipelineRef _pipelineScatteringRef;
 PipelineRef _pipelinePerlinRef;
+PipelineRef _pipelineNormalRef;
 
 ComputeCallRef _computeCallScatteringRef;
 ComputeCallRef _computeCallPerlinRef;
+ComputeCallRef _computeCallNormalRef;
 
 BufferRef bufferRef;
+BufferRef normalBufferRef;
 
 typedef struct Position
 {
@@ -386,6 +389,7 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
 
   // BufferRef bufferRef = p_Buffers[index];
   bufferRef = BufferManager::_buffersToCreate[index];
+  normalBufferRef = BufferManager::_buffersToCreate[index + 2];
 
   ComputeCallRef computeCallScatteringRef =
       ComputeCallManager::createComputeCall(_N(GeometryGeneration));
@@ -407,7 +411,11 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
     ComputeCallManager::bindBuffer(computeCallScatteringRef, _N(positionBuffer),
                                    GpuProgramType::kCompute, bufferRef,
                                    UboType::kPerInstanceCompute,
-                                   BufferManager::_descSizeInBytes(bufferRef));
+                                   BufferManager::_descSizeInBytes(normalBufferRef));
+    ComputeCallManager::bindBuffer(computeCallScatteringRef, _N(normalBuffer),
+                                   GpuProgramType::kCompute, normalBufferRef,
+                                   UboType::kPerInstanceCompute,
+								   BufferManager::_descSizeInBytes(normalBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallScatteringRef, _N(triangleConnectionBuffer),
         GpuProgramType::kCompute, _triangleConnectionBuffer,
@@ -470,6 +478,38 @@ _INTR_INLINE ComputeCallRef createComputeCallPerlin(glm::vec3 p_Dim)
   }
 
   return computeCallPerlinRef;
+}
+
+_INTR_INLINE ComputeCallRef createComputeCallNormal(glm::vec3 p_Dim)
+{
+  ComputeCallRef computeCallNormalRef =
+      ComputeCallManager::createComputeCall(_N(NormalGeneration));
+  {
+    ComputeCallManager::resetToDefault(computeCallNormalRef);
+    ComputeCallManager::addResourceFlags(
+        computeCallNormalRef, Dod::Resources::ResourceFlags::kResourceVolatile);
+
+    ComputeCallManager::_descDimensions(computeCallNormalRef) =
+        glm::uvec3(8u, 8u, 8u);
+    ComputeCallManager::_descPipeline(computeCallNormalRef) =
+        _pipelineNormalRef;
+
+    ComputeCallManager::bindBuffer(
+        computeCallNormalRef, _N(PerInstance), GpuProgramType::kCompute,
+        UniformManager::_perInstanceUniformBuffer, UboType::kPerInstanceCompute,
+        sizeof(PerInstanceData));
+    ComputeCallManager::bindImage(
+        computeCallNormalRef, _N(_NormalTex),
+        GpuProgramType::kCompute, _volLightingScatteringBufferImageRef,
+        Samplers::kLinearClamp);
+    ComputeCallManager::bindBuffer(
+        computeCallNormalRef, _N(_NoiseBuffer), GpuProgramType::kCompute,
+        _voxelBuffer, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(_voxelBuffer));
+    
+  }
+
+  return computeCallNormalRef;
 }
 
 } // namespace
@@ -544,6 +584,36 @@ void GeometryGeneration::postInit()
     pipelinesToCreate.push_back(_pipelinePerlinRef);
   }
 
+  // Pipeline layouts
+  PipelineLayoutRef pipelineLayoutNormal;
+  {
+    {
+      pipelineLayoutNormal = PipelineLayoutManager::createPipelineLayout(
+          _N(NormalGeneration));
+      PipelineLayoutManager::resetToDefault(pipelineLayoutNormal);
+
+      GpuProgramManager::reflectPipelineLayout(
+          8u, {GpuProgramManager::getResourceByName("normal_generation.comp")},
+          pipelineLayoutNormal);
+    }
+    pipelineLayoutsToCreate.push_back(pipelineLayoutNormal);
+  }
+
+  // Pipeline
+  {
+    {
+      _pipelineNormalRef =
+          PipelineManager::createPipeline(_N(NormalGeneration));
+      PipelineManager::resetToDefault(_pipelineNormalRef);
+
+      PipelineManager::_descComputeProgram(_pipelineNormalRef) =
+          GpuProgramManager::getResourceByName("normal_generation.comp");
+      PipelineManager::_descPipelineLayout(_pipelineNormalRef) =
+          pipelineLayoutNormal;
+    }
+    pipelinesToCreate.push_back(_pipelineNormalRef);
+  }
+
   PipelineLayoutManager::createResources(pipelineLayoutsToCreate);
   PipelineManager::createResources(pipelinesToCreate);
 
@@ -564,6 +634,13 @@ void GeometryGeneration::postInit()
     _computeCallPerlinRef = createComputeCallPerlin(computeDim);
 
     computeCallsToCreate.push_back(_computeCallPerlinRef);
+  }
+
+  {
+    // Normal
+    _computeCallNormalRef = createComputeCallNormal(computeDim);
+
+    computeCallsToCreate.push_back(_computeCallNormalRef);
   }
 
   ComputeCallManager::createResources(computeCallsToCreate);
@@ -640,7 +717,7 @@ void GeometryGeneration::init()
 		Dod::Resources::ResourceFlags::kResourceVolatile);
 
 	  ImageManager::_descDimensions(_volLightingScatteringBufferImageRef) =
-        glm::uvec3(160u, 90u, 128u);
+        glm::uvec3(64u, 64u, 64u);
 	  ImageManager::_descImageFormat(_volLightingScatteringBufferImageRef) =
 		Format::kR16G16B16A16Float;
 	  ImageManager::_descImageType(_volLightingScatteringBufferImageRef) =
@@ -685,6 +762,14 @@ void GeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   //    _volLightingScatteringBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
   //    VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
   //    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+
+  {
+    RenderSystem::dispatchComputeCall(_computeCallNormalRef, primaryCmdBuffer);
+  }
+
+  ImageManager::insertImageMemoryBarrier(_volLightingScatteringBufferImageRef,
+                                         VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
   {
     RenderSystem::dispatchComputeCall(_computeCallPerlinRef,

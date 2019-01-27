@@ -36,23 +36,27 @@ layout(binding = 1) buffer positionBuffer
 {
 	uint _Buffer[];
 };
-layout(binding = 2) buffer triangleConnectionBuffer 
+layout(binding = 2) buffer normalBuffer 
+{
+	uint _NormalBuffer[];
+};
+layout(binding = 3) buffer triangleConnectionBuffer 
 {
 	int _TriangleConnectionTable[];
 };
-layout(binding = 3) buffer voxelBuffer 
+layout(binding = 4) buffer voxelBuffer 
 {
 	float _Voxels[];
 };
-layout(binding = 4) buffer debugBuffer 
+layout(binding = 5) buffer debugBuffer 
 {
 	Debug _DebugBuffer[];
 };
-layout(binding = 5) uniform sampler3D volLightScatterBufferTex1; // do odczytu
+layout(binding = 6) uniform sampler3D volLightScatterBufferTex1; // do odczytu
 //layout(binding = 6, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex1; // do zapisu
 
-layout(binding = 6) uniform sampler2D gradient3DTex;
-layout(binding = 7) uniform sampler2D permTable2DTex;
+layout(binding = 7) uniform sampler2D gradient3DTex;
+layout(binding = 8) uniform sampler2D permTable2DTex;
 
 
 // edgeConnection lists the index of the endpoint vertices for each of the 12 edges of the cube
@@ -136,7 +140,8 @@ Vert CreateVertex(vec3 position, vec3 centre, vec3 size)
 	Vert vert;
 	vert.position = vec4(position - centre, 1.0);
 
-	//vec3 uv = position / size;
+	vec3 uv = position / size;
+	vert.normal = textureLod(volLightScatterBufferTex1, uv, 0).xyz;
 	//vert.normal = _Normals.SampleLevel(_LinearClamp, uv, 0);
 
 	return vert;
@@ -165,6 +170,23 @@ void ffff1(uint i, vec3 pos1)
 	}
 }
 
+void ffff2(uint i, vec3 pos1)
+{
+	if (i % 2 == 0)
+	{
+		uint iiii = i + i / 2;
+		_NormalBuffer[iiii] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_NormalBuffer[iiii + 1]);
+		_NormalBuffer[iiii + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+	}
+	else
+	{	
+		uint iiii = i + (i - 1) / 2;
+		vec2 tmp = unpackHalf2x16(_NormalBuffer[iiii]);
+		_NormalBuffer[iiii] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_NormalBuffer[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+	}
+}
 							
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
@@ -230,15 +252,18 @@ void main()
 			//packHalf2x16
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
 			//_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size).position;
-			ffff1(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).position.xyz / 10.0 + 0.01 * texelFetch(volLightScatterBufferTex1, ivec3(0), 0).x);
+			ffff1(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).position.xyz / 10.0);
+			ffff2(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
 			//_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size).position;
-			ffff1(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).position.xyz / 10.0 + 0.01 * texelFetch(volLightScatterBufferTex1, ivec3(0), 0).y);
+			ffff1(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).position.xyz / 10.0);
+			ffff2(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
 			//_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size).position;
-			ffff1(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).position.xyz / 10.0 + 0.01 * texelFetch(volLightScatterBufferTex1, ivec3(0), 0).z);
+			ffff1(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).position.xyz / 10.0);
+			ffff2(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
 		}
 	}
 	
