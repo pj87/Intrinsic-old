@@ -65,8 +65,10 @@ ImageRef _gradient3d;
 ImageRef _permTable2d;
 
 PipelineRef _pipelineScatteringRef;
+PipelineRef _pipelinePerlinRef;
 
 ComputeCallRef _computeCallScatteringRef;
+ComputeCallRef _computeCallPerlinRef;
 
 BufferRef bufferRef;
 
@@ -446,6 +448,41 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
 
   return computeCallScatteringRef;
 }
+
+_INTR_INLINE ComputeCallRef createComputeCallPerlin(glm::vec3 p_Dim)
+{
+  ComputeCallRef computeCallPerlinRef =
+      ComputeCallManager::createComputeCall(_N(PerlinNoiseGeneration));
+  {
+    ComputeCallManager::resetToDefault(computeCallPerlinRef);
+    ComputeCallManager::addResourceFlags(
+        computeCallPerlinRef,
+        Dod::Resources::ResourceFlags::kResourceVolatile);
+
+    ComputeCallManager::_descDimensions(computeCallPerlinRef) =
+        glm::uvec3(8u, 8u, 8u);
+    ComputeCallManager::_descPipeline(computeCallPerlinRef) =
+        _pipelinePerlinRef;
+
+	ComputeCallManager::bindBuffer(
+        computeCallPerlinRef, _N(PerInstance), GpuProgramType::kCompute,
+        UniformManager::_perInstanceUniformBuffer, UboType::kPerInstanceCompute,
+        sizeof(PerInstanceData));
+    ComputeCallManager::bindBuffer(
+        computeCallPerlinRef, _N(_VoxelBuffer), GpuProgramType::kCompute,
+        _voxelBuffer, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(_voxelBuffer));
+    ComputeCallManager::bindImage(computeCallPerlinRef, _N(_Gradient3D),
+                                  GpuProgramType::kCompute, _gradient3d,
+                                  Samplers::kLinearClamp);
+    ComputeCallManager::bindImage(computeCallPerlinRef, _N(_PermTable2D),
+                                  GpuProgramType::kCompute, _permTable2d,
+                                  Samplers::kLinearClamp);
+  }
+
+  return computeCallPerlinRef;
+}
+
 } // namespace
 
 // Static members
@@ -487,6 +524,37 @@ void GeometryGeneration::postInit()
     pipelinesToCreate.push_back(_pipelineScatteringRef);
   }
 
+  // Pipeline layouts
+  PipelineLayoutRef pipelineLayoutPerlin;
+  {
+    {
+      pipelineLayoutPerlin =
+          PipelineLayoutManager::createPipelineLayout(_N(PerlinNoiseGeneration));
+      PipelineLayoutManager::resetToDefault(pipelineLayoutPerlin);
+
+      GpuProgramManager::reflectPipelineLayout(
+          8u,
+          {GpuProgramManager::getResourceByName("perlin_noise_3d.comp")},
+          pipelineLayoutPerlin);
+    }
+    pipelineLayoutsToCreate.push_back(pipelineLayoutPerlin);
+  }
+
+  // Pipeline
+  {
+    {
+      _pipelinePerlinRef =
+          PipelineManager::createPipeline(_N(PerlinNoiseGeneration));
+      PipelineManager::resetToDefault(_pipelinePerlinRef);
+
+      PipelineManager::_descComputeProgram(_pipelinePerlinRef) =
+          GpuProgramManager::getResourceByName("perlin_noise_3d.comp");
+      PipelineManager::_descPipelineLayout(_pipelinePerlinRef) =
+          pipelineLayoutPerlin;
+    }
+    pipelinesToCreate.push_back(_pipelinePerlinRef);
+  }
+
   PipelineLayoutManager::createResources(pipelineLayoutsToCreate);
   PipelineManager::createResources(pipelinesToCreate);
 
@@ -501,6 +569,14 @@ void GeometryGeneration::postInit()
 
     computeCallsToCreate.push_back(_computeCallScatteringRef);
   }
+
+  {
+    // Perlin
+    _computeCallPerlinRef = createComputeCallPerlin(computeDim);
+
+    computeCallsToCreate.push_back(_computeCallPerlinRef);
+  }
+
   ComputeCallManager::createResources(computeCallsToCreate);
 }
 

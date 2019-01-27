@@ -18,7 +18,7 @@ uboPerInstance;
 layout(binding = 1) uniform sampler2D _Gradient3D;
 layout(binding = 2) uniform sampler2D _PermTable2D;
 
-layout(binding = 3) buffer positionBuffer 
+layout(binding = 3) buffer _VoxelBuffer 
 {
 	float _Result[];
 };
