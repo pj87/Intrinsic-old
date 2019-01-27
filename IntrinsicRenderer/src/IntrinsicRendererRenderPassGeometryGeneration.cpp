@@ -61,6 +61,8 @@ BufferRef _triangleConnectionBuffer;
 BufferRef _positionBuffer;
 BufferRef _debugBuffer; 
 ImageRef _volLightingScatteringBufferImageRef;
+ImageRef _gradient3d;
+ImageRef _permTable2d;
 
 PipelineRef _pipelineScatteringRef;
 
@@ -566,11 +568,11 @@ void GeometryGeneration::init()
 
   // Images 
   {
-    const ImageRef gradient3d =
-        ImageManager::getResourceByName(_N(gradient3d));
+    _gradient3d =
+	  ImageManager::getResourceByName(_N(gradient3d));
 
-	const ImageRef permTable2d =
-        ImageManager::getResourceByName(_N(perm_table2d));
+	_permTable2d =
+      ImageManager::getResourceByName(_N(perm_table2d));
 
     _volLightingScatteringBufferImageRef =
 	  ImageManager::createImage(_N(VolumetricLightingScatteringBuffer1));
