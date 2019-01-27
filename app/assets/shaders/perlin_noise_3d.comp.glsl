@@ -30,9 +30,7 @@ vec3 fmod(vec3 x, float y)
 
 vec3 fade(vec3 t)
 {
-	//return t * t * t * (t * (t * 6 - 15) + 10);
-	
-	return vec3(.0);
+	return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
 vec4 perm2d(vec2 uv)
