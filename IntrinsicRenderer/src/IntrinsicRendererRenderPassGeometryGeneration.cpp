@@ -379,17 +379,6 @@ updatePerInstanceData(CameraRef p_CameraRef,
                                           sizeof(PerInstanceData));
 }
 
-_INTR_INLINE void createVoxels(float* voxels)
-{
-
-  float lower_bound = -1.0;
-  float upper_bound = 1.0;
-  std::uniform_real_distribution<float> unif(lower_bound, upper_bound);
-  std::default_random_engine re;
-
-  memset(voxels, 0.0f, N * N * N * sizeof(float));
-}
-
 _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
 {
   const Name& name = _N(house);
@@ -582,22 +571,6 @@ void GeometryGeneration::postInit()
 
 void GeometryGeneration::init()
 {
-  std::ifstream infile("data.txt");
-  float a;
-  int i = 0;
-  while (infile >> a)
-  {
-    // process pair (a,b)
-    //std::cout << a < std::endl;
-    //_INTR_LOG_INFO("%f", a);
-    voxelTable[i] = a;
-    i++;
-    if (i > N * N * N)
-      break;
-  }
-
-  //createVoxels(voxelTable);
-
   // Buffers
   BufferRefArray buffersToCreate;
   {
