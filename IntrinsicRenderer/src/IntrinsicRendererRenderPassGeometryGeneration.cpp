@@ -566,6 +566,12 @@ void GeometryGeneration::init()
 
   // Images 
   {
+    const ImageRef gradient3d =
+        ImageManager::getResourceByName(_N(gradient3d));
+
+	const ImageRef permTable2d =
+        ImageManager::getResourceByName(_N(perm_table2d));
+
     _volLightingScatteringBufferImageRef =
 	  ImageManager::createImage(_N(VolumetricLightingScatteringBuffer1));
 	{
