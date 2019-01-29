@@ -40,23 +40,35 @@ layout(binding = 2) buffer normalBuffer
 {
 	uint _NormalBuffer[];
 };
-layout(binding = 3) buffer triangleConnectionBuffer 
+layout(binding = 3) buffer tangentBuffer 
+{
+	uint _TangentBuffer[];
+};
+layout(binding = 4) buffer binormalBuffer 
+{
+	uint _BinormalBuffer[];
+};
+layout(binding = 5) buffer uv0Buffer 
+{
+	uint _UV0Buffer[];
+};
+layout(binding = 6) buffer triangleConnectionBuffer 
 {
 	int _TriangleConnectionTable[];
 };
-layout(binding = 4) buffer voxelBuffer 
+layout(binding = 7) buffer voxelBuffer 
 {
 	float _Voxels[];
 };
-layout(binding = 5) buffer debugBuffer 
+layout(binding = 8) buffer debugBuffer 
 {
 	Debug _DebugBuffer[];
 };
-layout(binding = 6) uniform sampler3D volLightScatterBufferTex1; // do odczytu
+layout(binding = 9) uniform sampler3D volLightScatterBufferTex1; // do odczytu
 //layout(binding = 6, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex1; // do zapisu
 
-layout(binding = 7) uniform sampler2D gradient3DTex;
-layout(binding = 8) uniform sampler2D permTable2DTex;
+layout(binding = 10) uniform sampler2D gradient3DTex;
+layout(binding = 11) uniform sampler2D permTable2DTex;
 
 
 // edgeConnection lists the index of the endpoint vertices for each of the 12 edges of the cube
@@ -187,7 +199,61 @@ void ffff2(uint i, vec3 pos1)
 		_NormalBuffer[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
-							
+
+void ffff3(uint i, vec3 pos1)
+{
+	if (i % 2 == 0)
+	{
+		uint iiii = i + i / 2;
+		_BinormalBuffer[iiii] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_BinormalBuffer[iiii + 1]);
+		_BinormalBuffer[iiii + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+	}
+	else
+	{	
+		uint iiii = i + (i - 1) / 2;
+		vec2 tmp = unpackHalf2x16(_BinormalBuffer[iiii]);
+		_BinormalBuffer[iiii] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_BinormalBuffer[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+	}
+}
+
+void ffff4(uint i, vec3 pos1)
+{
+	if (i % 2 == 0)
+	{
+		uint iiii = i + i / 2;
+		_TangentBuffer[iiii] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_TangentBuffer[iiii + 1]);
+		_TangentBuffer[iiii + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+	}
+	else
+	{	
+		uint iiii = i + (i - 1) / 2;
+		vec2 tmp = unpackHalf2x16(_TangentBuffer[iiii]);
+		_TangentBuffer[iiii] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_TangentBuffer[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+	}
+}
+
+void ffff5(uint i, vec3 pos1)
+{
+	if (i % 2 == 0)
+	{
+		uint iiii = i + i / 2;
+		_UV0Buffer[iiii] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_UV0Buffer[iiii + 1]);
+		_UV0Buffer[iiii + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+	}
+	else
+	{	
+		uint iiii = i + (i - 1) / 2;
+		vec2 tmp = unpackHalf2x16(_UV0Buffer[iiii]);
+		_UV0Buffer[iiii] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_UV0Buffer[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+	}
+}
+				
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
 {	
@@ -255,15 +321,27 @@ void main()
 			ffff1(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).position.xyz / 10.0);
 			ffff2(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
 			
+			ffff3(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
+			ffff4(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
+			ffff5(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
+			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
 			//_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size).position;
 			ffff1(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).position.xyz / 10.0);
 			ffff2(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
 			
+			ffff3(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
+			ffff4(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
+			ffff5(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
+			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
 			//_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size).position;
 			ffff1(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).position.xyz / 10.0);
 			ffff2(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
+			
+			ffff3(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
+			ffff4(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
+			ffff5(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
 		}
 	}
 	

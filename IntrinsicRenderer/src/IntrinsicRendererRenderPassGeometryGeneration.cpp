@@ -74,6 +74,9 @@ ComputeCallRef _computeCallNormalRef;
 
 BufferRef bufferRef;
 BufferRef normalBufferRef;
+BufferRef binormalBufferRef;
+BufferRef tangentBufferRef;
+BufferRef uv0BufferRef;
 
 typedef struct Position
 {
@@ -389,7 +392,14 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
 
   // BufferRef bufferRef = p_Buffers[index];
   bufferRef = BufferManager::_buffersToCreate[index];
+  uv0BufferRef = BufferManager::_buffersToCreate[index + 1];
   normalBufferRef = BufferManager::_buffersToCreate[index + 2];
+  tangentBufferRef = BufferManager::_buffersToCreate[index + 3];
+  binormalBufferRef = BufferManager::_buffersToCreate[index + 4];
+  //color = index + 5
+  //indexBuffer = index + 6
+  
+
 
   ComputeCallRef computeCallScatteringRef =
       ComputeCallManager::createComputeCall(_N(GeometryGeneration));
@@ -411,11 +421,25 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
     ComputeCallManager::bindBuffer(computeCallScatteringRef, _N(positionBuffer),
                                    GpuProgramType::kCompute, bufferRef,
                                    UboType::kPerInstanceCompute,
-                                   BufferManager::_descSizeInBytes(normalBufferRef));
+                                   BufferManager::_descSizeInBytes(bufferRef));
     ComputeCallManager::bindBuffer(computeCallScatteringRef, _N(normalBuffer),
                                    GpuProgramType::kCompute, normalBufferRef,
                                    UboType::kPerInstanceCompute,
 								   BufferManager::_descSizeInBytes(normalBufferRef));
+    ComputeCallManager::bindBuffer(computeCallScatteringRef, _N(binormalBuffer), 
+								   GpuProgramType::kCompute, binormalBufferRef, 
+								   UboType::kPerInstanceCompute,
+								   BufferManager::_descSizeInBytes(binormalBufferRef));
+	ComputeCallManager::bindBuffer(computeCallScatteringRef, _N(tangentBuffer), 
+								   GpuProgramType::kCompute, tangentBufferRef, 
+								   UboType::kPerInstanceCompute,
+								   BufferManager::_descSizeInBytes(tangentBufferRef));
+    ComputeCallManager::bindBuffer(computeCallScatteringRef, _N(uv0Buffer), 
+								   GpuProgramType::kCompute, uv0BufferRef, 
+								   UboType::kPerInstanceCompute,
+								   BufferManager::_descSizeInBytes(uv0BufferRef));
+    
+
     ComputeCallManager::bindBuffer(
         computeCallScatteringRef, _N(triangleConnectionBuffer),
         GpuProgramType::kCompute, _triangleConnectionBuffer,
@@ -791,6 +815,17 @@ void GeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   BufferManager::insertBufferMemoryBarrier(
       bufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
 
+  BufferManager::insertBufferMemoryBarrier(
+      normalBufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
+
+  BufferManager::insertBufferMemoryBarrier(
+      binormalBufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
+
+  BufferManager::insertBufferMemoryBarrier(
+      tangentBufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
+
+  BufferManager::insertBufferMemoryBarrier(
+      uv0BufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
   // W PassClusteting.cpp jest opis jak dostac sie do pamieci GPU!!!!!
 
   //_INTR_LOG_WARNING("%d", BufferManager::_descSizeInBytes(bufferRef));
