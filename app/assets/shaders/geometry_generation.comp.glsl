@@ -14,6 +14,8 @@
 
 // https://gamedev.stackexchange.com/questions/51399/what-are-normal-tangent-and-binormal-vectors-and-how-are-they-used
 // http://blog.db-in.com/calculating-normals-and-tangent-space/
+// https://answers.unity.com/questions/731821/how-do-i-calculate-the-uvs-for-a-procedurally-gene.html
+// https://forum.unity.com/threads/going-crazy-on-uv-calculation-for-procedural-mesh.246872/
 
 #version 450
 
