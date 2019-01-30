@@ -40,7 +40,7 @@ uboPerInstance;
 
 layout(binding = 1) buffer positionBuffer 
 {
-	uint _Buffer[];
+	uint _PositionBuffer[];
 };
 layout(binding = 2) buffer normalBuffer 
 {
@@ -169,94 +169,81 @@ uint convert(vec2 pos0, vec2 pos1)
 	return(packHalf2x16(pos0) << 16 | packHalf2x16(pos1));
 }
 
-void ffff1(uint i, vec3 pos1)
+void storePosition(uint i, vec3 pos1)
 {
 	if (i % 2 == 0)
 	{
-		uint iiii = i + i / 2;
-		_Buffer[iiii] = packHalf2x16(pos1.xy);
-		vec2 tmp = unpackHalf2x16(_Buffer[iiii + 1]);
-		_Buffer[iiii + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+		uint index = i + i / 2;
+		_PositionBuffer[index] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_PositionBuffer[index + 1]);
+		_PositionBuffer[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
 	}
 	else
 	{	
-		uint iiii = i + (i - 1) / 2;
-		vec2 tmp = unpackHalf2x16(_Buffer[iiii]);
-		_Buffer[iiii] = packHalf2x16(vec2(tmp.x, pos1.x));
-		_Buffer[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+		uint index = i + (i - 1) / 2;
+		vec2 tmp = unpackHalf2x16(_PositionBuffer[index]);
+		_PositionBuffer[index] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_PositionBuffer[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
 
-void ffff2(uint i, vec3 pos1)
+void storeNormal(uint i, vec3 pos1)
 {
 	if (i % 2 == 0)
 	{
-		uint iiii = i + i / 2;
-		_NormalBuffer[iiii] = packHalf2x16(pos1.xy);
-		vec2 tmp = unpackHalf2x16(_NormalBuffer[iiii + 1]);
-		_NormalBuffer[iiii + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+		uint index = i + i / 2;
+		_NormalBuffer[index] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_NormalBuffer[index + 1]);
+		_NormalBuffer[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
 	}
 	else
 	{	
-		uint iiii = i + (i - 1) / 2;
-		vec2 tmp = unpackHalf2x16(_NormalBuffer[iiii]);
-		_NormalBuffer[iiii] = packHalf2x16(vec2(tmp.x, pos1.x));
-		_NormalBuffer[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+		uint index = i + (i - 1) / 2;
+		vec2 tmp = unpackHalf2x16(_NormalBuffer[index]);
+		_NormalBuffer[index] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_NormalBuffer[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
 
-void ffff3(uint i, vec3 pos1)
+void storeBinormal(uint i, vec3 pos1)
 {
 	if (i % 2 == 0)
 	{
-		uint iiii = i + i / 2;
-		_BinormalBuffer[iiii] = packHalf2x16(pos1.xy);
-		vec2 tmp = unpackHalf2x16(_BinormalBuffer[iiii + 1]);
-		_BinormalBuffer[iiii + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+		uint index = i + i / 2;
+		_BinormalBuffer[index] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_BinormalBuffer[index + 1]);
+		_BinormalBuffer[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
 	}
 	else
 	{	
-		uint iiii = i + (i - 1) / 2;
-		vec2 tmp = unpackHalf2x16(_BinormalBuffer[iiii]);
-		_BinormalBuffer[iiii] = packHalf2x16(vec2(tmp.x, pos1.x));
-		_BinormalBuffer[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+		uint index = i + (i - 1) / 2;
+		vec2 tmp = unpackHalf2x16(_BinormalBuffer[index]);
+		_BinormalBuffer[index] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_BinormalBuffer[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
 
-void ffff4(uint i, vec3 pos1)
+void storeTangent(uint i, vec3 pos1)
 {
 	if (i % 2 == 0)
 	{
-		uint iiii = i + i / 2;
-		_TangentBuffer[iiii] = packHalf2x16(pos1.xy);
-		vec2 tmp = unpackHalf2x16(_TangentBuffer[iiii + 1]);
-		_TangentBuffer[iiii + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+		uint index = i + i / 2;
+		_TangentBuffer[index] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_TangentBuffer[index + 1]);
+		_TangentBuffer[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
 	}
 	else
 	{	
-		uint iiii = i + (i - 1) / 2;
-		vec2 tmp = unpackHalf2x16(_TangentBuffer[iiii]);
-		_TangentBuffer[iiii] = packHalf2x16(vec2(tmp.x, pos1.x));
-		_TangentBuffer[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+		uint index = i + (i - 1) / 2;
+		vec2 tmp = unpackHalf2x16(_TangentBuffer[index]);
+		_TangentBuffer[index] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_TangentBuffer[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
 
-void ffff5(uint i, vec3 pos1)
+void storeUV(uint i, vec2 pos1)
 {
-	if (i % 2 == 0)
-	{
-		uint iiii = i + i / 2;
-		_UV0Buffer[iiii] = packHalf2x16(pos1.xy);
-		vec2 tmp = unpackHalf2x16(_UV0Buffer[iiii + 1]);
-		_UV0Buffer[iiii + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
-	}
-	else
-	{	
-		uint iiii = i + (i - 1) / 2;
-		vec2 tmp = unpackHalf2x16(_UV0Buffer[iiii]);
-		_UV0Buffer[iiii] = packHalf2x16(vec2(tmp.x, pos1.x));
-		_UV0Buffer[iiii + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
-	}
+	_UV0Buffer[i] = packHalf2x16(pos1.xy);
 }
 				
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
@@ -293,7 +280,7 @@ void main()
 	//Find which edges are intersected by the surface
 	int edgeFlags = _CubeEdgeFlags[flagIndex];
 	
-	//_Buffer[idx] = edgeFlags;
+	//_PositionBuffer[idx] = edgeFlags;
 	
 	// no connections, return
 	if (edgeFlags == 0) return;
@@ -323,18 +310,18 @@ void main()
 			//packHalf2x16
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
 			Vert v0 = CreateVertex(position, centre, size);
-			ffff1(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
-			ffff2(idx * 15 + (3 * i + 0), v0.normal);
+			storePosition(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
+			storeNormal(idx * 15 + (3 * i + 0), v0.normal);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
 			Vert v1 = CreateVertex(position, centre, size);
-			ffff1(idx * 15 + (3 * i + 1), v1.position.xyz / 10.0);
-			ffff2(idx * 15 + (3 * i + 1), v1.normal);
+			storePosition(idx * 15 + (3 * i + 1), v1.position.xyz / 10.0);
+			storeNormal(idx * 15 + (3 * i + 1), v1.normal);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
 			Vert v2 = CreateVertex(position, centre, size);
-			ffff1(idx * 15 + (3 * i + 2), v2.position.xyz / 10.0);
-			ffff2(idx * 15 + (3 * i + 2), v2.normal);
+			storePosition(idx * 15 + (3 * i + 2), v2.position.xyz / 10.0);
+			storeNormal(idx * 15 + (3 * i + 2), v2.normal);
 			
 			vec3 tangent0 = normalize(v0.position.xyz - v2.position.xyz);
 			vec3 tangent1 = normalize(v1.position.xyz - v2.position.xyz);
@@ -344,19 +331,19 @@ void main()
 			vec3 binormal1 = normalize(cross(v1.position.xyz, tangent1));
 			vec3 binormal2 = normalize(cross(v2.position.xyz, tangent2));
 			
-			ffff3(idx * 15 + (3 * i + 0), binormal0);
-			ffff4(idx * 15 + (3 * i + 0), tangent0);
-			//ffff5(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
+			storeBinormal(idx * 15 + (3 * i + 0), binormal0);
+			storeTangent(idx * 15 + (3 * i + 0), tangent0);
+			//storeUV(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
 			
-			ffff3(idx * 15 + (3 * i + 1), binormal1);
-			ffff4(idx * 15 + (3 * i + 1), tangent1);
-			//ffff5(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
+			storeBinormal(idx * 15 + (3 * i + 1), binormal1);
+			storeTangent(idx * 15 + (3 * i + 1), tangent1);
+			//storeUV(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
 			
-			ffff3(idx * 15 + (3 * i + 2), binormal2);
-			ffff4(idx * 15 + (3 * i + 2), tangent2);
-			//ffff5(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
+			storeBinormal(idx * 15 + (3 * i + 2), binormal2);
+			storeTangent(idx * 15 + (3 * i + 2), tangent2);
+			//storeUV(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
 		}
 	}
 	
-	//_Buffer[idx] = idx;
+	//_PositionBuffer[idx] = idx;
 }
