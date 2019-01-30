@@ -12,12 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// https://gamedev.stackexchange.com/questions/51399/what-are-normal-tangent-and-binormal-vectors-and-how-are-they-used
+// http://blog.db-in.com/calculating-normals-and-tangent-space/
+
 #version 450
 
 struct Vert
 {
 	vec4 position;
 	vec3 normal;
+	vec3 binormal;
+	vec3 tangent;
+	vec2 uv0;
 };
 
 struct Debug
@@ -154,7 +160,6 @@ Vert CreateVertex(vec3 position, vec3 centre, vec3 size)
 
 	vec3 uv = position / size;
 	vert.normal = textureLod(volLightScatterBufferTex1, uv, 0).xyz;
-	//vert.normal = _Normals.SampleLevel(_LinearClamp, uv, 0);
 
 	return vert;
 }
@@ -317,31 +322,39 @@ void main()
 		{	
 			//packHalf2x16
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
-			//_Buffer[idx * 15 + (3 * i + 0)] = CreateVertex(position, centre, size).position;
-			ffff1(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).position.xyz / 10.0);
-			ffff2(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
-			
-			ffff3(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
-			ffff4(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
-			ffff5(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
+			Vert v0 = CreateVertex(position, centre, size);
+			ffff1(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
+			ffff2(idx * 15 + (3 * i + 0), v0.normal);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
-			//_Buffer[idx * 15 + (3 * i + 1)] = CreateVertex(position, centre, size).position;
-			ffff1(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).position.xyz / 10.0);
-			ffff2(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
-			
-			ffff3(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
-			ffff4(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
-			ffff5(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
+			Vert v1 = CreateVertex(position, centre, size);
+			ffff1(idx * 15 + (3 * i + 1), v1.position.xyz / 10.0);
+			ffff2(idx * 15 + (3 * i + 1), v1.normal);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
-			//_Buffer[idx * 15 + (3 * i + 2)] = CreateVertex(position, centre, size).position;
-			ffff1(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).position.xyz / 10.0);
-			ffff2(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
+			Vert v2 = CreateVertex(position, centre, size);
+			ffff1(idx * 15 + (3 * i + 2), v2.position.xyz / 10.0);
+			ffff2(idx * 15 + (3 * i + 2), v2.normal);
 			
-			ffff3(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
-			ffff4(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
-			ffff5(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
+			vec3 tangent0 = normalize(v0.position.xyz - v2.position.xyz);
+			vec3 tangent1 = normalize(v1.position.xyz - v2.position.xyz);
+			vec3 tangent2 = normalize(v1.position.xyz - v0.position.xyz);
+			
+			vec3 binormal0 = normalize(cross(v0.position.xyz, tangent0));
+			vec3 binormal1 = normalize(cross(v1.position.xyz, tangent1));
+			vec3 binormal2 = normalize(cross(v2.position.xyz, tangent2));
+			
+			ffff3(idx * 15 + (3 * i + 0), binormal0);
+			ffff4(idx * 15 + (3 * i + 0), tangent0);
+			//ffff5(idx * 15 + (3 * i + 0), CreateVertex(position, centre, size).normal);
+			
+			ffff3(idx * 15 + (3 * i + 1), binormal1);
+			ffff4(idx * 15 + (3 * i + 1), tangent1);
+			//ffff5(idx * 15 + (3 * i + 1), CreateVertex(position, centre, size).normal);
+			
+			ffff3(idx * 15 + (3 * i + 2), binormal2);
+			ffff4(idx * 15 + (3 * i + 2), tangent2);
+			//ffff5(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
 		}
 	}
 	
