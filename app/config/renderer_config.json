@@ -187,6 +187,10 @@
 		}
 	],
 	"renderSteps" : [
+		// Custom Geometry Generation
+		{
+			"type" : "RenderPassGeometryGeneration"
+		},
 		// Offscreen test
 		{
 			"type" : "SwitchCamera",

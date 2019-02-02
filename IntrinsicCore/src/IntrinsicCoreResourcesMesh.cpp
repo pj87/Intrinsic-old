@@ -125,7 +125,23 @@ _INTR_INLINE void MeshManager::updateDependentResources(MeshRef p_Ref)
   CComponents::MeshManager::createResources(componentsToRecreate);
 }
 
-void MeshManager::createResources(const MeshRefArray& p_Meshes)
+int32_t MeshManager::getMeshInitialBufferNumber(const MeshRefArray& p_Meshes,
+                                                Name& name)
+{
+  for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
+  {
+    MeshRef meshRef = p_Meshes[meshIdx];
+
+    Name& meshName = MeshManager::_name(meshRef);
+    _INTR_LOG_INFO("PJ: Mesh Name: %s", meshName.getString().c_str());
+
+    if (meshName == name)
+      return meshIdx;
+  }
+  return -1;
+}
+
+void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
 {
   // Create vertex/index buffers - we're using a separate buffer for each vertex
   // attribute
@@ -135,6 +151,11 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
   {
     MeshRef meshRef = p_Meshes[meshIdx];
+
+	const Name& name = _name(meshRef);
+    if (name != _N(pbr_test_025))
+      continue;
+
     const PositionsPerSubMeshArray& positions =
         _descPositionsPerSubMesh(meshRef);
     const UVsPerSubMeshArray& uv0s = _descUV0sPerSubMesh(meshRef);
@@ -154,6 +175,169 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
     vertexBuffers.resize(subMeshCount);
     indexBuffers.resize(subMeshCount);
     _aabbPerSubMesh(meshRef).resize(subMeshCount);
+
+    _INTR_LOG_INFO("%s", name.getString().c_str());
+
+    for (uint32_t subMeshIdx = 0u; subMeshIdx < subMeshCount; ++subMeshIdx)
+    {
+      // Build AABB
+      {
+        Math::AABB& aabb = _aabbPerSubMesh(meshRef)[subMeshIdx];
+        Math::initAABB(aabb);
+
+        for (uint32_t posIdx = 0u; posIdx < positions[subMeshIdx].size();
+             ++posIdx)
+        {
+          Math::mergePointToAABB(aabb, positions[subMeshIdx][posIdx]);
+        }
+      }
+
+      BufferRef posVertexBuffer =
+          BufferManager::createBuffer(_N(MeshPositionVb));
+      {
+        BufferManager::resetToDefault(posVertexBuffer);
+
+        BufferManager::addResourceFlags(
+            posVertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
+        BufferManager::_descBufferType(posVertexBuffer) =
+            R::BufferType::kVertex;
+
+        BufferManager::_nameToInitlialBufferMap[name] =
+            BufferManager::_dynamicBuffers.size();
+        BufferManager::_descSizeInBytes(posVertexBuffer) =
+            20000000 * sizeof(uint32_t);
+        BufferManager::_dynamicBuffers.push_back(posVertexBuffer);
+        
+        vertexBuffers[subMeshIdx].push_back(posVertexBuffer);
+      }
+
+      BufferRef uv0VertexBuffer = BufferManager::createBuffer(_N(MeshUv0Vb));
+      {
+        BufferManager::resetToDefault(uv0VertexBuffer);
+
+        BufferManager::addResourceFlags(
+            uv0VertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
+        BufferManager::_descBufferType(uv0VertexBuffer) =
+            R::BufferType::kVertex;
+        BufferManager::_descSizeInBytes(uv0VertexBuffer) =
+            20000000 * sizeof(uint32_t);
+        BufferManager::_dynamicBuffers.push_back(uv0VertexBuffer);
+        
+        vertexBuffers[subMeshIdx].push_back(uv0VertexBuffer);
+      }
+
+      BufferRef normalVertexBuffer =
+          BufferManager::createBuffer(_N(MeshNormalVb));
+      {
+        BufferManager::resetToDefault(normalVertexBuffer);
+
+        BufferManager::addResourceFlags(
+            normalVertexBuffer,
+            Dod::Resources::ResourceFlags::kResourceVolatile);
+        BufferManager::_descBufferType(normalVertexBuffer) =
+            R::BufferType::kVertex;
+        BufferManager::_descSizeInBytes(normalVertexBuffer) =
+            20000000 * sizeof(uint32_t);
+        BufferManager::_dynamicBuffers.push_back(normalVertexBuffer);
+        
+        vertexBuffers[subMeshIdx].push_back(normalVertexBuffer);
+      }
+
+      BufferRef tangentVertexBuffer =
+          BufferManager::createBuffer(_N(MeshTangentVb));
+      {
+        BufferManager::resetToDefault(tangentVertexBuffer);
+
+        BufferManager::addResourceFlags(
+            tangentVertexBuffer,
+            Dod::Resources::ResourceFlags::kResourceVolatile);
+        BufferManager::_descBufferType(tangentVertexBuffer) =
+            R::BufferType::kVertex;
+        BufferManager::_descSizeInBytes(tangentVertexBuffer) =
+            20000000 * sizeof(uint32_t);
+        BufferManager::_dynamicBuffers.push_back(tangentVertexBuffer);
+        
+        vertexBuffers[subMeshIdx].push_back(tangentVertexBuffer);
+      }
+
+      BufferRef binormalVertexBuffer =
+          BufferManager::createBuffer(_N(MeshBinormalVb));
+      {
+        BufferManager::resetToDefault(binormalVertexBuffer);
+
+        BufferManager::addResourceFlags(
+            binormalVertexBuffer,
+            Dod::Resources::ResourceFlags::kResourceVolatile);
+        BufferManager::_descBufferType(binormalVertexBuffer) =
+            R::BufferType::kVertex;
+        BufferManager::_descSizeInBytes(binormalVertexBuffer) =
+            20000000 * sizeof(uint32_t);
+        BufferManager::_dynamicBuffers.push_back(binormalVertexBuffer);
+        
+        vertexBuffers[subMeshIdx].push_back(binormalVertexBuffer);
+      }
+
+      BufferRef vtxColorVertexBuffer =
+          BufferManager::createBuffer(_N(MeshVtxColorVb));
+      {
+        BufferManager::resetToDefault(vtxColorVertexBuffer);
+
+        BufferManager::addResourceFlags(
+            vtxColorVertexBuffer,
+            Dod::Resources::ResourceFlags::kResourceVolatile);
+        BufferManager::_descBufferType(vtxColorVertexBuffer) =
+            R::BufferType::kVertex;
+        BufferManager::_descSizeInBytes(vtxColorVertexBuffer) =
+            20000000 * sizeof(uint32_t);
+        BufferManager::_dynamicBuffers.push_back(vtxColorVertexBuffer);
+
+        vertexBuffers[subMeshIdx].push_back(vtxColorVertexBuffer);
+      }
+    }
+
+    createOrLoadPhysicsMeshes(meshRef);
+  }
+
+  BufferManager::createResources(BufferManager::_dynamicBuffers);
+}
+
+
+void MeshManager::createResources(const MeshRefArray& p_Meshes)
+{
+  // Create vertex/index buffers - we're using a separate buffer for each vertex
+  // attribute
+  BufferRefArray buffersToCreate;
+  _INTR_ARRAY(void*) tempBuffersToRelease;
+
+  for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
+  {
+    MeshRef meshRef = p_Meshes[meshIdx];
+
+	const Name& name = _name(meshRef);
+    if (name == _N(pbr_test_025))
+      continue;
+
+    const PositionsPerSubMeshArray& positions =
+        _descPositionsPerSubMesh(meshRef);
+    const UVsPerSubMeshArray& uv0s = _descUV0sPerSubMesh(meshRef);
+    const IndicesPerSubMeshArray& indices = _descIndicesPerSubMesh(meshRef);
+    const NormalsPerSubMeshArray& normals = _descNormalsPerSubMesh(meshRef);
+    const TangentsPerSubMeshArray& tangents = _descTangentsPerSubMesh(meshRef);
+    const BinormalsPerSubMeshArray& binormals =
+        _descBinormalsPerSubMesh(meshRef);
+    const VertexColorsPerSubMeshArray& vtxColors =
+        _descVertexColorsPerSubMesh(meshRef);
+    VertexBuffersPerSubMeshArray& vertexBuffers =
+        _vertexBuffersPerSubMesh(meshRef);
+    IndexBufferPerSubMeshArray& indexBuffers = _indexBufferPerSubMesh(meshRef);
+
+    void* tempIndexBuffer = nullptr;
+    const uint32_t subMeshCount = (uint32_t)positions.size();
+    vertexBuffers.resize(subMeshCount);
+    indexBuffers.resize(subMeshCount);
+    _aabbPerSubMesh(meshRef).resize(subMeshCount);
+
+    _INTR_LOG_INFO("%s", name.getString().c_str());
 
     for (uint32_t subMeshIdx = 0u; subMeshIdx < subMeshCount; ++subMeshIdx)
     {
