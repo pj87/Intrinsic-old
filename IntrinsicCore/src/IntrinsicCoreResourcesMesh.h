@@ -89,6 +89,9 @@ struct MeshManager
 {
   static void init();
 
+  _INTR_INLINE static int32_t getMeshInitialBufferNumber(const MeshRefArray& p_Meshes, 
+														 Name& name);
+
   // <-
 
   _INTR_INLINE static MeshRef createMesh(const Name& p_Name)

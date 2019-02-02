@@ -45,6 +45,7 @@ enum Enum
   kRenderPassShadow,
   kRenderPassClustering,
   kRenderPassVolumetricLighting,
+  kRenderPassGeometryGeneration,
   kRenderPassBloom
 };
 }
@@ -57,6 +58,8 @@ _renderStepTypeMapping = {
     {"RenderPassClustering", RenderStepType::kRenderPassClustering},
     {"RenderPassVolumetricLighting",
      RenderStepType::kRenderPassVolumetricLighting},
+    {"RenderPassGeometryGeneration",
+     RenderStepType::kRenderPassGeometryGeneration},
     {"RenderPassBloom", RenderStepType::kRenderPassBloom}};
 
 struct RenderPassInterface
@@ -80,6 +83,9 @@ _renderStepFunctionMapping = {
     {RenderStepType::kRenderPassVolumetricLighting,
      {RenderPass::VolumetricLighting::render,
       RenderPass::VolumetricLighting::onReinitRendering}},
+    {RenderStepType::kRenderPassGeometryGeneration,
+     {RenderPass::GeometryGeneration::render,
+      RenderPass::GeometryGeneration::onReinitRendering}},
     {RenderStepType::kRenderPassBloom,
      {RenderPass::Bloom::render, RenderPass::Bloom::onReinitRendering}}};
 

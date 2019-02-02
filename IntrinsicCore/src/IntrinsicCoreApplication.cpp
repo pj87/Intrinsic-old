@@ -85,6 +85,10 @@ void Application::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "managers/post_effects/", ".post_effect.json");
   }
 
+  // Initialize GeometryGeneration render pass after everything have been
+  // already initialized
+  Renderer::RenderPass::GeometryGeneration::postInit();
+
   // Initializes world
   {
     World::init();
