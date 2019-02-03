@@ -570,12 +570,10 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         else
         {
           BufferManager::_descBufferType(indexBuffer) = R::BufferType::kIndex32;
-
-          _INTR_LOG_WARNING("Duzy bufor");
-            BufferManager::_descSizeInBytes(indexBuffer) =
-                (uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t);
-            BufferManager::_descInitialData(indexBuffer) =
-                (void*)indices[subMeshIdx].data();
+          BufferManager::_descSizeInBytes(indexBuffer) =
+              (uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t);
+          BufferManager::_descInitialData(indexBuffer) =
+              (void*)indices[subMeshIdx].data();
         }
         buffersToCreate.push_back(indexBuffer);
         indexBuffers[subMeshIdx] = indexBuffer;
