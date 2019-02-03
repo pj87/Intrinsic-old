@@ -405,11 +405,13 @@ struct MeshManager
   {
     destroyResources(_activeRefs);
     createResources(_activeRefs);
+    createGeneratedResources(_activeRefs);
   }
 
   // <-
 
   static void createResources(const MeshRefArray& p_Meshes);
+  static void createGeneratedResources(const MeshRefArray& p_Meshes);
 
   // <-
 
