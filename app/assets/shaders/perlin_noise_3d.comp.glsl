@@ -1,24 +1,23 @@
 #version 450
 
-//#pragma kernel CSMain
+layout(binding = 0) buffer _SizeBuffer 
+{
+	int _Width;
+	int _Height;
+};
 
-//SamplerState _PointRepeat;
+layout(binding = 1) buffer _ParametersBuffer 
+{
+	float _Frequency;
+	float _Lacunarity;
+	float _Gain;
+};
 
-//Texture2D _PermTable2D, _Gradient3D;
+layout(binding = 2) uniform sampler2D _Gradient3D;
 
-float _Frequency = 0.02f, _Lacunarity = 2.0f, _Gain = 0.5f;
+layout(binding = 3) uniform sampler2D _PermTable2D;
 
-int _Width = 64, _Height = 64;
-
-//RWStructuredBuffer<float> _Result;
-
-layout(binding = 0) uniform PerInstance { float _dummy; }
-uboPerInstance;
-
-layout(binding = 1) uniform sampler2D _Gradient3D;
-layout(binding = 2) uniform sampler2D _PermTable2D;
-
-layout(binding = 3) buffer _VoxelBuffer 
+layout(binding = 4) buffer _VoxelBuffer 
 {
 	float _Result[];
 };
@@ -35,13 +34,11 @@ vec3 fade(vec3 t)
 
 vec4 perm2d(vec2 uv)
 {
-	//return _PermTable2D.SampleLevel(_PointRepeat, uv, .0);
 	return textureLod(_PermTable2D, uv, 0);
 }
 
 float gradperm(float x, vec3 p)
 {
-	//vec3 g = _Gradient3D.SampleLevel(_PointRepeat, vec2(x, 0), 0).rgb * 2.0 - 1.0;
 	vec3 g = textureLod(_Gradient3D, vec2(x, 0), .0).rgb * 2.0 - 1.0;
 	return dot(g, p);
 }
@@ -49,8 +46,8 @@ float gradperm(float x, vec3 p)
 float inoise(vec3 p)
 {
 	vec3 P = fmod(floor(p), 256.0);	// FIND UNIT CUBE THAT CONTAINS POINT
-  	p -= floor(p);                      // FIND RELATIVE X,Y,Z OF POINT IN CUBE.
-	vec3 f = fade(p);                 // COMPUTE FADE CURVES FOR EACH OF X,Y,Z.
+  	p -= floor(p);                  // FIND RELATIVE X,Y,Z OF POINT IN CUBE.
+	vec3 f = fade(p);               // COMPUTE FADE CURVES FOR EACH OF X,Y,Z.
 
 	P = P / 256.0;
 	const float one = 1.0 / 256.0;
@@ -142,19 +139,3 @@ void main()
 	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = n;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

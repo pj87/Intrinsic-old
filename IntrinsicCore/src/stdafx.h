@@ -207,6 +207,7 @@ namespace CComponents = Intrinsic::Core::Components;
 #include "IntrinsicCorePhysicsHelper.h"
 
 #include "IntrinsicRendererRenderPassGeometryGeneration.h"
+#include "IntrinsicRendererRenderPassMarchingCubes.h"
 
 // Renderer includes
 #include "stdafx_renderer.h"

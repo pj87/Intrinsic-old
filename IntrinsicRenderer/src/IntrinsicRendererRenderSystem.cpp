@@ -180,6 +180,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
     RenderPass::VolumetricLighting::init();
 
 	RenderPass::GeometryGeneration::init();
+    RenderPass::MarchingCubes::init();
 
     RenderPass::Bloom::init();
 

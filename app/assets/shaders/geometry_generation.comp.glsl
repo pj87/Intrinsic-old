@@ -1,17 +1,3 @@
-// Copyright 2017 Benjamin Glatzel
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//    http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 // https://gamedev.stackexchange.com/questions/51399/what-are-normal-tangent-and-binormal-vectors-and-how-are-they-used
 // http://blog.db-in.com/calculating-normals-and-tangent-space/
 // https://answers.unity.com/questions/731821/how-do-i-calculate-the-uvs-for-a-procedurally-gene.html
@@ -34,90 +20,60 @@ struct Debug
 	vec4 debug2;
 };
 
-float _Target = 0.0f;
-int _Width = 64, _Height = 64, _Depth = 64, _Border = 1;
-
-layout(binding = 0) uniform PerInstance { float _dummy; }
-uboPerInstance;
-
-layout(binding = 1) buffer positionBuffer 
+layout(binding = 0) buffer _PositionBuffer
 {
-	uint _PositionBuffer[];
+	uint _Positions[];
 };
-layout(binding = 2) buffer normalBuffer 
+layout(binding = 1) buffer _NormalBuffer
 {
-	uint _NormalBuffer[];
+	uint _Normals[];
 };
-layout(binding = 3) buffer tangentBuffer 
+layout(binding = 2) buffer _TangentBuffer
 {
-	uint _TangentBuffer[];
+	uint _Tangents[];
 };
-layout(binding = 4) buffer binormalBuffer 
+layout(binding = 3) buffer _BinormalBuffer
 {
-	uint _BinormalBuffer[];
+	uint _Binormals[];
 };
-layout(binding = 5) buffer uv0Buffer 
+layout(binding = 4) buffer _Uv0Buffer
 {
-	uint _UV0Buffer[];
+	uint _UV0s[];
 };
-layout(binding = 6) buffer triangleConnectionBuffer 
+layout(binding = 5) buffer _CubeEdgeBuffer
+{
+	int _CubeEdgeFlags[];
+};
+layout(binding = 6) buffer _TriangleConnectionBuffer
 {
 	int _TriangleConnectionTable[];
 };
-layout(binding = 7) buffer voxelBuffer 
+layout(binding = 7) buffer _VoxelBuffer
 {
 	float _Voxels[];
 };
-layout(binding = 8) buffer debugBuffer 
+layout(binding = 8) buffer _DebugBuffer
 {
-	Debug _DebugBuffer[];
+	Debug _DebugTuple[];
 };
-layout(binding = 9) uniform sampler3D volLightScatterBufferTex1; // do odczytu
-//layout(binding = 6, r11f_g11f_b10f) uniform image3D volLightScatterBufferTex1; // do zapisu
-
-layout(binding = 10) uniform sampler2D gradient3DTex;
-layout(binding = 11) uniform sampler2D permTable2DTex;
+layout(binding = 9) uniform sampler3D _NormalsTex;
+layout(binding = 10) buffer _SizesBuffer
+{	
+	int _Width;
+	int _Height;
+	int _Depth;
+	int _Border;
+};
+layout(binding = 11) buffer _TargetBuffer
+{	
+	float _Target;
+};
 
 
 // edgeConnection lists the index of the endpoint vertices for each of the 12 edges of the cube
 ivec2 edgeConnection[12] = {ivec2(0, 1), ivec2(1, 2), ivec2(2, 3), ivec2(3, 0),
 						    ivec2(4, 5), ivec2(5, 6), ivec2(6, 7), ivec2(7, 4),
                             ivec2(0, 4), ivec2(1, 5), ivec2(2, 6), ivec2(3, 7)};
-
-// For any edge, if one vertex is inside of the surface and the other is outside
-// of the surface
-//  then the edge intersects the surface
-// For each of the 8 vertices of the cube can be two possible states : either
-// inside or outside of the surface For any cube the are 2^8=256 possible sets
-// of vertex states This table lists the edges intersected by the surface for
-// all 256 possible vertex states There are 12 edges.  For each entry in the
-// table, if edge #n is intersected, then bit #n is set to 1
-
-int _CubeEdgeFlags[256] = {
-    0x000, 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c, 0x80c, 0x905, 0xa0f,
-    0xb06, 0xc0a, 0xd03, 0xe09, 0xf00, 0x190, 0x099, 0x393, 0x29a, 0x596, 0x49f,
-    0x795, 0x69c, 0x99c, 0x895, 0xb9f, 0xa96, 0xd9a, 0xc93, 0xf99, 0xe90, 0x230,
-    0x339, 0x033, 0x13a, 0x636, 0x73f, 0x435, 0x53c, 0xa3c, 0xb35, 0x83f, 0x936,
-    0xe3a, 0xf33, 0xc39, 0xd30, 0x3a0, 0x2a9, 0x1a3, 0x0aa, 0x7a6, 0x6af, 0x5a5,
-    0x4ac, 0xbac, 0xaa5, 0x9af, 0x8a6, 0xfaa, 0xea3, 0xda9, 0xca0, 0x460, 0x569,
-    0x663, 0x76a, 0x066, 0x16f, 0x265, 0x36c, 0xc6c, 0xd65, 0xe6f, 0xf66, 0x86a,
-    0x963, 0xa69, 0xb60, 0x5f0, 0x4f9, 0x7f3, 0x6fa, 0x1f6, 0x0ff, 0x3f5, 0x2fc,
-    0xdfc, 0xcf5, 0xfff, 0xef6, 0x9fa, 0x8f3, 0xbf9, 0xaf0, 0x650, 0x759, 0x453,
-    0x55a, 0x256, 0x35f, 0x055, 0x15c, 0xe5c, 0xf55, 0xc5f, 0xd56, 0xa5a, 0xb53,
-    0x859, 0x950, 0x7c0, 0x6c9, 0x5c3, 0x4ca, 0x3c6, 0x2cf, 0x1c5, 0x0cc, 0xfcc,
-    0xec5, 0xdcf, 0xcc6, 0xbca, 0xac3, 0x9c9, 0x8c0, 0x8c0, 0x9c9, 0xac3, 0xbca,
-    0xcc6, 0xdcf, 0xec5, 0xfcc, 0x0cc, 0x1c5, 0x2cf, 0x3c6, 0x4ca, 0x5c3, 0x6c9,
-    0x7c0, 0x950, 0x859, 0xb53, 0xa5a, 0xd56, 0xc5f, 0xf55, 0xe5c, 0x15c, 0x055,
-    0x35f, 0x256, 0x55a, 0x453, 0x759, 0x650, 0xaf0, 0xbf9, 0x8f3, 0x9fa, 0xef6,
-    0xfff, 0xcf5, 0xdfc, 0x2fc, 0x3f5, 0x0ff, 0x1f6, 0x6fa, 0x7f3, 0x4f9, 0x5f0,
-    0xb60, 0xa69, 0x963, 0x86a, 0xf66, 0xe6f, 0xd65, 0xc6c, 0x36c, 0x265, 0x16f,
-    0x066, 0x76a, 0x663, 0x569, 0x460, 0xca0, 0xda9, 0xea3, 0xfaa, 0x8a6, 0x9af,
-    0xaa5, 0xbac, 0x4ac, 0x5a5, 0x6af, 0x7a6, 0x0aa, 0x1a3, 0x2a9, 0x3a0, 0xd30,
-    0xc39, 0xf33, 0xe3a, 0x936, 0x83f, 0xb35, 0xa3c, 0x53c, 0x435, 0x73f, 0x636,
-    0x13a, 0x033, 0x339, 0x230, 0xe90, 0xf99, 0xc93, 0xd9a, 0xa96, 0xb9f, 0x895,
-    0x99c, 0x69c, 0x795, 0x49f, 0x596, 0x29a, 0x393, 0x099, 0x190, 0xf00, 0xe09,
-    0xd03, 0xc0a, 0xb06, 0xa0f, 0x905, 0x80c, 0x70c, 0x605, 0x50f, 0x406, 0x30a,
-    0x203, 0x109, 0x000};
 
 // edgeDirection lists the direction vector (vertex1-vertex0) for each edge in the cube
 vec3 edgeDirection[12] =
@@ -161,7 +117,7 @@ Vert CreateVertex(vec3 position, vec3 centre, vec3 size)
 	vert.position = vec4(position - centre, 1.0);
 
 	vec3 uv = position / size;
-	vert.normal = textureLod(volLightScatterBufferTex1, uv, 0).xyz;
+	vert.normal = textureLod(_NormalsTex, uv, 0).xyz;
 
 	return vert;
 }
@@ -176,16 +132,16 @@ void storePosition(uint i, vec3 pos1)
 	if (i % 2 == 0)
 	{
 		uint index = i + i / 2;
-		_PositionBuffer[index] = packHalf2x16(pos1.xy);
-		vec2 tmp = unpackHalf2x16(_PositionBuffer[index + 1]);
-		_PositionBuffer[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+		_Positions[index] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_Positions[index + 1]);
+		_Positions[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
 	}
 	else
 	{	
 		uint index = i + (i - 1) / 2;
-		vec2 tmp = unpackHalf2x16(_PositionBuffer[index]);
-		_PositionBuffer[index] = packHalf2x16(vec2(tmp.x, pos1.x));
-		_PositionBuffer[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+		vec2 tmp = unpackHalf2x16(_Positions[index]);
+		_Positions[index] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_Positions[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
 
@@ -194,16 +150,16 @@ void storeNormal(uint i, vec3 pos1)
 	if (i % 2 == 0)
 	{
 		uint index = i + i / 2;
-		_NormalBuffer[index] = packHalf2x16(pos1.xy);
-		vec2 tmp = unpackHalf2x16(_NormalBuffer[index + 1]);
-		_NormalBuffer[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+		_Normals[index] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_Normals[index + 1]);
+		_Normals[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
 	}
 	else
 	{	
 		uint index = i + (i - 1) / 2;
-		vec2 tmp = unpackHalf2x16(_NormalBuffer[index]);
-		_NormalBuffer[index] = packHalf2x16(vec2(tmp.x, pos1.x));
-		_NormalBuffer[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+		vec2 tmp = unpackHalf2x16(_Normals[index]);
+		_Normals[index] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_Normals[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
 
@@ -212,16 +168,16 @@ void storeBinormal(uint i, vec3 pos1)
 	if (i % 2 == 0)
 	{
 		uint index = i + i / 2;
-		_BinormalBuffer[index] = packHalf2x16(pos1.xy);
-		vec2 tmp = unpackHalf2x16(_BinormalBuffer[index + 1]);
-		_BinormalBuffer[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+		_Binormals[index] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_Binormals[index + 1]);
+		_Binormals[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
 	}
 	else
 	{	
 		uint index = i + (i - 1) / 2;
-		vec2 tmp = unpackHalf2x16(_BinormalBuffer[index]);
-		_BinormalBuffer[index] = packHalf2x16(vec2(tmp.x, pos1.x));
-		_BinormalBuffer[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+		vec2 tmp = unpackHalf2x16(_Binormals[index]);
+		_Binormals[index] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_Binormals[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
 
@@ -230,22 +186,22 @@ void storeTangent(uint i, vec3 pos1)
 	if (i % 2 == 0)
 	{
 		uint index = i + i / 2;
-		_TangentBuffer[index] = packHalf2x16(pos1.xy);
-		vec2 tmp = unpackHalf2x16(_TangentBuffer[index + 1]);
-		_TangentBuffer[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+		_Tangents[index] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_Tangents[index + 1]);
+		_Tangents[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
 	}
 	else
 	{	
 		uint index = i + (i - 1) / 2;
-		vec2 tmp = unpackHalf2x16(_TangentBuffer[index]);
-		_TangentBuffer[index] = packHalf2x16(vec2(tmp.x, pos1.x));
-		_TangentBuffer[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+		vec2 tmp = unpackHalf2x16(_Tangents[index]);
+		_Tangents[index] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_Tangents[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
 	}
 }
 
 void storeUV(uint i, vec2 pos1)
 {
-	_UV0Buffer[i] = packHalf2x16(pos1.xy);
+	_UV0s[i] = packHalf2x16(pos1.xy);
 }
 				
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
@@ -274,15 +230,13 @@ void main()
 	//Find which vertices are inside of the surface and which are outside
 	for (i = 0; i < 8; i++)
 	{
-		_DebugBuffer[idx].debug1 = vec4(cube[0], cube[1], cube[2], cube[3]);
-		_DebugBuffer[idx].debug2 = vec4(cube[4], cube[5], cube[6], cube[7]);
+		_DebugTuple[idx].debug1 = vec4(cube[0], cube[1], cube[2], cube[3]);
+		_DebugTuple[idx].debug2 = vec4(cube[4], cube[5], cube[6], cube[7]);
 		if (cube[i] <= _Target) flagIndex |= 1 << i;
 	}
 
 	//Find which edges are intersected by the surface
 	int edgeFlags = _CubeEdgeFlags[flagIndex];
-	
-	//_PositionBuffer[idx] = edgeFlags;
 	
 	// no connections, return
 	if (edgeFlags == 0) return;
@@ -346,6 +300,4 @@ void main()
 			//storeUV(idx * 15 + (3 * i + 2), CreateVertex(position, centre, size).normal);
 		}
 	}
-	
-	//_PositionBuffer[idx] = idx;
 }
