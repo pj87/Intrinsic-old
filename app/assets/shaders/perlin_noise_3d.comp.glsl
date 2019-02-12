@@ -141,6 +141,6 @@ void main()
 	//uncomment this for ridged multi fractal
 	//float n = ridgedmf(uv, 4, 1.0);
 	
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = sdSphere(uv, 10.0);
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = sdSphere(uv - vec3(10.0), 10.0);
 
 }
