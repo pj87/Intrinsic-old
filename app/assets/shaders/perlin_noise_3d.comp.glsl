@@ -133,6 +133,12 @@ float sdBox( vec3 p, vec3 b )
          + min(max(d.x,max(d.y,d.z)),0.0); // remove this line for an only partially signed sdf 
 }
 
+float sdTorus( vec3 p, vec2 t )
+{
+  vec2 q = vec2(length(p.xz)-t.x,p.y);
+  return length(q)-t.y;
+}
+
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
 {
@@ -148,6 +154,8 @@ void main()
 	//uncomment this for ridged multi fractal
 	//float n = ridgedmf(uv, 4, 1.0);
 	
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(10.0), vec3(10.0, 5.0, 5.0));
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(10.0), vec2(5.0, 2.0));
+	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(10.0), vec3(10.0, 5.0, 5.0));
+	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdSphere(uv - vec3(10.0), 10.0);
 
 }
