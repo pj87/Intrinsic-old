@@ -121,6 +121,11 @@ float ridgedmf(vec3 p, int octaves, float offset)
 	return sum;
 }
 
+float sdSphere( vec3 p, float s )
+{
+  return length(p)-s;
+}
+
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
 {
@@ -128,7 +133,7 @@ void main()
 	vec3 uv = vec3(id);
 
 	//uncomment this for fractal noise
-	float n = fBm(uv, 4);
+	//float n = fBm(uv, 4);
 
 	//uncomment this for turbulent noise
 	//float n = turbulence(uv, 4);
@@ -136,6 +141,6 @@ void main()
 	//uncomment this for ridged multi fractal
 	//float n = ridgedmf(uv, 4, 1.0);
 	
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = n;
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = sdSphere(uv, 10.0);
 
 }
