@@ -139,6 +139,75 @@ float sdTorus( vec3 p, vec2 t )
   return length(q)-t.y;
 }
 
+/*
+float map(vec3 p, vec4 c)
+{
+	p/10.0;
+    vec3 z = p;
+    float m = dot(z,z);
+
+    vec4 trap = vec4(abs(z),m);
+	float dz = 1.0;
+    
+    
+	for( int i=0; i<4; i++ )
+    {
+		dz = 8.0*pow(m,3.5)*dz;
+                
+        float r = length(z);
+        float b = 8.0*acos( clamp(z.y/r, -1.0, 1.0));
+        float a = 8.0*atan( z.x, z.z );
+        z = c + pow(r,8.0) * vec3( sin(b)*sin(a), cos(b), sin(b)*cos(a) );
+
+        trap = min( trap, vec4(abs(z),m) );
+
+        m = dot(z,z);
+		if( m > 2.0 )
+            break;
+    }
+
+    return 10.0*0.25*log(m)*sqrt(m)/dz;
+}
+*/
+
+vec4 qsqr( in vec4 a ) // square a quaterion
+{
+    return vec4( a.x*a.x - a.y*a.y - a.z*a.z - a.w*a.w,
+                 2.0*a.x*a.y,
+                 2.0*a.x*a.z,
+                 2.0*a.x*a.w );
+}
+
+float map1(vec3 p, vec4 c)
+{
+	p / 2.0;
+    vec4 z = vec4(p,0.0);
+    float md2 = 1.0;
+    float mz2 = dot(z,z);
+
+    //vec4 trap = vec4(abs(z.xyz),dot(z,z));
+
+    for( int i=0; i<11; i++ )
+    {
+        md2 *= 4.0*mz2;   // dz -> 2·z·dz, meaning |dz| -> 2·|z|·|dz| (can take the 4 out of the loop and do an exp2() afterwards)
+        z = qsqr(z) + c;  // z  -> z^2 + c
+
+        //trap = min( trap, vec4(abs(z.xyz),dot(z,z)) );
+
+        mz2 = dot(z,z);
+        if(mz2>4.0) break;
+    }
+
+    return 2.0*0.25*sqrt(mz2/md2)*log(mz2);  // d = 0.5·|z|·log|z| / |dz|
+}
+
+/*
+float opScale( in vec3 p, in float s)
+{
+    return -map(p/s)*s;
+}
+*/
+
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
 {
@@ -153,8 +222,10 @@ void main()
 
 	//uncomment this for ridged multi fractal
 	//float n = ridgedmf(uv, 4, 1.0);
-	
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(10.0), vec2(5.0, 2.0));
+
+	vec4 c = 0.45*cos( vec4(0.5,3.9,1.4,1.1) + _Frequency*vec4(1.2,1.7,1.3,2.5) ) - vec4(0.3,0.0,0.0,0.0);
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -map1(uv - vec3(0.0), c);
+	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(10.0), vec2(5.0, 2.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(10.0), vec3(10.0, 5.0, 5.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdSphere(uv - vec3(10.0), 10.0);
 

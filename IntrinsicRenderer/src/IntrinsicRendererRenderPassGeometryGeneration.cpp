@@ -240,6 +240,8 @@ void GeometryGeneration::init()
           Dod::Resources::ResourceFlags::kResourceVolatile);
       BufferManager::_descBufferType(_noiseParametersRef) =
           BufferType::kStorage;
+      BufferManager::_descMemoryPoolType(_noiseParametersRef) =
+          MemoryPoolType::kStaticStagingBuffers;
       BufferManager::_descSizeInBytes(_noiseParametersRef) = 
 		  3 * sizeof(float);
       BufferManager::_descInitialData(_noiseParametersRef) =
@@ -306,6 +308,32 @@ void GeometryGeneration::destroy() {}
 
 // <-
 
+_INTR_INLINE static void
+updateDataMemory(void* p_Data, uint32_t p_Size, uint32_t p_Offset)
+{
+  // Update staging memory
+  {
+    memcpy(BufferManager::getGpuMemory(_noiseParametersRef),
+           p_Data, p_Size);
+  }
+
+  // ... and copy to device
+  VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
+
+  VkBufferCopy bufferCopy = {};
+  {
+    bufferCopy.dstOffset = p_Offset;
+    bufferCopy.srcOffset = 0u;
+    bufferCopy.size = p_Size;
+  }
+
+  vkCmdCopyBuffer(copyCmd, BufferManager::_vkBuffer(_noiseParametersRef),
+                  BufferManager::_vkBuffer(_noiseParametersRef), 1u,
+                  &bufferCopy);
+
+  RenderSystem::flushTemporaryCommandBuffer();
+}
+
 void GeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 {
   _INTR_PROFILE_CPU("Render Pass", "Render Volumetric Lighting");
@@ -328,6 +356,12 @@ void GeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
   BufferManager::insertBufferMemoryBarrier(
       _voxelBufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
+
+  const float deltaT = TaskManager::_lastDeltaT;
+  noiseParams[0] += deltaT;
+  //BufferManager::_vkBuffer(_noiseParametersRef) = 
+  //BufferManager::_descInitialData(_noiseParametersRef) = noiseParams;
+  updateDataMemory(noiseParams, sizeof(float) * 3, 0);
 }
 } // namespace RenderPass
 } // namespace Renderer
