@@ -277,9 +277,10 @@ void main()
 	//uncomment this for ridged multi fractal
 	//float n = ridgedmf(uv, 4, 1.0);
 
-	vec4 c = 0.45*cos( vec4(0.5,3.9,1.4,1.1) + 0.01 * _Frequency*vec4(1.2,1.7,1.3,2.5) ) - vec4(0.3,0.0,0.0,0.0);
-	//vec4 c = vec4(0.2);
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0f * sin(_Frequency)), c);
+	//vec4 c = 0.45*cos( vec4(0.5,3.9,1.4,1.1) + 0.01 * _Frequency*vec4(1.2,1.7,1.3,2.5) ) - vec4(0.3,0.0,0.0,0.0);
+	vec4 c = vec4(0.2);
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(0.1f), c);
+	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0f * sin(_Frequency)), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(_Frequency), vec2(5.0, 2.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(10.0), vec3(10.0, 5.0, 5.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdSphere(uv - vec3(10.0), 10.0);
