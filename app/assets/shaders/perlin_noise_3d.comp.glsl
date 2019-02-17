@@ -180,7 +180,6 @@ vec4 qsqr( in vec4 a ) // square a quaterion
 
 float map1(vec3 p, vec4 c)
 {
-	p / 2.0;
     vec4 z = vec4(p,0.0);
     float md2 = 1.0;
     float mz2 = dot(z,z);
@@ -198,7 +197,7 @@ float map1(vec3 p, vec4 c)
         if(mz2>4.0) break;
     }
 
-    return 2.0*0.25*sqrt(mz2/md2)*log(mz2);  // d = 0.5·|z|·log|z| / |dz|
+    return 0.25*sqrt(mz2/md2)*log(mz2);  // d = 0.5·|z|·log|z| / |dz|
 }
 
 /*
@@ -207,6 +206,59 @@ float opScale( in vec3 p, in float s)
     return -map(p/s)*s;
 }
 */
+
+vec4 qSquare( vec4 a )
+{
+    return vec4( a.x*a.x - dot(a.yzw,a.yzw), 2.0*a.x*(a.yzw) );
+}
+
+vec4 qCube( vec4 a )
+{
+	return a * ( 4.0*a.x*a.x - dot(a,a)*vec4(3.0,1.0,1.0,1.0) );
+}
+
+//--------------------------------------------------------------------------------
+
+float lengthSquared( vec4 z ) { return dot(z,z); }
+
+// animation
+
+float map2( vec3 p, vec4 c )
+{
+    vec4 z = vec4( p, 0.2 );
+	
+	float m2 = 0.0;
+	vec2  t = vec2( 1e10 );
+
+	float dz2 = 1.0;
+	for( int i=0; i<10; i++ ) 
+	{
+        // |dz|² = |3z²|²
+		dz2 *= 9.0*lengthSquared(qSquare(z));
+        
+		// z = z^3 + c		
+		z = qCube( z ) + c;
+		
+        // stop under divergence		
+        m2 = dot(z, z);		
+        if( m2>10000.0 ) break;				 
+
+        // orbit trapping ( |z|² and z_x  )
+		//t = min( t, vec2( m2, abs(z.x)) );
+
+	}
+
+	// distance estimator: d(z) = 0.5·log|z|·|z|/|dz|   (see http://iquilezles.org/www/articles/distancefractals/distancefractals.htm)
+	float d = 0.25 * log(m2) * sqrt(m2/dz2 );
+	//float d = log(m2);
+
+	return d;
+}
+
+float mapScaled(vec3 p, vec4 c)
+{
+	return map2(p/1.0f, c) * 1.0f;
+}
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
@@ -223,8 +275,9 @@ void main()
 	//uncomment this for ridged multi fractal
 	//float n = ridgedmf(uv, 4, 1.0);
 
-	vec4 c = 0.45*cos( vec4(0.5,3.9,1.4,1.1) + _Frequency*vec4(1.2,1.7,1.3,2.5) ) - vec4(0.3,0.0,0.0,0.0);
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -map1(uv - vec3(0.0), c);
+	//vec4 c = 0.45*cos( vec4(0.5,3.9,1.4,1.1) + 0.01 * _Frequency*vec4(1.2,1.7,1.3,2.5) ) - vec4(0.3,0.0,0.0,0.0);
+	vec4 c = vec4(0.2);
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0 * sin(_Frequency), 0.0, 0.0), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(10.0), vec2(5.0, 2.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(10.0), vec3(10.0, 5.0, 5.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdSphere(uv - vec3(10.0), 10.0);

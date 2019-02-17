@@ -122,6 +122,10 @@ Vert CreateVertex(vec3 position, vec3 centre, vec3 size)
 	return vert;
 }
 
+void AddCube()
+{
+}
+
 uint convert(vec2 pos0, vec2 pos1)
 {
 	return(packHalf2x16(pos0) << 16 | packHalf2x16(pos1));
@@ -216,6 +220,34 @@ void main()
 	if (id.x >= _Width - 1 - _Border) return;
 	if (id.y >= _Height - 1 - _Border) return;
 	if (id.z >= _Depth - 1 - _Border) return;
+
+	/*
+	vec3 v0, v1, v2;
+	v0.x = id.x;
+	v0.y = id.y;
+	v0.z = id.z;
+
+	v1.x = id.x + 1.0;
+	v1.y = id.y;
+	v1.z = id.z;
+	
+	v2.x = id.x;
+	v2.y = id.y;
+	v2.z = id.z + 1.0;
+
+	if (_Voxels[id.x + id.y * _Width + id.z * _Width * _Height] > _Target)
+	{
+		storePosition(idx * 15 + 0, v0.xyz / 10.0);
+		storePosition(idx * 15 + 1, v1.xyz / 10.0);
+		storePosition(idx * 15 + 2, v2.xyz / 10.0);
+	}
+	
+	//storePosition(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
+	//storePosition(idx * 15 + (3 * i + 0), v1.position.xyz / 10.0);
+	//storePosition(idx * 15 + (3 * i + 0), v2.position.xyz / 10.0);
+
+	return;
+	*/
 
 	vec3 pos = vec3(id);
 	vec3 centre = vec3(_Width, 0, _Depth) / 2.0;
