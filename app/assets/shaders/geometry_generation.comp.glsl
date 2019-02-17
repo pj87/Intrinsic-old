@@ -221,8 +221,8 @@ void main()
 	if (id.y >= _Height - 1 - _Border) return;
 	if (id.z >= _Depth - 1 - _Border) return;
 	
-	//for (int i = 0; i < 15; i++)
-	//	storePosition(idx * 15 + i, vec3(0.0));
+	for (int i = 0; i < 15; i++)
+		storePosition(idx * 15 + i, vec3(0.0));
 
 	/*
 	vec3 v0, v1, v2;
