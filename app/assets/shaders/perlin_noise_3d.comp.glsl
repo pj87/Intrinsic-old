@@ -257,7 +257,7 @@ float map2( vec3 p, vec4 c )
 
 float mapScaled(vec3 p, vec4 c)
 {
-	return map2(p/0.01f, c) * 0.01f;
+	return map1(p/0.01f, c) * 0.01f;
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
