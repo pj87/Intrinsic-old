@@ -255,9 +255,34 @@ float map2( vec3 p, vec4 c )
 	return d;
 }
 
+float map3( in vec3 p)
+{
+    vec3 w = p;
+    float m = dot(w,w);
+	float dz = 1.0;
+    
+	for( int i=0; i<4; i++ )
+    {
+        dz = 8.0*pow(sqrt(m),7.0)*dz + 1.0;
+		//dz = 8.0*pow(m,3.5)*dz + 1.0;
+        
+        float r = length(w);
+        float b = 8.0*acos( w.y/r);
+        float a = 8.0*atan( w.x, w.z );
+        w = p + pow(r,8.0) * vec3( sin(b)*sin(a), cos(b), sin(b)*cos(a) );
+
+        m = dot(w,w);
+		if( m > 256.0 )
+            break;
+    }
+
+    return 0.25*log(m)*sqrt(m)/dz;
+}
+
 float mapScaled(vec3 p, vec4 c)
 {
-	return map1(p/0.0025f, c) * 0.0025f;
+	//return map2(p/0.0025f, c) * 0.0025f;
+	return map3(p/0.0025f) * 0.0025f;
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
@@ -279,7 +304,7 @@ void main()
 
 	vec4 c = 0.45*cos( vec4(0.5,3.9,1.4,1.1) + _Frequency*vec4(1.2,1.7,1.3,2.5) ) - vec4(0.3,0.0,0.0,0.0);
 	//vec4 c = vec4(0.4);
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(0.001f), c);
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(0.002f), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0f * sin(_Frequency)), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(_Frequency), vec2(5.0, 2.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(10.0), vec3(10.0, 5.0, 5.0));
