@@ -212,22 +212,9 @@ void storeUV(uint i, vec2 pos1)
 	_UV0s[i] = packHalf2x16(pos1.xy);
 }
 
-void storeColor(uint i, vec3 pos1)
-{
-	if (i % 2 == 0)
-	{
-		uint index = i + i / 2;
-		_Colors[index] = packHalf2x16(pos1.xy);
-		vec2 tmp = unpackHalf2x16(_Colors[index + 1]);
-		_Colors[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
-	}
-	else
-	{	
-		uint index = i + (i - 1) / 2;
-		vec2 tmp = unpackHalf2x16(_Colors[index]);
-		_Colors[index] = packHalf2x16(vec2(tmp.x, pos1.x));
-		_Colors[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
-	}
+void storeColor(uint i, vec4 p_Color)
+{  
+  _Colors[i] = packUnorm4x8(vec4(p_Color.b, p_Color.g, p_Color.r, p_Color.a));
 }
 				
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
@@ -245,7 +232,7 @@ void main()
 	
 	for (int i = 0; i < 15; i++) {
 		storePosition(idx * 15 + i, vec3(0.0));
-		storeColor(idx * 15 + i, vec3(1.0, 0.0, 0.0));
+		storeColor(idx * 15 + i, vec4(1.0, 0.0, 0.0, 1.0));
 	}
 	
 	/*
