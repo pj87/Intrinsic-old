@@ -40,31 +40,35 @@ layout(binding = 4) buffer _Uv0Buffer
 {
 	uint _UV0s[];
 };
-layout(binding = 5) buffer _CubeEdgeBuffer
+layout(binding = 5) buffer _ColorBuffer
+{
+	uint _Colors[];
+};
+layout(binding = 6) buffer _CubeEdgeBuffer
 {
 	int _CubeEdgeFlags[];
 };
-layout(binding = 6) buffer _TriangleConnectionBuffer
+layout(binding = 7) buffer _TriangleConnectionBuffer
 {
 	int _TriangleConnectionTable[];
 };
-layout(binding = 7) buffer _VoxelBuffer
+layout(binding = 8) buffer _VoxelBuffer
 {
 	float _Voxels[];
 };
-layout(binding = 8) buffer _DebugBuffer
+layout(binding = 9) buffer _DebugBuffer
 {
 	Debug _DebugTuple[];
 };
-layout(binding = 9) uniform sampler3D _NormalsTex;
-layout(binding = 10) buffer _SizesBuffer
+layout(binding = 10) uniform sampler3D _NormalsTex;
+layout(binding = 11) buffer _SizesBuffer
 {	
 	int _Width;
 	int _Height;
 	int _Depth;
 	int _Border;
 };
-layout(binding = 11) buffer _TargetBuffer
+layout(binding = 12) buffer _TargetBuffer
 {	
 	float _Target;
 };
@@ -207,6 +211,24 @@ void storeUV(uint i, vec2 pos1)
 {
 	_UV0s[i] = packHalf2x16(pos1.xy);
 }
+
+void storeColor(uint i, vec3 pos1)
+{
+	if (i % 2 == 0)
+	{
+		uint index = i + i / 2;
+		_Colors[index] = packHalf2x16(pos1.xy);
+		vec2 tmp = unpackHalf2x16(_Colors[index + 1]);
+		_Colors[index + 1] = packHalf2x16(vec2(pos1.z, tmp.y));
+	}
+	else
+	{	
+		uint index = i + (i - 1) / 2;
+		vec2 tmp = unpackHalf2x16(_Colors[index]);
+		_Colors[index] = packHalf2x16(vec2(tmp.x, pos1.x));
+		_Colors[index + 1] = packHalf2x16(vec2(pos1.y, pos1.z));
+	}
+}
 				
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
@@ -303,16 +325,19 @@ void main()
 			Vert v0 = CreateVertex(position, centre, size);
 			storePosition(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 0), v0.normal);
+			storeColor(idx * 15 + (3 * i + 0), id / 100.0);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
 			Vert v1 = CreateVertex(position, centre, size);
 			storePosition(idx * 15 + (3 * i + 1), v1.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 1), v1.normal);
+			storeColor(idx * 15 + (3 * i + 1), id / 100.0);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
 			Vert v2 = CreateVertex(position, centre, size);
 			storePosition(idx * 15 + (3 * i + 2), v2.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 2), v2.normal);
+			storeColor(idx * 15 + (3 * i + 2), id / 100.0);
 			
 			vec3 tangent0 = normalize(v0.position.xyz - v2.position.xyz);
 			vec3 tangent1 = normalize(v1.position.xyz - v2.position.xyz);

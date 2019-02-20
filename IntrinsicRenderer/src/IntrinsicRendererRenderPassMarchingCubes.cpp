@@ -40,6 +40,7 @@ BufferRef _cubeEdgeFlagsBufferRef;
 BufferRef _triangleConnectionBufferRef;
 BufferRef _sizesBufferRef;
 BufferRef _targetBufferRef;
+BufferRef _colorBufferRef;
 
 ImageRef _normalsImageRef;
 
@@ -353,6 +354,7 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
   _normalBufferRef = BufferManager::_dynamicBuffers[index + 2];
   _tangentBufferRef = BufferManager::_dynamicBuffers[index + 3];
   _binormalBufferRef = BufferManager::_dynamicBuffers[index + 4];
+  _colorBufferRef = BufferManager::_dynamicBuffers[index + 5];
   //color = index + 5
   //indexBuffer = index + 6
   
@@ -393,8 +395,13 @@ _INTR_INLINE ComputeCallRef createComputeCallScattering(glm::vec3 p_Dim)
 		computeCallScatteringRef, _N(_Uv0Buffer), 
 		GpuProgramType::kCompute, _uv0BufferRef, 
 		UboType::kPerInstanceCompute,
-		BufferManager::_descSizeInBytes(_uv0BufferRef));
-    ComputeCallManager::bindBuffer(
+        BufferManager::_descSizeInBytes(_uv0BufferRef));
+        ComputeCallManager::bindBuffer(
+        computeCallScatteringRef, _N(_ColorBuffer), 
+		GpuProgramType::kCompute, _colorBufferRef, 
+		UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(_colorBufferRef));
+	ComputeCallManager::bindBuffer(
         computeCallScatteringRef, _N(_CubeEdgeBuffer),
         GpuProgramType::kCompute, _cubeEdgeFlagsBufferRef,
         UboType::kPerInstanceCompute,
