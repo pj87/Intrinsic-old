@@ -626,6 +626,9 @@ void MarchingCubes::render(float p_DeltaT, CameraRef p_CameraRef)
 
   BufferManager::insertBufferMemoryBarrier(
       _uv0BufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
+
+  BufferManager::insertBufferMemoryBarrier(
+      _colorBufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
 }
 } // namespace RenderPass
 } // namespace Renderer

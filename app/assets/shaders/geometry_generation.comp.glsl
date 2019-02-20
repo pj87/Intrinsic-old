@@ -243,9 +243,11 @@ void main()
 	if (id.y >= _Height - 1 - _Border) return;
 	if (id.z >= _Depth - 1 - _Border) return;
 	
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 15; i++) {
 		storePosition(idx * 15 + i, vec3(0.0));
-
+		storeColor(idx * 15 + i, vec3(1.0, 0.0, 0.0));
+	}
+	
 	/*
 	vec3 v0, v1, v2;
 	v0.x = id.x;
@@ -325,19 +327,19 @@ void main()
 			Vert v0 = CreateVertex(position, centre, size);
 			storePosition(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 0), v0.normal);
-			storeColor(idx * 15 + (3 * i + 0), id / 100.0);
+			//storeColor(idx * 15 + (3 * i + 0), vec3(1.0, 0.0, 0.0));
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
 			Vert v1 = CreateVertex(position, centre, size);
 			storePosition(idx * 15 + (3 * i + 1), v1.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 1), v1.normal);
-			storeColor(idx * 15 + (3 * i + 1), id / 100.0);
+			//storeColor(idx * 15 + (3 * i + 1), vec3(0.0, 1.0, 0.0));
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
 			Vert v2 = CreateVertex(position, centre, size);
 			storePosition(idx * 15 + (3 * i + 2), v2.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 2), v2.normal);
-			storeColor(idx * 15 + (3 * i + 2), id / 100.0);
+			//storeColor(idx * 15 + (3 * i + 2), vec3(0.0, 0.0, 1.0));
 			
 			vec3 tangent0 = normalize(v0.position.xyz - v2.position.xyz);
 			vec3 tangent1 = normalize(v1.position.xyz - v2.position.xyz);
