@@ -231,7 +231,7 @@ float map2( vec3 p, vec4 c )
 	vec2  t = vec2( 1e10 );
 
 	float dz2 = 1.0;
-	for( int i=0; i<10; i++ ) 
+	for( int i=0; i<4; i++ ) 
 	{
         // |dz|² = |3z²|²
 		dz2 *= 9.0*lengthSquared(qSquare(z));
@@ -261,7 +261,7 @@ float map3( in vec3 p)
     float m = dot(w,w);
 	float dz = 1.0;
     
-	for( int i=0; i<4; i++ )
+	for( int i=0; i<1; i++ )
     {
         dz = 8.0*pow(sqrt(m),7.0)*dz + 1.0;
 		//dz = 8.0*pow(m,3.5)*dz + 1.0;
@@ -281,8 +281,8 @@ float map3( in vec3 p)
 
 float mapScaled(vec3 p, vec4 c)
 {
-	return map2(p/0.0025f, c) * 0.0025f;
-	//return map3(p/0.0025f) * 0.0025f;
+	//return map2(p/0.0025f, c) * 0.0025f;
+	return map3(p/0.0025f) * 0.0025f;
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
