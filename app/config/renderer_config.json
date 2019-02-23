@@ -189,11 +189,14 @@
 	"renderSteps" : [
 		// Custom Geometry Generation
 		{
-			"type" : "RenderPassGeometryGeneration"
+			"type" : "RenderPassDynamicGeometryGeneration"
 		},
-		{
-			"type" : "RenderPassMarchingCubes"
-		},
+		//{
+		//	"type" : "RenderPassGeometryGeneration"
+		//},
+		//{
+		//	"type" : "RenderPassMarchingCubes"
+		//},
 		// Offscreen test
 		{
 			"type" : "SwitchCamera",
@@ -302,7 +305,7 @@
 		{
 			"type" : "RenderPassGenericMesh",
 			"name" : "GBuffer",
-			"materialPasses" : ["GBufferDefault", "GBufferTerrain", "GBufferFoliage", "GBufferGrass"],
+			"materialPasses" : ["GBufferDefault", "GBufferGenerated", "GBufferTerrain", "GBufferFoliage", "GBufferGrass"],
 			"renderOrder" : "FrontToBack",
 			"outputs" : [
 				["GBufferAlbedo", [0.1, 0.5, 1.0, 1.0]],

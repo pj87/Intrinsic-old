@@ -135,6 +135,14 @@
       "blendStates" : ["Default", "Default", "Default"],
       "boundResources" : "GBuffer"
     },
+	{
+      "name" : "GBufferGenerated",
+      "baseVertexGpuProgram" : "gbuffer.vert",
+      "baseFragmentGpuProgram" : "gbuffer_generated.frag",
+      "renderPass" : "GBuffer",
+      "blendStates" : ["Default", "Default", "Default"],
+      "boundResources" : "GBuffer"
+    },
     {
       "name" : "GBufferWireframe",
       "baseVertexGpuProgram" : "position_only.vert",

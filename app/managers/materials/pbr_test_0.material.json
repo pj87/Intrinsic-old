@@ -3,7 +3,7 @@
     "properties": {
         "name": "pbr_test_0",
         "materialPassMask": [
-            "GBufferDefault",
+            "GBufferGenerated",
             "GBufferWireframe",
             "Shadow",
             "PerPixelPicking"

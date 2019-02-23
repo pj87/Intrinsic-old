@@ -4,6 +4,8 @@ layout(binding = 0) buffer _SizeBuffer
 {
 	int _Width;
 	int _Height;
+	int _Depth;
+	int _Border;
 };
 
 layout(binding = 1) buffer _ParametersBuffer 
