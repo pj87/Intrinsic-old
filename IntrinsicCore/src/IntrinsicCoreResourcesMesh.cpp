@@ -152,8 +152,8 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
   {
     MeshRef meshRef = p_Meshes[meshIdx];
 
-	const Name& name = _name(meshRef);
-    if (name != _N(pbr_test_025))
+	const Name& name = _name(meshRef);        
+    if (!_IS_OVERRIDEN_MESH(name))
       continue;
 
     const PositionsPerSubMeshArray& positions =
@@ -314,7 +314,7 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
     MeshRef meshRef = p_Meshes[meshIdx];
 
 	const Name& name = _name(meshRef);
-    if (name == _N(pbr_test_025))
+    if (_IS_OVERRIDEN_MESH(name))
       continue;
 
     const PositionsPerSubMeshArray& positions =
