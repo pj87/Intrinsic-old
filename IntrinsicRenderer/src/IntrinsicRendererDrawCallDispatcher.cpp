@@ -110,7 +110,7 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
 		  const Name& name = Components::MeshManager::getMeshName(meshCompRef);          
 		  if (_IS_OVERRIDEN_MESH(name))
 		  {
-		    vkCmdDraw(secondCmdBuffer, 6000000u, 1u, 0u, 0u);
+		    vkCmdDraw(secondCmdBuffer, 3000000u, 1u, 0u, 0u);
           }
           else 
 		  {
