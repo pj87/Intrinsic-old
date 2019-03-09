@@ -684,7 +684,7 @@ void DynamicGeometryGeneration::init()
         BufferManager::_descBufferType(_voxelBufferRef) = 
 			BufferType::kStorage;
         BufferManager::_descSizeInBytes(_voxelBufferRef) =
-            mesh->sizeX * mesh->sizeY * mesh->sizeZ * sizeof(float);
+            (*mesh->sizeX) * (*mesh->sizeY) * (*mesh->sizeZ) * sizeof(float);
       }
       mesh->_voxelBufferRef = _voxelBufferRef;
       buffersToCreate.push_back(_voxelBufferRef);

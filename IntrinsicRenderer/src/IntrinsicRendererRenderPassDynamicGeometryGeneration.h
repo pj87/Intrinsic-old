@@ -44,16 +44,16 @@ struct DynamicGeneratedMesh
   {
     this->meshName = std::make_unique<Name>(meshName);
     this->isDynamic = isDynamic;
-	
-	//redundant
-    this->sizeX = sizeX;
-    this->sizeY = sizeY;
-    this->sizeZ = sizeZ;
 
 	sizes[0] = sizeX;
     sizes[1] = sizeY;
     sizes[2] = sizeZ;
     sizes[3] = 1;
+
+	// redundant
+    this->sizeX = &sizes[0];
+    this->sizeY = &sizes[1];
+    this->sizeZ = &sizes[2];
 
     shaders.push_back(std::make_unique<Name>(voxelGenerationShader));
     shaders.push_back(std::make_unique<Name>(normalGenerationShader));
@@ -92,7 +92,7 @@ struct DynamicGeneratedMesh
   int counter = 0;
   bool isCalled = false;
   bool isDynamic;
-  int sizeX, sizeY, sizeZ;
+  int *sizeX, *sizeY, *sizeZ;
   int sizes[4];
 };
 
