@@ -35,7 +35,8 @@ typedef _INTR_ARRAY(ComputeCallRef) ComputeCallRefArray;
 
 struct DynamicGeneratedMesh
 {
-  DynamicGeneratedMesh(const Name& meshName,
+  DynamicGeneratedMesh(const int sizeX, const int sizeY, 
+					   const int sizeZ, const Name& meshName,
                        const Name&& voxelGenerationShader,
                        const Name&& normalGenerationShader, 
 					   const Name&& geometryGenerationShader, 
@@ -43,6 +44,17 @@ struct DynamicGeneratedMesh
   {
     this->meshName = std::make_unique<Name>(meshName);
     this->isDynamic = isDynamic;
+	
+	//redundant
+    this->sizeX = sizeX;
+    this->sizeY = sizeY;
+    this->sizeZ = sizeZ;
+
+	sizes[0] = sizeX;
+    sizes[1] = sizeY;
+    sizes[2] = sizeZ;
+    sizes[3] = 1;
+
     shaders.push_back(std::make_unique<Name>(voxelGenerationShader));
     shaders.push_back(std::make_unique<Name>(normalGenerationShader));
     shaders.push_back(std::make_unique<Name>(geometryGenerationShader));
@@ -80,6 +92,8 @@ struct DynamicGeneratedMesh
   int counter = 0;
   bool isCalled = false;
   bool isDynamic;
+  int sizeX, sizeY, sizeZ;
+  int sizes[4];
 };
 
 struct DynamicGeometryGeneration
@@ -87,7 +101,8 @@ struct DynamicGeometryGeneration
   static std::vector<std::unique_ptr<DynamicGeneratedMesh>>
       dynamicGenerationMeshes;
 
-  static void addDynamicGeneradtedMesh(const Name&, const Name&&, const Name&&,
+  static void addDynamicGeneradtedMesh(const int, const int, const int, 
+									   const Name&, const Name&&, const Name&&,
                                        const Name&&, bool isDynamic = true);
 
   static bool isOverridenMesh(const Name&);

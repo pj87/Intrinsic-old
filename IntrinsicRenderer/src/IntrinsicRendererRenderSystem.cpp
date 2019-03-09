@@ -180,6 +180,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
     RenderPass::VolumetricLighting::init();
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+		64, 64, 64,
 		_N(pbr_test_075),
         "perlin_noise_3d.comp", 
 		"normal_generation.comp",
@@ -187,12 +188,14 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
         _N(pbr_test_025), 
 		"julia.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp");
 	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
         _N(pbr_test_0), 
 		"mandelbulb.comp", 
 		"normal_generation.comp",

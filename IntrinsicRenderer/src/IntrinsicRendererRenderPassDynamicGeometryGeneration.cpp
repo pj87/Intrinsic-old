@@ -29,10 +29,6 @@ namespace RenderPass
 {
 namespace
 {
-const int N = 64;
-
-int sizes[] = {N, N, N, 1};
-
 float target = 0.0;
 float noiseParams[] = {0.02, 2.0, 0.5};
 
@@ -624,13 +620,16 @@ void DynamicGeometryGeneration::postInit()
 }
 
 void DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+	const int sizeX, const int sizeY, const int sizeZ,
 	const Name& meshName, const Name&& voxelGenerationShadera,
     const Name&& normalGenerationShader, const Name&& geometryGenerationShader, 
 	bool isDynamic)
 {
   std::unique_ptr<DynamicGeneratedMesh> dynamicGenerationMesh =
       std::make_unique<DynamicGeneratedMesh>(
-          std::move(meshName), std::move(voxelGenerationShadera),
+		  sizeX, sizeY, sizeZ, 
+		  std::move(meshName), 
+		  std::move(voxelGenerationShadera),
           std::move(normalGenerationShader),
           std::move(geometryGenerationShader), 
 		  isDynamic);
@@ -685,7 +684,7 @@ void DynamicGeometryGeneration::init()
         BufferManager::_descBufferType(_voxelBufferRef) = 
 			BufferType::kStorage;
         BufferManager::_descSizeInBytes(_voxelBufferRef) =
-            N * N * N * sizeof(float);
+            mesh->sizeX * mesh->sizeY * mesh->sizeZ * sizeof(float);
       }
       mesh->_voxelBufferRef = _voxelBufferRef;
       buffersToCreate.push_back(_voxelBufferRef);
@@ -700,9 +699,9 @@ void DynamicGeometryGeneration::init()
         BufferManager::_descBufferType(_sizesBufferRef) = 
 			BufferType::kStorage;
         BufferManager::_descSizeInBytes(_sizesBufferRef) = 
-			sizeof(sizes);
+			sizeof(mesh->sizes);
         BufferManager::_descInitialData(_sizesBufferRef) = 
-			sizes;
+			mesh->sizes;
       }
       mesh->_sizesBufferRef = _sizesBufferRef;
       buffersToCreate.push_back(_sizesBufferRef);
