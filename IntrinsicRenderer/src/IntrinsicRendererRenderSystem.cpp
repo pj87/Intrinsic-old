@@ -196,7 +196,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	*/
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
-        _N(pbr_test_0), 
+        _N(house), 
 		"mandelbulb.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp");

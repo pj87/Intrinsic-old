@@ -351,11 +351,12 @@ float cathedral( in vec3 pos ) {
     vec3 q = pos;
     pModMirror2(q.xz,vec2(22.));
     q.y -= 40.;
+	//q.y -= 10.;
     q.zx -= 21.;
     pR(q.yz,PI/2.);
     pR45(q.xy);
-    float d = fTorus(q,1.3,44.);
-
+    float d = fTorus(q,6.3,44.);
+	
     q = pos;
     pModMirror2(q.xz,vec2(500.));
     d = max(-fBox(q-vec3(0.,10.5,0.),vec3(500.,30.,500.)),d);
@@ -366,7 +367,7 @@ float cathedral( in vec3 pos ) {
     //q.zx += texture(iChannel0,pos.xy/50.).x*.5;
     vec2 idx = pModMirror2(q.xz,vec2(22.));
     q.xz -= 9.5;
-    d = fOpUnionStairs(d, fCylinder(q,2.,40.),4.,10.);
+    d = fOpUnionStairs(d, fCylinder(q,4.,40.),4.,10.);
     
     //ground
     //d = fOpUnionStairs(d, pos.y+40.1+texture(iChannel0,pos.xz/50.).x*.5, 5., 5.);
@@ -382,7 +383,7 @@ float cathedral( in vec3 pos ) {
     pR(q.xy,PI);
     d2 = min(d2,pyramid( q, 12. ));
     d = fOpUnionRound(d, d2,1.);
-
+	
     return d;
 }
 
