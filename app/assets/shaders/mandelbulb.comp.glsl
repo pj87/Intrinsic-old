@@ -443,6 +443,53 @@ float sponge1( in vec3 p )
     return res.x;
 }
 
+const float detail = .00002;
+float det = 0.;
+
+float de2(vec3 p) {
+    vec3 op = p;
+    p = abs(1.0 - mod(p, 2.));
+    float r = 0., power = 8., dr = 1.;
+    vec3 z = p;
+    for (int i = 0; i < 7; i++) {
+        op = -1.0 + 2.0 * fract(0.5 * op + 0.5);
+        float r2 = dot(op, op);
+        r = length(z);
+
+
+        if (r > 1.616) break;
+        float theta = acos(z.z / r);
+        float phi = atan(z.y, z.x);
+
+        dr = pow(r, power - 1.) * power * dr + 1.;
+        float zr = pow(r, power);
+        theta = theta * power;
+        phi = phi * power;
+        z = zr * vec3(sin(theta) * cos(phi), sin(phi) * sin(theta), cos(theta));
+        z += p;
+    }
+    return (.5 * log(r) * r / dr);
+}
+
+float de1(vec3 p) {
+    float s = 1.;
+    float d = 0.;
+    vec3 r = p, q = r;
+    for (int j = 0; j < 6; j++) {
+	   
+        r = max(r = abs(mod(q * s + 1., 2.) - 1.), r.yzx);
+	    
+        d = max(d, (.3 - length(r * 0.95) * .3) / s);
+	    
+	s *= 2.;
+    }
+    return d;
+}
+
+float sponge2(vec3 p) {
+    return min(de1(p), de2(p));;
+}
+
 float sdCross(vec3 p)
 {
 	// infinity doesn't exist, so 123456789. does the job
@@ -467,7 +514,9 @@ float mapScaled(vec3 p, vec4 c)
 	//return cathedral(p/0.000025f) * 0.000025f;
 	//return sponge1(p / 0.0025) * 0.0025;
 	
-	return dist2nearest(p / 0.0025) * 0.0025;
+	//return dist2nearest(p / 0.0025) * 0.0025;
+	
+	return sponge2(p / 0.0025) * 0.0025;
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
