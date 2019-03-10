@@ -379,7 +379,7 @@ float cathedral( in vec3 pos ) {
     q.zx += 11.;
     pModMirror2(q.xz,vec2(44.));
     pR45(q.xz);
-    float d2 = pyramid( q, 12. );
+    float d2 = pyramid( q, 32. );
     pR(q.xy,PI);
     d2 = min(d2,pyramid( q, 12. ));
     d = fOpUnionRound(d, d2,1.);
