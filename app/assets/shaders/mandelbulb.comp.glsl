@@ -661,7 +661,7 @@ float dTiles(vec3 p)
 
 float cathedral2(vec3 p)
 {
-	//globalRadial = atan(p.x, p.z);
+	globalRadial = atan(p.x, p.z);
 	// set up repeating spaces for pillars and arches
 	vec3 c = vec3(1.0, 1.0, 1.0)* 4.0;
 	float c2 = 5.2;
@@ -672,7 +672,7 @@ float cathedral2(vec3 p)
 
 	float final = -sdCapsule(p, vec3(0.0,-0.5,0.0), vec3(0.0,2.25,0.0), 3.0);
 	// This if condition is for a culling speedup and a cool bevel effect on the ceiling tiles.
-	if (final < 0.01) final = max(final, -dTiles(p + vec3(0.0, -2.25, 0.0)));
+	final = max(final, -dTiles(p + vec3(0.0, -2.75, 0.0)));
 	final = min(final, sdTorusBricks(p, vec2(2.75, 0.25), vec3(0.0, -0.795, 0.0), 12.0));
 	final = max(final, -sdCapsule(p, vec3(-6.0,0.0,0.0), vec3(6.0,0.0,0.0), 2.0));
 	final = max(final, -sdCapsule(p, vec3(0.0,0.0,-16.0), vec3(0.0,0.0,16.0), 2.0));
