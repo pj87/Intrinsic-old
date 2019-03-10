@@ -443,6 +443,21 @@ float sponge1( in vec3 p )
     return res.x;
 }
 
+float sdCross(vec3 p)
+{
+	// infinity doesn't exist, so 123456789. does the job
+	return min(sdBox(p, vec3(123456789., 1., 1.)),
+			   min(sdBox(p, vec3(1., 123456789., 1.)),
+			   sdBox(p, vec3(1., 1., 123456789.))));
+}
+
+float dist2nearest(vec3 p)
+{
+	// repeat the cross with 1. between each in every direction
+	vec3 q = mod(p, 1.) - .5;
+	return sdCross(q * 27.) / 27.;
+}
+
 float mapScaled(vec3 p, vec4 c)
 {
 	//return map2(p/0.0025f, c) * 0.0025f;
@@ -450,7 +465,9 @@ float mapScaled(vec3 p, vec4 c)
 	//return cathedral(p/0.0025f) * 0.0025f;
 	//return cathedral(p/100.0f) * 100.0f;
 	//return cathedral(p/0.000025f) * 0.000025f;
-	return sponge1(p / 0.0025) * 0.0025;
+	//return sponge1(p / 0.0025) * 0.0025;
+	
+	return dist2nearest(p / 0.0025) * 0.0025;
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
