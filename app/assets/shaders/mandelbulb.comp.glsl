@@ -367,7 +367,7 @@ float cathedral( in vec3 pos ) {
     //q.zx += texture(iChannel0,pos.xy/50.).x*.5;
     vec2 idx = pModMirror2(q.xz,vec2(22.));
     q.xz -= 9.5;
-    d = fOpUnionStairs(d, fCylinder(q,4.,40.),4.,10.);
+    d = fOpUnionStairs(d, fCylinder(q,6.,40.),4.,10.);
     
     //ground
     //d = fOpUnionStairs(d, pos.y+40.1+texture(iChannel0,pos.xz/50.).x*.5, 5., 5.);
