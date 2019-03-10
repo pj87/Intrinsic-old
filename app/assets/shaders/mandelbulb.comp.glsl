@@ -451,7 +451,7 @@ float de2(vec3 p) {
     p = abs(1.0 - mod(p, 2.));
     float r = 0., power = 8., dr = 1.;
     vec3 z = p;
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 2; i++) {
         op = -1.0 + 2.0 * fract(0.5 * op + 0.5);
         float r2 = dot(op, op);
         r = length(z);
@@ -516,7 +516,7 @@ float mapScaled(vec3 p, vec4 c)
 	
 	//return dist2nearest(p / 0.0025) * 0.0025;
 	
-	return sponge2(p / 0.0025) * 0.0025;
+	return sponge2(p / 0.001) * 0.001;
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
