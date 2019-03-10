@@ -2,6 +2,8 @@
 // http://blog.db-in.com/calculating-normals-and-tangent-space/
 // https://answers.unity.com/questions/731821/how-do-i-calculate-the-uvs-for-a-procedurally-gene.html
 // https://forum.unity.com/threads/going-crazy-on-uv-calculation-for-procedural-mesh.246872/
+// https://catlikecoding.com/unity/tutorials/advanced-rendering/triplanar-mapping/
+// https://medium.com/@bgolus/normal-mapping-for-a-triplanar-shader-10bf39dca05a
 
 #version 450
 
