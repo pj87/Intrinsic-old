@@ -387,6 +387,57 @@ float cathedral( in vec3 pos ) {
     return d;
 }
 
+// Regular Menger Sponge formula. Very simple, but if you're not sure, look it
+// up on Wikipedia, and look up a Void Cube image.
+float sponge(vec3 q){
+    
+    vec3 p;
+	// Scale factor, and distance.
+    float s = 3., d = 0.;
+    
+    for(int i=0; i<3; i++){
+ 		// Repeat space.
+        p = abs(fract(q/s)*s - s/2.); // Equivalent to: p = abs(mod(q, s) - s/2.);
+		// Repeat Void Cubes. Cubes with a cross taken out.
+ 		d = max(d, min(max(p.x, p.y), min(max(p.y, p.z), max(p.x, p.z))) - s/3.);
+    	s /= 3.; // Divide space (each dimension) by 3.
+    }
+ 
+ 	return d;    
+}
+
+float sponge1( in vec3 p )
+{
+    float d = sdBox(p,vec3(1.0));
+    vec4 res = vec4( d, 1.0, 0.0, 0.0 );
+	
+    //float ani = smoothstep( -0.2, 0.2, -cos(0.5*iTime) );
+	//float off = 1.5*sin( 0.01*iTime );
+	float ani = 0.0f;
+	float off = 0.0f;
+	
+    float s = 1.0;
+    for( int m=0; m<4; m++ )
+    {
+        //p = mix( p, ma*(p+off), ani );
+	   
+        vec3 a = mod( p*s, 2.0 )-1.0;
+        s *= 3.0;
+        vec3 r = abs(1.0 - 3.0*abs(a));
+        float da = max(r.x,r.y);
+        float db = max(r.y,r.z);
+        float dc = max(r.z,r.x);
+        float c = (min(da,min(db,dc))-1.0)/s;
+
+        if( c>d )
+        {
+          d = c;
+          res = vec4( d, min(res.y,0.2*da*db*dc), (1.0+float(m))/4.0, 0.0 );
+        }
+    }
+	
+    return res.x;
+}
 
 float mapScaled(vec3 p, vec4 c)
 {
@@ -394,7 +445,8 @@ float mapScaled(vec3 p, vec4 c)
 	//return map3(p/0.0025f) * 0.0025f;
 	//return cathedral(p/0.0025f) * 0.0025f;
 	//return cathedral(p/100.0f) * 100.0f;
-	return cathedral(p/0.000025f) * 0.000025f;
+	//return cathedral(p/0.000025f) * 0.000025f;
+	return sponge1(p / 0.0025) * 0.0025;
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
