@@ -406,20 +406,24 @@ float sponge(vec3 q){
  	return d;    
 }
 
+const mat3 ma = mat3( 0.60, 0.00,  0.80,
+                      0.00, 1.00,  0.00,
+                     -0.80, 0.00,  0.60 );
+
 float sponge1( in vec3 p )
 {
     float d = sdBox(p,vec3(1.0));
     vec4 res = vec4( d, 1.0, 0.0, 0.0 );
 	
-    //float ani = smoothstep( -0.2, 0.2, -cos(0.5*iTime) );
-	//float off = 1.5*sin( 0.01*iTime );
-	float ani = 0.0f;
-	float off = 0.0f;
+	const float iTime = _Frequency;
+	
+    float ani = smoothstep( -0.2, 0.2, -cos(0.5*iTime) );
+	float off = 1.5*sin( 0.01*iTime );
 	
     float s = 1.0;
-    for( int m=0; m<4; m++ )
+    for( int m=0; m<3; m++ )
     {
-        //p = mix( p, ma*(p+off), ani );
+        p = mix( p, ma*(p+off), ani );
 	   
         vec3 a = mod( p*s, 2.0 )-1.0;
         s *= 3.0;
