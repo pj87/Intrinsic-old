@@ -75,6 +75,7 @@ struct DynamicGeneratedMesh
   BufferRef _triangleConnectionBufferRef;
   BufferRef _sizesBufferRef;
   BufferRef _targetBufferRef;
+  BufferRef _uv0OffsetBufferRef;
   BufferRef _noiseParametersRef;
 
   ImageRef _normalsImageRef;

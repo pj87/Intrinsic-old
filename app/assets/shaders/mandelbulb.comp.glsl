@@ -153,6 +153,11 @@ float sdTorus( vec3 p, vec2 t )
   return length(q)-t.y;
 }
 
+float sdPlane( vec3 p )
+{
+	return p.y;
+}
+
 /*
 float map(vec3 p, vec4 c)
 {
@@ -707,7 +712,9 @@ float mapScaled(vec3 p, vec4 c)
 	
 	//return sponge2(p / 0.001) * 0.001;
 	
-	return cathedral2(p / 0.0005) * 0.0005;
+	//return cathedral2(p / 0.0005) * 0.0005;
+	
+	return sdPlane(p);
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;

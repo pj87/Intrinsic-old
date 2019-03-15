@@ -29,6 +29,7 @@ namespace RenderPass
 {
 namespace
 {
+float offset = 0.0;
 float target = 0.0;
 float noiseParams[] = {0.02, 2.0, 0.5};
 
@@ -398,6 +399,10 @@ _INTR_INLINE ComputeCallRef createComputeCallPolygonization(
         computeCallPloygonizationRef, _N(_TargetBuffer), GpuProgramType::kCompute,
         mesh->_targetBufferRef, UboType::kPerInstanceCompute,
         BufferManager::_descSizeInBytes(mesh->_targetBufferRef));
+    ComputeCallManager::bindBuffer(
+        computeCallPloygonizationRef, _N(_UVOffsetBuffer), GpuProgramType::kCompute,
+        mesh->_uv0OffsetBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(mesh->_uv0OffsetBufferRef));
   }
 
   return computeCallPloygonizationRef;
@@ -723,6 +728,25 @@ void DynamicGeometryGeneration::init()
       mesh->_targetBufferRef = _targetBufferRef;
       buffersToCreate.push_back(_targetBufferRef);
 
+	  BufferRef _uv0OffsetBufferRef =
+          BufferManager::createBuffer(_N(_UVOffset));
+      {
+        BufferManager::resetToDefault(_uv0OffsetBufferRef);
+        BufferManager::addResourceFlags(
+            _uv0OffsetBufferRef,
+            Dod::Resources::ResourceFlags::kResourceVolatile);
+        BufferManager::_descBufferType(_uv0OffsetBufferRef) =
+            BufferType::kStorage;
+        BufferManager::_descMemoryPoolType(_uv0OffsetBufferRef) =
+            MemoryPoolType::kStaticStagingBuffers;
+        BufferManager::_descSizeInBytes(_uv0OffsetBufferRef) = 
+			sizeof(float);
+        BufferManager::_descInitialData(_uv0OffsetBufferRef) = 
+			&offset;
+      }
+      mesh->_uv0OffsetBufferRef = _uv0OffsetBufferRef;
+      buffersToCreate.push_back(_uv0OffsetBufferRef);
+
       BufferRef _cubeEdgeFlagsBufferRef =
           BufferManager::createBuffer(_N(_CubeEdgeFlags));
       {
@@ -847,6 +871,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   _INTR_PROFILE_GPU("Dynamic Geometry Generation");
 
   noiseParams[0] += p_DeltaT;
+  offset += p_DeltaT;
 
   for (auto& mesh : dynamicGenerationMeshes)
   {
@@ -854,6 +879,10 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 	{
 	  BufferRef buffer = mesh->_noiseParametersRef;
       updateDataMemory(noiseParams, buffer,
+                       BufferManager::_descSizeInBytes(buffer), 0);
+
+	  buffer = mesh->_uv0OffsetBufferRef;
+      updateDataMemory(&offset, buffer,
                        BufferManager::_descSizeInBytes(buffer), 0);
 	}
 	else
