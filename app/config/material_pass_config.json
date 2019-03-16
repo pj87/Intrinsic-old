@@ -137,7 +137,7 @@
     },
 	{
       "name" : "GBufferGenerated",
-      "baseVertexGpuProgram" : "gbuffer.vert",
+      "baseVertexGpuProgram" : "gbuffer_generated.vert",
       "baseFragmentGpuProgram" : "gbuffer_generated.frag",
       "renderPass" : "GBuffer",
       "blendStates" : ["Default", "Default", "Default"],
