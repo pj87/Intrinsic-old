@@ -9,7 +9,7 @@
             "PerPixelPicking"
         ],
         "albedoTextureName": "concrete",
-		"emissiveTextureName": "concrete",
+		"emissiveTextureName": "terrain_rock",
         "uvOffsetScale": [
             0.0,
             0.0,
@@ -22,8 +22,8 @@
         ],
         "translucencyThickness": 0.0,
 		"emissiveIntensity": 3.0,
-        "normalTextureName": "concrete_NRM",
-        "pbrTextureName": "concrete_PBR",
+        "normalTextureName": "terrain_rock",
+        "pbrTextureName": "terrain_rock",
         "emissiveIntensity": 1.0,
         "metalMaskBias": 0.0,
         "roughnessBias": 0.0,
