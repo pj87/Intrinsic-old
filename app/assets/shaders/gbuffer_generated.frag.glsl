@@ -35,10 +35,21 @@ layout(location = 1) in vec3 inTangent;
 layout(location = 2) in vec3 inBinormal;
 layout(location = 3) in vec3 inColor;
 layout(location = 4) in vec2 inUV0;
-layout(location = 5) in vec3 inPosition;
+layout(location = 5) in vec4 inPosition;
 
 // Output
 OUTPUT
+
+vec4 tex3d(vec3 pos, vec3 normal)
+{
+	// loook up brick texture, blended across xyz axis based on normal.
+	vec4 texX = texture(albedoTex, pos.yz);
+	vec4 texY = texture(albedoTex, pos.xz);
+	vec4 texZ = texture(albedoTex, pos.xy);
+	vec4 tex = mix(texX, texZ, abs(normal.z));
+	tex = mix(tex, texY, abs(normal.y));//.zxyw;
+	return tex;
+}
 
 void main()
 {
@@ -49,8 +60,9 @@ void main()
   {
 	//gbuffer.albedo = vec4(inColor, 1.0) + 0.000001 * texture(albedoTex, uv0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = 0.000001 * vec4(inColor, 1.0) + texture(albedoTex, uv0) * uboPerInstance.colorTint;
-	
-	gbuffer.albedo = vec4(inColor, 1.0) + texture(albedoTex, uv0) * uboPerInstance.colorTint;
+	//gbuffer.albedo = vec4(inColor, 1.0) + texture(albedoTex, uv0) * uboPerInstance.colorTint;
+	gbuffer.albedo = vec4(inColor, 1.0) + tex3d(inPosition.xyz, inNormal) * uboPerInstance.colorTint;
+	/*
 	gbuffer.normal = normalize(TBN * textureNormal(normalTex, uv0));
     const vec2 pbr = texture(pbrTex, uv0).rg;
     gbuffer.metalMask = pbr.r + uboPerMaterial.pbrBias.r;
@@ -60,6 +72,7 @@ void main()
     gbuffer.materialBufferIdx = uboPerMaterial.data0.x;
     gbuffer.emissive = texture(emissiveTex, uv0).r;
     gbuffer.occlusion = 1.0;
+	*/
   }
   writeGBuffer(gbuffer, outAlbedo, outNormal, outParameter0);
 }
