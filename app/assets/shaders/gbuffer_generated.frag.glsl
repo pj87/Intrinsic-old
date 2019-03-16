@@ -46,9 +46,15 @@ vec4 tex3d(vec3 pos, vec3 normal)
 	vec4 texX = texture(albedoTex, pos.yz);
 	vec4 texY = texture(albedoTex, pos.xz);
 	vec4 texZ = texture(albedoTex, pos.xy);
-	vec4 tex = mix(texX, texZ, abs(normal.z));
-	tex = mix(tex, texY, abs(normal.y));//.zxyw;
-	return tex;
+	//vec4 tex = mix(texX, texZ, abs(normal.z));
+	//tex = mix(tex, texY, abs(normal.y));//.zxyw;
+	
+	vec3 avgNormal = abs(normal);
+	avgNormal / (avgNormal.x + avgNormal.y + avgNormal.z);
+	
+	vec4 albedo = texX * avgNormal.x + texY * avgNormal.y + texZ * avgNormal.z;
+	
+	return albedo;
 }
 
 void main()
