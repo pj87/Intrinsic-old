@@ -8,8 +8,8 @@
             "Shadow",
             "PerPixelPicking"
         ],
-        "albedoTextureName": "house_01",
-		"emissiveTextureName": "house_01_E",
+        "albedoTextureName": "concrete",
+		"emissiveTextureName": "concrete",
         "uvOffsetScale": [
             0.0,
             0.0,
@@ -22,8 +22,8 @@
         ],
         "translucencyThickness": 0.0,
 		"emissiveIntensity": 3.0,
-        "normalTextureName": "house_01_NRM",
-        "pbrTextureName": "house_01_PBR",
+        "normalTextureName": "concrete_NRM",
+        "pbrTextureName": "concrete_PBR",
         "emissiveIntensity": 1.0,
         "metalMaskBias": 0.0,
         "roughnessBias": 0.0,
