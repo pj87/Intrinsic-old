@@ -290,21 +290,21 @@ void main()
 			storePosition(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 0), v0.normal);
 			//storeColor(idx * 15 + (3 * i + 0), vec4(clamp(v0.position.xyz, vec3(0.0), vec3(1.0)), 1.0));
-			storeUV(idx * 15 + (3 * i + 0), clamp(v0.position.xz, vec2(0.0), vec2(1.0)));
+			storeUV(idx * 15 + (3 * i + 0), clamp(v0.position.xz / div, vec2(0.0), vec2(1.0)));
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
 			Vert v1 = CreateVertex(position, centre, size);
 			storePosition(idx * 15 + (3 * i + 1), v1.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 1), v1.normal);
 			//storeColor(idx * 15 + (3 * i + 1), vec4(clamp(v1.position.xyz, vec3(0.0), vec3(1.0)), 1.0));
-			storeUV(idx * 15 + (3 * i + 1), clamp(v1.position.xz, vec2(0.0), vec2(1.0)));
+			storeUV(idx * 15 + (3 * i + 1), clamp(v1.position.xz / div, vec2(0.0), vec2(1.0)));
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
 			Vert v2 = CreateVertex(position, centre, size);
 			storePosition(idx * 15 + (3 * i + 2), v2.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 2), v2.normal);
 			//storeColor(idx * 15 + (3 * i + 2), vec4(clamp(v2.position.xyz, vec3(0.0), vec3(1.0)), 1.0));
-			storeUV(idx * 15 + (3 * i + 2), clamp(v2.position.xz, vec2(0.0), vec2(1.0)));
+			storeUV(idx * 15 + (3 * i + 2), clamp(v2.position.xz / div, vec2(0.0), vec2(1.0)));
 			
 			vec3 tangent0 = normalize(v0.position.xyz - v2.position.xyz);
 			vec3 tangent1 = normalize(v1.position.xyz - v2.position.xyz);
