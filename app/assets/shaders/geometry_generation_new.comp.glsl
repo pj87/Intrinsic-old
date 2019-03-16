@@ -297,8 +297,8 @@ void main()
 			uvY = clamp((v0.position.xz + 32.0) / div, vec2(0.0), vec2(1.0));
 			uvZ = clamp((v0.position.xy + 32.0) / div, vec2(0.0), vec2(1.0));
 			uv = mix(uvX, uvZ, abs(v0.normal.z));
-			uv = mix(uvX, uvY, abs(v0.normal.y));
-			
+			uv += mix(uvX, uvY, abs(v0.normal.y));
+			//uv = uvX;
 			
 			storePosition(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 0), v0.normal);
@@ -313,7 +313,8 @@ void main()
 			uvY = clamp((v1.position.xz + 32.0) / div, vec2(0.0), vec2(1.0));
 			uvZ = clamp((v1.position.xy + 32.0) / div, vec2(0.0), vec2(1.0));
 			uv = mix(uvX, uvZ, abs(v1.normal.z));
-			uv = mix(uvX, uvY, abs(v1.normal.y));
+			uv += mix(uvX, uvY, abs(v1.normal.y));
+			//uv = uvX;
 			
 			storePosition(idx * 15 + (3 * i + 1), v1.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 1), v1.normal);
@@ -328,7 +329,8 @@ void main()
 			uvY = clamp((v2.position.xz + 32.0) / div, vec2(0.0), vec2(1.0));
 			uvZ = clamp((v2.position.xy + 32.0) / div, vec2(0.0), vec2(1.0));
 			uv = mix(uvX, uvZ, abs(v2.normal.z));
-			uv = mix(uvX, uvY, abs(v2.normal.y));
+			uv += mix(uvX, uvY, abs(v2.normal.y));
+			//uv = uvX;
 			
 			storePosition(idx * 15 + (3 * i + 2), v2.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 2), v2.normal);
