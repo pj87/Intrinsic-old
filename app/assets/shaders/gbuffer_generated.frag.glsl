@@ -46,8 +46,8 @@ void main()
 
   GBuffer gbuffer;
   {
-	//gbuffer.albedo = vec4(inColor, 1.0) + 0.000001 * texture(albedoTex, uv0) * uboPerInstance.colorTint;
-	gbuffer.albedo = 0.000001 * vec4(inColor, 1.0) + texture(albedoTex, uv0) * uboPerInstance.colorTint;
+	gbuffer.albedo = vec4(inColor, 1.0) + 0.000001 * texture(albedoTex, uv0) * uboPerInstance.colorTint;
+	//gbuffer.albedo = 0.000001 * vec4(inColor, 1.0) + texture(albedoTex, uv0) * uboPerInstance.colorTint;
 	/*
 	gbuffer.normal = normalize(TBN * textureNormal(normalTex, uv0));
     const vec2 pbr = texture(pbrTex, uv0).rg;
