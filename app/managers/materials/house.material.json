@@ -9,6 +9,7 @@
             "PerPixelPicking"
         ],
         "albedoTextureName": "house_01",
+		"emissiveTextureName": "house_01_E",
         "uvOffsetScale": [
             0.0,
             0.0,
@@ -20,6 +21,9 @@
             0.0
         ],
         "translucencyThickness": 0.0,
+		"emissiveIntensity": 3.0,
+        "normalTextureName": "house_01_NRM",
+        "pbrTextureName": "house_01_PBR",
         "emissiveIntensity": 1.0,
         "metalMaskBias": 0.0,
         "roughnessBias": 0.0,
