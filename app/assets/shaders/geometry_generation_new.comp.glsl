@@ -278,6 +278,8 @@ void main()
 	{
 		vec3 position;
 		
+		float div = 64.0f;
+		
 		//If the connection table is not -1 then this a triangle.
 		if (_TriangleConnectionTable[flagIndex * 16 + 3 * i] >= 0)
 		{	
@@ -287,25 +289,28 @@ void main()
 			Vert v0 = CreateVertex(position, centre, size);
 			storePosition(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 0), v0.normal);
-			storeColor(idx * 15 + (3 * i + 0), vec4(1.0, 0.0, 0.0, 1.0));
-			storeUV(idx * 15 + (3 * i + 1), v0.position.xz);
+			//storeColor(idx * 15 + (3 * i + 0), vec4(v0.position.x / div, 0.0, 0.0, 1.0));
+			storeColor(idx * 15 + (3 * i + 0), vec4(normalize(v0.position.xyz), 1.0));
+			storeUV(idx * 15 + (3 * i + 0), normalize(v0.position.xz));
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
 			Vert v1 = CreateVertex(position, centre, size);
 			storePosition(idx * 15 + (3 * i + 1), v1.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 1), v1.normal);
-			storeColor(idx * 15 + (3 * i + 1), vec4(0.0, 0.0, 1.0, 1.0));
+			//storeColor(idx * 15 + (3 * i + 1), vec4(v1.position.x / div, 0.0, 0.0, 1.0));
+			storeColor(idx * 15 + (3 * i + 1), vec4(normalize(v1.position.xyz), 1.0));
 			//storeUV(idx * 15 + (3 * i + 1), sin(vec2(id.z, id.y)));
-			//storeUV(idx * 15 + (3 * i + 1), v1.position.xz);
+			storeUV(idx * 15 + (3 * i + 1), normalize(v1.position.xz));
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
 			Vert v2 = CreateVertex(position, centre, size);
 			storePosition(idx * 15 + (3 * i + 2), v2.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 2), v2.normal);
-			storeColor(idx * 15 + (3 * i + 2), vec4(0.0, 1.0, 0.0, 1.0));
+			//storeColor(idx * 15 + (3 * i + 2), vec4(v2.position.x / div, 0.0, 0.0, 1.0));
+			storeColor(idx * 15 + (3 * i + 2), vec4(normalize(v2.position.xyz), 1.0));
 			//storeUV(idx * 15 + (3 * i + 2), sin(vec2(id.x, id.z)));
 			//storeUV(idx * 15 + (3 * i + 2), vec2(0.5));
-			//storeUV(idx * 15 + (3 * i + 1), v2.position.xz);
+			storeUV(idx * 15 + (3 * i + 2), normalize(v2.position.xz));
 			
 			vec3 tangent0 = normalize(v0.position.xyz - v2.position.xyz);
 			vec3 tangent1 = normalize(v1.position.xyz - v2.position.xyz);
