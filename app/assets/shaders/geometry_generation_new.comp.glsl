@@ -272,6 +272,11 @@ void main()
 	for (i = 0; i < 5; i++)
 	{
 		vec3 position;
+		float div = 64.0f;
+		vec2 uvX;
+		vec2 uvY;
+		vec2 uvZ;
+		vec2 uv;
 		
 		//If the connection table is not -1 then this a triangle.
 		if (_TriangleConnectionTable[flagIndex * 16 + 3 * i] >= 0)
@@ -280,21 +285,39 @@ void main()
 			vec4 color = vec4(sin(id.x / 10.0), cos(id.y / 10.0), sin(id.z / 10.0), 1.0);
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
 			Vert v0 = CreateVertex(position, centre, size);
+			uvX = clamp((v0.position.yz + 32.0) / div, vec2(0.0), vec2(1.0));
+			uvY = clamp((v0.position.xz + 32.0) / div, vec2(0.0), vec2(1.0));
+			uvZ = clamp((v0.position.xy + 32.0) / div, vec2(0.0), vec2(1.0));
+			uv = mix(uvX, uvZ, abs(v0.normal.z));
+			uv = mix(uv, uvY, abs(v0.normal.y));
 			storePosition(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 0), v0.normal);
-			storeColor(idx * 15 + (3 * i + 0), color);
+			storeColor(idx * 15 + (3 * i + 0), vec4(0.2 * sin(v0.position.xyz), 1.0));
+			storeUV(idx * 15 + (3 * i + 0), uv);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
 			Vert v1 = CreateVertex(position, centre, size);
+			uvX = clamp((v1.position.yz + 32.0) / div, vec2(0.0), vec2(1.0));
+			uvY = clamp((v1.position.xz + 32.0) / div, vec2(0.0), vec2(1.0));
+			uvZ = clamp((v1.position.xy + 32.0) / div, vec2(0.0), vec2(1.0));
+			uv = mix(uvX, uvZ, abs(v1.normal.z));
+			uv = mix(uv, uvY, abs(v1.normal.y));
 			storePosition(idx * 15 + (3 * i + 1), v1.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 1), v1.normal);
-			storeColor(idx * 15 + (3 * i + 1), color);
+			storeColor(idx * 15 + (3 * i + 1), vec4(0.2 * sin(v1.position.xyz), 1.0));
+			storeUV(idx * 15 + (3 * i + 1), uv);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
 			Vert v2 = CreateVertex(position, centre, size);
+			uvX = clamp((v2.position.yz + 32.0) / div, vec2(0.0), vec2(1.0));
+			uvY = clamp((v2.position.xz + 32.0) / div, vec2(0.0), vec2(1.0));
+			uvZ = clamp((v2.position.xy + 32.0) / div, vec2(0.0), vec2(1.0));
+			uv = mix(uvX, uvZ, abs(v2.normal.z));
+			uv = mix(uv, uvY, abs(v2.normal.y));
 			storePosition(idx * 15 + (3 * i + 2), v2.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 2), v2.normal);
-			storeColor(idx * 15 + (3 * i + 2), color);
+			storeColor(idx * 15 + (3 * i + 2), vec4(0.2 * sin(v2.position.xyz), 1.0));
+			storeUV(idx * 15 + (3 * i + 2), uv);
 			
 			vec3 tangent0 = normalize(v0.position.xyz - v2.position.xyz);
 			vec3 tangent1 = normalize(v1.position.xyz - v2.position.xyz);
