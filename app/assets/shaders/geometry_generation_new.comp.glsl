@@ -298,12 +298,10 @@ void main()
 			uvZ = clamp((v0.position.xy + 32.0) / div, vec2(0.0), vec2(1.0));
 			uv = mix(uvX, uvZ, abs(v0.normal.z));
 			uv = mix(uv, uvY, abs(v0.normal.y));
-			//uv = uvX;
 			
 			storePosition(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 0), v0.normal);
-			//storeColor(idx * 15 + (3 * i + 0), vec4(clamp(v0.position.xyz, vec3(0.0), vec3(1.0)), 1.0));
-			//storeUV(idx * 15 + (3 * i + 0), clamp((v0.position.zy + 32.0) / div, vec2(0.0), vec2(1.0)));
+			storeColor(idx * 15 + (3 * i + 0), vec4(0.2 * sin(v0.position.xyz), 1.0));
 			storeUV(idx * 15 + (3 * i + 0), uv);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
@@ -314,12 +312,10 @@ void main()
 			uvZ = clamp((v1.position.xy + 32.0) / div, vec2(0.0), vec2(1.0));
 			uv = mix(uvX, uvZ, abs(v1.normal.z));
 			uv = mix(uv, uvY, abs(v1.normal.y));
-			//uv = uvX;
 			
 			storePosition(idx * 15 + (3 * i + 1), v1.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 1), v1.normal);
-			//storeColor(idx * 15 + (3 * i + 1), vec4(clamp(v1.position.xyz, vec3(0.0), vec3(1.0)), 1.0));
-			//storeUV(idx * 15 + (3 * i + 1), clamp((v1.position.zy + 32.0) / div, vec2(0.0), vec2(1.0)));
+			storeColor(idx * 15 + (3 * i + 1), vec4(0.2 * sin(v1.position.xyz), 1.0));
 			storeUV(idx * 15 + (3 * i + 1), uv);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
@@ -330,12 +326,10 @@ void main()
 			uvZ = clamp((v2.position.xy + 32.0) / div, vec2(0.0), vec2(1.0));
 			uv = mix(uvX, uvZ, abs(v2.normal.z));
 			uv = mix(uv, uvY, abs(v2.normal.y));
-			//uv = uvX;
 			
 			storePosition(idx * 15 + (3 * i + 2), v2.position.xyz / 10.0);
 			storeNormal(idx * 15 + (3 * i + 2), v2.normal);
-			//storeColor(idx * 15 + (3 * i + 2), vec4(clamp(v2.position.xyz, vec3(0.0), vec3(1.0)), 1.0));
-			storeUV(idx * 15 + (3 * i + 2), clamp((v2.position.zy + 32.0) / div, vec2(0.0), vec2(1.0)));
+			storeColor(idx * 15 + (3 * i + 2), vec4(0.2 * sin(v2.position.xyz), 1.0));
 			storeUV(idx * 15 + (3 * i + 2), uv);
 			
 			vec3 tangent0 = normalize(v0.position.xyz - v2.position.xyz);
