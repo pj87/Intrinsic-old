@@ -175,7 +175,7 @@
                 "properties": {
                     "localPos": [
                         -843.8748779296875,
-                        -150257536.0,
+                        -150556992.0,
                         -761.631103515625
                     ],
                     "localOrient": [
@@ -191,7 +191,7 @@
                     ],
                     "worldPos": [
                         -843.8748779296875,
-                        -150257536.0,
+                        -150556992.0,
                         -761.631103515625
                     ],
                     "worldOrient": [
@@ -208,13 +208,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 5,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "sphere",
@@ -225,6 +218,13 @@
                         1.0
                     ]
                 }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 5,
+                    "density": 1.0
+                }
             }
         ]
     },
@@ -232,6 +232,43 @@
         "name": "TownProbe3",
         "offsetToParent": -4,
         "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        -1055.75,
+                        572.75,
+                        -278.25
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "worldPos": [
+                        -1055.75,
+                        572.75,
+                        -278.25
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
             {
                 "type": "IrradianceProbe",
                 "properties": {
@@ -474,14 +511,20 @@
                         ]
                     ]
                 }
-            },
+            }
+        ]
+    },
+    {
+        "name": "TownProbe2",
+        "offsetToParent": -5,
+        "propertyEntries": [
             {
                 "type": "Node",
                 "properties": {
                     "localPos": [
                         -1055.75,
                         572.75,
-                        -278.25
+                        -210.5
                     ],
                     "localOrient": [
                         0.0,
@@ -497,7 +540,7 @@
                     "worldPos": [
                         -1055.75,
                         572.75,
-                        -278.25
+                        -210.5
                     ],
                     "worldOrient": [
                         0.0,
@@ -511,13 +554,7 @@
                         1.0
                     ]
                 }
-            }
-        ]
-    },
-    {
-        "name": "TownProbe2",
-        "offsetToParent": -5,
-        "propertyEntries": [
+            },
             {
                 "type": "IrradianceProbe",
                 "properties": {
@@ -760,43 +797,6 @@
                         ]
                     ]
                 }
-            },
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        -1055.75,
-                        572.75,
-                        -210.5
-                    ],
-                    "localOrient": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "localSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "worldPos": [
-                        -1055.75,
-                        572.75,
-                        -210.5
-                    ],
-                    "worldOrient": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "worldSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
             }
         ]
     },
@@ -842,13 +842,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "house_5",
@@ -858,6 +851,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -904,13 +904,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "house_3",
@@ -920,6 +913,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -1015,13 +1015,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "house",
@@ -1031,6 +1024,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -1077,13 +1077,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "barrel",
@@ -1093,6 +1086,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -1259,10 +1259,10 @@
                         -231.75
                     ],
                     "localOrient": [
-                        0.3448696732521057,
-                        -0.5308140516281128,
-                        -0.2419556826353073,
-                        -0.7566105127334595
+                        0.18113672733306886,
+                        0.8344519138336182,
+                        0.3803512454032898,
+                        -0.3973811864852905
                     ],
                     "localSize": [
                         3.0,
@@ -1275,22 +1275,16 @@
                         -231.75
                     ],
                     "worldOrient": [
-                        0.3448696732521057,
-                        -0.5308140516281128,
-                        -0.2419556826353073,
-                        -0.7566105127334595
+                        0.18113672733306886,
+                        0.8344519138336182,
+                        0.3803512454032898,
+                        -0.3973811864852905
                     ],
                     "worldSize": [
                         3.0,
                         3.0,
                         3.0
                     ]
-                }
-            },
-            {
-                "type": "Script",
-                "properties": {
-                    "scriptName": "rotate"
                 }
             },
             {
@@ -1303,6 +1297,12 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "Script",
+                "properties": {
+                    "scriptName": "rotate"
                 }
             }
         ]
@@ -1349,6 +1349,14 @@
                 }
             },
             {
+                "type": "Camera",
+                "properties": {
+                    "fov": 80.0,
+                    "nearPlane": 1.0,
+                    "farPlane": 10000.0
+                }
+            },
+            {
                 "type": "CameraController",
                 "properties": {
                     "cameraControllerType": 0,
@@ -1358,14 +1366,6 @@
                         8.106780052185059,
                         0.0
                     ]
-                }
-            },
-            {
-                "type": "Camera",
-                "properties": {
-                    "fov": 80.0,
-                    "nearPlane": 1.0,
-                    "farPlane": 10000.0
                 }
             }
         ]
@@ -1412,16 +1412,6 @@
                 }
             },
             {
-                "type": "CharacterController",
-                "properties": {}
-            },
-            {
-                "type": "Player",
-                "properties": {
-                    "playerId": 0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "rabbit",
@@ -1432,6 +1422,16 @@
                         1.0
                     ]
                 }
+            },
+            {
+                "type": "Player",
+                "properties": {
+                    "playerId": 0
+                }
+            },
+            {
+                "type": "CharacterController",
+                "properties": {}
             }
         ]
     },
@@ -1673,13 +1673,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 2,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "terrain",
@@ -1689,6 +1682,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 2,
+                    "density": 1.0
                 }
             }
         ]
@@ -1701,15 +1701,15 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        -939.5630493164063,
-                        574.4939575195313,
-                        -268.5003662109375
+                        -935.9974365234375,
+                        580.35400390625,
+                        -246.4801025390625
                     ],
                     "localOrient": [
-                        -0.027689659968018533,
-                        -0.5591530799865723,
-                        -0.01869015581905842,
-                        0.8283910751342773
+                        -0.10578357428312302,
+                        0.01825099065899849,
+                        0.0019418817246332765,
+                        0.9942197799682617
                     ],
                     "localSize": [
                         0.0,
@@ -1717,15 +1717,15 @@
                         0.0
                     ],
                     "worldPos": [
-                        -939.5630493164063,
-                        574.4939575195313,
-                        -268.5003662109375
+                        -935.9974365234375,
+                        580.35400390625,
+                        -246.4801025390625
                     ],
                     "worldOrient": [
-                        -0.027689659968018533,
-                        -0.5591530799865723,
-                        -0.01869015581905842,
-                        0.8283910751342773
+                        -0.10578357428312302,
+                        0.01825099065899849,
+                        0.0019418817246332765,
+                        0.9942197799682617
                     ],
                     "worldSize": [
                         0.0,
@@ -1982,13 +1982,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "house_2",
@@ -1999,6 +1992,13 @@
                         1.0
                     ]
                 }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
+                }
             }
         ]
     },
@@ -2006,6 +2006,43 @@
         "name": "TownProbe",
         "offsetToParent": -28,
         "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        -963.25,
+                        576.0,
+                        -259.5
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "worldPos": [
+                        -963.25,
+                        576.0,
+                        -259.5
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
             {
                 "type": "IrradianceProbe",
                 "properties": {
@@ -2250,49 +2287,23 @@
                 }
             },
             {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        -963.25,
-                        576.0,
-                        -259.5
-                    ],
-                    "localOrient": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "localSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "worldPos": [
-                        -963.25,
-                        576.0,
-                        -259.5
-                    ],
-                    "worldOrient": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "worldSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
                 "type": "SpecularProbe",
                 "properties": {
                     "radius": 100.0,
                     "falloffRangePerc": 0.20000000298023225,
                     "falloffExp": 1.0,
                     "priority": 1,
+                    "flags": [],
+                    "minExtent": [
+                        10.0,
+                        10.0,
+                        10.0
+                    ],
+                    "maxExtent": [
+                        -10.0,
+                        0.0,
+                        -10.0
+                    ],
                     "specularTextureNames": [
                         "TownProbe0.dds",
                         "TownProbe0-125.dds",
@@ -2311,6 +2322,43 @@
         "name": "TownProbe1",
         "offsetToParent": -29,
         "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        -1133.25,
+                        587.0,
+                        -259.5
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "worldPos": [
+                        -1133.25,
+                        587.0,
+                        -259.5
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
             {
                 "type": "IrradianceProbe",
                 "properties": {
@@ -2553,43 +2601,6 @@
                         ]
                     ]
                 }
-            },
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        -1133.25,
-                        587.0,
-                        -259.5
-                    ],
-                    "localOrient": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "localSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "worldPos": [
-                        -1133.25,
-                        587.0,
-                        -259.5
-                    ],
-                    "worldOrient": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "worldSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
             }
         ]
     },
@@ -2601,9 +2612,9 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        -1100.25,
+                        -919.0,
                         575.0,
-                        -283.5
+                        -209.0
                     ],
                     "localOrient": [
                         -0.07789351791143418,
@@ -2617,9 +2628,9 @@
                         5.0
                     ],
                     "worldPos": [
-                        -1100.25,
+                        -919.0,
                         575.0,
-                        -283.5
+                        -209.0
                     ],
                     "worldOrient": [
                         -0.07789351791143418,
@@ -2690,13 +2701,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "house_3",
@@ -2706,6 +2710,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -3051,16 +3062,6 @@
                 }
             },
             {
-                "type": "CharacterController",
-                "properties": {}
-            },
-            {
-                "type": "Player",
-                "properties": {
-                    "playerId": 1
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "rabbit",
@@ -3071,6 +3072,16 @@
                         1.0
                     ]
                 }
+            },
+            {
+                "type": "Player",
+                "properties": {
+                    "playerId": 1
+                }
+            },
+            {
+                "type": "CharacterController",
+                "properties": {}
             }
         ]
     },
@@ -3819,9 +3830,9 @@
                         0.20000000298023225
                     ],
                     "worldPos": [
-                        -1060.5,
+                        -879.25,
                         567.25,
-                        -331.25
+                        -256.75
                     ],
                     "worldOrient": [
                         0.0025992041919380428,
@@ -3875,9 +3886,9 @@
                         0.20000000298023225
                     ],
                     "worldPos": [
-                        -1051.25,
+                        -870.0,
                         578.0,
-                        -335.5
+                        -261.0
                     ],
                     "worldOrient": [
                         0.0025992041919380428,
@@ -3931,9 +3942,9 @@
                         0.20000000298023225
                     ],
                     "worldPos": [
-                        -1034.5,
+                        -853.25,
                         562.25,
-                        -349.5
+                        -275.0
                     ],
                     "worldOrient": [
                         0.0025992041919380428,
@@ -9452,13 +9463,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -9468,6 +9472,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -9514,13 +9525,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -9530,6 +9534,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -9576,13 +9587,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -9592,6 +9596,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -9638,13 +9649,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -9654,6 +9658,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -9865,13 +9876,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -9881,6 +9885,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -10092,13 +10103,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -10108,6 +10112,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -10154,13 +10165,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -10170,6 +10174,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -10216,13 +10227,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -10232,6 +10236,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -10278,13 +10289,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -10294,6 +10298,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -10340,13 +10351,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -10356,6 +10360,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -10402,13 +10413,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -10418,6 +10422,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -10464,13 +10475,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -10480,6 +10484,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -10526,13 +10537,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -10542,6 +10546,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -10588,13 +10599,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -10604,6 +10608,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -10650,13 +10661,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -10666,6 +10670,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -10712,13 +10723,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -10728,6 +10732,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -11049,13 +11060,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -11065,6 +11069,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -11166,13 +11177,6 @@
                 }
             },
             {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            },
-            {
                 "type": "Mesh",
                 "properties": {
                     "meshName": "Rock_01_88",
@@ -11182,6 +11186,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
                 }
             }
         ]
@@ -14792,15 +14803,15 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        -0.7522171139717102,
-                        0.031215248629450799,
-                        -1.313069224357605
+                        -0.7361140847206116,
+                        0.05063602328300476,
+                        -1.3341816663742066
                     ],
                     "localOrient": [
-                        -0.00006151877460069954,
-                        0.03483380749821663,
-                        -0.000039674341678619388,
-                        0.9993931651115418
+                        -0.002284790389239788,
+                        0.034030672162771228,
+                        -0.0014523444697260857,
+                        0.9994171857833862
                     ],
                     "localSize": [
                         1.25,
@@ -14808,28 +14819,21 @@
                         1.25
                     ],
                     "worldPos": [
-                        -967.5139770507813,
-                        567.7468872070313,
-                        -228.00634765625
+                        -967.5244750976563,
+                        567.7655029296875,
+                        -228.03135681152345
                     ],
                     "worldOrient": [
-                        -0.015126415528357029,
-                        0.5296357274055481,
-                        -0.0008741765050217509,
-                        0.8480899333953857
+                        -0.017758477479219438,
+                        0.5289316177368164,
+                        -0.0009743558475747705,
+                        0.8484781384468079
                     ],
                     "worldSize": [
                         1.25,
                         1.25,
                         1.25
                     ]
-                }
-            },
-            {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 7,
-                    "density": 1.0
                 }
             },
             {
@@ -14842,6 +14846,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 7,
+                    "density": 1.0
                 }
             }
         ]
@@ -14854,15 +14865,15 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        1.024986982345581,
-                        0.02747611701488495,
-                        -1.7811737060546876
+                        1.0557515621185303,
+                        0.0482674241065979,
+                        -1.803900122642517
                     ],
                     "localOrient": [
-                        -0.00007277430268004537,
-                        0.006539874244481325,
-                        -0.00004393933340907097,
-                        0.9999786019325256
+                        -0.002636394463479519,
+                        -0.0022307143080979587,
+                        -0.0021043354645371439,
+                        0.9999918341636658
                     ],
                     "localSize": [
                         1.100000023841858,
@@ -14870,28 +14881,21 @@
                         1.100000023841858
                     ],
                     "worldPos": [
-                        -967.0297241210938,
-                        567.7032470703125,
-                        -229.7786865234375
+                        -967.0343017578125,
+                        567.7229614257813,
+                        -229.81723022460938
                     ],
                     "worldOrient": [
-                        -0.015156900510191918,
-                        0.505424976348877,
-                        -0.0004459303745534271,
-                        0.8627373576164246
+                        -0.01841001957654953,
+                        0.4978058934211731,
+                        -0.0008168511558324099,
+                        0.8670926690101624
                     ],
                     "worldSize": [
                         1.100000023841858,
                         1.100000023841858,
                         1.100000023841858
                     ]
-                }
-            },
-            {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 7,
-                    "density": 1.0
                 }
             },
             {
@@ -14904,6 +14908,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 7,
+                    "density": 1.0
                 }
             }
         ]
@@ -14916,15 +14927,15 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        1.5234863758087159,
-                        0.037562280893325809,
-                        1.9683983325958253
+                        1.55874764919281,
+                        0.03747297823429108,
+                        1.9482934474945069
                     ],
                     "localOrient": [
-                        -0.00005204888293519616,
-                        0.004792466294020414,
-                        -0.000031466130167245868,
-                        0.9999886751174927
+                        -0.00020500051323324442,
+                        0.000747371232137084,
+                        -0.00012908410280942917,
+                        0.9999998807907105
                     ],
                     "localSize": [
                         1.5,
@@ -14932,28 +14943,21 @@
                         1.5
                     ],
                     "worldPos": [
-                        -963.5346069335938,
-                        567.8021240234375,
-                        -228.33567810058595
+                        -963.5343627929688,
+                        567.8009643554688,
+                        -228.37625122070313
                     ],
                     "worldOrient": [
-                        -0.01513347402215004,
-                        0.50391685962677,
-                        -0.00041914841858670115,
-                        0.8636196255683899
+                        -0.01531628705561161,
+                        0.5004178881645203,
+                        -0.00036627313238568604,
+                        0.8656485676765442
                     ],
                     "worldSize": [
                         1.5,
                         1.5,
                         1.5
                     ]
-                }
-            },
-            {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 7,
-                    "density": 1.0
                 }
             },
             {
@@ -14966,6 +14970,13 @@
                         1.0,
                         1.0
                     ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 7,
+                    "density": 1.0
                 }
             }
         ]

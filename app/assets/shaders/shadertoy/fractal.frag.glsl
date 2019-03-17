@@ -1,0 +1,162 @@
+float hash(float n) {
+    return fract(sin(n)*43578.5453);
+}
+
+float box(vec3 p, vec3 b) {
+    vec3 d = abs(p) - b;
+    return min(max(d.x, max(d.y, d.z)), 0.0) + length(max(d, 0.0));
+}
+
+float de(vec3 p) {
+    vec4 q = vec4(p, 1);
+	q.y = mod(q.y + 1.0, 2.0) - 1.0;
+    q.xyz -= 1.0;
+    
+    for(int i = 0; i < 3; i++) {
+        q.xyz = abs(q.xyz + 1.0) - 1.0;
+        q = 1.2*q/clamp(dot(q.xyz, q.xyz), 0.25, 1.0);
+    }
+    
+    float f = box(q.xyz, vec3(1.0))/q.w;
+    f = min(f, p.y + 2.0);
+    f = min(f, min(p.x + 3.0, -p.x + 3.0));
+    f = min(f, min(p.z + 3.0, -p.z + 3.0));
+    
+    return f;
+}
+
+float trace(vec3 ro, vec3 rd, float mx) {
+    float t = 0.0;
+    for(int i = 0; i < 80; i++) {
+        float d = de(ro + rd*t);
+        if(d < 0.001 || t >= mx) break;
+        t += d;
+    }
+    
+    if(t < mx) return t;
+    return -1.0;
+}
+
+// Approvement thanks to Shane. vstrace= shadow trace in volumentric loop.
+// less detailed, dithering and breaks quicker.
+float vstrace(vec3 ro, vec3 rd, float mx) {
+    float t = 0.1*hash(dot(ro, rd));
+    for(int i = 0; i < 50; i++) {
+        float d = de(ro + rd*t);
+        if(d < 0.01 || t >= mx) break;
+        t += d;
+    }
+    
+    if(t < mx) return t;
+    return -1.0;
+}
+
+vec3 normal(vec3 p, out float e) {
+    vec2 h = vec2(0.001, 0.0);
+    
+    vec3 n1 = vec3(
+        de(p + h.xyy),
+        de(p + h.yxy),
+        de(p + h.yyx)
+	);
+    
+    vec3 n2 = vec3(
+        de(p - h.xyy),
+        de(p - h.yxy),
+        de(p - h.yyx)
+	);
+    
+    // edge detection.
+    float d = de(p);
+    
+    vec3 e3 = abs(d - 0.5*(n1 + n2));
+    e = min(1.0, pow(e3.x + e3.y + e3.z, 0.55)*10.0);
+    return normalize(n1 - n2);
+}
+
+vec4 texcube(sampler2D s, vec3 p, vec3 n) {
+    vec3 m = pow(n, vec3(30.0));
+    vec4 x = texture(s, p.zy);
+    vec4 y = texture(s, p.xz);
+    vec4 z = texture(s, p.xy);
+    
+    return (m.x*x + m.y*y + m.z*z)/(m.x + m.y + m.z);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+	vec2 uv = (-iResolution.xy + 2.0*fragCoord)/iResolution.y;
+    
+    vec3 ro = vec3(-2.9*sin(iTime*0.5), -1, 2.9*cos(iTime*0.4));
+    vec3 ww = normalize(vec3(0, -0.7, 0)-ro);
+    vec3 uu = normalize(cross(vec3(0, 1, 0), ww));
+    vec3 vv = normalize(cross(ww, uu));
+    vec3 rd = normalize(uv.x*uu + uv.y*vv + 1.97*ww);
+    
+    vec3 col = vec3(0);
+    vec3 key = vec3(0, 0.0*sin(iTime*0.3), 0);
+    
+    float t = trace(ro, rd, 10.0);
+    if(t > 0.0) {
+        float edg;
+        vec3 pos = ro + rd*t;
+        vec3 nor = normal(pos, edg);
+        
+        // ambient occlusion.
+        float occ = 0.0, sca = 1.0, ste = 0.003;
+        for(int i = 0; i < 15; i++) {
+            float d = de(pos + nor*ste);
+            occ += (ste - d)*sca;
+            sca *= 1.0;
+            ste += ste/(float(i) + 1.0);
+        }
+        occ = 1.0 - clamp(occ, 0.0, 1.0);
+        
+        vec3 lig = normalize(key - pos);
+        float dis = length(pos - key);
+        
+        // direct lighting with hard shadows.
+        col += 0.3*clamp(dot(lig, nor), 0.0, 1.0)
+            *step(0.0, -trace(pos + nor*0.001, lig, dis));
+        
+        // indirect lighting with ambient occlusion.
+        col += 0.1*clamp(dot(-lig, nor), 0.0, 1.0)*occ;
+        
+        // material.
+        col *= texcube(iChannel0, 0.5*pos, nor).xyz;
+        
+        // edge emission texture           // avoid pixel dancing by fading the effect while the veiwer is farther away.
+        col += mix(col, vec3(0, 0.1, 2.1), edg/(0.7*length(ro)));
+    }
+    
+    // volumetric shadows
+    float s = hash(dot(uv, vec2(12.23, 39.343)))*0.05;
+    float vol = 0.0;
+    // need less light strength the closer you are to the light.
+    float e = 0.1*smoothstep(0.0, 3.5, length(key - ro));
+    for(int i = 0; i < 70; i++) {
+        if(s > t) break;
+        vec3 pos = ro + rd*s;
+        
+        vec3 lig = normalize(key - pos);
+        float dis = length(key - pos);
+        
+        // shadow trace at each position along the march.
+        float l = step(0.0, -vstrace(pos, lig, dis));
+        // light strength is proportional to distance from light.
+        l *= e/dis;
+        
+        vol += l;
+        s += 0.05;
+    }
+    
+    // blue light rays.
+    col += 0.6*vec3(0.5*vol, 0.5*vol, vol);
+    col = pow(col, vec3(1.0/2.2));
+    
+    // vignetting
+    vec2 q = fragCoord/iResolution.xy;
+	col *= pow( 16.0*q.x*q.y*(1.0-q.x)*(1.0-q.y), 0.25 );
+
+	fragColor = vec4(col, 1);
+}
