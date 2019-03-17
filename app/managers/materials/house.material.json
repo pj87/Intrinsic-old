@@ -3,7 +3,7 @@
     "properties": {
         "name": "house",
         "materialPassMask": [
-            "GBufferDefault",
+            "GBufferGenerated",
             "GBufferWireframe",
             "Shadow",
             "PerPixelPicking"
