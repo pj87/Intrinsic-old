@@ -1,0 +1,10 @@
+{
+    "name": "fractal1.comp",
+    "properties": {
+        "name": "fractal1.comp",
+        "gpuProgramName": "fractal1.comp.glsl",
+        "entryPoint": "main",
+        "preprocessorDefines": "",
+        "gpuProgramType": 3
+    }
+}

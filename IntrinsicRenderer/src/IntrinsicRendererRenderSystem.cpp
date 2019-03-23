@@ -219,11 +219,20 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+         64, 64, 64, 
+		_N(house_3), 
+		"fractal.comp", 
+		"normal_generation.comp",    
+		"geometry_generation_new.comp", 
+		false);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(house_4), 
-		"fractal.comp", 
+		"fractal1.comp", 
 		"normal_generation.comp",
-        "geometry_generation_new.comp");
+        "geometry_generation_new.comp", 
+		false);
 
 	RenderPass::DynamicGeometryGeneration::init();
 	RenderPass::GeometryGeneration::init();
