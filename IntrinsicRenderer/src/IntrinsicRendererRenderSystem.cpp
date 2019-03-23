@@ -219,16 +219,32 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-         64, 64, 64, 
+		64, 64, 64, 
+		_N(metal_torus), 
+		"cave.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
 		_N(house_3), 
-		"fractal.comp", 
-		"normal_generation.comp",    
-		"geometry_generation_new.comp", 
+		"cave1.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
 		false);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(house_4), 
+		"fractal.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+    
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(house_5), 
 		"fractal1.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 

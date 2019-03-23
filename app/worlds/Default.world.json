@@ -175,7 +175,7 @@
                 "properties": {
                     "localPos": [
                         -843.8748779296875,
-                        -150614800.0,
+                        -151974176.0,
                         -761.631103515625
                     ],
                     "localOrient": [
@@ -191,7 +191,7 @@
                     ],
                     "worldPos": [
                         -843.8748779296875,
-                        -150614800.0,
+                        -151974176.0,
                         -761.631103515625
                     ],
                     "worldOrient": [
@@ -808,9 +808,9 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        -1141.25,
-                        582.75,
-                        -209.25
+                        -1017.0,
+                        572.0,
+                        -243.0
                     ],
                     "localOrient": [
                         -0.07654517143964768,
@@ -824,9 +824,9 @@
                         5.0
                     ],
                     "worldPos": [
-                        -1141.25,
-                        582.75,
-                        -209.25
+                        -1017.0,
+                        572.0,
+                        -243.0
                     ],
                     "worldOrient": [
                         -0.07654517143964768,
@@ -1259,10 +1259,10 @@
                         -231.75
                     ],
                     "localOrient": [
-                        -0.14317235350608827,
-                        -0.8692339658737183,
-                        -0.3962053954601288,
-                        0.31409043073654177
+                        0.3917692303657532,
+                        -0.33981427550315859,
+                        -0.1548987179994583,
+                        -0.8595009446144104
                     ],
                     "localSize": [
                         3.0,
@@ -1275,10 +1275,10 @@
                         -231.75
                     ],
                     "worldOrient": [
-                        -0.14317235350608827,
-                        -0.8692339658737183,
-                        -0.3962053954601288,
-                        0.31409043073654177
+                        0.3917692303657532,
+                        -0.33981427550315859,
+                        -0.1548987179994583,
+                        -0.8595009446144104
                     ],
                     "worldSize": [
                         3.0,
@@ -1701,15 +1701,15 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        -942.4454345703125,
-                        589.258544921875,
-                        -240.3075714111328
+                        -993.5302124023438,
+                        584.8237915039063,
+                        -247.49969482421876
                     ],
                     "localOrient": [
-                        0.014898546040058136,
-                        -0.8627844452857971,
-                        0.02546853758394718,
-                        0.5047102570533752
+                        -0.0005105839809402823,
+                        -0.7236050963401794,
+                        0.0005352846346795559,
+                        -0.6902137994766235
                     ],
                     "localSize": [
                         0.0,
@@ -1717,15 +1717,15 @@
                         0.0
                     ],
                     "worldPos": [
-                        -942.4454345703125,
-                        589.258544921875,
-                        -240.3075714111328
+                        -993.5302124023438,
+                        584.8237915039063,
+                        -247.49969482421876
                     ],
                     "worldOrient": [
-                        0.014898546040058136,
-                        -0.8627844452857971,
-                        0.02546853758394718,
-                        0.5047102570533752
+                        -0.0005105839809402823,
+                        -0.7236050963401794,
+                        0.0005352846346795559,
+                        -0.6902137994766235
                     ],
                     "worldSize": [
                         0.0,
@@ -2660,70 +2660,8 @@
         ]
     },
     {
-        "name": "House5",
-        "offsetToParent": -31,
-        "propertyEntries": [
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        -1120.75,
-                        567.0,
-                        -362.75
-                    ],
-                    "localOrient": [
-                        -0.06365854293107987,
-                        -0.0017856834456324578,
-                        -0.07574119418859482,
-                        0.9950917959213257
-                    ],
-                    "localSize": [
-                        5.0,
-                        5.0,
-                        5.0
-                    ],
-                    "worldPos": [
-                        -1120.75,
-                        567.0,
-                        -362.75
-                    ],
-                    "worldOrient": [
-                        -0.06365854293107987,
-                        -0.0017856834456324578,
-                        -0.07574119418859482,
-                        0.9950917959213257
-                    ],
-                    "worldSize": [
-                        5.0,
-                        5.0,
-                        5.0
-                    ]
-                }
-            },
-            {
-                "type": "Mesh",
-                "properties": {
-                    "meshName": "house_3",
-                    "colorTint": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 8,
-                    "density": 1.0
-                }
-            }
-        ]
-    },
-    {
         "name": "PostEffectVolume1",
-        "offsetToParent": -32,
+        "offsetToParent": -31,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2774,7 +2712,7 @@
     },
     {
         "name": "Decal",
-        "offsetToParent": -33,
+        "offsetToParent": -32,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2836,7 +2774,7 @@
     },
     {
         "name": "Decal3",
-        "offsetToParent": -34,
+        "offsetToParent": -33,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2898,7 +2836,7 @@
     },
     {
         "name": "Decal4",
-        "offsetToParent": -35,
+        "offsetToParent": -34,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2960,7 +2898,7 @@
     },
     {
         "name": "Decal5",
-        "offsetToParent": -36,
+        "offsetToParent": -35,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3022,7 +2960,7 @@
     },
     {
         "name": "Player1",
-        "offsetToParent": -37,
+        "offsetToParent": -36,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3087,7 +3025,7 @@
     },
     {
         "name": "pbr_test_0",
-        "offsetToParent": -38,
+        "offsetToParent": -37,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3471,344 +3409,8 @@
         ]
     },
     {
-        "name": "Light13",
-        "offsetToParent": -14,
-        "propertyEntries": [
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        15.801691055297852,
-                        6.310434341430664,
-                        29.075075149536134
-                    ],
-                    "localOrient": [
-                        0.06617428362369538,
-                        0.0006304640555754304,
-                        0.07543124258518219,
-                        0.9949525594711304
-                    ],
-                    "localSize": [
-                        0.20000000298023225,
-                        0.20000000298023225,
-                        0.20000000298023225
-                    ],
-                    "worldPos": [
-                        -1104.0,
-                        574.5,
-                        -334.5
-                    ],
-                    "worldOrient": [
-                        0.0024253097362816335,
-                        -0.0013595768250524998,
-                        -0.00021985720377415419,
-                        0.9999960660934448
-                    ],
-                    "worldSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "type": "Light",
-                "properties": {
-                    "radius": 50.0,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "intensity": 80.0,
-                    "temperature": 1200.0
-                }
-            }
-        ]
-    },
-    {
-        "name": "Light14",
-        "offsetToParent": -15,
-        "propertyEntries": [
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        6.880644798278809,
-                        10.093493461608887,
-                        28.667762756347658
-                    ],
-                    "localOrient": [
-                        0.06617428362369538,
-                        0.0006304640555754304,
-                        0.07543124258518219,
-                        0.9949525594711304
-                    ],
-                    "localSize": [
-                        0.20000000298023225,
-                        0.20000000298023225,
-                        0.20000000298023225
-                    ],
-                    "worldPos": [
-                        -1112.25,
-                        579.5,
-                        -335.5
-                    ],
-                    "worldOrient": [
-                        0.0024253097362816335,
-                        -0.0013595768250524998,
-                        -0.00021985720377415419,
-                        0.9999960660934448
-                    ],
-                    "worldSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "type": "Light",
-                "properties": {
-                    "radius": 50.0,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "intensity": 80.0,
-                    "temperature": 1200.0
-                }
-            }
-        ]
-    },
-    {
-        "name": "Light15",
-        "offsetToParent": -16,
-        "propertyEntries": [
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        21.1016845703125,
-                        20.212326049804689,
-                        14.645590782165528
-                    ],
-                    "localOrient": [
-                        0.06617428362369538,
-                        0.0006304640555754304,
-                        0.07543124258518219,
-                        0.9949525594711304
-                    ],
-                    "localSize": [
-                        0.20000000298023225,
-                        0.20000000298023225,
-                        0.20000000298023225
-                    ],
-                    "worldPos": [
-                        -1096.75,
-                        585.5,
-                        -350.5
-                    ],
-                    "worldOrient": [
-                        0.0024253097362816335,
-                        -0.0013595768250524998,
-                        -0.00021985720377415419,
-                        0.9999960660934448
-                    ],
-                    "worldSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "type": "Light",
-                "properties": {
-                    "radius": 50.0,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "intensity": 80.0,
-                    "temperature": 1200.0
-                }
-            }
-        ]
-    },
-    {
-        "name": "Light16",
-        "offsetToParent": -17,
-        "propertyEntries": [
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        -23.536705017089845,
-                        10.900699615478516,
-                        19.849702835083009
-                    ],
-                    "localOrient": [
-                        0.06617428362369538,
-                        0.0006304640555754304,
-                        0.07543124258518219,
-                        0.9949525594711304
-                    ],
-                    "localSize": [
-                        0.20000000298023225,
-                        0.20000000298023225,
-                        0.20000000298023225
-                    ],
-                    "worldPos": [
-                        -1142.25,
-                        583.75,
-                        -344.75
-                    ],
-                    "worldOrient": [
-                        0.0024253097362816335,
-                        -0.0013595768250524998,
-                        -0.00021985720377415419,
-                        0.9999960660934448
-                    ],
-                    "worldSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "type": "Light",
-                "properties": {
-                    "radius": 50.0,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "intensity": 80.0,
-                    "temperature": 1200.0
-                }
-            }
-        ]
-    },
-    {
-        "name": "Light17",
-        "offsetToParent": -18,
-        "propertyEntries": [
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        -23.735336303710939,
-                        30.95458984375,
-                        6.529528617858887
-                    ],
-                    "localOrient": [
-                        0.06617428362369538,
-                        0.0006304640555754304,
-                        0.07543124258518219,
-                        0.9949525594711304
-                    ],
-                    "localSize": [
-                        0.20000000298023225,
-                        0.20000000298023225,
-                        0.20000000298023225
-                    ],
-                    "worldPos": [
-                        -1139.5,
-                        601.75,
-                        -360.5
-                    ],
-                    "worldOrient": [
-                        0.0024253097362816335,
-                        -0.0013595768250524998,
-                        -0.00021985720377415419,
-                        0.9999960660934448
-                    ],
-                    "worldSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "type": "Light",
-                "properties": {
-                    "radius": 50.0,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "intensity": 80.0,
-                    "temperature": 1200.0
-                }
-            }
-        ]
-    },
-    {
-        "name": "Light18",
-        "offsetToParent": -19,
-        "propertyEntries": [
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        -14.629731178283692,
-                        14.911995887756348,
-                        -6.474246025085449
-                    ],
-                    "localOrient": [
-                        0.06617428362369538,
-                        0.0006304640555754304,
-                        0.07543124258518219,
-                        0.9949525594711304
-                    ],
-                    "localSize": [
-                        0.20000000298023225,
-                        0.20000000298023225,
-                        0.20000000298023225
-                    ],
-                    "worldPos": [
-                        -1133.0,
-                        583.0,
-                        -371.25
-                    ],
-                    "worldOrient": [
-                        0.0024253097362816335,
-                        -0.0013595768250524998,
-                        -0.00021985720377415419,
-                        0.9999960660934448
-                    ],
-                    "worldSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "type": "Light",
-                "properties": {
-                    "radius": 50.0,
-                    "color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "intensity": 80.0,
-                    "temperature": 1200.0
-                }
-            }
-        ]
-    },
-    {
         "name": "Light10",
-        "offsetToParent": -21,
+        "offsetToParent": -14,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3864,7 +3466,7 @@
     },
     {
         "name": "Light11",
-        "offsetToParent": -22,
+        "offsetToParent": -15,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3920,7 +3522,7 @@
     },
     {
         "name": "Light12",
-        "offsetToParent": -23,
+        "offsetToParent": -16,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3976,7 +3578,7 @@
     },
     {
         "name": "Light",
-        "offsetToParent": -27,
+        "offsetToParent": -20,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4032,7 +3634,7 @@
     },
     {
         "name": "Light2",
-        "offsetToParent": -28,
+        "offsetToParent": -21,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4088,7 +3690,7 @@
     },
     {
         "name": "Fence7",
-        "offsetToParent": -30,
+        "offsetToParent": -23,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4143,7 +3745,7 @@
     },
     {
         "name": "Fence6",
-        "offsetToParent": -31,
+        "offsetToParent": -24,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4198,7 +3800,7 @@
     },
     {
         "name": "Fence5",
-        "offsetToParent": -32,
+        "offsetToParent": -25,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4253,7 +3855,7 @@
     },
     {
         "name": "Fence4",
-        "offsetToParent": -33,
+        "offsetToParent": -26,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4308,7 +3910,7 @@
     },
     {
         "name": "Fence3",
-        "offsetToParent": -34,
+        "offsetToParent": -27,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4363,7 +3965,7 @@
     },
     {
         "name": "Fence2",
-        "offsetToParent": -35,
+        "offsetToParent": -28,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4418,7 +4020,7 @@
     },
     {
         "name": "Fence1",
-        "offsetToParent": -36,
+        "offsetToParent": -29,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4473,7 +4075,7 @@
     },
     {
         "name": "Fence02",
-        "offsetToParent": -37,
+        "offsetToParent": -30,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4528,7 +4130,7 @@
     },
     {
         "name": "Fence",
-        "offsetToParent": -38,
+        "offsetToParent": -31,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4583,7 +4185,7 @@
     },
     {
         "name": "GrassPatch71",
-        "offsetToParent": -41,
+        "offsetToParent": -34,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4638,7 +4240,7 @@
     },
     {
         "name": "GrassPatch70",
-        "offsetToParent": -42,
+        "offsetToParent": -35,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4693,7 +4295,7 @@
     },
     {
         "name": "GrassPatch69",
-        "offsetToParent": -43,
+        "offsetToParent": -36,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4748,7 +4350,7 @@
     },
     {
         "name": "GrassPatch40",
-        "offsetToParent": -44,
+        "offsetToParent": -37,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4803,7 +4405,7 @@
     },
     {
         "name": "GrassPatch39",
-        "offsetToParent": -45,
+        "offsetToParent": -38,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4858,7 +4460,7 @@
     },
     {
         "name": "GrassPatch38",
-        "offsetToParent": -46,
+        "offsetToParent": -39,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4913,7 +4515,7 @@
     },
     {
         "name": "GrassPatch37",
-        "offsetToParent": -47,
+        "offsetToParent": -40,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -4968,7 +4570,7 @@
     },
     {
         "name": "GrassPatch36",
-        "offsetToParent": -48,
+        "offsetToParent": -41,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5023,7 +4625,7 @@
     },
     {
         "name": "GrassPatch35",
-        "offsetToParent": -49,
+        "offsetToParent": -42,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5078,7 +4680,7 @@
     },
     {
         "name": "GrassPatch34",
-        "offsetToParent": -50,
+        "offsetToParent": -43,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5133,7 +4735,7 @@
     },
     {
         "name": "GrassPatch33",
-        "offsetToParent": -51,
+        "offsetToParent": -44,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5188,7 +4790,7 @@
     },
     {
         "name": "GrassPatch32",
-        "offsetToParent": -52,
+        "offsetToParent": -45,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5243,7 +4845,7 @@
     },
     {
         "name": "GrassPatch31",
-        "offsetToParent": -53,
+        "offsetToParent": -46,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5298,7 +4900,7 @@
     },
     {
         "name": "GrassPatch30",
-        "offsetToParent": -54,
+        "offsetToParent": -47,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5353,7 +4955,7 @@
     },
     {
         "name": "GrassPatch29",
-        "offsetToParent": -55,
+        "offsetToParent": -48,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5408,7 +5010,7 @@
     },
     {
         "name": "GrassPatch28",
-        "offsetToParent": -56,
+        "offsetToParent": -49,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5463,7 +5065,7 @@
     },
     {
         "name": "GrassPatch27",
-        "offsetToParent": -57,
+        "offsetToParent": -50,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5518,7 +5120,7 @@
     },
     {
         "name": "GrassPatch26",
-        "offsetToParent": -58,
+        "offsetToParent": -51,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5573,7 +5175,7 @@
     },
     {
         "name": "GrassPatch25",
-        "offsetToParent": -59,
+        "offsetToParent": -52,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5628,7 +5230,7 @@
     },
     {
         "name": "GrassPatch24",
-        "offsetToParent": -60,
+        "offsetToParent": -53,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5683,7 +5285,7 @@
     },
     {
         "name": "GrassPatch23",
-        "offsetToParent": -61,
+        "offsetToParent": -54,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5738,7 +5340,7 @@
     },
     {
         "name": "GrassPatch22",
-        "offsetToParent": -62,
+        "offsetToParent": -55,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5793,7 +5395,7 @@
     },
     {
         "name": "GrassPatch21",
-        "offsetToParent": -63,
+        "offsetToParent": -56,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5848,7 +5450,7 @@
     },
     {
         "name": "GrassPatch20",
-        "offsetToParent": -64,
+        "offsetToParent": -57,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5903,7 +5505,7 @@
     },
     {
         "name": "GrassPatch19",
-        "offsetToParent": -65,
+        "offsetToParent": -58,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -5958,7 +5560,7 @@
     },
     {
         "name": "GrassPatch18",
-        "offsetToParent": -66,
+        "offsetToParent": -59,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6013,7 +5615,7 @@
     },
     {
         "name": "GrassPatch01",
-        "offsetToParent": -67,
+        "offsetToParent": -60,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6068,7 +5670,7 @@
     },
     {
         "name": "GrassPatch1",
-        "offsetToParent": -68,
+        "offsetToParent": -61,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6123,7 +5725,7 @@
     },
     {
         "name": "GrassPatch2",
-        "offsetToParent": -69,
+        "offsetToParent": -62,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6178,7 +5780,7 @@
     },
     {
         "name": "GrassPatch3",
-        "offsetToParent": -70,
+        "offsetToParent": -63,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6233,7 +5835,7 @@
     },
     {
         "name": "GrassPatch4",
-        "offsetToParent": -71,
+        "offsetToParent": -64,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6288,7 +5890,7 @@
     },
     {
         "name": "GrassPatch5",
-        "offsetToParent": -72,
+        "offsetToParent": -65,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6343,7 +5945,7 @@
     },
     {
         "name": "GrassPatch6",
-        "offsetToParent": -73,
+        "offsetToParent": -66,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6398,7 +6000,7 @@
     },
     {
         "name": "GrassPatch7",
-        "offsetToParent": -74,
+        "offsetToParent": -67,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6453,7 +6055,7 @@
     },
     {
         "name": "GrassPatch8",
-        "offsetToParent": -75,
+        "offsetToParent": -68,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6508,7 +6110,7 @@
     },
     {
         "name": "GrassPatch9",
-        "offsetToParent": -76,
+        "offsetToParent": -69,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6563,7 +6165,7 @@
     },
     {
         "name": "GrassPatch10",
-        "offsetToParent": -77,
+        "offsetToParent": -70,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6618,7 +6220,7 @@
     },
     {
         "name": "GrassPatch11",
-        "offsetToParent": -78,
+        "offsetToParent": -71,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6673,7 +6275,7 @@
     },
     {
         "name": "GrassPatch12",
-        "offsetToParent": -79,
+        "offsetToParent": -72,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6728,7 +6330,7 @@
     },
     {
         "name": "GrassPatch13",
-        "offsetToParent": -80,
+        "offsetToParent": -73,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6783,7 +6385,7 @@
     },
     {
         "name": "GrassPatch14",
-        "offsetToParent": -81,
+        "offsetToParent": -74,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6838,7 +6440,7 @@
     },
     {
         "name": "GrassPatch15",
-        "offsetToParent": -82,
+        "offsetToParent": -75,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6893,7 +6495,7 @@
     },
     {
         "name": "GrassPatch16",
-        "offsetToParent": -83,
+        "offsetToParent": -76,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -6948,7 +6550,7 @@
     },
     {
         "name": "GrassPatch17",
-        "offsetToParent": -84,
+        "offsetToParent": -77,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7003,7 +6605,7 @@
     },
     {
         "name": "GrassPatch41",
-        "offsetToParent": -85,
+        "offsetToParent": -78,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7058,7 +6660,7 @@
     },
     {
         "name": "GrassPatch42",
-        "offsetToParent": -86,
+        "offsetToParent": -79,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7113,7 +6715,7 @@
     },
     {
         "name": "GrassPatch43",
-        "offsetToParent": -87,
+        "offsetToParent": -80,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7168,7 +6770,7 @@
     },
     {
         "name": "GrassPatch44",
-        "offsetToParent": -88,
+        "offsetToParent": -81,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7223,7 +6825,7 @@
     },
     {
         "name": "GrassPatch45",
-        "offsetToParent": -89,
+        "offsetToParent": -82,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7278,7 +6880,7 @@
     },
     {
         "name": "GrassPatch46",
-        "offsetToParent": -90,
+        "offsetToParent": -83,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7333,7 +6935,7 @@
     },
     {
         "name": "GrassPatch47",
-        "offsetToParent": -91,
+        "offsetToParent": -84,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7388,7 +6990,7 @@
     },
     {
         "name": "GrassPatch48",
-        "offsetToParent": -92,
+        "offsetToParent": -85,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7443,7 +7045,7 @@
     },
     {
         "name": "GrassPatch49",
-        "offsetToParent": -93,
+        "offsetToParent": -86,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7498,7 +7100,7 @@
     },
     {
         "name": "GrassPatch50",
-        "offsetToParent": -94,
+        "offsetToParent": -87,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7553,7 +7155,7 @@
     },
     {
         "name": "GrassPatch51",
-        "offsetToParent": -95,
+        "offsetToParent": -88,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7608,7 +7210,7 @@
     },
     {
         "name": "GrassPatch52",
-        "offsetToParent": -96,
+        "offsetToParent": -89,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7663,7 +7265,7 @@
     },
     {
         "name": "GrassPatch53",
-        "offsetToParent": -97,
+        "offsetToParent": -90,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7718,7 +7320,7 @@
     },
     {
         "name": "GrassPatch54",
-        "offsetToParent": -98,
+        "offsetToParent": -91,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7773,7 +7375,7 @@
     },
     {
         "name": "GrassPatch55",
-        "offsetToParent": -99,
+        "offsetToParent": -92,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7828,7 +7430,7 @@
     },
     {
         "name": "GrassPatch56",
-        "offsetToParent": -100,
+        "offsetToParent": -93,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7883,7 +7485,7 @@
     },
     {
         "name": "GrassPatch57",
-        "offsetToParent": -101,
+        "offsetToParent": -94,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7938,7 +7540,7 @@
     },
     {
         "name": "GrassPatch58",
-        "offsetToParent": -102,
+        "offsetToParent": -95,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -7993,7 +7595,7 @@
     },
     {
         "name": "GrassPatch59",
-        "offsetToParent": -103,
+        "offsetToParent": -96,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8048,7 +7650,7 @@
     },
     {
         "name": "GrassPatch60",
-        "offsetToParent": -104,
+        "offsetToParent": -97,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8103,7 +7705,7 @@
     },
     {
         "name": "GrassPatch61",
-        "offsetToParent": -105,
+        "offsetToParent": -98,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8158,7 +7760,7 @@
     },
     {
         "name": "GrassPatch62",
-        "offsetToParent": -106,
+        "offsetToParent": -99,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8213,7 +7815,7 @@
     },
     {
         "name": "GrassPatch63",
-        "offsetToParent": -107,
+        "offsetToParent": -100,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8268,7 +7870,7 @@
     },
     {
         "name": "GrassPatch64",
-        "offsetToParent": -108,
+        "offsetToParent": -101,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8323,7 +7925,7 @@
     },
     {
         "name": "GrassPatch65",
-        "offsetToParent": -109,
+        "offsetToParent": -102,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8378,7 +7980,7 @@
     },
     {
         "name": "GrassPatch66",
-        "offsetToParent": -110,
+        "offsetToParent": -103,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8433,7 +8035,7 @@
     },
     {
         "name": "GrassPatch67",
-        "offsetToParent": -111,
+        "offsetToParent": -104,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8488,7 +8090,7 @@
     },
     {
         "name": "GrassPatch68",
-        "offsetToParent": -112,
+        "offsetToParent": -105,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8543,7 +8145,7 @@
     },
     {
         "name": "GrassPatch72",
-        "offsetToParent": -113,
+        "offsetToParent": -106,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8598,7 +8200,7 @@
     },
     {
         "name": "GrassPatch73",
-        "offsetToParent": -114,
+        "offsetToParent": -107,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8653,7 +8255,7 @@
     },
     {
         "name": "GrassPatch74",
-        "offsetToParent": -115,
+        "offsetToParent": -108,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8708,7 +8310,7 @@
     },
     {
         "name": "GrassPatch75",
-        "offsetToParent": -116,
+        "offsetToParent": -109,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8763,7 +8365,7 @@
     },
     {
         "name": "GrassPatch76",
-        "offsetToParent": -117,
+        "offsetToParent": -110,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8818,7 +8420,7 @@
     },
     {
         "name": "GrassPatch77",
-        "offsetToParent": -118,
+        "offsetToParent": -111,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8873,7 +8475,7 @@
     },
     {
         "name": "GrassPatch78",
-        "offsetToParent": -119,
+        "offsetToParent": -112,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8928,7 +8530,7 @@
     },
     {
         "name": "GrassPatch79",
-        "offsetToParent": -120,
+        "offsetToParent": -113,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -8983,7 +8585,7 @@
     },
     {
         "name": "GrassPatch80",
-        "offsetToParent": -121,
+        "offsetToParent": -114,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9038,7 +8640,7 @@
     },
     {
         "name": "GrassPatch81",
-        "offsetToParent": -122,
+        "offsetToParent": -115,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9093,7 +8695,7 @@
     },
     {
         "name": "GrassPatch82",
-        "offsetToParent": -123,
+        "offsetToParent": -116,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9148,7 +8750,7 @@
     },
     {
         "name": "GrassPatch83",
-        "offsetToParent": -124,
+        "offsetToParent": -117,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9203,7 +8805,7 @@
     },
     {
         "name": "GrassPatch84",
-        "offsetToParent": -125,
+        "offsetToParent": -118,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9258,7 +8860,7 @@
     },
     {
         "name": "GrassPatch85",
-        "offsetToParent": -126,
+        "offsetToParent": -119,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9313,7 +8915,7 @@
     },
     {
         "name": "GrassPatch86",
-        "offsetToParent": -127,
+        "offsetToParent": -120,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9368,7 +8970,7 @@
     },
     {
         "name": "GrassPatch87",
-        "offsetToParent": -128,
+        "offsetToParent": -121,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9423,7 +9025,7 @@
     },
     {
         "name": "Stone28",
-        "offsetToParent": -134,
+        "offsetToParent": -127,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9485,7 +9087,7 @@
     },
     {
         "name": "Stone27",
-        "offsetToParent": -135,
+        "offsetToParent": -128,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9547,7 +9149,7 @@
     },
     {
         "name": "Stone26",
-        "offsetToParent": -136,
+        "offsetToParent": -129,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9609,7 +9211,7 @@
     },
     {
         "name": "Stone25",
-        "offsetToParent": -137,
+        "offsetToParent": -130,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9671,7 +9273,7 @@
     },
     {
         "name": "Stone24",
-        "offsetToParent": -138,
+        "offsetToParent": -131,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9726,7 +9328,7 @@
     },
     {
         "name": "Stone23",
-        "offsetToParent": -139,
+        "offsetToParent": -132,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9781,7 +9383,7 @@
     },
     {
         "name": "Stone22",
-        "offsetToParent": -140,
+        "offsetToParent": -133,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9836,7 +9438,7 @@
     },
     {
         "name": "Stone21",
-        "offsetToParent": -141,
+        "offsetToParent": -134,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9898,7 +9500,7 @@
     },
     {
         "name": "Stone20",
-        "offsetToParent": -142,
+        "offsetToParent": -135,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -9953,7 +9555,7 @@
     },
     {
         "name": "Stone19",
-        "offsetToParent": -143,
+        "offsetToParent": -136,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10008,7 +9610,7 @@
     },
     {
         "name": "Stone18",
-        "offsetToParent": -144,
+        "offsetToParent": -137,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10063,7 +9665,7 @@
     },
     {
         "name": "Stone17",
-        "offsetToParent": -145,
+        "offsetToParent": -138,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10125,7 +9727,7 @@
     },
     {
         "name": "Stone16",
-        "offsetToParent": -146,
+        "offsetToParent": -139,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10187,7 +9789,7 @@
     },
     {
         "name": "Stone15",
-        "offsetToParent": -147,
+        "offsetToParent": -140,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10249,7 +9851,7 @@
     },
     {
         "name": "Stone14",
-        "offsetToParent": -148,
+        "offsetToParent": -141,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10311,7 +9913,7 @@
     },
     {
         "name": "Stone13",
-        "offsetToParent": -149,
+        "offsetToParent": -142,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10373,7 +9975,7 @@
     },
     {
         "name": "Stone12",
-        "offsetToParent": -150,
+        "offsetToParent": -143,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10435,7 +10037,7 @@
     },
     {
         "name": "Stone11",
-        "offsetToParent": -151,
+        "offsetToParent": -144,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10497,7 +10099,7 @@
     },
     {
         "name": "Stone10",
-        "offsetToParent": -152,
+        "offsetToParent": -145,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10559,7 +10161,7 @@
     },
     {
         "name": "Stone9",
-        "offsetToParent": -153,
+        "offsetToParent": -146,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10621,7 +10223,7 @@
     },
     {
         "name": "Stone3",
-        "offsetToParent": -154,
+        "offsetToParent": -147,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10683,7 +10285,7 @@
     },
     {
         "name": "Stone",
-        "offsetToParent": -155,
+        "offsetToParent": -148,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10745,7 +10347,7 @@
     },
     {
         "name": "Stone4",
-        "offsetToParent": -156,
+        "offsetToParent": -149,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10800,7 +10402,7 @@
     },
     {
         "name": "Stone2",
-        "offsetToParent": -157,
+        "offsetToParent": -150,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10855,7 +10457,7 @@
     },
     {
         "name": "Stone1",
-        "offsetToParent": -158,
+        "offsetToParent": -151,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10910,7 +10512,7 @@
     },
     {
         "name": "Stone5",
-        "offsetToParent": -159,
+        "offsetToParent": -152,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -10965,7 +10567,7 @@
     },
     {
         "name": "Stone6",
-        "offsetToParent": -160,
+        "offsetToParent": -153,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11020,7 +10622,7 @@
     },
     {
         "name": "Stone7",
-        "offsetToParent": -161,
+        "offsetToParent": -154,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11082,7 +10684,7 @@
     },
     {
         "name": "Stone8",
-        "offsetToParent": -162,
+        "offsetToParent": -155,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11137,7 +10739,7 @@
     },
     {
         "name": "Stone29",
-        "offsetToParent": -163,
+        "offsetToParent": -156,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11199,7 +10801,7 @@
     },
     {
         "name": "Tree47",
-        "offsetToParent": -165,
+        "offsetToParent": -158,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11254,7 +10856,7 @@
     },
     {
         "name": "Tree46",
-        "offsetToParent": -166,
+        "offsetToParent": -159,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11309,7 +10911,7 @@
     },
     {
         "name": "Tree45",
-        "offsetToParent": -167,
+        "offsetToParent": -160,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11364,7 +10966,7 @@
     },
     {
         "name": "Tree44",
-        "offsetToParent": -168,
+        "offsetToParent": -161,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11419,7 +11021,7 @@
     },
     {
         "name": "Tree43",
-        "offsetToParent": -169,
+        "offsetToParent": -162,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11474,7 +11076,7 @@
     },
     {
         "name": "Tree42",
-        "offsetToParent": -170,
+        "offsetToParent": -163,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11529,7 +11131,7 @@
     },
     {
         "name": "Tree41",
-        "offsetToParent": -171,
+        "offsetToParent": -164,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11584,7 +11186,7 @@
     },
     {
         "name": "Tree40",
-        "offsetToParent": -172,
+        "offsetToParent": -165,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11639,7 +11241,7 @@
     },
     {
         "name": "Tree39",
-        "offsetToParent": -173,
+        "offsetToParent": -166,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11694,7 +11296,7 @@
     },
     {
         "name": "Tree38",
-        "offsetToParent": -174,
+        "offsetToParent": -167,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11749,7 +11351,7 @@
     },
     {
         "name": "Tree37",
-        "offsetToParent": -175,
+        "offsetToParent": -168,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11804,7 +11406,7 @@
     },
     {
         "name": "Tree35",
-        "offsetToParent": -176,
+        "offsetToParent": -169,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11859,7 +11461,7 @@
     },
     {
         "name": "Tree34",
-        "offsetToParent": -177,
+        "offsetToParent": -170,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11914,7 +11516,7 @@
     },
     {
         "name": "Tree33",
-        "offsetToParent": -178,
+        "offsetToParent": -171,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -11969,7 +11571,7 @@
     },
     {
         "name": "Tree29",
-        "offsetToParent": -179,
+        "offsetToParent": -172,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12024,7 +11626,7 @@
     },
     {
         "name": "Tree28",
-        "offsetToParent": -180,
+        "offsetToParent": -173,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12079,7 +11681,7 @@
     },
     {
         "name": "Tree1",
-        "offsetToParent": -181,
+        "offsetToParent": -174,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12134,7 +11736,7 @@
     },
     {
         "name": "Tree32",
-        "offsetToParent": -182,
+        "offsetToParent": -175,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12189,7 +11791,7 @@
     },
     {
         "name": "Tree31",
-        "offsetToParent": -183,
+        "offsetToParent": -176,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12244,7 +11846,7 @@
     },
     {
         "name": "Tree30",
-        "offsetToParent": -184,
+        "offsetToParent": -177,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12299,7 +11901,7 @@
     },
     {
         "name": "Tree27",
-        "offsetToParent": -185,
+        "offsetToParent": -178,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12354,7 +11956,7 @@
     },
     {
         "name": "Tree0",
-        "offsetToParent": -186,
+        "offsetToParent": -179,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12409,7 +12011,7 @@
     },
     {
         "name": "Tree2",
-        "offsetToParent": -187,
+        "offsetToParent": -180,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12464,7 +12066,7 @@
     },
     {
         "name": "Tree3",
-        "offsetToParent": -188,
+        "offsetToParent": -181,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12519,7 +12121,7 @@
     },
     {
         "name": "Tree4",
-        "offsetToParent": -189,
+        "offsetToParent": -182,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12574,7 +12176,7 @@
     },
     {
         "name": "Tree10",
-        "offsetToParent": -190,
+        "offsetToParent": -183,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12629,7 +12231,7 @@
     },
     {
         "name": "Tree11",
-        "offsetToParent": -191,
+        "offsetToParent": -184,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12684,7 +12286,7 @@
     },
     {
         "name": "Tree",
-        "offsetToParent": -192,
+        "offsetToParent": -185,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12739,7 +12341,7 @@
     },
     {
         "name": "Tree12",
-        "offsetToParent": -193,
+        "offsetToParent": -186,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12794,7 +12396,7 @@
     },
     {
         "name": "Tree13",
-        "offsetToParent": -194,
+        "offsetToParent": -187,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12849,7 +12451,7 @@
     },
     {
         "name": "Tree14",
-        "offsetToParent": -195,
+        "offsetToParent": -188,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12904,7 +12506,7 @@
     },
     {
         "name": "Tree6",
-        "offsetToParent": -196,
+        "offsetToParent": -189,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -12959,7 +12561,7 @@
     },
     {
         "name": "Tree7",
-        "offsetToParent": -197,
+        "offsetToParent": -190,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13014,7 +12616,7 @@
     },
     {
         "name": "Tree8",
-        "offsetToParent": -198,
+        "offsetToParent": -191,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13069,7 +12671,7 @@
     },
     {
         "name": "Tree9",
-        "offsetToParent": -199,
+        "offsetToParent": -192,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13124,7 +12726,7 @@
     },
     {
         "name": "Tree15",
-        "offsetToParent": -200,
+        "offsetToParent": -193,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13179,7 +12781,7 @@
     },
     {
         "name": "Tree16",
-        "offsetToParent": -201,
+        "offsetToParent": -194,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13234,7 +12836,7 @@
     },
     {
         "name": "Tree17",
-        "offsetToParent": -202,
+        "offsetToParent": -195,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13289,7 +12891,7 @@
     },
     {
         "name": "Tree18",
-        "offsetToParent": -203,
+        "offsetToParent": -196,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13344,7 +12946,7 @@
     },
     {
         "name": "Tree19",
-        "offsetToParent": -204,
+        "offsetToParent": -197,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13399,7 +13001,7 @@
     },
     {
         "name": "Tree20",
-        "offsetToParent": -205,
+        "offsetToParent": -198,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13454,7 +13056,7 @@
     },
     {
         "name": "Tree21",
-        "offsetToParent": -206,
+        "offsetToParent": -199,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13509,7 +13111,7 @@
     },
     {
         "name": "Tree22",
-        "offsetToParent": -207,
+        "offsetToParent": -200,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13564,7 +13166,7 @@
     },
     {
         "name": "Tree5",
-        "offsetToParent": -208,
+        "offsetToParent": -201,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13619,7 +13221,7 @@
     },
     {
         "name": "Tree23",
-        "offsetToParent": -209,
+        "offsetToParent": -202,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13674,7 +13276,7 @@
     },
     {
         "name": "Tree24",
-        "offsetToParent": -210,
+        "offsetToParent": -203,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13729,7 +13331,7 @@
     },
     {
         "name": "Tree25",
-        "offsetToParent": -211,
+        "offsetToParent": -204,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13784,7 +13386,7 @@
     },
     {
         "name": "Tree26",
-        "offsetToParent": -212,
+        "offsetToParent": -205,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13839,7 +13441,7 @@
     },
     {
         "name": "Tree36",
-        "offsetToParent": -213,
+        "offsetToParent": -206,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13894,7 +13496,7 @@
     },
     {
         "name": "PathD7",
-        "offsetToParent": -221,
+        "offsetToParent": -214,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13937,7 +13539,7 @@
     },
     {
         "name": "PathD5",
-        "offsetToParent": -222,
+        "offsetToParent": -215,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -13980,7 +13582,7 @@
     },
     {
         "name": "PathD4",
-        "offsetToParent": -223,
+        "offsetToParent": -216,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14023,7 +13625,7 @@
     },
     {
         "name": "PathD2",
-        "offsetToParent": -224,
+        "offsetToParent": -217,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14066,7 +13668,7 @@
     },
     {
         "name": "PathD1",
-        "offsetToParent": -225,
+        "offsetToParent": -218,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14109,7 +13711,7 @@
     },
     {
         "name": "PathD6",
-        "offsetToParent": -226,
+        "offsetToParent": -219,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14152,7 +13754,7 @@
     },
     {
         "name": "PathB2",
-        "offsetToParent": -227,
+        "offsetToParent": -220,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14195,7 +13797,7 @@
     },
     {
         "name": "PathB1",
-        "offsetToParent": -228,
+        "offsetToParent": -221,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14238,7 +13840,7 @@
     },
     {
         "name": "PathA6",
-        "offsetToParent": -229,
+        "offsetToParent": -222,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14281,7 +13883,7 @@
     },
     {
         "name": "PathA5",
-        "offsetToParent": -230,
+        "offsetToParent": -223,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14324,7 +13926,7 @@
     },
     {
         "name": "PathA4",
-        "offsetToParent": -231,
+        "offsetToParent": -224,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14367,7 +13969,7 @@
     },
     {
         "name": "PathA3",
-        "offsetToParent": -232,
+        "offsetToParent": -225,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14410,7 +14012,7 @@
     },
     {
         "name": "PathA2",
-        "offsetToParent": -233,
+        "offsetToParent": -226,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14453,7 +14055,7 @@
     },
     {
         "name": "PathA1",
-        "offsetToParent": -234,
+        "offsetToParent": -227,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14496,7 +14098,7 @@
     },
     {
         "name": "PathB3",
-        "offsetToParent": -235,
+        "offsetToParent": -228,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14539,7 +14141,7 @@
     },
     {
         "name": "PathA7",
-        "offsetToParent": -236,
+        "offsetToParent": -229,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14582,7 +14184,7 @@
     },
     {
         "name": "PathA8",
-        "offsetToParent": -237,
+        "offsetToParent": -230,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14625,7 +14227,7 @@
     },
     {
         "name": "PathC4",
-        "offsetToParent": -238,
+        "offsetToParent": -231,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14668,7 +14270,7 @@
     },
     {
         "name": "PathC1",
-        "offsetToParent": -239,
+        "offsetToParent": -232,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14711,7 +14313,7 @@
     },
     {
         "name": "PathC2",
-        "offsetToParent": -240,
+        "offsetToParent": -233,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14754,7 +14356,7 @@
     },
     {
         "name": "PathC3",
-        "offsetToParent": -241,
+        "offsetToParent": -234,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -14797,21 +14399,21 @@
     },
     {
         "name": "Barrel2",
-        "offsetToParent": -243,
+        "offsetToParent": -236,
         "propertyEntries": [
             {
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        -0.7286916971206665,
-                        0.031246868893504144,
-                        -1.3450015783309937
+                        -0.7192388772964478,
+                        0.03133668005466461,
+                        -1.3569518327713013
                     ],
                     "localOrient": [
-                        -0.00035428942646831274,
-                        0.03385210782289505,
-                        -0.00026143481954932213,
-                        0.9994267821311951
+                        -0.00039554975228384137,
+                        0.033422019332647327,
+                        -0.00028890185058116913,
+                        0.9994413256645203
                     ],
                     "localSize": [
                         1.25,
@@ -14819,15 +14421,15 @@
                         1.25
                     ],
                     "worldPos": [
-                        -967.5298461914063,
-                        567.7457275390625,
-                        -228.0426788330078
+                        -967.5354614257813,
+                        567.745361328125,
+                        -228.0568389892578
                     ],
                     "worldOrient": [
-                        -0.015491637401282788,
-                        0.5287991166114807,
-                        -0.0009051208035089076,
-                        0.8486050963401794
+                        -0.015541465021669865,
+                        0.5284335017204285,
+                        -0.0009018089040182531,
+                        0.8488320708274841
                     ],
                     "worldSize": [
                         1.25,
@@ -14859,21 +14461,21 @@
     },
     {
         "name": "Barrel1",
-        "offsetToParent": -244,
+        "offsetToParent": -237,
         "propertyEntries": [
             {
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        1.063147783279419,
-                        0.027477264404296876,
-                        -1.8148696422576905
+                        1.0723466873168946,
+                        0.02750009298324585,
+                        -1.826744556427002
                     ],
                     "localOrient": [
-                        -0.00043928343802690506,
-                        -0.0023943791165947916,
-                        -0.00027228519320487976,
-                        0.9999971389770508
+                        -0.00046235654735937715,
+                        -0.0026683572214096786,
+                        -0.0002861074171960354,
+                        0.9999963641166687
                     ],
                     "localSize": [
                         1.100000023841858,
@@ -14881,15 +14483,15 @@
                         1.100000023841858
                     ],
                     "worldPos": [
-                        -967.039794921875,
-                        567.7017822265625,
-                        -229.8285675048828
+                        -967.0454711914063,
+                        567.7013549804688,
+                        -229.84246826171876
                     ],
                     "worldOrient": [
-                        -0.015591795556247235,
-                        0.49769362807273867,
-                        -0.00032583944266662,
-                        0.8672127723693848
+                        -0.015618767589330674,
+                        0.49745574593544009,
+                        -0.0003221482038497925,
+                        0.8673487305641174
                     ],
                     "worldSize": [
                         1.100000023841858,
@@ -14921,21 +14523,21 @@
     },
     {
         "name": "Barrel3",
-        "offsetToParent": -245,
+        "offsetToParent": -238,
         "propertyEntries": [
             {
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        1.5622721910476685,
-                        0.0374520905315876,
-                        1.9441399574279786
+                        1.57246732711792,
+                        0.037514448165893558,
+                        1.9313371181488038
                     ],
                     "localOrient": [
-                        -0.0002993759699165821,
-                        0.0006788225728087127,
-                        -0.0001851143315434456,
-                        0.9999998807907105
+                        -0.0003419470740482211,
+                        0.0004930964787490666,
+                        -0.0002144286409020424,
+                        0.9999999403953552
                     ],
                     "localSize": [
                         1.5,
@@ -14943,15 +14545,15 @@
                         1.5
                     ],
                     "worldPos": [
-                        -963.5361938476563,
-                        567.80078125,
-                        -228.38137817382813
+                        -963.5421752929688,
+                        567.8003540039063,
+                        -228.3966064453125
                     ],
                     "worldOrient": [
-                        -0.01542604435235262,
-                        0.5003577470779419,
-                        -0.0003665971162263304,
-                        0.8656814098358154
+                        -0.015477627515792847,
+                        0.5001965165138245,
+                        -0.00036790844751521945,
+                        0.8657736778259277
                     ],
                     "worldSize": [
                         1.5,
@@ -14983,7 +14585,7 @@
     },
     {
         "name": "Light1",
-        "offsetToParent": -247,
+        "offsetToParent": -240,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15039,7 +14641,7 @@
     },
     {
         "name": "Light3",
-        "offsetToParent": -248,
+        "offsetToParent": -241,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15095,7 +14697,7 @@
     },
     {
         "name": "Light4",
-        "offsetToParent": -249,
+        "offsetToParent": -242,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15151,7 +14753,7 @@
     },
     {
         "name": "Light19",
-        "offsetToParent": -250,
+        "offsetToParent": -243,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15207,7 +14809,7 @@
     },
     {
         "name": "Light20",
-        "offsetToParent": -251,
+        "offsetToParent": -244,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15263,7 +14865,7 @@
     },
     {
         "name": "Light21",
-        "offsetToParent": -252,
+        "offsetToParent": -245,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15319,7 +14921,7 @@
     },
     {
         "name": "Light22",
-        "offsetToParent": -253,
+        "offsetToParent": -246,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15375,7 +14977,7 @@
     },
     {
         "name": "Light23",
-        "offsetToParent": -254,
+        "offsetToParent": -247,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15431,7 +15033,7 @@
     },
     {
         "name": "Light5",
-        "offsetToParent": -257,
+        "offsetToParent": -250,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15487,7 +15089,7 @@
     },
     {
         "name": "Light6",
-        "offsetToParent": -258,
+        "offsetToParent": -251,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15543,7 +15145,7 @@
     },
     {
         "name": "Light7",
-        "offsetToParent": -260,
+        "offsetToParent": -253,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15565,9 +15167,9 @@
                         0.20000000298023225
                     ],
                     "worldPos": [
-                        -1105.75,
-                        606.25,
-                        -211.5
+                        -981.5,
+                        595.5,
+                        -245.25
                     ],
                     "worldOrient": [
                         -0.0009425543248653412,
@@ -15599,7 +15201,7 @@
     },
     {
         "name": "Light8",
-        "offsetToParent": -261,
+        "offsetToParent": -254,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15621,9 +15223,9 @@
                         0.20000000298023225
                     ],
                     "worldPos": [
-                        -1105.75,
-                        596.5,
-                        -207.5
+                        -981.5,
+                        585.75,
+                        -241.25
                     ],
                     "worldOrient": [
                         -0.0009425543248653412,
@@ -15655,7 +15257,7 @@
     },
     {
         "name": "Light9",
-        "offsetToParent": -262,
+        "offsetToParent": -255,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -15677,9 +15279,9 @@
                         0.20000000298023225
                     ],
                     "worldPos": [
-                        -1115.25,
-                        589.25,
-                        -228.75
+                        -991.0,
+                        578.5,
+                        -262.5
                     ],
                     "worldOrient": [
                         -0.0009425543248653412,
