@@ -289,7 +289,7 @@ void main()
 			uvZ = clamp((v0.position.xy + _Depth / 2.0) / _Depth, vec2(0.0), vec2(1.0));
 			uv = mix(uvX, uvZ, abs(v0.normal.z));
 			uv = mix(uv, uvY, abs(v0.normal.y));
-			storePosition(idx * 15 + (3 * i + 0), v0.position.xyz / 10.0);
+			storePosition(idx * 15 + (3 * i + 0), v0.position.xyz);
 			storeNormal(idx * 15 + (3 * i + 0), v0.normal);
 			//storeColor(idx * 15 + (3 * i + 0), vec4(0.2 * sin(v0.position.xyz), 1.0));
 			storeUV(idx * 15 + (3 * i + 0), uv);
@@ -301,7 +301,7 @@ void main()
 			uvZ = clamp((v1.position.xy + _Depth / 2.0) / _Depth, vec2(0.0), vec2(1.0));
 			uv = mix(uvX, uvZ, abs(v1.normal.z));
 			uv = mix(uv, uvY, abs(v1.normal.y));
-			storePosition(idx * 15 + (3 * i + 1), v1.position.xyz / 10.0);
+			storePosition(idx * 15 + (3 * i + 1), v1.position.xyz);
 			storeNormal(idx * 15 + (3 * i + 1), v1.normal);
 			//storeColor(idx * 15 + (3 * i + 1), vec4(0.2 * sin(v1.position.xyz), 1.0));
 			storeUV(idx * 15 + (3 * i + 1), uv);
@@ -313,7 +313,7 @@ void main()
 			uvZ = clamp((v2.position.xy + _Depth / 2.0) / _Depth, vec2(0.0), vec2(1.0));
 			uv = mix(uvX, uvZ, abs(v2.normal.z));
 			uv = mix(uv, uvY, abs(v2.normal.y));
-			storePosition(idx * 15 + (3 * i + 2), v2.position.xyz / 10.0);
+			storePosition(idx * 15 + (3 * i + 2), v2.position.xyz);
 			storeNormal(idx * 15 + (3 * i + 2), v2.normal);
 			//storeColor(idx * 15 + (3 * i + 2), vec4(0.2 * sin(v2.position.xyz), 1.0));
 			storeUV(idx * 15 + (3 * i + 2), uv);
