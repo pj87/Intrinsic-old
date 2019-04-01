@@ -342,7 +342,7 @@ _INTR_INLINE ComputeCallRef createComputeCallPolygonization(
         Dod::Resources::ResourceFlags::kResourceVolatile);
 
     ComputeCallManager::_descDimensions(computeCallPloygonizationRef) =
-        glm::uvec3(8u, 8u, 8u);
+        glm::uvec3(4u, 4u, 4u);
     ComputeCallManager::_descPipeline(computeCallPloygonizationRef) =
         mesh->_pipelineScatteringRef;
 
@@ -414,7 +414,7 @@ _INTR_INLINE ComputeCallRef createComputeCallSDFGeneration(
         computeCallSDFGenerationRef, Dod::Resources::ResourceFlags::kResourceVolatile);
 
     ComputeCallManager::_descDimensions(computeCallSDFGenerationRef) =
-        glm::uvec3(8u, 8u, 8u);
+        glm::uvec3(4u, 4u, 4u);
     ComputeCallManager::_descPipeline(computeCallSDFGenerationRef) =
         mesh->_pipelineSDFGenerationRef;
 
@@ -452,7 +452,7 @@ _INTR_INLINE ComputeCallRef createComputeCallNormal(
         computeCallNormalRef, Dod::Resources::ResourceFlags::kResourceVolatile);
 
     ComputeCallManager::_descDimensions(computeCallNormalRef) =
-        glm::uvec3(8u, 8u, 8u);
+        glm::uvec3(4u, 4u, 4u);
     ComputeCallManager::_descPipeline(computeCallNormalRef) =
         mesh->_pipelineNormalRef;
 
@@ -496,7 +496,7 @@ void DynamicGeometryGeneration::postInit()
         PipelineLayoutManager::resetToDefault(pipelineLayoutSDFGeneration);
 
         GpuProgramManager::reflectPipelineLayout(
-            8u, {GpuProgramManager::getResourceByName(*(mesh->shaders[0]))},
+            4u, {GpuProgramManager::getResourceByName(*(mesh->shaders[0]))},
             pipelineLayoutSDFGeneration);
       }
       pipelineLayoutsToCreate.push_back(pipelineLayoutSDFGeneration);
@@ -526,7 +526,7 @@ void DynamicGeometryGeneration::postInit()
         PipelineLayoutManager::resetToDefault(pipelineLayoutNormal);
 
         GpuProgramManager::reflectPipelineLayout(
-            8u, {GpuProgramManager::getResourceByName(*(mesh->shaders[1]))},
+            4u, {GpuProgramManager::getResourceByName(*(mesh->shaders[1]))},
             pipelineLayoutNormal);
       }
       pipelineLayoutsToCreate.push_back(pipelineLayoutNormal);
@@ -557,7 +557,7 @@ void DynamicGeometryGeneration::postInit()
         PipelineLayoutManager::resetToDefault(pipelineLayoutScattering);
 
         GpuProgramManager::reflectPipelineLayout(
-            8u, {GpuProgramManager::getResourceByName(*(mesh->shaders[2]))},
+            4u, {GpuProgramManager::getResourceByName(*(mesh->shaders[2]))},
             pipelineLayoutScattering);
       }
       pipelineLayoutsToCreate.push_back(pipelineLayoutScattering);
@@ -582,7 +582,7 @@ void DynamicGeometryGeneration::postInit()
     PipelineLayoutManager::createResources(pipelineLayoutsToCreate);
     PipelineManager::createResources(pipelinesToCreate);
 
-    const glm::uvec3 computeDim = glm::uvec3(8u, 8u, 8u);
+    const glm::uvec3 computeDim = glm::uvec3(4u, 4u, 4u);
 
     {
       // SDF generation
@@ -789,7 +789,7 @@ void DynamicGeometryGeneration::init()
 			Dod::Resources::ResourceFlags::kResourceVolatile);
 
         ImageManager::_descDimensions(_normalsImageRef) =
-            glm::uvec3(64u, 64u, 64u);
+            glm::uvec3(4u, 4u, 4u);
         ImageManager::_descImageFormat(_normalsImageRef) =
             Format::kR16G16B16A16Float;
         ImageManager::_descImageType(_normalsImageRef) = 
