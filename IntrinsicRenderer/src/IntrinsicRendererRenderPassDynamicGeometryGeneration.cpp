@@ -496,7 +496,7 @@ void DynamicGeometryGeneration::postInit()
         PipelineLayoutManager::resetToDefault(pipelineLayoutSDFGeneration);
 
         GpuProgramManager::reflectPipelineLayout(
-            4u, {GpuProgramManager::getResourceByName(*(mesh->shaders[0]))},
+            1u, {GpuProgramManager::getResourceByName(*(mesh->shaders[0]))},
             pipelineLayoutSDFGeneration);
       }
       pipelineLayoutsToCreate.push_back(pipelineLayoutSDFGeneration);
@@ -526,7 +526,7 @@ void DynamicGeometryGeneration::postInit()
         PipelineLayoutManager::resetToDefault(pipelineLayoutNormal);
 
         GpuProgramManager::reflectPipelineLayout(
-            4u, {GpuProgramManager::getResourceByName(*(mesh->shaders[1]))},
+            1u, {GpuProgramManager::getResourceByName(*(mesh->shaders[1]))},
             pipelineLayoutNormal);
       }
       pipelineLayoutsToCreate.push_back(pipelineLayoutNormal);
@@ -557,7 +557,7 @@ void DynamicGeometryGeneration::postInit()
         PipelineLayoutManager::resetToDefault(pipelineLayoutScattering);
 
         GpuProgramManager::reflectPipelineLayout(
-            4u, {GpuProgramManager::getResourceByName(*(mesh->shaders[2]))},
+            1u, {GpuProgramManager::getResourceByName(*(mesh->shaders[2]))},
             pipelineLayoutScattering);
       }
       pipelineLayoutsToCreate.push_back(pipelineLayoutScattering);
