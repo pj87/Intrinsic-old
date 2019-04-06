@@ -342,7 +342,7 @@ _INTR_INLINE ComputeCallRef createComputeCallPolygonization(
         Dod::Resources::ResourceFlags::kResourceVolatile);
 
     ComputeCallManager::_descDimensions(computeCallPloygonizationRef) =
-        glm::uvec3(4u, 4u, 4u);
+        glm::uvec3(p_Dim);
     ComputeCallManager::_descPipeline(computeCallPloygonizationRef) =
         mesh->_pipelineScatteringRef;
 
@@ -414,7 +414,7 @@ _INTR_INLINE ComputeCallRef createComputeCallSDFGeneration(
         computeCallSDFGenerationRef, Dod::Resources::ResourceFlags::kResourceVolatile);
 
     ComputeCallManager::_descDimensions(computeCallSDFGenerationRef) =
-        glm::uvec3(4u, 4u, 4u);
+        glm::uvec3(p_Dim);
     ComputeCallManager::_descPipeline(computeCallSDFGenerationRef) =
         mesh->_pipelineSDFGenerationRef;
 
@@ -452,7 +452,7 @@ _INTR_INLINE ComputeCallRef createComputeCallNormal(
         computeCallNormalRef, Dod::Resources::ResourceFlags::kResourceVolatile);
 
     ComputeCallManager::_descDimensions(computeCallNormalRef) =
-        glm::uvec3(4u, 4u, 4u);
+        glm::uvec3(p_Dim);
     ComputeCallManager::_descPipeline(computeCallNormalRef) =
         mesh->_pipelineNormalRef;
 
@@ -582,7 +582,10 @@ void DynamicGeometryGeneration::postInit()
     PipelineLayoutManager::createResources(pipelineLayoutsToCreate);
     PipelineManager::createResources(pipelinesToCreate);
 
-    const glm::uvec3 computeDim = glm::uvec3(4u, 4u, 4u);
+    const glm::uvec3 computeDim = 
+		glm::uvec3(sqrt(mesh->sizes[0]), 
+				   sqrt(mesh->sizes[1]), 
+				   sqrt(mesh->sizes[2]));
 
     {
       // SDF generation
@@ -789,7 +792,10 @@ void DynamicGeometryGeneration::init()
 			Dod::Resources::ResourceFlags::kResourceVolatile);
 
         ImageManager::_descDimensions(_normalsImageRef) =
-            glm::uvec3(4u, 4u, 4u);
+            glm::uvec3(sqrt(mesh->sizes[0]), 
+					   sqrt(mesh->sizes[1]), 
+					   sqrt(mesh->sizes[2]));
+
         ImageManager::_descImageFormat(_normalsImageRef) =
             Format::kR16G16B16A16Float;
         ImageManager::_descImageType(_normalsImageRef) = 
