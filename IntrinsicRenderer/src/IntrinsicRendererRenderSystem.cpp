@@ -227,7 +227,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64,
+        64, 64, 256,
         _N(house_4), 
 		"cave.comp", 
 		"normal_generation.comp",
@@ -235,7 +235,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false);
     
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
+        64, 64, 256, 
 		_N(house_5), 
 		"cave.comp", 
 		"normal_generation.comp",
