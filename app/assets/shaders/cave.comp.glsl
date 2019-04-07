@@ -65,6 +65,7 @@ float ground( in vec3 p )
 float map( in vec3 p )
 {
 	return min(ground(p), rock(p));
+	//return length(p) - 10.0f;
 }
 
 float mapScaled(vec3 p, vec4 c)
@@ -73,7 +74,7 @@ float mapScaled(vec3 p, vec4 c)
 	return map(p / 0.1) * 0.1;
 }
 
-layout(local_size_x = 4u, local_size_y = 4u, local_size_z = 4u) in;
+layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 16u) in;
 void main()
 {
     uvec3 id = gl_GlobalInvocationID;
