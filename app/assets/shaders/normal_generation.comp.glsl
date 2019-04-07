@@ -14,7 +14,7 @@ layout(binding = 2) buffer _SizeBuffer
 	int _Border;
 };
 
-layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 16u) in;
+layout(local_size_x = 4u, local_size_y = 8u, local_size_z = 16u) in;
 void main()
 {
     ivec3 id = ivec3(gl_GlobalInvocationID);

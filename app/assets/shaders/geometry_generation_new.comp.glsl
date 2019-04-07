@@ -213,7 +213,7 @@ void storeColor(uint i, vec4 p_Color)
   _Colors[i] = packUnorm4x8(vec4(p_Color.b, p_Color.g, p_Color.r, p_Color.a));
 }
 				
-layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 16u) in;
+layout(local_size_x = 4u, local_size_y = 8u, local_size_z = 16u) in;
 void main()
 {	
 	uvec3 id = gl_GlobalInvocationID;

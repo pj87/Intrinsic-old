@@ -64,7 +64,7 @@ float ground( in vec3 p )
 }
 float map( in vec3 p )
 {
-	return min(ground(p), rock(p));
+	return rock(p);
 	//return length(p) - 10.0f;
 }
 
@@ -74,7 +74,7 @@ float mapScaled(vec3 p, vec4 c)
 	return map(p / 0.1) * 0.1;
 }
 
-layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 16u) in;
+layout(local_size_x = 4u, local_size_y = 8u, local_size_z = 16u) in;
 void main()
 {
     uvec3 id = gl_GlobalInvocationID;
@@ -93,7 +93,7 @@ void main()
 
 	vec4 c = 0.45*cos( vec4(0.5,3.9,1.4,1.1) + _Frequency*vec4(1.2,1.7,1.3,2.5) ) - vec4(0.3,0.0,0.0,0.0);
 	//vec4 c = vec4(0.4);
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(10.0f), c);
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(25.0f, 10.0f, 0.0f), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0f * sin(_Frequency)), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(_Frequency), vec2(5.0, 2.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(10.0), vec3(10.0, 5.0, 5.0));
