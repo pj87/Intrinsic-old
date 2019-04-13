@@ -213,7 +213,7 @@ void storeColor(uint i, vec4 p_Color)
   _Colors[i] = packUnorm4x8(vec4(p_Color.b, p_Color.g, p_Color.r, p_Color.a));
 }
 				
-layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
+layout(local_size_x = 4u, local_size_y = 8u, local_size_z = 16u) in;
 void main()
 {	
 	uvec3 id = gl_GlobalInvocationID;
@@ -284,9 +284,14 @@ void main()
 			vec4 color = vec4(sin(id.x / 10.0), cos(id.y / 10.0), sin(id.z / 10.0), 1.0);
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 0)]];
 			Vert v0 = CreateVertex(position, centre, size);
-			uvX = clamp((v0.position.yz + _Width / 2.0) / _Width, vec2(0.0), vec2(1.0));
-			uvY = clamp((v0.position.xz + _Height / 2.0) / _Height, vec2(0.0), vec2(1.0));
-			uvZ = clamp((v0.position.xy + _Depth / 2.0) / _Depth, vec2(0.0), vec2(1.0));
+			uvX = (v0.position.yz + _Width / 2.0) / _Width;
+			uvY = (v0.position.xz + _Height / 2.0) / _Height;
+			uvZ = (v0.position.xy + _Depth / 2.0) / _Depth;
+			
+			uvX *= 0.5;
+			uvY *= 0.5;
+			uvZ *= 0.5;
+			
 			uv = mix(uvX, uvZ, abs(v0.normal.z));
 			uv = mix(uv, uvY, abs(v0.normal.y));
 			storePosition(idx * 15 + (3 * i + 0), v0.position.xyz);
@@ -296,9 +301,14 @@ void main()
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
 			Vert v1 = CreateVertex(position, centre, size);
-			uvX = clamp((v1.position.yz + _Width / 2.0) / _Width, vec2(0.0), vec2(1.0));
-			uvY = clamp((v1.position.xz + _Height / 2.0) / _Height, vec2(0.0), vec2(1.0));
-			uvZ = clamp((v1.position.xy + _Depth / 2.0) / _Depth, vec2(0.0), vec2(1.0));
+			uvX = (v1.position.yz + _Width / 2.0) / _Width;
+			uvY = (v1.position.xz + _Height / 2.0) / _Height;
+			uvZ = (v1.position.xy + _Depth / 2.0) / _Depth;
+			
+			uvX *= 0.5;
+			uvY *= 0.5;
+			uvZ *= 0.5;
+			
 			uv = mix(uvX, uvZ, abs(v1.normal.z));
 			uv = mix(uv, uvY, abs(v1.normal.y));
 			storePosition(idx * 15 + (3 * i + 1), v1.position.xyz);
@@ -308,9 +318,14 @@ void main()
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
 			Vert v2 = CreateVertex(position, centre, size);
-			uvX = clamp((v2.position.yz + _Width / 2.0) / _Width, vec2(0.0), vec2(1.0));
-			uvY = clamp((v2.position.xz + _Height / 2.0) / _Height, vec2(0.0), vec2(1.0));
-			uvZ = clamp((v2.position.xy + _Depth / 2.0) / _Depth, vec2(0.0), vec2(1.0));
+			uvX = (v2.position.yz + _Width / 2.0) / _Width;
+			uvY = (v2.position.xz + _Height / 2.0) / _Height;
+			uvZ = (v2.position.xy + _Depth / 2.0) / _Depth;
+			
+			uvX *= 0.5;
+			uvY *= 0.5;
+			uvZ *= 0.5;
+			
 			uv = mix(uvX, uvZ, abs(v2.normal.z));
 			uv = mix(uv, uvY, abs(v2.normal.y));
 			storePosition(idx * 15 + (3 * i + 2), v2.position.xyz);

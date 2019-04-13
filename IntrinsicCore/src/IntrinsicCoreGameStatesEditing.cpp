@@ -818,7 +818,7 @@ Entity::EntityRef Editing::_currentlySelectedEntity;
 EditingMode::Enum Editing::_editingMode = EditingMode::kDefault;
 float Editing::_gridSize = 1.0f;
 float Editing::_gizmoSize = 0.1f;
-float Editing::_cameraSpeed = 150.0f;
+float Editing::_cameraSpeed = 1500.0f;
 float Editing::_rotationStepSize = 5.0f;
 
 // <-
