@@ -178,7 +178,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 
     RenderPass::Clustering::init();
     RenderPass::VolumetricLighting::init();
-
+    /*
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
 		64, 64, 64,
 		_N(pbr_test_075),
@@ -217,11 +217,11 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-
+	*/
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain), 
-		"terrain_generated.comp", 
+		"terrain_generated1.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
