@@ -193,6 +193,7 @@ DrawCallRef DrawCallManager::createDrawCallForMesh(
 
     _INTR_ASSERT(PipelineManager::_vkPipeline(_descPipeline(drawCallMesh)));
 
+	_descInstanceCount(drawCallRef) = 10u;
     _descVertexBuffers(drawCallMesh) =
         MeshManager::_vertexBuffersPerSubMesh(p_Mesh)[p_SubMeshIdx];
     _descIndexBuffer(drawCallMesh) =

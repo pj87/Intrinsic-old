@@ -251,7 +251,7 @@ struct DrawCallManager
   {
     _descVertexCount(p_Ref) = 0u;
     _descIndexCount(p_Ref) = 0u;
-    _descInstanceCount(p_Ref) = 1u;
+    _descInstanceCount(p_Ref) = 10u;
     _descPipeline(p_Ref) = PipelineRef();
     _descBindInfos(p_Ref).clear();
     _descVertexBuffers(p_Ref).clear();

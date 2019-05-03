@@ -53,6 +53,7 @@ void VertexLayoutManager::createResources(
       {
         vertexInputBindingDesc.binding = vtxBinding.binding;
         vertexInputBindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+        //vertexInputBindingDesc.inputRate = VK_VERTEX_INPUT_RATE_INSTANCE;
         vertexInputBindingDesc.stride = vtxBinding.stride;
       }
     }

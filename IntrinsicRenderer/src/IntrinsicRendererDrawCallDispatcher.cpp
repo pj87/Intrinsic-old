@@ -80,6 +80,8 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
                 .data());
       }
 
+	  //_INTR_LOG_WARNING("instances: %d", Resources::DrawCallManager::_descInstanceCount(drawCallRef));
+
       // Draw
       {
         Resources::BufferRef indexBufferRef =
