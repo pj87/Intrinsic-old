@@ -406,13 +406,20 @@ Components::NodeRef World::loadNodeHierarchy(const _INTR_STRING& p_FilePath)
 
   _INTR_ARRAY(Components::NodeRef) loadedNodes;
 
+  int foundNode = -1;
+
   // Initializes nodes
   {
     for (uint32_t i = 0u; i < saveDesc.Size(); ++i)
     {
       rapidjson::Value& node = saveDesc[i];
+
+	  if (!strncmp(node["name"].GetString(), "Tree10", 6))
+        foundNode = i;
+
       Entity::EntityRef entityRef =
           Entity::EntityManager::createEntity(node["name"].GetString());
+
       rapidjson::Value& propertyEntries = node["propertyEntries"];
 
       for (auto it = propertyEntries.Begin(); it != propertyEntries.End(); ++it)
@@ -452,12 +459,21 @@ Components::NodeRef World::loadNodeHierarchy(const _INTR_STRING& p_FilePath)
     }
   }
 
+  int sizeNodes = loadedNodes.size();
+
+  for (int i = 0; i < 100; i++)
+  {
+	  const Components::NodeRef nodeRef = World::cloneNodeFull(loadedNodes[foundNode]);
+	  loadedNodes.push_back(nodeRef);
+  }
+
   // Restore hierarchy
   {
     for (uint32_t i = 0u; i < loadedNodes.size(); ++i)
     {
       const Components::NodeRef nodeRef = loadedNodes[i];
-      rapidjson::Value& node = saveDesc[i];
+
+      rapidjson::Value& node = saveDesc[i <= (sizeNodes - 1) ? i : foundNode];
 
       const int32_t offsetToParent = node["offsetToParent"].GetInt();
 
