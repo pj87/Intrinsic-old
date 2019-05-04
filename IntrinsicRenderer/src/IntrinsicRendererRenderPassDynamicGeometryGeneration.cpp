@@ -479,6 +479,8 @@ _INTR_INLINE ComputeCallRef createComputeCallNormal(
 std::vector<std::unique_ptr<DynamicGeneratedMesh>>
     DynamicGeometryGeneration::dynamicGenerationMeshes;
 
+std::vector<std::unique_ptr<Name>> pseudoInstancedMeshes;
+
 void DynamicGeometryGeneration::postInit()
 {
   PipelineRefArray pipelinesToCreate;
@@ -651,11 +653,18 @@ bool DynamicGeometryGeneration::isOverridenMesh(const Name& meshName)
 
 bool DynamicGeometryGeneration::isInstancedMesh(const Name& meshName)
 {
-  for (auto& mesh : dynamicGenerationMeshes)
+  /*
+  for (auto& mesh : pseudoInstancedMeshes)
   {
-    if ((*mesh->meshName) == meshName)
+    if ((*mesh) == meshName)
       return true;
   }
+  return false;
+  */
+
+  if (meshName == _N(Tree_Tall_01_8))
+    return true;
+
   return false;
 }
 
