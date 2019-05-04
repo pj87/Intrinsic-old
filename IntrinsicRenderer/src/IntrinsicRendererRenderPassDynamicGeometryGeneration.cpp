@@ -649,6 +649,16 @@ bool DynamicGeometryGeneration::isOverridenMesh(const Name& meshName)
   return false;
 }
 
+bool DynamicGeometryGeneration::isInstancedMesh(const Name& meshName)
+{
+  for (auto& mesh : dynamicGenerationMeshes)
+  {
+    if ((*mesh->meshName) == meshName)
+      return true;
+  }
+  return false;
+}
+
 void DynamicGeometryGeneration::init()
 {
   // Buffers

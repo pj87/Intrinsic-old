@@ -460,13 +460,13 @@ Components::NodeRef World::loadNodeHierarchy(const _INTR_STRING& p_FilePath)
   }
 
   int sizeNodes = loadedNodes.size();
-
+  /*
   for (int i = 0; i < 100; i++)
   {
 	  const Components::NodeRef nodeRef = World::cloneNodeFull(loadedNodes[foundNode]);
 	  loadedNodes.push_back(nodeRef);
   }
-
+  */
   // Restore hierarchy
   {
     for (uint32_t i = 0u; i < loadedNodes.size(); ++i)

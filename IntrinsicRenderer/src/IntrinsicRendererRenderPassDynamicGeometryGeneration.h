@@ -15,6 +15,7 @@
 #pragma once
 
 #define _IS_OVERRIDEN_MESH(name) Intrinsic::Renderer::RenderPass::DynamicGeometryGeneration::isOverridenMesh(name)
+#define _IS_INSTANCED_MESH(name) Intrinsic::Renderer::RenderPass::DynamicGeometryGeneration::isInstancedMesh(name)
 
 namespace Intrinsic
 {
@@ -106,6 +107,7 @@ struct DynamicGeometryGeneration
                                        const Name&&, bool isDynamic = true);
 
   static bool isOverridenMesh(const Name&);
+  static bool isInstancedMesh(const Name&);
 
   static void init();
   static void onReinitRendering();

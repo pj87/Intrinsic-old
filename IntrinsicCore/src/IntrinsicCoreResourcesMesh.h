@@ -406,12 +406,14 @@ struct MeshManager
     destroyResources(_activeRefs);
     createResources(_activeRefs);
     createGeneratedResources(_activeRefs);
+    createInstancedResources(_activeRefs);
   }
 
   // <-
 
   static void createResources(const MeshRefArray& p_Meshes);
   static void createGeneratedResources(const MeshRefArray& p_Meshes);
+  static void createInstancedResources(const MeshRefArray& p_Meshes);
 
   // <-
 
