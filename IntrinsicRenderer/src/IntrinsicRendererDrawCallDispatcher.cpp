@@ -84,6 +84,12 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
       {
         Resources::BufferRef indexBufferRef =
             Resources::DrawCallManager::_descIndexBuffer(drawCallRef);
+
+		Components::MeshRef meshCompRef =
+            DrawCallManager::_descMeshComponent(drawCallRef);
+
+        const Name& name = Components::MeshManager::getMeshName(meshCompRef);
+
         if (indexBufferRef.isValid())
         {
           const VkIndexType indexType =
@@ -96,18 +102,26 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
               Resources::BufferManager::_vkBuffer(indexBufferRef),
               Resources::DrawCallManager::_indexBufferOffset(drawCallRef),
               indexType);
-          vkCmdDrawIndexed(
-              secondCmdBuffer,
-              Resources::DrawCallManager::_descIndexCount(drawCallRef),
-              Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
-              0u, 0u);
+
+		  if (!_IS_INSTANCED_MESH(name))
+          {
+			  vkCmdDrawIndexed(
+				  secondCmdBuffer,
+				  Resources::DrawCallManager::_descIndexCount(drawCallRef),
+				  Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
+				  0u, 0u);
+           }
+		  else
+		  {
+			  vkCmdDrawIndexed(
+				  secondCmdBuffer,
+				  Resources::DrawCallManager::_descIndexCount(drawCallRef) * 2u,
+				  Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
+				  0u, 0u);
+		  }
         }
         else
-        {
-		  Components::MeshRef meshCompRef =
-              DrawCallManager::_descMeshComponent(drawCallRef);
-          
-		  const Name& name = Components::MeshManager::getMeshName(meshCompRef);          
+        {          
 		  if (_IS_OVERRIDEN_MESH(name))
 		  {
 		    vkCmdDraw(secondCmdBuffer, 12000000u, 1u, 0u, 0u);                  
