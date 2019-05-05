@@ -393,6 +393,12 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           tempBuffer[len + i * 3u + 1u] = packedPosition0_0 >> 16u;
           tempBuffer[len + i * 3u + 2u] = packedPosition1_0;
 
+		  /*
+		  if (i == positions[subMeshIdx].size())
+            _INTR_LOG_INFO("------------------------------------------");
+
+		  _INTR_LOG_INFO("Dodaje %d, %d", i * 3u, len + i * 3u);
+          */
 		  //_INTR_LOG_WARNING("ostatnie: %d", (i * 3u + 2u));
         }
         BufferManager::_descInitialData(posVertexBuffer) = tempBuffer;
@@ -616,12 +622,23 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
                   indexBufferSizeInBytes);
           tempBuffersToRelease.push_back(tempIndexBuffer);
 
+		  uint32_t len = indices[subMeshIdx].size();
+
           for (uint32_t i = 0u; i < indices[subMeshIdx].size(); ++i)
           {
             tempIndexBuffer[i] = (uint16_t)indices[subMeshIdx][i];
-            tempIndexBuffer[i + indices[subMeshIdx].size()] =
-                (uint16_t)indices[subMeshIdx][i];
+            tempIndexBuffer[i + indices[subMeshIdx].size()] = 
+                (uint16_t)indices[subMeshIdx][i] + len;
           }
+
+		  /*
+		  for (int i = 0; i < indices[subMeshIdx].size() * 2u; i++)
+		  {
+            if (i == (indices[subMeshIdx].size()))
+                      _INTR_LOG_WARNING("---------------------------------------------------");
+			_INTR_LOG_WARNING("%d", tempIndexBuffer[i]);
+		  }
+		  */
 
           BufferManager::_descBufferType(indexBuffer) = R::BufferType::kIndex16;
           BufferManager::_descSizeInBytes(indexBuffer) = indexBufferSizeInBytes;
