@@ -381,7 +381,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
               glm::packHalf2x16(glm::vec2(positions[subMeshIdx][i].z, 0.0f));
 
 		  uint32_t packedPosition0_0 = glm::packHalf2x16(glm::vec2(
-              positions[subMeshIdx][i].x, positions[subMeshIdx][i].y - 50.0));
+              positions[subMeshIdx][i].x, positions[subMeshIdx][i].y - 2.5));
           uint32_t packedPosition1_0 =
               glm::packHalf2x16(glm::vec2(positions[subMeshIdx][i].z, 0.0f));
 
@@ -389,9 +389,9 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           tempBuffer[i * 3u + 1u] = packedPosition0 >> 16u;
           tempBuffer[i * 3u + 2u] = packedPosition1;
 
-		  tempBuffer[(len + i) * 3u] = packedPosition0_0;
-          tempBuffer[(len + i) * 3u + 1u] = packedPosition0_0 >> 16u;
-          tempBuffer[(len + i) * 3u + 2u] = packedPosition1_0;
+		  tempBuffer[len + i * 3u] = packedPosition0_0;
+          tempBuffer[len + i * 3u + 1u] = packedPosition0_0 >> 16u;
+          tempBuffer[len + i * 3u + 2u] = packedPosition1_0;
 
 		  //_INTR_LOG_WARNING("ostatnie: %d", (i * 3u + 2u));
         }
@@ -436,8 +436,8 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           tempBuffer[i * 2u] = packedUv;
           tempBuffer[i * 2u + 1u] = packedUv >> 16u;
 
-		  tempBuffer[(i + len) * 2u] = packedUv;
-          tempBuffer[(i + len) * 2u + 1u] = packedUv >> 16u;
+		  tempBuffer[len + i * 2u] = packedUv;
+          tempBuffer[len + i * 2u + 1u] = packedUv >> 16u;
         }
         BufferManager::_descInitialData(uv0VertexBuffer) = tempBuffer;
 
@@ -476,9 +476,9 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           tempBuffer[i * 3u + 1u] = packedNormal0 >> 16u;
           tempBuffer[i * 3u + 2u] = packedNormal1;
 
-		  tempBuffer[(i + len) * 3u] = packedNormal0;
-          tempBuffer[(i + len) * 3u + 1u] = packedNormal0 >> 16u;
-          tempBuffer[(i + len) * 3u + 2u] = packedNormal1;
+		  tempBuffer[len + i * 3u] = packedNormal0;
+          tempBuffer[len + i * 3u + 1u] = packedNormal0 >> 16u;
+          tempBuffer[len + i * 3u + 2u] = packedNormal1;
         }
         BufferManager::_descInitialData(normalVertexBuffer) = tempBuffer;
 
@@ -517,9 +517,9 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           tempBuffer[i * 3u + 1u] = packedTangent0 >> 16u;
           tempBuffer[i * 3u + 2u] = packedTangent1;
 
-		  tempBuffer[(i + len) * 3u] = packedTangent0;
-          tempBuffer[(i + len) * 3u + 1u] = packedTangent0 >> 16u;
-          tempBuffer[(i + len) * 3u + 2u] = packedTangent1;
+		  tempBuffer[len + i * 3u] = packedTangent0;
+          tempBuffer[len + i * 3u + 1u] = packedTangent0 >> 16u;
+          tempBuffer[len + i * 3u + 2u] = packedTangent1;
         }
         BufferManager::_descInitialData(tangentVertexBuffer) = tempBuffer;
 
@@ -554,9 +554,13 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           uint32_t packedBinormal1 =
               glm::packHalf2x16(glm::vec2(binormals[subMeshIdx][i].z, 0.0f));
 
-          tempBuffer[(i + len) * 3u] = packedBinormal0;
-          tempBuffer[(i + len) * 3u + 1u] = packedBinormal0 >> 16u;
-          tempBuffer[(i + len) * 3u + 2u] = packedBinormal1;
+		  tempBuffer[i * 3u] = packedBinormal0;
+          tempBuffer[i * 3u + 1u] = packedBinormal0 >> 16u;
+          tempBuffer[i * 3u + 2u] = packedBinormal1;
+
+          tempBuffer[len + i * 3u] = packedBinormal0;
+          tempBuffer[len + i * 3u + 1u] = packedBinormal0 >> 16u;
+          tempBuffer[len + i * 3u + 2u] = packedBinormal1;
         }
         BufferManager::_descInitialData(binormalVertexBuffer) = tempBuffer;
 
