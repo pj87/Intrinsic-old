@@ -427,12 +427,17 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             BufferManager::_descSizeInBytes(uv0VertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
+		uint32_t len = uv0s[subMeshIdx].size();
+
         for (uint32_t i = 0u; i < uv0s[subMeshIdx].size(); ++i)
         {
           uint32_t packedUv = glm::packHalf2x16(uv0s[subMeshIdx][i]);
 
           tempBuffer[i * 2u] = packedUv;
           tempBuffer[i * 2u + 1u] = packedUv >> 16u;
+
+		  tempBuffer[(i + len) * 2u] = packedUv;
+          tempBuffer[(i + len) * 2u + 1u] = packedUv >> 16u;
         }
         BufferManager::_descInitialData(uv0VertexBuffer) = tempBuffer;
 
@@ -458,6 +463,8 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             BufferManager::_descSizeInBytes(normalVertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
+		uint32_t len = normals[subMeshIdx].size();
+
         for (uint32_t i = 0u; i < normals[subMeshIdx].size(); ++i)
         {
           uint32_t packedNormal0 = glm::packHalf2x16(
@@ -468,6 +475,10 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           tempBuffer[i * 3u] = packedNormal0;
           tempBuffer[i * 3u + 1u] = packedNormal0 >> 16u;
           tempBuffer[i * 3u + 2u] = packedNormal1;
+
+		  tempBuffer[(i + len) * 3u] = packedNormal0;
+          tempBuffer[(i + len) * 3u + 1u] = packedNormal0 >> 16u;
+          tempBuffer[(i + len) * 3u + 2u] = packedNormal1;
         }
         BufferManager::_descInitialData(normalVertexBuffer) = tempBuffer;
 
@@ -493,6 +504,8 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             BufferManager::_descSizeInBytes(tangentVertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
+		uint32_t len = tangents[subMeshIdx].size();
+
         for (uint32_t i = 0u; i < tangents[subMeshIdx].size(); ++i)
         {
           uint32_t packedTangent0 = glm::packHalf2x16(
@@ -503,6 +516,10 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           tempBuffer[i * 3u] = packedTangent0;
           tempBuffer[i * 3u + 1u] = packedTangent0 >> 16u;
           tempBuffer[i * 3u + 2u] = packedTangent1;
+
+		  tempBuffer[(i + len) * 3u] = packedTangent0;
+          tempBuffer[(i + len) * 3u + 1u] = packedTangent0 >> 16u;
+          tempBuffer[(i + len) * 3u + 2u] = packedTangent1;
         }
         BufferManager::_descInitialData(tangentVertexBuffer) = tempBuffer;
 
@@ -528,6 +545,8 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             BufferManager::_descSizeInBytes(binormalVertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
+		uint32_t len = binormals[subMeshIdx].size();
+
         for (uint32_t i = 0u; i < binormals[subMeshIdx].size(); ++i)
         {
           uint32_t packedBinormal0 = glm::packHalf2x16(glm::vec2(
@@ -535,9 +554,9 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           uint32_t packedBinormal1 =
               glm::packHalf2x16(glm::vec2(binormals[subMeshIdx][i].z, 0.0f));
 
-          tempBuffer[i * 3u] = packedBinormal0;
-          tempBuffer[i * 3u + 1u] = packedBinormal0 >> 16u;
-          tempBuffer[i * 3u + 2u] = packedBinormal1;
+          tempBuffer[(i + len) * 3u] = packedBinormal0;
+          tempBuffer[(i + len) * 3u + 1u] = packedBinormal0 >> 16u;
+          tempBuffer[(i + len) * 3u + 2u] = packedBinormal1;
         }
         BufferManager::_descInitialData(binormalVertexBuffer) = tempBuffer;
 
@@ -557,16 +576,19 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             R::BufferType::kVertex;
 
         BufferManager::_descSizeInBytes(vtxColorVertexBuffer) =
-            (uint32_t)vtxColors[subMeshIdx].size() * sizeof(uint32_t);
+            (uint32_t)vtxColors[subMeshIdx].size() * sizeof(uint32_t) * 2u;
 
         // Convert color
         uint32_t* tempBuffer = (uint32_t*)Memory::Tlsf::MainAllocator::allocate(
             BufferManager::_descSizeInBytes(vtxColorVertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
+		uint32_t len = vtxColors[subMeshIdx].size();
+
         for (uint32_t i = 0u; i < vtxColors[subMeshIdx].size(); ++i)
         {
           tempBuffer[i] = Math::convertColorToBGRA(vtxColors[subMeshIdx][i]);
+          tempBuffer[i + len] = Math::convertColorToBGRA(vtxColors[subMeshIdx][i]);
         }
         BufferManager::_descInitialData(vtxColorVertexBuffer) = tempBuffer;
 
