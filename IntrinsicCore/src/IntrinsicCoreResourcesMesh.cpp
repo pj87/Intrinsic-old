@@ -371,6 +371,8 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             BufferManager::_descSizeInBytes(posVertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
+		_INTR_LOG_WARNING("Positions: %d", positions[subMeshIdx].size());
+
 		uint32_t len = positions[subMeshIdx].size();
 
         for (uint32_t i = 0u; i < positions[subMeshIdx].size(); ++i)
@@ -382,16 +384,20 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
 		  uint32_t packedPosition0_0 = glm::packHalf2x16(glm::vec2(
               positions[subMeshIdx][i].x, positions[subMeshIdx][i].y - 2.5));
+          /*
           uint32_t packedPosition1_0 =
               glm::packHalf2x16(glm::vec2(positions[subMeshIdx][i].z, 0.0f));
-
+		  */
           tempBuffer[i * 3u] = packedPosition0;
           tempBuffer[i * 3u + 1u] = packedPosition0 >> 16u;
           tempBuffer[i * 3u + 2u] = packedPosition1;
 
 		  tempBuffer[len + i * 3u] = packedPosition0_0;
           tempBuffer[len + i * 3u + 1u] = packedPosition0_0 >> 16u;
-          tempBuffer[len + i * 3u + 2u] = packedPosition1_0;
+          tempBuffer[len + i * 3u + 2u] = packedPosition1;
+
+		  _INTR_LOG_WARNING("%d %d", tempBuffer[i * 3u], 
+			  tempBuffer[len + i * 3u]);
 
 		  /*
 		  if (i == positions[subMeshIdx].size())
@@ -403,6 +409,15 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
         }
         BufferManager::_descInitialData(posVertexBuffer) = tempBuffer;
 
+		/*
+		for (int i = 0; i < indices[subMeshIdx].size() * 2u; i++)
+        {
+          if (i == (indices[subMeshIdx].size()))
+            _INTR_LOG_WARNING(
+                "---------------------------------------------------");
+          _INTR_LOG_WARNING("%d", tempIndexBuffer[i]);
+        }
+		*/
 		//_INTR_LOG_WARNING("total: %d", positions[subMeshIdx].size());
 		
 		/*
@@ -622,23 +637,23 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
                   indexBufferSizeInBytes);
           tempBuffersToRelease.push_back(tempIndexBuffer);
 
-		  uint32_t len = indices[subMeshIdx].size();
+		  //uint32_t len = indices[subMeshIdx].size();
+          uint32_t len = positions[subMeshIdx].size();
 
           for (uint32_t i = 0u; i < indices[subMeshIdx].size(); ++i)
           {
             tempIndexBuffer[i] = (uint16_t)indices[subMeshIdx][i];
-            tempIndexBuffer[i + indices[subMeshIdx].size()] = 
+            tempIndexBuffer[i + indices[subMeshIdx].size()] =
+                //(uint16_t)indices[subMeshIdx][i];
                 (uint16_t)indices[subMeshIdx][i] + len;
           }
 
-		  /*
 		  for (int i = 0; i < indices[subMeshIdx].size() * 2u; i++)
 		  {
             if (i == (indices[subMeshIdx].size()))
                       _INTR_LOG_WARNING("---------------------------------------------------");
 			_INTR_LOG_WARNING("%d", tempIndexBuffer[i]);
 		  }
-		  */
 
           BufferManager::_descBufferType(indexBuffer) = R::BufferType::kIndex16;
           BufferManager::_descSizeInBytes(indexBuffer) = indexBufferSizeInBytes;
