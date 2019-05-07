@@ -378,14 +378,14 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
         for (uint32_t i = 0u; i < positions[subMeshIdx].size(); ++i)
         {
           uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(
-              positions[subMeshIdx][i].x, positions[subMeshIdx][i].y));
-          uint32_t packedPosition1 =
-              glm::packHalf2x16(glm::vec2(positions[subMeshIdx][i].z, 0.0f));
+              positions[subMeshIdx][i].x - 25.0f, positions[subMeshIdx][i].y));
+          uint32_t packedPosition1 = glm::packHalf2x16(
+              glm::vec2(positions[subMeshIdx][i].z - 25.0f, 0.0f));
 
 		  uint32_t packedPosition0_0 = glm::packHalf2x16(glm::vec2(
-              positions[subMeshIdx][i].x, positions[subMeshIdx][i].y + 2.5));
-          uint32_t packedPosition1_0 =
-              glm::packHalf2x16(glm::vec2(positions[subMeshIdx][i].z, 0.0f));
+              positions[subMeshIdx][i].x + 25.0f, positions[subMeshIdx][i].y));
+          uint32_t packedPosition1_0 = glm::packHalf2x16(
+                      glm::vec2(positions[subMeshIdx][i].z + 25.0f, 0.0f));
 
           tempBuffer[i * 3u] = packedPosition0;
           tempBuffer[i * 3u + 1u] = packedPosition0 >> 16u;
@@ -394,7 +394,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 		  tempBuffer[(len + i) * 3u] = packedPosition0_0;
           tempBuffer[(len + i) * 3u + 1u] = packedPosition0_0 >> 16u;
           tempBuffer[(len + i) * 3u + 2u] = packedPosition1_0;
-
+          /*
 		  _INTR_LOG_WARNING("i * 3u: %d", (i * 3u));
           _INTR_LOG_WARNING("i * 3u + 1u: %d", (i * 3u + 1u));
           _INTR_LOG_WARNING("i * 3u + 2u: %d", (i * 3u + 2u));
@@ -402,7 +402,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 		  _INTR_LOG_WARNING("(len + i) * 3u: %d", (len + i) * 3u);
           _INTR_LOG_WARNING("(len + i) * 3u + 1u: %d", (len + i) * 3u + 1u);
           _INTR_LOG_WARNING("(len + i) * 3u + 2u: %d", (len + i) * 3u + 2u);
-
+		  */
 		  /*
 		  _INTR_LOG_WARNING("0 %d %d", tempBuffer[i * 3u], 
 			  tempBuffer[(len + i) * 3u]);
@@ -663,12 +663,14 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
                 (uint16_t)indices[subMeshIdx][i] + len;
           }
 
+          /*
 		  for (int i = 0; i < indices[subMeshIdx].size() * 2u; i++)
 		  {
             if (i == (indices[subMeshIdx].size()))
                       _INTR_LOG_WARNING("---------------------------------------------------");
 			_INTR_LOG_WARNING("%d", tempIndexBuffer[i]);
 		  }
+		  */
 
           BufferManager::_descBufferType(indexBuffer) = R::BufferType::kIndex16;
           BufferManager::_descSizeInBytes(indexBuffer) = indexBufferSizeInBytes;
