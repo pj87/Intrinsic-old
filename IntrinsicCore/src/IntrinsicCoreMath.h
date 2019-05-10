@@ -496,8 +496,8 @@ _INTR_INLINE void extractFrustumPlanes(FrustumPlanes& p_FrustumPlanes,
   p_FrustumPlanes.d[FrustumPlane::kLeft] =
       p_ViewProjMatrix[3].w + p_ViewProjMatrix[3].x;
 
-  p_FrustumPlanes.n[FrustumPlane::kLeft].x *= 10.0f;
-  p_FrustumPlanes.n[FrustumPlane::kLeft].z *= 10.0f;
+  //p_FrustumPlanes.n[FrustumPlane::kLeft].x *= 10.0f;
+  //p_FrustumPlanes.n[FrustumPlane::kLeft].z *= 10.0f;
 
   p_FrustumPlanes.n[FrustumPlane::kRight].x =
       p_ViewProjMatrix[0].w - p_ViewProjMatrix[0].x;
@@ -508,8 +508,8 @@ _INTR_INLINE void extractFrustumPlanes(FrustumPlanes& p_FrustumPlanes,
   p_FrustumPlanes.d[FrustumPlane::kRight] =
       p_ViewProjMatrix[3].w - p_ViewProjMatrix[3].x;
 
-  p_FrustumPlanes.n[FrustumPlane::kRight].x *= 10.0f;
-  p_FrustumPlanes.n[FrustumPlane::kRight].z *= 10.0f;
+  //p_FrustumPlanes.n[FrustumPlane::kRight].x *= 10.0f;
+  //p_FrustumPlanes.n[FrustumPlane::kRight].z *= 10.0f;
 
   p_FrustumPlanes.n[FrustumPlane::kTop].x =
       p_ViewProjMatrix[0].w - p_ViewProjMatrix[0].y;
@@ -538,8 +538,8 @@ _INTR_INLINE void extractFrustumPlanes(FrustumPlanes& p_FrustumPlanes,
   p_FrustumPlanes.d[FrustumPlane::kFar] =
       p_ViewProjMatrix[3].w + p_ViewProjMatrix[3].z;
 
-  p_FrustumPlanes.n[FrustumPlane::kFar].x *= 10.0f;
-  p_FrustumPlanes.n[FrustumPlane::kFar].z *= 10.0f;
+  //p_FrustumPlanes.n[FrustumPlane::kFar].x *= 10.0f;
+  //p_FrustumPlanes.n[FrustumPlane::kFar].z *= 10.0f;
 
   p_FrustumPlanes.n[FrustumPlane::kNear].x =
       p_ViewProjMatrix[0].w - p_ViewProjMatrix[0].z;
@@ -550,14 +550,14 @@ _INTR_INLINE void extractFrustumPlanes(FrustumPlanes& p_FrustumPlanes,
   p_FrustumPlanes.d[FrustumPlane::kNear] =
       p_ViewProjMatrix[3].w - p_ViewProjMatrix[3].z;
 
-  p_FrustumPlanes.n[FrustumPlane::kNear].x *= 10.0f;
-  p_FrustumPlanes.n[FrustumPlane::kNear].z *= 10.0f;
+  //p_FrustumPlanes.n[FrustumPlane::kNear].x *= 10.0f;
+  //p_FrustumPlanes.n[FrustumPlane::kNear].z *= 10.0f;
 
   for (int planeIdx = 0; planeIdx < FrustumPlane::kCount; ++planeIdx)
   {
     const float len = glm::length(p_FrustumPlanes.n[planeIdx]);
-    p_FrustumPlanes.n[planeIdx] /= len;
-    p_FrustumPlanes.d[planeIdx] /= len;
+    p_FrustumPlanes.n[planeIdx] /= len * 10.0f;
+    p_FrustumPlanes.d[planeIdx] /= len * 10.0f;
   }
 }
 
