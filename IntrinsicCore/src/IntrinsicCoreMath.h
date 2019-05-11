@@ -544,8 +544,8 @@ _INTR_INLINE void extractFrustumPlanes(FrustumPlanes& p_FrustumPlanes,
   for (int planeIdx = 0; planeIdx < FrustumPlane::kCount; ++planeIdx)
   {
     const float len = glm::length(p_FrustumPlanes.n[planeIdx]);
-    p_FrustumPlanes.n[planeIdx] /= len;
-    p_FrustumPlanes.d[planeIdx] /= len;
+    p_FrustumPlanes.n[planeIdx] /= len * 10.0f;
+    p_FrustumPlanes.d[planeIdx] /= len * 10.0f;
   }
 }
 
