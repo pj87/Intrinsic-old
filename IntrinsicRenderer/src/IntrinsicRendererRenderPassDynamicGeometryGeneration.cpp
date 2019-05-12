@@ -662,9 +662,11 @@ bool DynamicGeometryGeneration::isInstancedMesh(const Name& meshName)
   return false;
   */
 
-  if (/*meshName == _N(Tree_Tall_01_8) || meshName == _N(Tree_Tall_02_10) ||
-      meshName == _N(Tree_Tall_04_12) || meshName == _N(Tree_Tall_05_14) ||
-      meshName == _N(Tree_Trunk_01_70) ||*/
+  if (
+      /*
+	  meshName == _N(Tree_Tall_01_8) || meshName == _N(Tree_Tall_02_10) || 
+      meshName == _N(Tree_Tall_04_12) || */ meshName == _N(Tree_Tall_05_14) || 
+      //meshName == _N(Tree_Trunk_01_70) || 
       meshName == _N(cube))
     return true;
 

@@ -308,7 +308,8 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
   BufferRefArray buffersToCreate;
   _INTR_ARRAY(void*) tempBuffersToRelease;
 
-  uint32_t dupa = 12u;
+  uint32_t dupa = 50u;
+  float posZ = 0.0;
 
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
   {
@@ -385,12 +386,25 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
         {
           for (uint32_t j = 0; j < dupa; ++j)
           {
+            posZ = positions[subMeshIdx][i].z + static_cast<float>(j % 10) * 5.0;
+            //posZ = positions[subMeshIdx][i].z;
+            //+static_cast<float>(j) * 15.0;
+            /*
+            if (j % 10 == 0)
+            {
+              posZ = positions[subMeshIdx][i].z;
+            }
+			else
+			{
+              posZ += static_cast<float>(j) * 5.0;
+			}
+			*/
+
             uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(
                 positions[subMeshIdx][i].x + static_cast<float>(j) * 5.0,
                 positions[subMeshIdx][i].y));
             uint32_t packedPosition1 = glm::packHalf2x16(glm::vec2(
-                positions[subMeshIdx][i].z + static_cast<float>(j) * 5.0,
-                0.0f));
+                posZ, 0.0f));
 
             tempBuffer[(len * j + i) * 3u] = packedPosition0;
             tempBuffer[(len * j + i) * 3u + 1u] = packedPosition0 >> 16u;
