@@ -382,84 +382,20 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
         for (uint32_t i = 0u; i < positions[subMeshIdx].size(); ++i)
         {
-          uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(
-              positions[subMeshIdx][i].x - 25.0f, positions[subMeshIdx][i].y));
-          uint32_t packedPosition1 = glm::packHalf2x16(
-              glm::vec2(positions[subMeshIdx][i].z - 25.0f, 0.0f));
+          for (uint32_t j = 0; j < dupa; ++j)
+          {
+            uint32_t packedPosition0 = glm::packHalf2x16(
+                glm::vec2(positions[subMeshIdx][i].x + static_cast<float>(j) * 5.0,
+                          positions[subMeshIdx][i].y));
+            uint32_t packedPosition1 = glm::packHalf2x16(glm::vec2(
+                positions[subMeshIdx][i].z + static_cast<float>(j) * 5.0, 0.0f));
 
-		  uint32_t packedPosition0_0 = glm::packHalf2x16(glm::vec2(
-              positions[subMeshIdx][i].x + 25.0f, positions[subMeshIdx][i].y));
-          uint32_t packedPosition1_0 = glm::packHalf2x16(
-                      glm::vec2(positions[subMeshIdx][i].z + 25.0f, 0.0f));
-
-		  uint32_t packedPosition0_1 = glm::packHalf2x16(glm::vec2(
-              positions[subMeshIdx][i].x + 50.0f, positions[subMeshIdx][i].y));
-          uint32_t packedPosition2_0 = glm::packHalf2x16(
-              glm::vec2(positions[subMeshIdx][i].z + 50.0f, 0.0f));
-
-          tempBuffer[(len * 0u + i) * 3u] = packedPosition0;
-          tempBuffer[(len * 0u + i) * 3u + 1u] = packedPosition0 >> 16u;
-          tempBuffer[(len * 0u + i) * 3u + 2u] = packedPosition1;
-
-		  tempBuffer[(len * 1u + i) * 3u] = packedPosition0_0;
-          tempBuffer[(len * 1u + i) * 3u + 1u] = packedPosition0_0 >> 16u;
-          tempBuffer[(len * 1u + i) * 3u + 2u] = packedPosition1_0;
-
-		  tempBuffer[(len * 2u + i) * 3u] = packedPosition0_1;
-          tempBuffer[(len * 2u + i) * 3u + 1u] = packedPosition0_1 >> 16u;
-          tempBuffer[(len * 2u + i) * 3u + 2u] = packedPosition2_0;
-          /*
-		  _INTR_LOG_WARNING("i * 3u: %d", (i * 3u));
-          _INTR_LOG_WARNING("i * 3u + 1u: %d", (i * 3u + 1u));
-          _INTR_LOG_WARNING("i * 3u + 2u: %d", (i * 3u + 2u));
-		  
-		  _INTR_LOG_WARNING("(len + i) * 3u: %d", (len + i) * 3u);
-          _INTR_LOG_WARNING("(len + i) * 3u + 1u: %d", (len + i) * 3u + 1u);
-          _INTR_LOG_WARNING("(len + i) * 3u + 2u: %d", (len + i) * 3u + 2u);
-		  
-		  _INTR_LOG_WARNING("(len * 2u + i) * 3u: %d", (len * 2u + i) * 3u);
-          _INTR_LOG_WARNING("(len * 2u + i) * 3u + 1u: %d", (len * 2u + i) * 3u + 1u);
-          _INTR_LOG_WARNING("(len * 2u + i) * 3u + 2u: %d", (len * 2u + i) * 3u + 2u);
-		  */
-		  /*
-		  _INTR_LOG_WARNING("0 %d %d", tempBuffer[i * 3u], 
-			  tempBuffer[(len + i) * 3u]);
-
-		  _INTR_LOG_WARNING("1 %d %d", tempBuffer[i * 3u + 1u],
-			  tempBuffer[(len + i) * 3u + 1u]);
-
-		  _INTR_LOG_WARNING("2 %d %d", tempBuffer[i * 3u + 2u],
-			  tempBuffer[(len + i) * 3u + 2u]);
-		  */
-
-		  /*
-		  if (i == positions[subMeshIdx].size())
-            _INTR_LOG_INFO("------------------------------------------");
-
-		  _INTR_LOG_INFO("Dodaje %d, %d", i * 3u, (len + i) * 3u);
-          */
-		  //_INTR_LOG_WARNING("ostatnie: %d", (i * 3u + 2u));
+            tempBuffer[(len * j + i) * 3u] = packedPosition0;
+            tempBuffer[(len * j + i) * 3u + 1u] = packedPosition0 >> 16u;
+            tempBuffer[(len * j + i) * 3u + 2u] = packedPosition1;
+          }
         }
         BufferManager::_descInitialData(posVertexBuffer) = tempBuffer;
-
-		/*
-		for (int i = 0; i < indices[subMeshIdx].size() * dupa; i++)
-        {
-          if (i == (indices[subMeshIdx].size()))
-            _INTR_LOG_WARNING(
-                "---------------------------------------------------");
-          _INTR_LOG_WARNING("%d", tempIndexBuffer[i]);
-        }
-		*/
-		//_INTR_LOG_WARNING("total: %d", positions[subMeshIdx].size());
-		
-		/*
-		uint16_t* dst = &tempBuffer[positions[subMeshIdx].size() * 3];
-        uint16_t* src = tempBuffer;
-
-		memcpy(reinterpret_cast<void*>(dst), reinterpret_cast<void*>(src),
-               positions[subMeshIdx].size() * 3);
-		*/
 
         buffersToCreate.push_back(posVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(posVertexBuffer);
