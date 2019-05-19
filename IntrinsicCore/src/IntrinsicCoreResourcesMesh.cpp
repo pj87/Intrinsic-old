@@ -308,7 +308,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
   BufferRefArray buffersToCreate;
   _INTR_ARRAY(void*) tempBuffersToRelease;
 
-  uint32_t dupa = 50u;
+  uint32_t dupa = 1250u;
   float posZ = 0.0;
 
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
@@ -615,7 +615,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
         BufferManager::addResourceFlags(
             indexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
 
-        if (indices[subMeshIdx].size() <= 0xFFFF)
+        if (indices[subMeshIdx].size() * dupa <= 0xFFFF)
         {
           uint32_t indexBufferSizeInBytes =
               (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t) * dupa;
@@ -641,13 +641,28 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
         }
         else
         {
-          BufferManager::_descBufferType(indexBuffer) = R::BufferType::kIndex32;
-          BufferManager::_descSizeInBytes(indexBuffer) =
-              (uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t);
-          BufferManager::_descInitialData(indexBuffer) =
-              (void*)indices[subMeshIdx].data();
-        }
+          uint32_t indexBufferSizeInBytes =
+              (uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t) * dupa;
+          uint32_t* tempIndexBuffer =
+              (uint32_t*)Memory::Tlsf::MainAllocator::allocate(
+                  indexBufferSizeInBytes);
+          tempBuffersToRelease.push_back(tempIndexBuffer);
 
+          uint32_t len = positions[subMeshIdx].size();
+
+          for (uint32_t i = 0u; i < indices[subMeshIdx].size(); ++i)
+          {
+            for (int j = 0; j < dupa; ++j)
+            {
+              tempIndexBuffer[i + indices[subMeshIdx].size() * j] =
+                  (uint32_t)indices[subMeshIdx][i] + len * j;
+            }
+          }
+
+          BufferManager::_descBufferType(indexBuffer) = R::BufferType::kIndex32;
+          BufferManager::_descSizeInBytes(indexBuffer) = indexBufferSizeInBytes;
+          BufferManager::_descInitialData(indexBuffer) = tempIndexBuffer;
+        }
         buffersToCreate.push_back(indexBuffer);
         indexBuffers[subMeshIdx] = indexBuffer;
       }
