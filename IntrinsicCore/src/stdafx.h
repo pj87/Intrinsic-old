@@ -209,6 +209,7 @@ namespace CComponents = Intrinsic::Core::Components;
 #include "IntrinsicRendererRenderPassGeometryGeneration.h"
 #include "IntrinsicRendererRenderPassMarchingCubes.h"
 #include "IntrinsicRendererRenderPassDynamicGeometryGeneration.h"
+#include "IntrinsicRendererPseudoInstancing.h"
 
 // Renderer includes
 #include "stdafx_renderer.h"

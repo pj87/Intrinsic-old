@@ -14,13 +14,26 @@
 
 #pragma once
 
-#define _IS_OVERRIDEN_MESH(name) Intrinsic::Renderer::RenderPass::DynamicGeometryGeneration::isOverridenMesh(name)
-#define _IS_INSTANCED_MESH(name) Intrinsic::Renderer::RenderPass::DynamicGeometryGeneration::isInstancedMesh(name)
+//#define _IS_OVERRIDEN_MESH(name) Intrinsic::Renderer::RenderPass::DynamicGeometryGeneration::isOverridenMesh(name)
+#define _IS_INSTANCED_MESH(name)                                               \
+  Intrinsic::Renderer::PseudoInstancing::isInstancedMesh(name)
 
 namespace Intrinsic
 {
 namespace Renderer
 {
+
+struct PseudoInstancing
+{
+public:
+  //static std::vector<std::unique_ptr<Name>>& getInstancedMesh();
+  static bool isInstancedMesh(const Name&);
+  int sizeX, sizeY;
+
+private:
+  std::vector<std::unique_ptr<Name>> meshes;
+};
+/*
 namespace RenderPass
 {
 
@@ -33,11 +46,6 @@ typedef Dod::Ref PipelineRef;
 typedef _INTR_ARRAY(PipelineRef) PipelineRefArray;
 typedef Dod::Ref ComputeCallRef;
 typedef _INTR_ARRAY(ComputeCallRef) ComputeCallRefArray;
-
-struct PseudoInstancing
-{
-
-};
 
 struct DynamicGeneratedMesh
 {
@@ -123,5 +131,6 @@ struct DynamicGeometryGeneration
   static void render(float p_DeltaT, Components::CameraRef p_CameraRef);
 };
 }
+*/
 }
 }
