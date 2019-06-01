@@ -25,11 +25,22 @@ namespace Intrinsic
 {
 namespace Renderer
 {
+
+	//std::vector<std::unique_ptr<Name>> meshes;
 	/*
-	std::vector<std::unique_ptr<Name>>& PseudoInstancing::getInstancedMesh()
+	std::vector<std::unique_ptr<Name>>& PseudoInstancing::getInstancedMeshes()
 	{
+		return meshes;
 	}
 	*/
+
+void PseudoInstancing::addPseudoInstancingMesh(const unsigned sizeX,
+											   const unsigned sizeY,
+											   const Name&)
+{
+  this->sizeX = sizeX;
+  this->sizeY = sizeY;
+}
 
 bool PseudoInstancing::isInstancedMesh(const Name& meshName)
 {

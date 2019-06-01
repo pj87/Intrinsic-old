@@ -26,12 +26,15 @@ namespace Renderer
 struct PseudoInstancing
 {
 public:
-  //static std::vector<std::unique_ptr<Name>>& getInstancedMesh();
+  //static std::vector<std::unique_ptr<Name>>& getInstancedMeshes();
+  void addPseudoInstancingMesh(const unsigned sizeX, const unsigned sizeY,
+                              const Name&);
+
   static bool isInstancedMesh(const Name&);
   int sizeX, sizeY;
 
 private:
-  std::vector<std::unique_ptr<Name>> meshes;
+  //static std::vector<std::unique_ptr<Name>> meshes;
 };
 /*
 namespace RenderPass
