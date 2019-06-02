@@ -49,7 +49,9 @@ void PseudoInstancing::addPseudoInstancingMesh(const unsigned sizeX,
       std::tuple<unsigned int, unsigned int, Name&&>>
       mesh = std::make_unique<
           std::tuple<unsigned int, unsigned int, Name&&>>(
-          sizeX, sizeY, _N(sfdkljsfdlj));
+          sizeX, sizeY, _N(Tree_Tall_05_14));
+
+
 
   //meshSizeX = sizeX;
   //meshSizeY = sizeY;
