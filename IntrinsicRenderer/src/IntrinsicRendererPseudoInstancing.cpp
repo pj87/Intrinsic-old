@@ -36,10 +36,23 @@ namespace Renderer
 
 void PseudoInstancing::addPseudoInstancingMesh(const unsigned sizeX,
 											   const unsigned sizeY,
-											   const Name&)
+											   const Name&& name)
 {
-  this->sizeX = sizeX;
-  this->sizeY = sizeY;
+  //std::unique_ptr<>;
+  /*
+  std::unique_ptr<std::tuple<const unsigned int, const unsigned int, const Name&&>> mesh
+  = std::make_unique<
+      std::tuple<const unsigned int, const unsigned int, const Name&&>>(sizeX, sizeY,name);
+  */
+
+	std::unique_ptr<
+      std::tuple<unsigned int, unsigned int, Name&&>>
+      mesh = std::make_unique<
+          std::tuple<unsigned int, unsigned int, Name&&>>(
+          sizeX, sizeY, _N(sfdkljsfdlj));
+
+  //meshSizeX = sizeX;
+  //meshSizeY = sizeY;
 }
 
 bool PseudoInstancing::isInstancedMesh(const Name& meshName)

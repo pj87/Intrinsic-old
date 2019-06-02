@@ -27,14 +27,17 @@ struct PseudoInstancing
 {
 public:
   //static std::vector<std::unique_ptr<Name>>& getInstancedMeshes();
-  void addPseudoInstancingMesh(const unsigned sizeX, const unsigned sizeY,
-                              const Name&);
+  static void addPseudoInstancingMesh(const unsigned sizeX, const unsigned sizeY,
+                              const Name&&);
 
   static bool isInstancedMesh(const Name&);
-  int sizeX, sizeY;
+  int meshSizeX, meshSizeY;
 
 private:
   //static std::vector<std::unique_ptr<Name>> meshes;
+  static std::vector<
+      std::unique_ptr<std::tuple<unsigned int, unsigned int, Name&&>>>
+      meshes;
 };
 /*
 namespace RenderPass
