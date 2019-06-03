@@ -36,11 +36,9 @@ public:
 
   int meshSizeX, meshSizeY;
 
-  /*
   static std::vector<
-      std::unique_ptr<std::tuple<unsigned int, unsigned int, Name&&>>
+      std::unique_ptr<std::tuple<unsigned int, unsigned int, Name&&>>>&
 	  getMeshes();
-  */
 
   static std::vector<int>& getDupa();
 
