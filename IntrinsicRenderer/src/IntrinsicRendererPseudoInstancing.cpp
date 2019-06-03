@@ -26,6 +26,8 @@ namespace Intrinsic
 namespace Renderer
 {
 
+	std::vector<int> PseudoInstancing::dupa;
+
 	//std::vector<std::unique_ptr<Name>> meshes;
 	/*
 	std::vector<std::unique_ptr<Name>>& PseudoInstancing::getInstancedMeshes()
@@ -78,5 +80,21 @@ bool PseudoInstancing::isInstancedMesh(const Name& meshName)
 
   return false;
 }
+/*
+std::vector<
+    std::unique_ptr<std::tuple<unsigned int, unsigned int, Name&&>>>
+	PseudoInstancing::getMeshes()
+{
+  return meshes;
+}
+*/
+
+
+std::vector<int>& PseudoInstancing::getDupa() 
+{ 
+	return dupa;
+}
+
+
 } // namespace Renderer
 } // namespace Intrinsic

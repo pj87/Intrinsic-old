@@ -31,13 +31,26 @@ public:
                               const Name&&);
 
   static bool isInstancedMesh(const Name&);
+
+  
+
   int meshSizeX, meshSizeY;
+
+  /*
+  static std::vector<
+      std::unique_ptr<std::tuple<unsigned int, unsigned int, Name&&>>
+	  getMeshes();
+  */
+
+  static std::vector<int>& getDupa();
 
 private:
   //static std::vector<std::unique_ptr<Name>> meshes;
   static std::vector<
       std::unique_ptr<std::tuple<unsigned int, unsigned int, Name&&>>>
       meshes;
+
+  static std::vector<int> dupa;
 };
 /*
 namespace RenderPass
