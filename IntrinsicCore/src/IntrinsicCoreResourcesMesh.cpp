@@ -328,7 +328,9 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 	for (auto& i : Intrinsic::Renderer::PseudoInstancing::getMeshes())
 	{
           //_INTR_LOG_INFO("PJ: %s", i.get(2).getString().c_str());
-          _INTR_LOG_INFO("PJ: %p", i.get());
+          //_INTR_LOG_INFO("PJ: %p", i.get());
+          //_INTR_LOG_INFO("PJ: %s", i.get());
+          _INTR_LOG_INFO("PJ: %d", std::get<0>(*(i.get())));
 	}
 
     const PositionsPerSubMeshArray& positions =
