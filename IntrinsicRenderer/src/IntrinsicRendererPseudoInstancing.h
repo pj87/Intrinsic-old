@@ -32,14 +32,6 @@ public:
 
   static bool isInstancedMesh(const Name&);
 
-  int meshSizeX, meshSizeY;
-
-  static std::vector<int>& getDupa();
-
-  static std::vector<
-	  std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>>&
-	  getMeshes();
-
   static std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>&
 	  getMeshSizes(const Name&);
 
@@ -48,7 +40,9 @@ private:
       std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>>
       meshes;
 
-  static std::vector<int> dupa;
+  static std::vector<
+      std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>>&
+	  getMeshes();
 };
 /*
 namespace RenderPass
