@@ -39,15 +39,15 @@ namespace Renderer
 	}
 	*/
 
-void PseudoInstancing::addPseudoInstancingMesh(const unsigned sizeX,
-											   const unsigned sizeY,
-											   const Name&& name)
+void PseudoInstancing::addPseudoInstancingMesh(const unsigned& sizeX,
+											   const unsigned& sizeY,
+											   Name&& name)
 {
 	std::unique_ptr<
       std::tuple<unsigned int, unsigned int, Name&&>>
       mesh = std::make_unique<
           std::tuple<unsigned int, unsigned int, Name&&>>(
-          sizeX, sizeY, _N(Tree_Tall_05_14));
+          sizeX, sizeY, std::move(name));
 
     meshes.push_back(std::move(mesh));
 

@@ -27,8 +27,7 @@ struct PseudoInstancing
 {
 public:
   //static std::vector<std::unique_ptr<Name>>& getInstancedMeshes();
-  static void addPseudoInstancingMesh(const unsigned sizeX, const unsigned sizeY,
-                              const Name&&);
+  static void addPseudoInstancingMesh(const unsigned&, const unsigned&, Name&&);
 
   static bool isInstancedMesh(const Name&);
 
