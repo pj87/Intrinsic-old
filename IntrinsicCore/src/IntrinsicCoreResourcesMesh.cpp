@@ -327,9 +327,9 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
 	for (auto& i : Intrinsic::Renderer::PseudoInstancing::getMeshes())
 	{
-          const unsigned int x = std::get<0>(i);
-          const unsigned int y = std::get<1>(i);
-          const Name& name = *(std::get<2>(i));
+          const Name& name = *(std::get<0>(i));
+          const unsigned int x = std::get<1>(i);
+          const unsigned int y = std::get<2>(i);
 
 		  _INTR_LOG_INFO("PJ: %d %d %s", x, y, name.getString().c_str());
 	}

@@ -26,16 +26,16 @@ namespace Renderer
 
 	std::vector<int> PseudoInstancing::dupa;
 
-	std::vector<std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>
+	std::vector< 
+		std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>>
         PseudoInstancing::meshes;
 
-void PseudoInstancing::addPseudoInstancingMesh(const unsigned& sizeX,
-											   const unsigned& sizeY,
-											   Name&& name)
-{	
+void PseudoInstancing::addPseudoInstancingMesh(Name&& name, 
+	const unsigned& sizeX, const unsigned& sizeY)
+        {	
     meshes.push_back(
-      std::make_tuple(sizeX, sizeY, std::make_unique<Name>(name)));
-}
+              std::make_tuple(std::make_unique<Name>(name), sizeX, sizeY));
+        }
 
 bool PseudoInstancing::isInstancedMesh(const Name& meshName)
 {
@@ -59,8 +59,7 @@ bool PseudoInstancing::isInstancedMesh(const Name& meshName)
   return false;
 }
 
-std::vector<
-	std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>&
+std::vector<std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>>&
 	PseudoInstancing::getMeshes()
 {
   return meshes;
