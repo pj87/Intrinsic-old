@@ -14,7 +14,6 @@
 
 #pragma once
 
-//#define _IS_OVERRIDEN_MESH(name) Intrinsic::Renderer::RenderPass::DynamicGeometryGeneration::isOverridenMesh(name)
 #define _IS_INSTANCED_MESH(name)                                               \
   Intrinsic::Renderer::PseudoInstancing::isInstancedMesh(name)
 

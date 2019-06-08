@@ -29,14 +29,6 @@ namespace Renderer
 	std::vector<std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>
         PseudoInstancing::meshes;
 
-	//std::vector<std::unique_ptr<Name>> meshes;
-	/*
-	std::vector<std::unique_ptr<Name>>& PseudoInstancing::getInstancedMeshes()
-	{
-		return meshes;
-	}
-	*/
-
 void PseudoInstancing::addPseudoInstancingMesh(const unsigned& sizeX,
 											   const unsigned& sizeY,
 											   Name&& name)
