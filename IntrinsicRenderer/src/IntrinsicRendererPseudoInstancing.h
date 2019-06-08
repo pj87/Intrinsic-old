@@ -39,6 +39,10 @@ public:
       std::unique_ptr<std::tuple<unsigned int, unsigned int, Name&&>>>&
 	  getMeshes();
 
+  static std::vector<std::unique_ptr<
+      std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>>&
+	  getMeshes1();
+
   static std::vector<int>& getDupa();
 
 private:
@@ -46,6 +50,10 @@ private:
   static std::vector<
       std::unique_ptr<std::tuple<unsigned int, unsigned int, Name&&>>>
       meshes;
+
+  static std::vector<
+      std::unique_ptr<std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>>
+      meshes1;
 
   static std::vector<int> dupa;
 };

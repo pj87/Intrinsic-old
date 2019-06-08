@@ -31,6 +31,9 @@ namespace Renderer
 	std::vector<std::unique_ptr<std::tuple<unsigned int, unsigned int, Name&&>>>
 		PseudoInstancing::meshes;
 
+	std::vector<std::unique_ptr<std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>>
+        PseudoInstancing::meshes1;
+
 	//std::vector<std::unique_ptr<Name>> meshes;
 	/*
 	std::vector<std::unique_ptr<Name>>& PseudoInstancing::getInstancedMeshes()
@@ -51,6 +54,13 @@ void PseudoInstancing::addPseudoInstancingMesh(const unsigned& sizeX,
 
     meshes.push_back(std::move(mesh));
 
+	std::unique_ptr<
+        std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>
+		mesh1 = std::make_unique<
+          std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>(
+          sizeX, sizeY, std::make_unique<Name>(name));
+
+    meshes1.push_back(std::move(mesh1));
 
   //meshSizeX = sizeX;
   //meshSizeY = sizeY;
@@ -83,6 +93,13 @@ std::vector<
 	PseudoInstancing::getMeshes()
 {
   return meshes;
+}
+
+std::vector<std::unique_ptr<
+    std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>>&
+	PseudoInstancing::getMeshes1()
+{
+  return meshes1;
 }
 
 std::vector<int>& PseudoInstancing::getDupa() 
