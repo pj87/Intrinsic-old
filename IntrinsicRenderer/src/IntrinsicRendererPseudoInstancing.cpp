@@ -14,8 +14,6 @@
 
 // Precompiled header file
 #include "stdafx.h"
-#include <random>
-#include <fstream>
 
 using namespace RResources;
 using namespace CComponents;
@@ -28,11 +26,8 @@ namespace Renderer
 
 	std::vector<int> PseudoInstancing::dupa;
 
-	std::vector<std::unique_ptr<std::tuple<unsigned int, unsigned int, Name&&>>>
-		PseudoInstancing::meshes;
-
-	std::vector<std::unique_ptr<std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>>
-        PseudoInstancing::meshes1;
+	std::vector<std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>
+        PseudoInstancing::meshes;
 
 	//std::vector<std::unique_ptr<Name>> meshes;
 	/*
@@ -45,25 +40,9 @@ namespace Renderer
 void PseudoInstancing::addPseudoInstancingMesh(const unsigned& sizeX,
 											   const unsigned& sizeY,
 											   Name&& name)
-{
-	std::unique_ptr<
-      std::tuple<unsigned int, unsigned int, Name&&>>
-      mesh = std::make_unique<
-          std::tuple<unsigned int, unsigned int, Name&&>>(
-          sizeX, sizeY, std::move(name));
-
-    meshes.push_back(std::move(mesh));
-
-	std::unique_ptr<
-        std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>
-		mesh1 = std::make_unique<
-          std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>(
-          sizeX, sizeY, std::make_unique<Name>(name));
-
-    meshes1.push_back(std::move(mesh1));
-
-  //meshSizeX = sizeX;
-  //meshSizeY = sizeY;
+{	
+    meshes.push_back(
+      std::make_tuple(sizeX, sizeY, std::make_unique<Name>(name)));
 }
 
 bool PseudoInstancing::isInstancedMesh(const Name& meshName)
@@ -89,17 +68,10 @@ bool PseudoInstancing::isInstancedMesh(const Name& meshName)
 }
 
 std::vector<
-    std::unique_ptr<std::tuple<unsigned int, unsigned int, Name&&>>>&
+	std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>&
 	PseudoInstancing::getMeshes()
 {
   return meshes;
-}
-
-std::vector<std::unique_ptr<
-    std::tuple<unsigned int, unsigned int, std::unique_ptr<Name>>>>&
-	PseudoInstancing::getMeshes1()
-{
-  return meshes1;
 }
 
 std::vector<int>& PseudoInstancing::getDupa() 
