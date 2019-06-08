@@ -41,7 +41,7 @@ public:
 	  getMeshes();
 
   static std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>&
-	  getMeshSizes(Name&&);
+	  getMeshSizes(const Name&);
 
 private:
   static std::vector<

@@ -39,22 +39,13 @@ void PseudoInstancing::addPseudoInstancingMesh(Name&& name,
 
 bool PseudoInstancing::isInstancedMesh(const Name& meshName)
 {
-  /*
-  for (auto& mesh : pseudoInstancedMeshes)
+  for (auto& i : Intrinsic::Renderer::PseudoInstancing::meshes)
   {
-    if ((*mesh) == meshName)
+    const Name& name = *(std::get<0>(i));
+
+    if (meshName == name)
       return true;
   }
-  return false;
-  */
-
-  if (
-      /*
-	  meshName == _N(Tree_Tall_01_8) || meshName == _N(Tree_Tall_02_10) || 
-      meshName == _N(Tree_Tall_04_12) || */ meshName == _N(Tree_Tall_05_14) || 
-      //meshName == _N(Tree_Trunk_01_70) || 
-      meshName == _N(cube))
-    return true;
 
   return false;
 }
@@ -66,7 +57,7 @@ std::vector<std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>>&
 }
 
 std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>&
-	PseudoInstancing::getMeshSizes(Name&& meshName)
+	PseudoInstancing::getMeshSizes(const Name& meshName)
 {
   for (auto& i : Intrinsic::Renderer::PseudoInstancing::meshes)
   {

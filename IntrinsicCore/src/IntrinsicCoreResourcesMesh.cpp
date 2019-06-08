@@ -325,14 +325,13 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
     if (!_IS_INSTANCED_MESH(name))
       continue;
 
-	for (auto& i : Intrinsic::Renderer::PseudoInstancing::getMeshes())
-	{
-          const Name& name = *(std::get<0>(i));
-          const unsigned int x = std::get<1>(i);
-          const unsigned int y = std::get<2>(i);
+	const std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>&
+        instancedMesh = _INSTANCED_MESH_SIZE(name);
 
-		  _INTR_LOG_INFO("PJ: %d %d %s", x, y, name.getString().c_str());
-	}
+	const unsigned sizeX = std::get<1>(instancedMesh);
+    const unsigned sizeY = std::get<2>(instancedMesh);
+
+	_INTR_LOG_INFO("instanced mesh: x: %d y: %d", sizeX, sizeY);
 
 	const PositionsPerSubMeshArray& positions =
         _descPositionsPerSubMesh(meshRef);
