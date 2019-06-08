@@ -65,6 +65,18 @@ std::vector<std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>>&
   return meshes;
 }
 
+std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>&
+	PseudoInstancing::getMeshSizes(Name&& meshName)
+{
+  for (auto& i : Intrinsic::Renderer::PseudoInstancing::meshes)
+  {
+    const Name& name = *(std::get<0>(i));
+
+	if (meshName == name)
+      return i;
+  }
+}
+
 std::vector<int>& PseudoInstancing::getDupa() 
 { 
 	return dupa;

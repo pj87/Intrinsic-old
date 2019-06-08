@@ -17,6 +17,9 @@
 #define _IS_INSTANCED_MESH(name)                                               \
   Intrinsic::Renderer::PseudoInstancing::isInstancedMesh(name)
 
+#define _INSTANCED_MESH_SIZE(name)                                               \
+  Intrinsic::Renderer::PseudoInstancing::getMeshSizes(name)
+
 namespace Intrinsic
 {
 namespace Renderer
@@ -31,11 +34,14 @@ public:
 
   int meshSizeX, meshSizeY;
 
+  static std::vector<int>& getDupa();
+
   static std::vector<
-      std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>>&
+	  std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>>&
 	  getMeshes();
 
-  static std::vector<int>& getDupa();
+  static std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>&
+	  getMeshSizes(Name&&);
 
 private:
   static std::vector<
