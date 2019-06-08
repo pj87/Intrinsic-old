@@ -242,6 +242,9 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "geometry_generation_cave.comp", 
 		false);
 		*/
+
+	PseudoInstancing::addPseudoInstancingMesh(100, 100, _N(Tree_Tall_05_14));
+
 	RenderPass::DynamicGeometryGeneration::init();
 	RenderPass::GeometryGeneration::init();
     RenderPass::MarchingCubes::init();

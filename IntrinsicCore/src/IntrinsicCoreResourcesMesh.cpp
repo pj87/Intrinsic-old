@@ -305,8 +305,14 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 {
   // Create vertex/index buffers - we're using a separate buffer for each vertex
   // attribute
+  
   BufferRefArray buffersToCreate;
   _INTR_ARRAY(void*) tempBuffersToRelease;
+
+
+  // iteruj po wszystkich meshach (tak jak jest teraz)
+  // jeœli mesh jest na liœcie (czyli jest zapisana jego nazwa)
+  // pobierz odpowiednie wartosci rozmiarow dla danego mesha
 
   uint32_t dupa = 1250u;
   float posZ = 0.0;
@@ -318,6 +324,12 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
     const Name& name = _name(meshRef);
     if (!_IS_INSTANCED_MESH(name))
       continue;
+
+	for (auto& i : Intrinsic::Renderer::PseudoInstancing::getMeshes())
+	{
+          //_INTR_LOG_INFO("PJ: %s", i.get(2).getString().c_str());
+          _INTR_LOG_INFO("PJ: %p", i.get());
+	}
 
     const PositionsPerSubMeshArray& positions =
         _descPositionsPerSubMesh(meshRef);
