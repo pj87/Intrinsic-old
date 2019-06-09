@@ -403,8 +403,8 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           for (uint32_t j = 0; j < sizeX * sizeY; ++j)
           {
             //posZ = positions[subMeshIdx][i].z + static_cast<float>(j % 10) * 5.0;
-            posZ = static_cast<float>(j / sizeX);
-			posX = static_cast<float>(j % sizeY);
+            posZ = static_cast<float>(j / sizeX) * 5.0;
+            posX = static_cast<float>(j % sizeY) * 5.0;
             //posZ = positions[subMeshIdx][i].z;
             //+static_cast<float>(j) * 15.0;
             /*
@@ -422,7 +422,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
                 positions[subMeshIdx][i].x + posX,
                 positions[subMeshIdx][i].y));
             uint32_t packedPosition1 = glm::packHalf2x16(glm::vec2(
-				posZ, 0.0f));
+				positions[subMeshIdx][i].z + posZ, 0.0f));
             /*
 			_INTR_LOG_WARNING("x: %f, y: %f, z: %f",
                               positions[subMeshIdx][i].x + posX, 
