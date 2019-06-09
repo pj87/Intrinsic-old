@@ -24,13 +24,13 @@ namespace Intrinsic
 namespace Renderer
 {
 std::vector<
-    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int>>
+    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>
     PseudoInstancing::meshes;
 
 void PseudoInstancing::addPseudoInstancingMesh(Name&& name,
                                                const unsigned& sizeX,
                                                const unsigned& sizeY,
-                                               const unsigned& probability)
+                                               const float& probability)
 {
   meshes.push_back(
       std::make_tuple(std::make_unique<Name>(name), sizeX, sizeY, probability));
@@ -49,14 +49,13 @@ bool PseudoInstancing::isInstancedMesh(const Name& meshName)
   return false;
 }
 
-std::vector<std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int,
-                       unsigned int>>&
+std::vector<std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>&
 PseudoInstancing::getMeshes()
 {
   return meshes;
 }
 
-std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int>&
+std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>&
 PseudoInstancing::getMeshSizes(const Name& meshName)
 {
   for (auto& i : Intrinsic::Renderer::PseudoInstancing::meshes)
