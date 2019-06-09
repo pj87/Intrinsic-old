@@ -32,31 +32,32 @@ struct PseudoInstancing
 {
 public:
   static void addPseudoInstancingMesh(Name&&, const unsigned&, 
-	  const unsigned&, const float&);
+	  const unsigned&, const unsigned&);
 
   static bool isInstancedMesh(const Name&);
 
-  static std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>&
+  static std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int,
+                    unsigned int>&
 	  getMeshSizes(const Name&);
 
   template <class Iter>
-  static void fillWithRandomIntValues(Iter start, Iter end, int min, int max)
+  static void fillWithRandomIntValues(Iter start, Iter end, int min, int max, int probability)
   {
     static std::random_device rd;  // you only need to initialize it once
     static std::mt19937 mte(rd()); // this is a relative big object to create
 
-    std::uniform_real_distribution<double> dist(min, max);
+    std::uniform_int_distribution<int> dist(min, max);
 
-    std::generate(start, end, [&]() { return dist(mte); });
+    std::generate(start, end, [&]() { return dist(mte) < probability; });
   }
 
 private:
-  static std::vector<
-      std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>
+  static std::vector<std::tuple<std::unique_ptr<Name>, unsigned int,
+                                unsigned int, unsigned int>>
       meshes;
 
-  static std::vector<
-      std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>&
+  static std::vector<std::tuple<std::unique_ptr<Name>, unsigned int,
+                                unsigned int, unsigned int>>&
 	  getMeshes();
 };
 /*

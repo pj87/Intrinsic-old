@@ -243,8 +243,8 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false);
 		*/
 
-	PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_05_14), 10, 10, 0.5);
-    PseudoInstancing::addPseudoInstancingMesh(_N(cube), 10, 10, 0.4);
+	PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_05_14), 10, 10, 50);
+    PseudoInstancing::addPseudoInstancingMesh(_N(cube), 10, 10, 50);
 
 	RenderPass::DynamicGeometryGeneration::init();
 	RenderPass::GeometryGeneration::init();
