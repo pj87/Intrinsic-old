@@ -28,20 +28,21 @@ namespace Renderer
 struct PseudoInstancing
 {
 public:
-  static void addPseudoInstancingMesh(Name&&, const unsigned&, const unsigned&);
+  static void addPseudoInstancingMesh(Name&&, const unsigned&, 
+	  const unsigned&, const float&);
 
   static bool isInstancedMesh(const Name&);
 
-  static std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>&
+  static std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>&
 	  getMeshSizes(const Name&);
 
 private:
   static std::vector<
-      std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>>
+      std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>
       meshes;
 
   static std::vector<
-      std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>>&
+      std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>&
 	  getMeshes();
 };
 /*

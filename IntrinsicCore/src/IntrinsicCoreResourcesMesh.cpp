@@ -314,8 +314,8 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
   // jeœli mesh jest na liœcie (czyli jest zapisana jego nazwa)
   // pobierz odpowiednie wartosci rozmiarow dla danego mesha
 
-  //uint32_t dupa = 1250u;
-  float posZ = 0.0;
+  float posX = 0.0f;
+  float posZ = 0.0f;
 
   for (uint32_t meshIdx = 0u; meshIdx < p_Meshes.size(); ++meshIdx)
   {
@@ -325,7 +325,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
     if (!_IS_INSTANCED_MESH(name))
       continue;
 
-	const std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int>&
+	const std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>&
         instancedMesh = _INSTANCED_MESH_SIZE(name);
 
 	const unsigned sizeX = std::get<1>(instancedMesh);
@@ -394,9 +394,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 		uint32_t len = positions[subMeshIdx].size();
 
 		_INTR_LOG_WARNING("len: %d", len);
-        _INTR_LOG_WARNING("len * 2u: %d", len * 2u);
-
-		float posX = 0.0f;
+        _INTR_LOG_WARNING("len * 2u: %d", len * 2u);		
 
         for (uint32_t i = 0u; i < positions[subMeshIdx].size(); ++i)
         {
