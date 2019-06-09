@@ -36,6 +36,9 @@ public:
   static std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>&
 	  getMeshSizes(const Name&);
 
+  template <class Iter>
+  static void fillWithRandomIntValues(Iter start, Iter end, int min, int max);
+
 private:
   static std::vector<
       std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>

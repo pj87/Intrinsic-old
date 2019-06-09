@@ -15,6 +15,11 @@
 // Precompiled header file
 #include "stdafx.h"
 
+#include <array>
+#include <iterator>
+#include <random>
+#include <algorithm>
+
 // PhysX includes
 #include "PxPhysics.h"
 #include "PxScene.h"
@@ -34,6 +39,19 @@ namespace Resources
 {
 namespace
 {
+/*
+int main()
+{
+  std::array<int, 10> a;
+
+  fill_with_random_int_values(a.begin(), a.end(), 0, 1000);
+
+  for (int i : a)
+    std::cout << i << ' ';
+  std::cout << '\n';
+}
+*/
+
 _INTR_INLINE void createOrLoadPhysicsMeshes(MeshRef p_MeshRef)
 {
   const _INTR_STRING meshFilePath =
@@ -309,7 +327,6 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
   BufferRefArray buffersToCreate;
   _INTR_ARRAY(void*) tempBuffersToRelease;
 
-
   // iteruj po wszystkich meshach (tak jak jest teraz)
   // jeœli mesh jest na liœcie (czyli jest zapisana jego nazwa)
   // pobierz odpowiednie wartosci rozmiarow dla danego mesha
@@ -330,6 +347,13 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
 	const unsigned sizeX = std::get<1>(instancedMesh);
     const unsigned sizeY = std::get<2>(instancedMesh);
+
+	std::array<int, 40> a;
+
+    Intrinsic::Renderer::PseudoInstancing::fillWithRandomIntValues(a.begin(), a.end(), 0, 100);
+
+    for (auto& i : a)
+      _INTR_LOG_WARNING("%d", i);
 
 	_INTR_LOG_INFO("instanced mesh: x: %d y: %d", sizeX, sizeY);
 
