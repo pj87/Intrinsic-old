@@ -334,11 +334,10 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 	const unsigned sizeX = std::get<1>(instancedMesh);
     const unsigned sizeY = std::get<2>(instancedMesh);
 
-	std::array<int, 40> a;
+	//std::array<int, 40> a;
+    std::vector<int> a(sizeX * sizeY);
 
-    //Intrinsic::Renderer::PseudoInstancing::fillWithRandomIntValues<std::array<int, 40>::iterator>(a.begin(), a.end(), 0, 100);
     Intrinsic::Renderer::PseudoInstancing::fillWithRandomIntValues(a.begin(), a.end(), 0, 100);
-    //Intrinsic::Renderer::PseudoInstancing::isInstancedMesh(name);
 
     for (auto& i : a)
       _INTR_LOG_WARNING("%d", i);
