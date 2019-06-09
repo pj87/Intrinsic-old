@@ -396,11 +396,15 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 		_INTR_LOG_WARNING("len: %d", len);
         _INTR_LOG_WARNING("len * 2u: %d", len * 2u);
 
+		float posX = 0.0f;
+
         for (uint32_t i = 0u; i < positions[subMeshIdx].size(); ++i)
         {
           for (uint32_t j = 0; j < sizeX * sizeY; ++j)
           {
-            posZ = positions[subMeshIdx][i].z + static_cast<float>(j % 10) * 5.0;
+            //posZ = positions[subMeshIdx][i].z + static_cast<float>(j % 10) * 5.0;
+            posZ = static_cast<float>(j / sizeX);
+			posX = static_cast<float>(j % sizeY);
             //posZ = positions[subMeshIdx][i].z;
             //+static_cast<float>(j) * 15.0;
             /*
@@ -415,11 +419,16 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 			*/
 
             uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(
-                positions[subMeshIdx][i].x + static_cast<float>(j) * 5.0,
+                positions[subMeshIdx][i].x + posX,
                 positions[subMeshIdx][i].y));
             uint32_t packedPosition1 = glm::packHalf2x16(glm::vec2(
-                posZ, 0.0f));
-
+				posZ, 0.0f));
+            /*
+			_INTR_LOG_WARNING("x: %f, y: %f, z: %f",
+                              positions[subMeshIdx][i].x + posX, 
+							  positions[subMeshIdx][i].y, 
+							  positions[subMeshIdx][i].z + posZ);
+			*/
             tempBuffer[(len * j + i) * 3u] = packedPosition0;
             tempBuffer[(len * j + i) * 3u + 1u] = packedPosition0 >> 16u;
             tempBuffer[(len * j + i) * 3u + 2u] = packedPosition1;
