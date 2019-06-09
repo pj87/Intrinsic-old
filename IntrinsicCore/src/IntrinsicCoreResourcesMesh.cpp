@@ -17,8 +17,6 @@
 
 #include <array>
 #include <iterator>
-#include <random>
-#include <algorithm>
 
 // PhysX includes
 #include "PxPhysics.h"
@@ -39,18 +37,6 @@ namespace Resources
 {
 namespace
 {
-/*
-int main()
-{
-  std::array<int, 10> a;
-
-  fill_with_random_int_values(a.begin(), a.end(), 0, 1000);
-
-  for (int i : a)
-    std::cout << i << ' ';
-  std::cout << '\n';
-}
-*/
 
 _INTR_INLINE void createOrLoadPhysicsMeshes(MeshRef p_MeshRef)
 {
@@ -350,7 +336,9 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
 	std::array<int, 40> a;
 
+    //Intrinsic::Renderer::PseudoInstancing::fillWithRandomIntValues<std::array<int, 40>::iterator>(a.begin(), a.end(), 0, 100);
     Intrinsic::Renderer::PseudoInstancing::fillWithRandomIntValues(a.begin(), a.end(), 0, 100);
+    //Intrinsic::Renderer::PseudoInstancing::isInstancedMesh(name);
 
     for (auto& i : a)
       _INTR_LOG_WARNING("%d", i);
