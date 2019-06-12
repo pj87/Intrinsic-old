@@ -757,6 +757,11 @@ void DynamicGeometryGeneration::init()
             _cubeEdgeFlagsBufferRef,
             Dod::Resources::ResourceFlags::kResourceVolatile);
 
+		///// PJ: only for tests
+        BufferManager::_descMemoryPoolType(_cubeEdgeFlagsBufferRef) =
+            MemoryPoolType::kStaticStagingBuffers;
+        ///// PJ: only for tests
+
         BufferManager::_descBufferType(_cubeEdgeFlagsBufferRef) =
             BufferType::kStorage;
         BufferManager::_descSizeInBytes(_cubeEdgeFlagsBufferRef) =
@@ -939,6 +944,16 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     BufferManager::insertBufferMemoryBarrier(mesh->_colorBufferRef, 
 											 VK_ACCESS_SHADER_WRITE_BIT, 
 											 VK_ACCESS_SHADER_READ_BIT);
+
+
+	///// PJ: only for tests
+	uint16_t* _cubeEdgeFlagsBufferGpuMemory =
+        (uint16_t*)BufferManager::getGpuMemory(mesh->_cubeEdgeFlagsBufferRef);
+
+	for (int i = 0; i < 10; i++)
+		_INTR_LOG_WARNING("X0%x", *(_cubeEdgeFlagsBufferGpuMemory + i));
+    ///// PJ: only for tests
+
 
 	mesh->isCalled = true;
     mesh->counter++;
