@@ -707,6 +707,10 @@ void DynamicGeometryGeneration::init()
         BufferManager::addResourceFlags(
             _voxelBufferRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
+        ///// PJ: only for tests
+        BufferManager::_descMemoryPoolType(_voxelBufferRef) =
+            MemoryPoolType::kStaticStagingBuffers;
+        ///// PJ: only for tests
         BufferManager::_descBufferType(_voxelBufferRef) = 
 			BufferType::kStorage;
         BufferManager::_descSizeInBytes(_voxelBufferRef) = 
@@ -947,11 +951,23 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
 
 	///// PJ: only for tests
+    /*
 	uint16_t* _cubeEdgeFlagsBufferGpuMemory =
         (uint16_t*)BufferManager::getGpuMemory(mesh->_cubeEdgeFlagsBufferRef);
 
 	for (int i = 0; i < 10; i++)
 		_INTR_LOG_WARNING("X0%x", *(_cubeEdgeFlagsBufferGpuMemory + i));
+	*/
+	float* _voxelBufferGpuMemory =
+            (float*)BufferManager::getGpuMemory(mesh->_voxelBufferRef);
+
+    for (int i = 0; i < (*mesh->sizeX) * (*mesh->sizeY) * (*mesh->sizeZ); i++)
+    {
+      float f = *(_voxelBufferGpuMemory + i);
+      if (f > 0.00001)
+		_INTR_LOG_WARNING("%f", f);
+    }
+
     ///// PJ: only for tests
 
 
@@ -959,6 +975,19 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     mesh->counter++;
   }
 }
+
+float DynamicGeometryGeneration::getVoxel(DynamicGeneratedMesh& mesh, int x,
+                                          int y, int z)
+{ /*
+	https://stackoverflow.com/questions/3613429/algorithm-to-convert-a-multi-dimensional-array-to-a-one-dimensional-array
+    https://stackoverflow.com/questions/29022714/java-mapping-multi-dimensional-arrays-to-single
+      m0,m1,.. are dimensions
+      A(i,j,k,...) -> A0[i + j*m0 + k*m0*m1 + ...]
+      */
+  // return mesh->
+  return 0.0;
+}
+
 } // namespace RenderPass
 } // namespace Renderer
 } // namespace Intrinsic

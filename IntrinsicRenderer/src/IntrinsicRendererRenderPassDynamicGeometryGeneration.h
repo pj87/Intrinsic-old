@@ -105,6 +105,8 @@ struct DynamicGeometryGeneration
 									   const Name&, const Name&&, const Name&&,
                                        const Name&&, bool isDynamic = true);
 
+  static float getVoxel(DynamicGeneratedMesh& mesh, int x, int y, int z);
+
   static bool isOverridenMesh(const Name&);
   static bool isInstancedMesh(const Name&);
 
