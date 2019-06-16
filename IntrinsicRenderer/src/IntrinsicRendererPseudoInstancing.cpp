@@ -87,23 +87,20 @@ void PseudoInstancing::update()
 
   uint32_t* _vertexBufferGpuMemory =
       (uint32_t*)BufferManager::getGpuMemory(vertexBufferRef);
-
-  /*
+  
   for (int i = 0; i < 10000; i++)
   {
     glm::vec2 unpackedPosition0 = glm::unpackHalf2x16(static_cast<unsigned int>(*(_vertexBufferGpuMemory + i)));
     //_INTR_LOG_WARNING("%f %f", unpackedPosition0.x, unpackedPosition0.y);
 
-	unpackedPosition0.y += 2.0;
+	unpackedPosition0.y += 2000.0;
 
 	uint32_t packedPosition0 = glm::packHalf2x16(unpackedPosition0);
 
 	tempBuffer[i] = packedPosition0;
+    tempBuffer[i] = rand() % 0xFFFF;
   }
-
-  BufferManager::_descInitialData(vertexBufferRef) = tempBuffer;
-  */
-
+  
   BufferManager::updateResources(BufferManager::_dynamicBuffers,
                                  reinterpret_cast<void*>(tempBuffer));
   /*
