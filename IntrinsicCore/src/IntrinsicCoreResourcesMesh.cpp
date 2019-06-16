@@ -387,6 +387,9 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
       {
         BufferManager::resetToDefault(posVertexBuffer);
 
+		BufferManager::_descMemoryPoolType(posVertexBuffer) =
+            Intrinsic::Renderer::MemoryPoolType::kStaticStagingBuffers;
+
         BufferManager::addResourceFlags(
             posVertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
         BufferManager::_descBufferType(posVertexBuffer) =
