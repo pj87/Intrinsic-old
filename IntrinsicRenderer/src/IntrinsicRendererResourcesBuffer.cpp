@@ -23,7 +23,8 @@ namespace Resources
 {
 
 // PJ: Added++
-void BufferManager::updateResources(const BufferRefArray& p_Buffers)
+void BufferManager::updateResources(const BufferRefArray& p_Buffers,
+                                    const void* initialData)
 {
   VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
 
@@ -143,15 +144,15 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers)
           _INTR_LOG_INFO("PJ: Changed: %f, %f, %f", pos1->x, pos1->y, pos1->z);
         }
       }
-		
+		*/
       {
 
         memcpy(stagingGpuAllocInfo._mappedMemory, initialData,
                _descSizeInBytes(bufferRef));
       }
-	  */
+	  
 
-	  memset(stagingGpuAllocInfo._mappedMemory, 0, _descSizeInBytes(bufferRef));
+	  //memset(stagingGpuAllocInfo._mappedMemory, 0, _descSizeInBytes(bufferRef));
 
       VkBufferCopy bufferCopy = {};
       {

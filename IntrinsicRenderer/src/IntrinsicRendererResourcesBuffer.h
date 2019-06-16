@@ -142,7 +142,8 @@ struct BufferManager
 
   static void createResources(const BufferRefArray& p_Buffers);
 
-  static void updateResources(const BufferRefArray& p_Buffers);
+  static void updateResources(const BufferRefArray& p_Buffers,
+                              const void* initialData);
   // <-
 
   _INTR_INLINE static void destroyResources(const BufferRefArray& p_Buffers)
