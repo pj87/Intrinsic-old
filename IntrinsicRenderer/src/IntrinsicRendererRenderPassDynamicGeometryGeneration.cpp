@@ -651,28 +651,6 @@ bool DynamicGeometryGeneration::isOverridenMesh(const Name& meshName)
   return false;
 }
 
-bool DynamicGeometryGeneration::isInstancedMesh(const Name& meshName)
-{
-  /*
-  for (auto& mesh : pseudoInstancedMeshes)
-  {
-    if ((*mesh) == meshName)
-      return true;
-  }
-  return false;
-  */
-
-  if (
-      /*
-	  meshName == _N(Tree_Tall_01_8) || meshName == _N(Tree_Tall_02_10) || 
-      meshName == _N(Tree_Tall_04_12) || */ meshName == _N(Tree_Tall_05_14) || 
-      //meshName == _N(Tree_Trunk_01_70) || 
-      meshName == _N(cube))
-    return true;
-
-  return false;
-}
-
 void DynamicGeometryGeneration::init()
 {
   // Buffers
@@ -958,6 +936,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 	for (int i = 0; i < 10; i++)
 		_INTR_LOG_WARNING("X0%x", *(_cubeEdgeFlagsBufferGpuMemory + i));
 	*/
+    /*
 	float* _voxelBufferGpuMemory =
             (float*)BufferManager::getGpuMemory(mesh->_voxelBufferRef);
 
@@ -967,7 +946,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
       if (f > 0.00001)
 		_INTR_LOG_WARNING("%f", f);
     }
-
+	*/
     ///// PJ: only for tests
 
 

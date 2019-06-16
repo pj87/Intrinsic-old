@@ -108,7 +108,6 @@ struct DynamicGeometryGeneration
   static float getVoxel(DynamicGeneratedMesh& mesh, int x, int y, int z);
 
   static bool isOverridenMesh(const Name&);
-  static bool isInstancedMesh(const Name&);
 
   static void init();
   static void onReinitRendering();
