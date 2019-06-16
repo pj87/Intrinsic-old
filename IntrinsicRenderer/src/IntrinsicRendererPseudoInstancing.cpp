@@ -74,5 +74,15 @@ void PseudoInstancing::addInstancedBufferRef(BufferRef bufferRef)
   vertexBufferRef = bufferRef;
 }
 
+void PseudoInstancing::update()
+{
+  uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
+      BufferManager::_descSizeInBytes(vertexBufferRef));
+
+
+
+  BufferManager::_descInitialData(vertexBufferRef) = tempBuffer;
+}
+
 } // namespace Renderer
 } // namespace Intrinsic

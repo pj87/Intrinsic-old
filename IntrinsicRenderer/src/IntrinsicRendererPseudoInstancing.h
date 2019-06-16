@@ -45,6 +45,8 @@ public:
 
   static void addInstancedBufferRef(BufferRef bufferRef);
 
+  static void update();
+
   template <class Iter>
   static void fillWithRandomFloatValues(Iter start, Iter end, float probability)
   {

@@ -928,6 +928,9 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 											 VK_ACCESS_SHADER_READ_BIT);
 
 
+	//Intrinsic::Renderer::PseudoInstancing::addInstancedBufferRef(posVertexBuffer);
+    Intrinsic::Renderer::PseudoInstancing::update();
+
 	///// PJ: only for tests
     /*
 	uint16_t* _cubeEdgeFlagsBufferGpuMemory =
