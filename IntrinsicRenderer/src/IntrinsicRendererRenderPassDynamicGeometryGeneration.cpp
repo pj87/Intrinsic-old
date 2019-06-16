@@ -963,7 +963,10 @@ float DynamicGeometryGeneration::getVoxel(DynamicGeneratedMesh& mesh, int x,
       m0,m1,.. are dimensions
       A(i,j,k,...) -> A0[i + j*m0 + k*m0*m1 + ...]
       */
-  int index = x + y * (*mesh.sizeX) + z * (*mesh.sizeX) * (*mesh.sizeY);
+  //int index = x + y * (*mesh.sizeX) + z * (*mesh.sizeX) * (*mesh.sizeY);
+  //int[dimX][dimY][dimZ] : 1 - D array index[i * dimY * dimZ + j * dimZ + k]
+
+  int index = x * (*mesh.sizeY) * (*mesh.sizeZ) + y * (*mesh.sizeZ) + z;
 
   float* _voxelBufferGpuMemory =
       (float*)BufferManager::getGpuMemory(mesh._voxelBufferRef);
