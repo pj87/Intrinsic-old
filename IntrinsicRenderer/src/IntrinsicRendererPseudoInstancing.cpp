@@ -104,6 +104,26 @@ glm::vec3 getPosition(unsigned int i, uint32_t* vertexMemory)
 	return ret;
 }
 
+void storePosition(unsigned int i, glm::vec3 pos, uint16_t* tempBuffer)
+{
+  /*
+  if (i % 2 == 0)
+  {
+    uint index = i + i / 2;
+    _Positions[index] = glm::packHalf2x16(pos.xy);
+    vec2 tmp = glm::unpackHalf2x16(_Positions[index + 1]);
+    _Positions[index + 1] = glm::packHalf2x16(vec2(pos.z, tmp.y));
+  }
+  else
+  {
+    uint index = i + (i - 1) / 2;
+    vec2 tmp = glm::unpackHalf2x16(_Positions[index]);
+    _Positions[index] = glm::packHalf2x16(vec2(tmp.x, pos.x));
+    _Positions[index + 1] = glm::packHalf2x16(vec2(pos.y, pos.z));
+  }
+  */
+}
+
 void PseudoInstancing::update()
 {
   uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -117,13 +137,20 @@ void PseudoInstancing::update()
 
 	glm::vec3 unpackedPosition0 = getPosition(i, _vertexBufferGpuMemory);
     //glm::vec2 unpackedPosition = glm::unpackHalf2x16(static_cast<unsigned int>(*(_vertexBufferGpuMemory + i)));
-    _INTR_LOG_WARNING("%f %f %f", unpackedPosition0.x, unpackedPosition0.y, unpackedPosition0.z);
+    //_INTR_LOG_WARNING("%f %f %f", unpackedPosition0.x, unpackedPosition0.y, unpackedPosition0.z);
 
 	//unpackedPosition0.y += 1.0;
 
-	//uint32_t packedPosition0 = glm::packHalf2x16(unpackedPosition0);
+	glm::vec2 pos1 = glm::vec2(unpackedPosition0.x, unpackedPosition0.y);
+    glm::vec2 pos2 = glm::vec2(unpackedPosition0.z, 0.0f);
 
-	//tempBuffer[i] = packedPosition0;
+	uint32_t packedPosition0 = glm::packHalf2x16(pos1);
+    uint32_t packedPosition1 = glm::packHalf2x16(pos2);
+
+	tempBuffer[3 * i] = packedPosition0;
+    tempBuffer[3 * i + 1] = packedPosition0 >> 16;
+    tempBuffer[3 * i + 2] = packedPosition1;
+
     //tempBuffer[i] = rand() % 0xFFFF;
     //tempBuffer[i] = 0;
   }
