@@ -45,6 +45,8 @@ public:
 
   static void addInstancedBufferRef(BufferRef bufferRef);
 
+  static BufferRef PseudoInstancing::getInstancedBufferRef();
+
   static void update();
 
   template <class Iter>
