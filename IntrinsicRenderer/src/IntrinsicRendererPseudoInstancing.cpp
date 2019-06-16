@@ -132,15 +132,14 @@ void PseudoInstancing::update()
   uint32_t* _vertexBufferGpuMemory =
       (uint32_t*)BufferManager::getGpuMemory(vertexBufferRef);
   
-  for (int i = 0; i < 1000; i++)
+  for (int i = 0; i < 100; i++)
   {
-
 	glm::vec3 unpackedPosition0 = getPosition(i, _vertexBufferGpuMemory);
     //glm::vec2 unpackedPosition = glm::unpackHalf2x16(static_cast<unsigned int>(*(_vertexBufferGpuMemory + i)));
-    //_INTR_LOG_WARNING("%f %f %f", unpackedPosition0.x, unpackedPosition0.y, unpackedPosition0.z);
+    _INTR_LOG_WARNING("%f %f %f", unpackedPosition0.x, unpackedPosition0.y, unpackedPosition0.z);
 
 	//unpackedPosition0.y += 1.0;
-
+    /*
 	glm::vec2 pos1 = glm::vec2(unpackedPosition0.x, unpackedPosition0.y);
     glm::vec2 pos2 = glm::vec2(unpackedPosition0.z, 0.0f);
 
@@ -153,10 +152,11 @@ void PseudoInstancing::update()
 
     //tempBuffer[i] = rand() % 0xFFFF;
     //tempBuffer[i] = 0;
+	*/
   }
   
-  BufferManager::updateResources(BufferManager::_dynamicBuffers,
-                                 reinterpret_cast<void*>(tempBuffer));
+  //BufferManager::updateResources(BufferManager::_dynamicBuffers,
+  //                               reinterpret_cast<void*>(tempBuffer));
   /*
   uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
       BufferManager::_descSizeInBytes(vertexBufferRef));

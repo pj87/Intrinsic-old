@@ -339,8 +339,8 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
     Intrinsic::Renderer::PseudoInstancing::fillWithRandomFloatValues(a.begin(), a.end(), probability);
 
-    for (auto& i : a)
-      _INTR_LOG_WARNING("%d", i);
+    //for (auto& i : a)
+    //  _INTR_LOG_WARNING("%d", i);
 
 	_INTR_LOG_INFO("instanced mesh: x: %d y: %d", sizeX, sizeY);
 
@@ -438,6 +438,11 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
                 positions[subMeshIdx][i].y));
             uint32_t packedPosition1 = glm::packHalf2x16(glm::vec2(
 				positions[subMeshIdx][i].z + posZ, 0.0f));
+
+			_INTR_LOG_WARNING("%f %f %f", positions[subMeshIdx][i].x + posX,
+                              positions[subMeshIdx][i].y,
+                              positions[subMeshIdx][i].z + posZ);
+
             /*
 			_INTR_LOG_WARNING("x: %f, y: %f, z: %f",
                               positions[subMeshIdx][i].x + posX, 
