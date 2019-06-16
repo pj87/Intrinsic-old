@@ -23,6 +23,9 @@
 #define _INSTANCED_MESH_SIZE(name)                                               \
   Intrinsic::Renderer::PseudoInstancing::getMeshSizes(name)
 
+typedef Dod::Ref BufferRef;
+typedef _INTR_ARRAY(BufferRef) BufferRefArray;
+
 namespace Intrinsic
 {
 namespace Renderer
@@ -39,6 +42,8 @@ public:
   static std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int,
                     float>&
 	  getMeshSizes(const Name&);
+
+  static void addInstancedBufferRef(BufferRef bufferRef);
 
   template <class Iter>
   static void fillWithRandomFloatValues(Iter start, Iter end, float probability)

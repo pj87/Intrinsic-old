@@ -67,5 +67,10 @@ PseudoInstancing::getMeshSizes(const Name& meshName)
   }
 }
 
+void PseudoInstancing::addInstancedBufferRef(BufferRef bufferRef) 
+{
+
+}
+
 } // namespace Renderer
 } // namespace Intrinsic
