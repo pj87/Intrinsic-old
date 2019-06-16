@@ -64,6 +64,8 @@ private:
   static std::vector<std::tuple<std::unique_ptr<Name>, unsigned int,
                                 unsigned int, float>>&
 	  getMeshes();
+
+  static BufferRef vertexBufferRef;
 };
 /*
 namespace RenderPass

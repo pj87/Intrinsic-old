@@ -27,6 +27,8 @@ std::vector<
     std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>
     PseudoInstancing::meshes;
 
+BufferRef PseudoInstancing::vertexBufferRef;
+
 void PseudoInstancing::addPseudoInstancingMesh(Name&& name,
                                                const unsigned& sizeX,
                                                const unsigned& sizeY,
@@ -69,7 +71,7 @@ PseudoInstancing::getMeshSizes(const Name& meshName)
 
 void PseudoInstancing::addInstancedBufferRef(BufferRef bufferRef) 
 {
-
+  vertexBufferRef = bufferRef;
 }
 
 } // namespace Renderer
