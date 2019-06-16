@@ -984,8 +984,12 @@ float DynamicGeometryGeneration::getVoxel(DynamicGeneratedMesh& mesh, int x,
       m0,m1,.. are dimensions
       A(i,j,k,...) -> A0[i + j*m0 + k*m0*m1 + ...]
       */
-  // return mesh->
-  return 0.0;
+  int index = x + y * (*mesh.sizeX) + z * (*mesh.sizeX) * (*mesh.sizeY);
+
+  float* _voxelBufferGpuMemory =
+      (float*)BufferManager::getGpuMemory(mesh._voxelBufferRef);
+
+  return *(_voxelBufferGpuMemory + index);
 }
 
 } // namespace RenderPass
