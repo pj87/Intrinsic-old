@@ -874,7 +874,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 	}
 	else
 	{
-	  if (mesh->isCalled && mesh->counter > 2)
+	  if (mesh->isCalled/* && mesh->counter > 2*/)
 		continue;
 	}
 
@@ -927,10 +927,14 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 											 VK_ACCESS_SHADER_WRITE_BIT, 
 											 VK_ACCESS_SHADER_READ_BIT);
 
-
 	//Intrinsic::Renderer::PseudoInstancing::addInstancedBufferRef(posVertexBuffer);
-	if (_IS_INSTANCED_MESH(*(mesh->meshName)))
-		Intrinsic::Renderer::PseudoInstancing::update();
+
+	//_INTR_LOG_INFO("%s", mesh->meshName.getString().c_str());
+
+	//*(mesh->meshName)
+
+    //if (!_IS_OVERRIDEN_MESH(*(mesh->meshName))
+	Intrinsic::Renderer::PseudoInstancing::update();
 
 	///// PJ: only for tests
     

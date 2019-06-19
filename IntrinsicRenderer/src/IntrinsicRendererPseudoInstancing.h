@@ -44,8 +44,10 @@ public:
 	  getMeshSizes(const Name&);
 
   static void addInstancedBufferRef(BufferRef bufferRef);
+  static void addInstancedBufferTmp(uint16_t* bufferTmp);
 
   static BufferRef PseudoInstancing::getInstancedBufferRef();
+  static uint16_t* PseudoInstancing::getInstancedBufferTmp();
 
   static void update();
 
@@ -70,6 +72,7 @@ private:
 	  getMeshes();
 
   static BufferRef vertexBufferRef;
+  static uint16_t* vertexBufferTmp;
 };
 /*
 namespace RenderPass
