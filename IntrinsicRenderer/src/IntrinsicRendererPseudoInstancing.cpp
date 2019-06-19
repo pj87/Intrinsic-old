@@ -80,25 +80,24 @@ BufferRef PseudoInstancing::getInstancedBufferRef()
   return vertexBufferRef;
 }
 
-glm::vec3 getPosition(unsigned int i, uint32_t* vertexMemory)
+glm::vec2 getPosition(unsigned int i, uint32_t* vertexMemory)
 { 
-	glm::vec3 ret(0.0);
+	glm::vec2 ret(0.0);
 
 	if (i % 2 == 0)
 	{
 		unsigned int index = i + i / 2;
-        glm::vec2 tmp1 = glm::unpackHalf2x16(vertexMemory[index]);
-        glm::vec2 tmp2 = glm::unpackHalf2x16(vertexMemory[index + 1]);
+        ret = glm::unpackHalf2x16(vertexMemory[index]);
+        //glm::vec2 tmp2 = glm::unpackHalf2x16(vertexMemory[index + 1]);
 
-		ret = glm::vec3(tmp1.x, tmp1.y, tmp1.x);
+		//ret = glm::vec3(tmp1.x, tmp1.y, tmp1.x);
 	}
 	else
 	{
         unsigned int index = i + (i - 1) / 2;
-        glm::vec2 tmp1 = glm::unpackHalf2x16(vertexMemory[index]);
-        glm::vec2 tmp2 = glm::unpackHalf2x16(vertexMemory[index + 1]);
+        ret = glm::unpackHalf2x16(vertexMemory[index + 1]);
 
-		ret = glm::vec3(tmp1.y, tmp2.x, tmp2.y);
+		//ret = glm::vec3(tmp1.y, tmp2.x, tmp2.y);
 	}
 
 	return ret;
@@ -123,20 +122,36 @@ void storePosition(unsigned int i, glm::vec3 pos, uint16_t* tempBuffer)
   }
   */
 }
-
+/*
+int getIndex(int x, int z, int len)
+{
+	return 
+}
+*/
 void PseudoInstancing::update()
 {
   uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
       BufferManager::_descSizeInBytes(vertexBufferRef));
 
-  uint32_t* _vertexBufferGpuMemory =
-      (uint32_t*)BufferManager::getGpuMemory(vertexBufferRef);
+  _INTR_LOG_WARNING("vertexBufferRef size: %d, vertices: %d",
+                    BufferManager::_descSizeInBytes(vertexBufferRef),
+                    BufferManager::_descSizeInBytes(vertexBufferRef) / 8);
+
+  uint16_t* _vertexBufferGpuMemory =
+      (uint16_t*)BufferManager::getGpuMemory(vertexBufferRef);
   
-  for (int i = 0; i < 100; i++)
+  //for (int i = 0; i < 216; i++)
+  for (int i = 0; i < BufferManager::_descSizeInBytes(vertexBufferRef) / 8; i++)
   {
-	glm::vec3 unpackedPosition0 = getPosition(i, _vertexBufferGpuMemory);
+	//glm::vec2 unpackedPosition0 = getPosition(i, _vertexBufferGpuMemory);
     //glm::vec2 unpackedPosition = glm::unpackHalf2x16(static_cast<unsigned int>(*(_vertexBufferGpuMemory + i)));
-    _INTR_LOG_WARNING("%f %f %f", unpackedPosition0.x, unpackedPosition0.y, unpackedPosition0.z);
+        //_INTR_LOG_WARNING("%f %f 0X%x", unpackedPosition0.x,
+        //                  unpackedPosition0.y,
+        //                  *(_vertexBufferGpuMemory + i));
+
+	  //_INTR_LOG_WARNING("0x%X", *(_vertexBufferGpuMemory + i));
+
+	tempBuffer[i] = *(_vertexBufferGpuMemory + i);
 
 	//unpackedPosition0.y += 1.0;
     /*
@@ -153,10 +168,22 @@ void PseudoInstancing::update()
     //tempBuffer[i] = rand() % 0xFFFF;
     //tempBuffer[i] = 0;
 	*/
+    //  tempBuffer[i] = 0;
+	//  tempBuffer[i] = rand() % 0xFFFF;
   }
   
-  //BufferManager::updateResources(BufferManager::_dynamicBuffers,
-  //                               reinterpret_cast<void*>(tempBuffer));
+  BufferManager::updateResources(BufferManager::_dynamicBuffers,
+                                 reinterpret_cast<void*>(tempBuffer));
+
+  _INTR_LOG_WARNING("------ Odczytuje po zapisie ----------");
+
+  for (int i = 0; i < 50; i++)
+  {
+    _INTR_LOG_WARNING("0x%X", tempBuffer[i]);
+  }
+
+  _INTR_LOG_WARNING("------ Koniec odczytu po zapise ----------");
+
   /*
   uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
       BufferManager::_descSizeInBytes(vertexBufferRef));

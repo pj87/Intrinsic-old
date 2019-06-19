@@ -929,17 +929,18 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
 
 	//Intrinsic::Renderer::PseudoInstancing::addInstancedBufferRef(posVertexBuffer);
-    Intrinsic::Renderer::PseudoInstancing::update();
+	if (_IS_INSTANCED_MESH(*(mesh->meshName)))
+		Intrinsic::Renderer::PseudoInstancing::update();
 
 	///// PJ: only for tests
-    /*
-	uint16_t* _cubeEdgeFlagsBufferGpuMemory =
-        (uint16_t*)BufferManager::getGpuMemory(mesh->_cubeEdgeFlagsBufferRef);
+    
+	/*
+	uint32_t* _cubeEdgeFlagsBufferGpuMemory =
+        (uint32_t*)BufferManager::getGpuMemory(mesh->_cubeEdgeFlagsBufferRef);
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 256; i++)
 		_INTR_LOG_WARNING("X0%x", *(_cubeEdgeFlagsBufferGpuMemory + i));
-	*/
-    /*
+	
 	float* _voxelBufferGpuMemory =
             (float*)BufferManager::getGpuMemory(mesh->_voxelBufferRef);
 
@@ -951,7 +952,6 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     }
 	*/
     ///// PJ: only for tests
-
 
 	mesh->isCalled = true;
     mesh->counter++;

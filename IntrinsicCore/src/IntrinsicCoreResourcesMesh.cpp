@@ -313,6 +313,9 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
   BufferRefArray buffersToCreate;
   _INTR_ARRAY(void*) tempBuffersToRelease;
 
+  BufferRef vertexBufferRef;
+  uint16_t* tempVertexBuffer;  
+
   // iteruj po wszystkich meshach (tak jak jest teraz)
   // jeœli mesh jest na liœcie (czyli jest zapisana jego nazwa)
   // pobierz odpowiednie wartosci rozmiarow dla danego mesha
@@ -439,9 +442,11 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             uint32_t packedPosition1 = glm::packHalf2x16(glm::vec2(
 				positions[subMeshIdx][i].z + posZ, 0.0f));
 
-			_INTR_LOG_WARNING("%f %f %f", positions[subMeshIdx][i].x + posX,
+			_INTR_LOG_WARNING("%f %f %f 0x%X 0x%X", positions[subMeshIdx][i].x + posX,
                               positions[subMeshIdx][i].y,
-                              positions[subMeshIdx][i].z + posZ);
+                              positions[subMeshIdx][i].z + posZ,
+                              packedPosition0, 
+							  packedPosition1);
 
             /*
 			_INTR_LOG_WARNING("x: %f, y: %f, z: %f",
@@ -452,13 +457,21 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             tempBuffer[(len * j + i) * 3u] = packedPosition0;
             tempBuffer[(len * j + i) * 3u + 1u] = packedPosition0 >> 16u;
             tempBuffer[(len * j + i) * 3u + 2u] = packedPosition1;
+            /*
+			_INTR_LOG_WARNING("%d %d %d", (len * j + i) * 3u,
+										  (len * j + i) * 3u + 1u, 
+										  (len * j + i) * 3u + 2u);
+			*/
           }
         }
         BufferManager::_descInitialData(posVertexBuffer) = tempBuffer;
+        tempVertexBuffer = tempBuffer;
 
         buffersToCreate.push_back(posVertexBuffer);
         vertexBuffers[subMeshIdx].push_back(posVertexBuffer);
       }
+
+	  vertexBufferRef = posVertexBuffer;
 
       BufferRef uv0VertexBuffer = BufferManager::createBuffer(_N(MeshUv0Vb));
       {
@@ -721,6 +734,39 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
   }
 
   BufferManager::createResources(buffersToCreate);
+
+  
+  _INTR_LOG_WARNING("------ Test przed pierwszym zapisem ----------");
+
+  for (int i = 0; i < 50; i++)
+  {
+    _INTR_LOG_WARNING("0x%X", tempVertexBuffer[i]);
+  }
+
+  _INTR_LOG_WARNING("------ Tutaj konczy sie test przed pierwszym zapisem ----------");
+
+  /*
+  _INTR_LOG_WARNING("------ Tutaj jest test0----------");
+
+  for (int i = 0; i < 200; i++)
+  {
+    _INTR_LOG_WARNING("0x%X", tempVertexBuffer[i]);
+  }
+
+  _INTR_LOG_WARNING("------ Tutaj konczy sie test0----------");
+
+  _INTR_LOG_WARNING("------ Tutaj jest test1----------");
+
+  uint32_t* _vertexBufferGpuMemory =
+      (uint32_t*)BufferManager::getGpuMemory(vertexBufferRef);
+
+  for (int i = 0; i < 200; i++)
+  {
+    _INTR_LOG_WARNING("0x%X", *(_vertexBufferGpuMemory + i));    
+  }
+
+  _INTR_LOG_WARNING("------ Tutaj konczy sie test0----------");
+  */
 
   for (uint32_t i = 0u; i < tempBuffersToRelease.size(); ++i)
   {
