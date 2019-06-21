@@ -305,6 +305,41 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
   BufferManager::createResources(BufferManager::_dynamicBuffers);
 }
 
+uint32_t getPosition(unsigned int i, uint16_t* tempBuffer)
+{
+  uint16_t* pos = &tempBuffer[i];
+
+  uint32_t* _Position = reinterpret_cast<uint32_t*>(pos);
+
+  // uint32_t result = glm::unpackHalf2x16(_Position);
+
+  _INTR_LOG_WARNING("0x%X", *_Position);
+
+  return *_Position;
+
+  /*
+  if (i % 2 == 0)
+  {
+    unsigned int index = i + i / 2;
+    glm::vec2 tmp = glm::unpackHalf2x16(_Positions[index]);
+    glm::vec2 tmp2 = glm::unpackHalf2x16(_Positions[index + 1]);
+
+        ret = glm::vec3(tmp.x, tmp.y, tmp2.x);
+  }
+  else
+  {
+    unsigned int index = i + (i - 1) / 2;
+
+        glm::vec2 tmp = glm::unpackHalf2x16(_Positions[index]);
+    glm::vec2 tmp2 = glm::unpackHalf2x16(_Positions[index + 1]);
+
+        ret = glm::vec3(tmp.x, tmp2.x, tmp2.y);
+  }
+
+  return ret;
+  */
+}
+
 void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 {
   // Create vertex/index buffers - we're using a separate buffer for each vertex
@@ -740,9 +775,10 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
   
   _INTR_LOG_WARNING("------ Test przed pierwszym zapisem ----------");
 
-  for (int i = 0; i < 50; i++)
+  for (int i = 0; i < 24 * 3; i += 2)
   {
-    _INTR_LOG_WARNING("0x%X", tempVertexBuffer[i]);
+    //_INTR_LOG_WARNING("0x%X", tempVertexBuffer[i]);
+    uint32_t dupa = getPosition(i, tempVertexBuffer);
   }
 
   _INTR_LOG_WARNING("------ Tutaj konczy sie test przed pierwszym zapisem ----------");

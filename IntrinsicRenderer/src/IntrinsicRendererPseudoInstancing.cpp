@@ -127,6 +127,50 @@ void storePosition(unsigned int i, glm::vec3 pos, uint16_t* tempBuffer)
   }
   */
 }
+
+uint32_t getPosition(unsigned int i, uint16_t* tempBuffer)
+{
+  uint16_t* pos = &tempBuffer[i];
+
+  uint32_t* _Position = reinterpret_cast<uint32_t*>(pos);
+
+  //uint32_t result = glm::unpackHalf2x16(_Position);
+
+  _INTR_LOG_WARNING("0x%X", *_Position);
+
+  return *_Position;
+
+  /*
+  if (i % 2 == 0)
+  {
+    unsigned int index = i + i / 2;
+    glm::vec2 tmp = glm::unpackHalf2x16(_Positions[index]);
+    glm::vec2 tmp2 = glm::unpackHalf2x16(_Positions[index + 1]);
+
+	ret = glm::vec3(tmp.x, tmp.y, tmp2.x);
+  }
+  else
+  {
+    unsigned int index = i + (i - 1) / 2;
+
+	glm::vec2 tmp = glm::unpackHalf2x16(_Positions[index]);
+    glm::vec2 tmp2 = glm::unpackHalf2x16(_Positions[index + 1]);
+
+	ret = glm::vec3(tmp.x, tmp2.x, tmp2.y);
+  }
+
+  return ret;
+  */
+}
+
+glm::vec2 getPosition1(unsigned int i, uint16_t* tempBuffer)
+{
+  uint32_t* _Positions = reinterpret_cast<uint32_t*>(tempBuffer);
+
+  return glm::unpackHalf2x16(_Positions[i]);
+}
+
+
 /*
 int getIndex(int x, int z, int len)
 {
@@ -177,7 +221,6 @@ void PseudoInstancing::update()
     //tempBuffer[i] = rand() % 0xFFFF;
     //tempBuffer[i] = 0;
         */
-    tempBuffer[i] = 0;
     // tempBuffer[i] = rand() % 0xFFFF;
   }
 
@@ -186,9 +229,27 @@ void PseudoInstancing::update()
 
   _INTR_LOG_WARNING("------ Odczytuje po zapisie ----------");
 
-  for (int i = 0; i < BufferManager::_descSizeInBytes(vertexBufferRef) / 8; i++)
+  for (int i = 0; i < 24 * 3; i += 2)
   {
-    _INTR_LOG_WARNING("0x%X", tempBuffer[i]);
+    //_INTR_LOG_WARNING("0x%X", tempBuffer[i]);
+
+	//glm::vec2 dupa = getPosition(i, tempBuffer);
+    uint32_t dupa = getPosition(i, tempBuffer);
+
+    //_INTR_LOG_WARNING("0x%X", dupa);
+
+    /*
+	_INTR_LOG_WARNING("%d %d %d", i, i + 1u, i + 2u);
+
+	float x = getPosition1(i, tempBuffer);
+    float y = getPosition1(i + 1u, tempBuffer);
+    float z = getPosition1(i + 2u, tempBuffer);
+
+    _INTR_LOG_WARNING("PJ: %f %f %f", x, y, z);
+	*/
+
+
+	//glm::vec3 dupa = getPosition(i, tempBuffer);
   }
 
   _INTR_LOG_WARNING("------ Koniec odczytu po zapise ----------");
