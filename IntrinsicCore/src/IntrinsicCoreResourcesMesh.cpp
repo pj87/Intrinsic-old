@@ -340,6 +340,39 @@ uint32_t getPosition(unsigned int i, uint16_t* tempBuffer)
   */
 }
 
+void updatePosition(unsigned int i, uint16_t* tempBuffer)
+{
+  uint16_t* pos0 = &tempBuffer[i];
+  uint16_t* pos1 = &tempBuffer[i + 1];
+
+  uint32_t* _Position = reinterpret_cast<uint32_t*>(pos0);
+
+  float result0 = glm::unpackHalf1x16(*pos0);
+  float result1 = glm::unpackHalf1x16(*pos1);
+
+  result0 += 1.0000f;
+
+  *pos0 = glm::packHalf1x16(result0);
+
+  //_INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
+}
+
+
+/*
+glm::vec2 getVectorPosition(unsigned int i, uint16_t* tempBuffer)
+{
+  uint16_t* pos = &tempBuffer[i];
+
+  uint32_t* _Position = reinterpret_cast<uint32_t*>(pos);
+
+  glm::vec2 result = glm::unpackHalf2x16(_Position);
+
+  _INTR_LOG_WARNING("0x", *_Position);
+
+  return result;
+}
+*/
+
 void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 {
   // Create vertex/index buffers - we're using a separate buffer for each vertex
@@ -778,6 +811,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
   for (int i = 0; i < 24 * 3; i += 2)
   {
     //_INTR_LOG_WARNING("0x%X", tempVertexBuffer[i]);
+    updatePosition(i, tempVertexBuffer);
     uint32_t dupa = getPosition(i, tempVertexBuffer);
   }
 
