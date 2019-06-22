@@ -128,7 +128,7 @@ void storePosition(unsigned int i, glm::vec3 pos, uint16_t* tempBuffer)
   */
 }
 
-uint32_t getPosition(unsigned int i, uint16_t* tempBuffer)
+uint32_t getPosition(unsigned int i, uint16_t* tempBuffer, const char *qqqq)
 {
   uint16_t* pos = &tempBuffer[i];
 
@@ -136,7 +136,7 @@ uint32_t getPosition(unsigned int i, uint16_t* tempBuffer)
 
   //uint32_t result = glm::unpackHalf2x16(_Position);
 
-  _INTR_LOG_WARNING("0x%X", *_Position);
+  _INTR_LOG_WARNING("%s: 0x%X", qqqq, *_Position);
 
   return *_Position;
 
@@ -234,7 +234,9 @@ void PseudoInstancing::update()
     //_INTR_LOG_WARNING("0x%X", tempBuffer[i]);
 
 	//glm::vec2 dupa = getPosition(i, tempBuffer);
-    uint32_t dupa = getPosition(i, tempBuffer);
+    uint32_t dupa = getPosition(i, tempBuffer, "tempBuffer            ");
+    uint32_t dupa1 =
+        getPosition(i, _vertexBufferGpuMemory, "_vertexBufferGpuMemory");
 
     //_INTR_LOG_WARNING("0x%X", dupa);
 
