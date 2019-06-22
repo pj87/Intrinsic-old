@@ -225,7 +225,7 @@ void PseudoInstancing::update()
   }
 
   BufferManager::updateResources(BufferManager::_dynamicBuffers,
-                                 reinterpret_cast<void*>(tempBuffer));
+      reinterpret_cast<void*>(_vertexBufferGpuMemory));
 
   _INTR_LOG_WARNING("------ Odczytuje po zapisie ----------");
 
