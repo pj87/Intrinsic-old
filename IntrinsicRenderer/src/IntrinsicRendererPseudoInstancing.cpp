@@ -227,10 +227,6 @@ void PseudoInstancing::update()
   _INTR_LOG_WARNING("------ Koniec odczytu po zapise ----------");
 
   /*
-
-
-
-
   */
 }
 
