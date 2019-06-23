@@ -226,12 +226,8 @@ void PseudoInstancing::update()
 
   _INTR_LOG_WARNING("------ Koniec odczytu po zapise ----------");
 
-  /*
-  for (int i = 0; i < 10; i++)
-          for (int j = 0; j < 10; j++)
-          {
-          
-                  
+  /*
+
                   uint32_t packedPosition0 = glm::packHalf2x16(
                           glm::vec2(positions[subMeshIdx][i].x + posX,
   positions[subMeshIdx][i].y)); uint32_t packedPosition1 =
