@@ -228,11 +228,7 @@ void PseudoInstancing::update()
 
   /*
 
-                  uint32_t packedPosition0 = glm::packHalf2x16(
-                          glm::vec2(positions[subMeshIdx][i].x + posX,
-  positions[subMeshIdx][i].y)); uint32_t packedPosition1 =
-                          glm::packHalf2x16(glm::vec2(positions[subMeshIdx][i].z
-  + posZ, 0.0f));
+
 
 
   */
