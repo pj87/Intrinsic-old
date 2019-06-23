@@ -95,7 +95,7 @@ void BufferManager::updateResources(const BufferRefArray& p_Buffers,
                                 memoryAllocationInfo._offset);
     _INTR_VK_CHECK_RESULT(result);
 
-    void* initialData = _descInitialData(bufferRef);
+    //void* initialData = _descInitialData(bufferRef);
     if (initialData)
     {
       VkBufferCreateInfo stagingBufferCreateInfo = bufferCreateInfo;
