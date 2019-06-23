@@ -227,9 +227,6 @@ void PseudoInstancing::update()
   _INTR_LOG_WARNING("------ Koniec odczytu po zapise ----------");
 
   /*
-  uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
-      BufferManager::_descSizeInBytes(vertexBufferRef));
-
   for (int i = 0; i < 10; i++)
           for (int j = 0; j < 10; j++)
           {
@@ -241,12 +238,7 @@ void PseudoInstancing::update()
                           glm::packHalf2x16(glm::vec2(positions[subMeshIdx][i].z
   + posZ, 0.0f));
 
-                  tempBuffer[(len * j + i) * 3u] = packedPosition0;
-                  tempBuffer[(len * j + i) * 3u + 1u] = packedPosition0 >> 16u;
-                  tempBuffer[(len * j + i) * 3u + 2u] = packedPosition1;
-          }
 
-  BufferManager::_descInitialData(vertexBufferRef) = tempBuffer;
   */
 }
 
