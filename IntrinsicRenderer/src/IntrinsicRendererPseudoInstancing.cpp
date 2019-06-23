@@ -128,7 +128,21 @@ void storePosition(unsigned int i, glm::vec3 pos, uint16_t* tempBuffer)
   */
 }
 
-uint32_t getPosition(unsigned int i, uint16_t* tempBuffer, const char *qqqq)
+glm::vec2 getPositionVec2(unsigned int i, uint16_t* tempBuffer)
+{
+  uint32_t* _Positions = reinterpret_cast<uint32_t*>(tempBuffer);
+
+  return glm::unpackHalf2x16(_Positions[i]);
+}
+
+glm::vec4 getPositionVec4(unsigned int i, uint16_t* tempBuffer)
+{
+  uint64_t* _Positions = reinterpret_cast<uint64_t*>(tempBuffer);
+
+  return glm::unpackHalf4x16(_Positions[i]);
+}
+
+uint32_t getPositionPacked(unsigned int i, uint16_t* tempBuffer, const char *qqqq)
 {
   uint16_t* pos0 = &tempBuffer[i];
   uint16_t* pos1 = &tempBuffer[i + 1];
@@ -163,13 +177,6 @@ uint32_t getPosition(unsigned int i, uint16_t* tempBuffer, const char *qqqq)
 
   return ret;
   */
-}
-
-glm::vec2 getPosition1(unsigned int i, uint16_t* tempBuffer)
-{
-  uint32_t* _Positions = reinterpret_cast<uint32_t*>(tempBuffer);
-
-  return glm::unpackHalf2x16(_Positions[i]);
 }
 
 void updatePosition(unsigned int i, uint16_t* tempBuffer)
@@ -219,9 +226,9 @@ void PseudoInstancing::update()
   {
     //_INTR_LOG_WARNING("0x%X", tempBuffer[i]);
 
-    uint32_t dupa = getPosition(i, tempBuffer, "tempBuffer            ");
+    uint32_t dupa = getPositionPacked(i, tempBuffer, "tempBuffer            ");
     uint32_t dupa1 =
-        getPosition(i, _vertexBufferGpuMemory, "_vertexBufferGpuMemory");
+        getPositionPacked(i, _vertexBufferGpuMemory, "_vertexBufferGpuMemory");
   }
 
   _INTR_LOG_WARNING("------ Koniec odczytu po zapise ----------");
