@@ -307,13 +307,17 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
 
 uint32_t getPosition(unsigned int i, uint16_t* tempBuffer)
 {
-  uint16_t* pos = &tempBuffer[i];
+  uint16_t* pos0 = &tempBuffer[i];
+  uint16_t* pos1 = &tempBuffer[i + 1];
 
-  uint32_t* _Position = reinterpret_cast<uint32_t*>(pos);
+  uint32_t* _Position = reinterpret_cast<uint32_t*>(pos0);
+
+  float result0 = glm::unpackHalf1x16(*pos0);
+  float result1 = glm::unpackHalf1x16(*pos1);
 
   // uint32_t result = glm::unpackHalf2x16(_Position);
 
-  _INTR_LOG_WARNING("0x%X", *_Position);
+  _INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
 
   return *_Position;
 
@@ -808,10 +812,15 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
   
   _INTR_LOG_WARNING("------ Test przed pierwszym zapisem ----------");
 
+  for (int i = 0; i < 24 * 3; i += 3)
+  {
+	updatePosition(i, tempVertexBuffer);
+  }
+
   for (int i = 0; i < 24 * 3; i += 2)
   {
     //_INTR_LOG_WARNING("0x%X", tempVertexBuffer[i]);
-    updatePosition(i, tempVertexBuffer);
+
     uint32_t dupa = getPosition(i, tempVertexBuffer);
   }
 
