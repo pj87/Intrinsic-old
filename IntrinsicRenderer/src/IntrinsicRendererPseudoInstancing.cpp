@@ -211,6 +211,27 @@ void updatePosition(unsigned int i, uint16_t* tempBuffer)
   //_INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
 }
 
+void updatePosition(uint16_t* tempBuffer, unsigned int i, glm::vec3& offset)
+{
+  uint16_t* pos0 = &tempBuffer[i];
+  uint16_t* pos1 = &tempBuffer[i + 1];
+  uint16_t* pos2 = &tempBuffer[i + 2];
+
+  float result0 = glm::unpackHalf1x16(*pos0);
+  float result1 = glm::unpackHalf1x16(*pos1);
+  float result2 = glm::unpackHalf1x16(*pos2);
+
+  glm::vec3 pos = glm::vec3(result0, result1, result2);
+
+  pos += offset;
+
+  *pos0 = glm::packHalf1x16(pos.x);
+  *pos1 = glm::packHalf1x16(pos.y);
+  *pos2 = glm::packHalf1x16(pos.z);
+
+  //_INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
+}
+
 void PseudoInstancing::update()
 {
   //uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -229,7 +250,8 @@ void PseudoInstancing::update()
   for (int i = 0; i < 24 * 3; i += 3)
   {
     //updatePosition(i, tempBuffer);
-    updatePosition(i, _vertexBufferGpuMemory);
+    //updatePosition(i, _vertexBufferGpuMemory);
+    updatePosition(_vertexBufferGpuMemory, i, glm::vec3(0.0f, 0.01f, 0.0f));
   }
 
   BufferManager::updateResources(BufferManager::_dynamicBuffers,
