@@ -135,6 +135,21 @@ glm::vec2 getPositionVec2(unsigned int i, uint16_t* tempBuffer)
   return glm::unpackHalf2x16(_Positions[i]);
 }
 
+glm::vec3 getPositionVec3(unsigned int i, uint16_t* tempBuffer)
+{
+  uint16_t* pos0 = &tempBuffer[i];
+  uint16_t* pos1 = &tempBuffer[i + 1];
+  uint16_t* pos2 = &tempBuffer[i + 2];
+
+  float result0 = glm::unpackHalf1x16(*pos0);
+  float result1 = glm::unpackHalf1x16(*pos1);
+  float result2 = glm::unpackHalf1x16(*pos2);
+
+  _INTR_LOG_WARNING("%f %f %f", result0, result1, result2);
+
+  return glm::vec3(result0, result1, result2);
+}
+
 glm::vec4 getPositionVec4(unsigned int i, uint16_t* tempBuffer)
 {
   uint64_t* _Positions = reinterpret_cast<uint64_t*>(tempBuffer);
@@ -229,6 +244,11 @@ void PseudoInstancing::update()
     uint32_t dupa = getPositionPacked(i, tempBuffer, "tempBuffer            ");
     uint32_t dupa1 =
         getPositionPacked(i, _vertexBufferGpuMemory, "_vertexBufferGpuMemory");
+  }
+
+  for (int i = 0; i < 24 * 3; i += 3)
+  {
+	glm::vec3 dupa = getPositionVec3(i, _vertexBufferGpuMemory);
   }
 
   _INTR_LOG_WARNING("------ Koniec odczytu po zapise ----------");
