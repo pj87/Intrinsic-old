@@ -74,9 +74,10 @@ float map( in vec3 pos, float time )
     m = clamp(m,0.0,1.0);
 	*/
 	
-	pos = repxz(vec3(pos.x, h, pos.z), 30.0);
+	//pos = repxz(vec3(pos.x, h, pos.z), 300.0);
     
-    h = opU(h, sdBox(pos, vec3(2.5, 50.0, 2.5)));
+    //h = opU(h, sdBox(pos, vec3(2.5, 50.0, 2.5)));
+	//h = opU(h, sdBox(pos, vec3(2.5, 50.0, 2.5)));
 	
 	return h;
 	
