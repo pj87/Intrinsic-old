@@ -67,6 +67,10 @@ private:
                                 unsigned int, float>>&
 	  getMeshes();
 
+  static int getIndex(int x, int z);
+
+  static int getMeshIndicesRange(int x, int z);
+
   static BufferRef vertexBufferRef;
 };
 /*
