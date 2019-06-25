@@ -74,13 +74,6 @@ void PseudoInstancing::addInstancedBufferRef(BufferRef bufferRef)
   vertexBufferRef = bufferRef;
 }
 
-int PseudoInstancing::getIndex(int x, int z)
-{
-	//24
-	//return 10 * 24 * z + x;
-  return 0;
-}
-
 void updatePosition(uint16_t* tempBuffer, unsigned int i, glm::vec3& offset)
 {
   uint16_t* pos0 = &tempBuffer[i];
@@ -105,11 +98,19 @@ void updatePosition(uint16_t* tempBuffer, unsigned int i, glm::vec3& offset)
 int PseudoInstancing::getMeshIndicesRange(int x, int z) 
 {
   int index = z * 10 + x;
-  int index1 = 24 * (z * 10 + x);
+  int index1 = 3 * 24 * (z * 10 + x);
   _INTR_LOG_WARNING("index w meshu: %d", index);
   _INTR_LOG_WARNING("index w meshu: %d", index1);
 
   return index1;
+}
+
+int PseudoInstancing::getIndex(int x, int z, int sizeX, int numMeshVertices)
+{
+  int index = 3 * numMeshVertices * (z * sizeX + x);
+  _INTR_LOG_WARNING("index w meshu: %d", index);
+
+  return index;
 }
 
 void PseudoInstancing::update()
@@ -118,10 +119,10 @@ void PseudoInstancing::update()
       (uint16_t*)BufferManager::getGpuMemory(vertexBufferRef);
 
   //for (int i = 24 * 3; i < 48 * 3; i += 3)
-  int index = getMeshIndicesRange(0, 1);
-  int index1 = getMeshIndicesRange(1, 1);
+  int index = getIndex(2, 2, 10, 24);
+  int index1 = getIndex(3, 2, 10, 24);
 
-  for (int i = index * 3; i < index1 * 3; i += 3)
+  for (int i = index; i < index1; i += 3)
   {
     updatePosition(_vertexBufferGpuMemory, i, glm::vec3(0.0f, 0.01f, 0.0f));
   }
