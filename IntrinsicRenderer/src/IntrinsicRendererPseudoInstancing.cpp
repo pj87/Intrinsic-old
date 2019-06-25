@@ -107,10 +107,10 @@ void rotatePosition(uint16_t* tempBuffer, unsigned int i, glm::vec3& offset)
 
   glm::vec4 pos = glm::vec4(result0, result1, result2, 0.0);
 
-  glm::mat4 matrix(glm::cos(45.0), -glm::sin(45.0), 0.0, 0.0, 
-				   glm::sin(45.0),  glm::cos(45.0), 0.0, 0.0, 
-				              0.0,             0.0, 1.0, 0.0,
-						      0.0,             0.0, 0.0, 1.0);
+  glm::mat4 matrix(glm::cos(0.1), -glm::sin(0.1), 0.0, 0.0, 
+				   glm::sin(0.1),  glm::cos(0.1), 0.0, 0.0, 
+				             0.0,            0.0, 1.0, 0.0,
+						     0.0,            0.0, 0.0, 1.0);
 
   glm::vec4 result = matrix * pos;
 
