@@ -95,6 +95,35 @@ void updatePosition(uint16_t* tempBuffer, unsigned int i, glm::vec3& offset)
   //_INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
 }
 
+void rotatePosition(uint16_t* tempBuffer, unsigned int i, glm::vec3& offset)
+{
+  uint16_t* pos0 = &tempBuffer[i];
+  uint16_t* pos1 = &tempBuffer[i + 1];
+  uint16_t* pos2 = &tempBuffer[i + 2];
+
+  float result0 = glm::unpackHalf1x16(*pos0);
+  float result1 = glm::unpackHalf1x16(*pos1);
+  float result2 = glm::unpackHalf1x16(*pos2);
+
+  glm::vec4 pos = glm::vec4(result0, result1, result2, 0.0);
+
+  glm::mat4 matrix(glm::cos(45.0), -glm::sin(45.0), 0.0, 0.0, 
+				   glm::sin(45.0),  glm::cos(45.0), 0.0, 0.0, 
+				              0.0,             0.0, 1.0, 0.0,
+						      0.0,             0.0, 0.0, 1.0);
+
+  glm::vec4 result = matrix * pos;
+
+  //pos += offset;
+  //glm::vec3 pos = glm::vec3(result.x, result.y, result.z);
+
+  *pos0 = glm::packHalf1x16(result.x);
+  *pos1 = glm::packHalf1x16(result.y);
+  *pos2 = glm::packHalf1x16(result.z);
+
+  //_INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
+}
+
 int PseudoInstancing::getMeshIndicesRange(int x, int z) 
 {
   int index = z * 10 + x;
