@@ -156,6 +156,14 @@ void PseudoInstancing::update()
     updatePosition(_vertexBufferGpuMemory, i, glm::vec3(0.0f, 0.01f, 0.0f));
   }
 
+  int index2 = getIndex(0, 0, 10, 24);
+  int index3 = getIndex(1, 0, 10, 24);
+
+  for (int i = index2; i < index3; i += 3)
+  {
+    rotatePosition(_vertexBufferGpuMemory, i, glm::vec3(0.0f, 0.01f, 0.0f));
+  }
+
   BufferManager::updateResources(
       vertexBufferRef, reinterpret_cast<void*>(_vertexBufferGpuMemory));
 
