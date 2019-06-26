@@ -28,6 +28,7 @@ std::vector<
     PseudoInstancing::meshes;
 
 BufferRef PseudoInstancing::vertexBufferRef;
+uint16_t* PseudoInstancing::tempBufferRef;
 
 void PseudoInstancing::addPseudoInstancingMesh(Name&& name,
                                                const unsigned& sizeX,
@@ -72,6 +73,11 @@ PseudoInstancing::getMeshSizes(const Name& meshName)
 void PseudoInstancing::addInstancedBufferRef(BufferRef bufferRef) 
 {
   vertexBufferRef = bufferRef;
+}
+
+void PseudoInstancing::addTempBuffer(uint16_t* tempBuffer)
+{ 
+  tempBufferRef = tempBuffer;
 }
 
 void updatePosition(uint16_t* tempBuffer, unsigned int i, glm::vec3& offset)
