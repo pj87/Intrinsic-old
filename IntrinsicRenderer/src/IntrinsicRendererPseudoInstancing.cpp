@@ -52,7 +52,8 @@ bool PseudoInstancing::isInstancedMesh(const Name& meshName)
   return false;
 }
 
-std::vector<std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>&
+std::vector<
+    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>&
 PseudoInstancing::getMeshes()
 {
   return meshes;
