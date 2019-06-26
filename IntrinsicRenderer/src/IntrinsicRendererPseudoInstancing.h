@@ -45,6 +45,8 @@ public:
 
   static void addInstancedBufferRef(BufferRef bufferRef);
 
+  static void addTempBuffer(uint16_t *tempBuffer);
+
   static void update();
 
   template <class Iter>
@@ -72,6 +74,7 @@ private:
   static int getMeshIndicesRange(int x, int z);
 
   static BufferRef vertexBufferRef;
+  static uint16_t *tempBufferRef;
 };
 /*
 namespace RenderPass
