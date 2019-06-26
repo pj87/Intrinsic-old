@@ -141,19 +141,21 @@ void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
   float result1 = glm::unpackHalf1x16(*src1);
   float result2 = glm::unpackHalf1x16(*src2);
 
-  glm::vec4 pos = glm::vec4(result0, result1, result2, 1.0);
-
-  glm::mat4 rotation(glm::cos(0.1), -glm::sin(0.1), 0.0, 0.0, 
-					 glm::sin(0.1),  glm::cos(0.1), 0.0, 0.0, 
+  glm::vec4 pos = glm::vec4(result0 - offset.x, result1 - offset.y,
+                            result2 - offset.z, 1.0);
+  
+  glm::mat4 rotation(glm::cos(0.5), -glm::sin(0.5), 0.0, 0.0, 
+					 glm::sin(0.5),  glm::cos(0.5), 0.0, 0.0, 
 					           0.0,            0.0, 1.0, 0.0, 
 						   	   0.0,            0.0, 0.0, 1.0);
-
+  
   glm::mat4 translation(1.0, 0.0, 0.0, 0.0, 
 						0.0, 1.0, 0.0, 0.0, 
 						0.0, 0.0, 1.0, 0.0,
-						0.0, 2.0, 0.0, 1.0);
+						0.0, 10.0, 0.0, 1.0);
 
-  glm::vec4 result = translation * rotation * pos;
+  glm::vec4 result = /*translation */ rotation * pos;
+  result += glm::vec4(offset.x, offset.y, offset.z, 0.0);
 
   // pos += offset;
   // glm::vec3 pos = glm::vec3(result.x, result.y, result.z);
@@ -187,28 +189,45 @@ int PseudoInstancing::getIndex(int x, int z, int sizeX, int numMeshVertices)
   return index;
 }
 
+glm::vec3 getOffset(uint16_t* srcBuffer, uint16_t *dstBuffer, int i1, int i2)
+{
+  uint16_t* src0 = &srcBuffer[i1];
+  uint16_t* src1 = &srcBuffer[i1 + 1];
+  uint16_t* src2 = &srcBuffer[i1 + 2];
+
+  float srcX = glm::unpackHalf1x16(*src0);
+  float srcY = glm::unpackHalf1x16(*src1);
+  float srcZ = glm::unpackHalf1x16(*src2);
+
+  uint16_t* dst0 = &dstBuffer[i2];
+  uint16_t* dst1 = &dstBuffer[i2 + 1];
+  uint16_t* dst2 = &dstBuffer[i2 + 2];
+
+  float dstX = glm::unpackHalf1x16(*dst0);
+  float dstY = glm::unpackHalf1x16(*dst1);
+  float dstZ = glm::unpackHalf1x16(*dst2);
+
+  return glm::vec3(dstX - srcX, dstY - srcY, dstZ - srcZ);
+}
+
 void PseudoInstancing::update()
 {
   uint16_t* _vertexBufferGpuMemory =
       (uint16_t*)BufferManager::getGpuMemory(vertexBufferRef);
 
-  //for (int i = 24 * 3; i < 48 * 3; i += 3)
-  int index = getIndex(2, 2, 10, 24);
-  int index1 = getIndex(3, 2, 10, 24);
+  //int reference = getIndex(0, 0, 10, 24);
+  int index = getIndex(1, 0, 10, 24);
+  int index1 = getIndex(2, 0, 10, 24);
+
+  glm::vec3 offset = getOffset(tempBufferRef, _vertexBufferGpuMemory, index, index1);
+
+  _INTR_LOG_WARNING("PJ: offset %f %f %f", offset.x, offset.y, offset.z);
 
   for (int i = index; i < index1; i += 3)
   {
-    updatePosition(_vertexBufferGpuMemory, i, glm::vec3(0.0f, 0.01f, 0.0f));
-  }
-
-  int index2 = getIndex(0, 0, 10, 24);
-  int index3 = getIndex(1, 0, 10, 24);
-
-  for (int i = index2; i < index3; i += 3)
-  {
-    //rotatePosition(_vertexBufferGpuMemory, i, glm::vec3(0.0f, 0.01f, 0.0f));
+    //updatePosition(_vertexBufferGpuMemory, i, glm::vec3(0.0f, 0.01f, 0.0f));
     transformPosition(tempBufferRef, _vertexBufferGpuMemory, i,
-                      glm::vec3(0.0f, 0.01f, 0.0f));
+                      offset);
   }
 
   BufferManager::updateResources(
