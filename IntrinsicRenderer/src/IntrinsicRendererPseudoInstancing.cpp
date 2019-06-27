@@ -81,56 +81,6 @@ void PseudoInstancing::addTempBuffer(uint16_t* tempBuffer)
   tempBufferRef = tempBuffer;
 }
 
-void updatePosition(uint16_t* tempBuffer, unsigned int i, glm::vec3& offset)
-{
-  uint16_t* pos0 = &tempBuffer[i];
-  uint16_t* pos1 = &tempBuffer[i + 1];
-  uint16_t* pos2 = &tempBuffer[i + 2];
-
-  float result0 = glm::unpackHalf1x16(*pos0);
-  float result1 = glm::unpackHalf1x16(*pos1);
-  float result2 = glm::unpackHalf1x16(*pos2);
-
-  glm::vec3 pos = glm::vec3(result0, result1, result2);
-
-  pos += offset;
-
-  *pos0 = glm::packHalf1x16(pos.x);
-  *pos1 = glm::packHalf1x16(pos.y);
-  *pos2 = glm::packHalf1x16(pos.z);
-
-  //_INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
-}
-
-void rotatePosition(uint16_t* tempBuffer, unsigned int i, glm::vec3& offset)
-{
-  uint16_t* pos0 = &tempBuffer[i];
-  uint16_t* pos1 = &tempBuffer[i + 1];
-  uint16_t* pos2 = &tempBuffer[i + 2];
-
-  float result0 = glm::unpackHalf1x16(*pos0);
-  float result1 = glm::unpackHalf1x16(*pos1);
-  float result2 = glm::unpackHalf1x16(*pos2);
-
-  glm::vec4 pos = glm::vec4(result0, result1, result2, 0.0);
-
-  glm::mat4 matrix(glm::cos(0.1), -glm::sin(0.1), 0.0, 0.0, 
-				   glm::sin(0.1),  glm::cos(0.1), 0.0, 0.0, 
-				             0.0,            0.0, 1.0, 0.0,
-						     0.0,            0.0, 0.0, 1.0);
-
-  glm::vec4 result = matrix * pos;
-
-  //pos += offset;
-  //glm::vec3 pos = glm::vec3(result.x, result.y, result.z);
-
-  *pos0 = glm::packHalf1x16(result.x);
-  *pos1 = glm::packHalf1x16(result.y);
-  *pos2 = glm::packHalf1x16(result.z);
-
-  //_INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
-}
-
 void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i, glm::vec3& offset)
 {
   uint16_t* src0 = &srcBuffer[i];
@@ -154,11 +104,8 @@ void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
 						0.0, 0.0, 1.0, 0.0,
 						0.0, 10.0, 0.0, 1.0);
 
-  glm::vec4 result = /*translation */ rotation * pos;
+  glm::vec4 result = translation * rotation * pos;
   result += glm::vec4(offset.x, offset.y, offset.z, 0.0);
-
-  // pos += offset;
-  // glm::vec3 pos = glm::vec3(result.x, result.y, result.z);
 
   uint16_t* dst0 = &dstBuffer[i];
   uint16_t* dst1 = &dstBuffer[i + 1];
@@ -167,8 +114,6 @@ void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
   *dst0 = glm::packHalf1x16(result.x);
   *dst1 = glm::packHalf1x16(result.y);
   *dst2 = glm::packHalf1x16(result.z);
-
-  //_INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
 }
 
 void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
@@ -201,18 +146,6 @@ void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
   *dst0 = glm::packHalf1x16(result.x);
   *dst1 = glm::packHalf1x16(result.y);
   *dst2 = glm::packHalf1x16(result.z);
-
-  //_INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
-}
-
-int PseudoInstancing::getMeshIndicesRange(int x, int z) 
-{
-  int index = z * 10 + x;
-  int index1 = 3 * 24 * (z * 10 + x);
-  _INTR_LOG_WARNING("index w meshu: %d", index);
-  _INTR_LOG_WARNING("index w meshu: %d", index1);
-
-  return index1;
 }
 
 int getIndex(int x, int z, int sizeX, int numMeshVertices)
