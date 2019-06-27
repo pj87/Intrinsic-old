@@ -223,7 +223,7 @@ int getIndex(int x, int z, int sizeX, int numMeshVertices)
   return index;
 }
 
-glm::vec3 getOffset(uint16_t* srcBuffer, uint16_t *dstBuffer, int i1, int i2)
+glm::vec3 getOffset(uint16_t* srcBuffer, int i1, int i2)
 {
   uint16_t* src0 = &srcBuffer[i1];
   uint16_t* src1 = &srcBuffer[i1 + 1];
@@ -233,9 +233,9 @@ glm::vec3 getOffset(uint16_t* srcBuffer, uint16_t *dstBuffer, int i1, int i2)
   float srcY = glm::unpackHalf1x16(*src1);
   float srcZ = glm::unpackHalf1x16(*src2);
 
-  uint16_t* dst0 = &dstBuffer[i2];
-  uint16_t* dst1 = &dstBuffer[i2 + 1];
-  uint16_t* dst2 = &dstBuffer[i2 + 2];
+  uint16_t* dst0 = &srcBuffer[i2];
+  uint16_t* dst1 = &srcBuffer[i2 + 1];
+  uint16_t* dst2 = &srcBuffer[i2 + 2];
 
   float dstX = glm::unpackHalf1x16(*dst0);
   float dstY = glm::unpackHalf1x16(*dst1);
@@ -252,7 +252,7 @@ void transformMesh(int x, int y, int sizeX, int numMeshVertices,
   int start = getIndex(x, y, sizeX, numMeshVertices);
   int end = getIndex(x + 1, y, sizeX, numMeshVertices);
 
-  glm::vec3 offset = getOffset(srcBuffer, srcBuffer, ref, start);
+  glm::vec3 offset = getOffset(srcBuffer, ref, start);
 
   for (int i = start; i < end; i += 3)
   {
