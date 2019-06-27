@@ -69,7 +69,7 @@ private:
                                 unsigned int, float>>&
 	  getMeshes();
 
-  static int getIndex(int x, int z, int sizeX, int numMeshVertices);
+  //static int getIndex(int x, int z, int sizeX, int numMeshVertices);
 
   static int getMeshIndicesRange(int x, int z);
 
