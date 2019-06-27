@@ -171,6 +171,40 @@ void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
   //_INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
 }
 
+void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
+                       float angle, glm::vec3& rot, glm::vec3& trans, glm::vec3& offset)
+{
+  uint16_t* src0 = &srcBuffer[i];
+  uint16_t* src1 = &srcBuffer[i + 1];
+  uint16_t* src2 = &srcBuffer[i + 2];
+
+  float result0 = glm::unpackHalf1x16(*src0);
+  float result1 = glm::unpackHalf1x16(*src1);
+  float result2 = glm::unpackHalf1x16(*src2);
+
+  glm::vec4 offset4 = glm::vec4(offset.x, offset.y, offset.z, 0.0);
+
+  glm::vec4 pos = glm::vec4(result0, result1, result2, 1.0) - offset4;
+
+  glm::mat4 rotation = glm::rotate(angle, rot);
+
+  glm::mat4 translation =
+      glm::translate(trans);
+
+  glm::vec4 result = translation * rotation * pos;
+  result += offset4;
+
+  uint16_t* dst0 = &dstBuffer[i];
+  uint16_t* dst1 = &dstBuffer[i + 1];
+  uint16_t* dst2 = &dstBuffer[i + 2];
+
+  *dst0 = glm::packHalf1x16(result.x);
+  *dst1 = glm::packHalf1x16(result.y);
+  *dst2 = glm::packHalf1x16(result.z);
+
+  //_INTR_LOG_WARNING("0x%X %f %f", *_Position, result0, result1);
+}
+
 int PseudoInstancing::getMeshIndicesRange(int x, int z) 
 {
   int index = z * 10 + x;
@@ -226,7 +260,10 @@ void PseudoInstancing::update()
   for (int i = index; i < index1; i += 3)
   {
     //updatePosition(_vertexBufferGpuMemory, i, glm::vec3(0.0f, 0.01f, 0.0f));
-    transformPosition(tempBufferRef, _vertexBufferGpuMemory, i,
+    //transformPosition(tempBufferRef, _vertexBufferGpuMemory, i,
+    //                  offset);
+    transformPosition(tempBufferRef, _vertexBufferGpuMemory, i, 0.5,
+                      glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, 10.0, 0.0),
                       offset);
   }
 
