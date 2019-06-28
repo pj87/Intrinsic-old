@@ -926,7 +926,33 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     BufferManager::insertBufferMemoryBarrier(mesh->_colorBufferRef, 
 											 VK_ACCESS_SHADER_WRITE_BIT, 
 											 VK_ACCESS_SHADER_READ_BIT);
+    
+	PseudoInstancing::voxels.clear();
 
+	for (int x = 0; x < 8; x+= 1)
+      for (int y = 0; y < 8; y+= 1)
+		for (int z = 0; z < 8; z+= 1)
+		{
+			float voxel = getVoxel(*mesh, x, y, z);
+            //if (voxel > 0.001 || voxel < -0.001)
+            if (voxel > 0.0)
+			{
+                Voxel voxel;
+				voxel.x = static_cast<float>(x);
+                voxel.y = static_cast<float>(y);
+                voxel.z = static_cast<float>(z);
+
+                PseudoInstancing::voxels.push_back(voxel);
+
+				//_INTR_LOG_WARNING("(%d, %d, %d) = %f", x, y, z, voxel);
+                //_INTR_LOG_WARNING("(%f, %f, %f) = %f", voxel.x, voxel.y,
+                //                  voxel.z, voxel);
+			}
+		}
+
+	//_INTR_LOG_WARNING("size = %d", PseudoInstancing::voxels.size());
+
+	PseudoInstancing::update();
 
 	///// PJ: only for tests
     /*
@@ -950,8 +976,8 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     ///// PJ: only for tests
 
 
-	mesh->isCalled = true;
-    mesh->counter++;
+	//mesh->isCalled = true;
+    //mesh->counter++;
   }
 }
 

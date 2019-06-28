@@ -31,6 +31,11 @@ namespace Intrinsic
 namespace Renderer
 {
 
+struct Voxel
+{
+  float x, y, z;
+};
+
 struct PseudoInstancing
 {
 public:
@@ -59,6 +64,8 @@ public:
 
     std::generate(start, end, [&]() { return dist(mte) < probability; });
   }
+
+  static std::vector<Voxel> voxels;
 
 private:
   static std::vector<std::tuple<std::unique_ptr<Name>, unsigned int,

@@ -193,15 +193,15 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"julia.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp");
-	
+	*/
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64,
+        16, 16, 16,
         _N(pbr_test_0), 
 		"mandelbulb.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-
+    /*
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(house), 
@@ -217,7 +217,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-	*/
+	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain), 
@@ -225,7 +225,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-        /*
+        
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         32, 64, 256,
         _N(house_4), 
@@ -243,7 +243,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false);
 		*/
 
-	PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_05_14), 10, 10, 0.3f);
+	//PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_05_14), 10, 10, 0.3f);
     PseudoInstancing::addPseudoInstancingMesh(_N(cube), 10, 10, 0.5f);
 
 	RenderPass::DynamicGeometryGeneration::init();
