@@ -929,9 +929,9 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     
 	PseudoInstancing::voxels.clear();
 
-	for (int x = 0; x < 8; x+= 1)
-      for (int y = 0; y < 8; y+= 1)
-		for (int z = 0; z < 8; z+= 1)
+	for (int x = 0; x < 16; x+= 1)
+      for (int y = 0; y < 16; y+= 1)
+		for (int z = 0; z < 16; z+= 1)
 		{
 			float voxel = getVoxel(*mesh, x, y, z);
             //if (voxel > 0.001 || voxel < -0.001)

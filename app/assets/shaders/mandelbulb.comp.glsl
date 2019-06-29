@@ -308,6 +308,6 @@ void main()
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0f * sin(_Frequency)), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(_Frequency), vec2(5.0, 2.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(1.5), vec3(1.5, 1.5, 1.5));
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdSphere(uv - vec3(3.0), 3.0);
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdSphere(uv - vec3(6.0), 6.0);
 
 }

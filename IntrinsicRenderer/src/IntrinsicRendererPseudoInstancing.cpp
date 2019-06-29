@@ -253,27 +253,31 @@ void PseudoInstancing::update()
   if (voxels.size() == 0)
     return;
 
-  for (int x = 0; x < 10; x++)
-    for (int z = 0; z < 10; z++)
+  for (int x = 0; x < 30; x++)
+    for (int z = 0; z < 30; z++)
     {
-      transformMesh(x, z, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
+      transformMesh(x, z, 30, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
                     glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, -100.0, 0.0));
     }
   
   int i = 0;
 
-  for (int x = 0; x < 10; x++)
-    for (int z = 0; z < 10; z++)
+  for (int x = 0; x < 30; x++)
+    for (int z = 0; z < 30; z++)
     {
-      transformMesh(x, z, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
+      transformMesh(x, z, 30, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
                     glm::vec3(0.0, 0.0, 0.0),
                     glm::vec3(voxels[i].x, voxels[i].y, voxels[i].z));
 
 	  i++;
 
       if (i >= voxels.size())
+	  {
+        x = z = 30;
         break;
+	  }
     }
+
 
   /*
   transformMesh(0, 0, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
