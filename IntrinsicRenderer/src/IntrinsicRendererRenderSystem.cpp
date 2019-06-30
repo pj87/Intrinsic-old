@@ -193,7 +193,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"julia.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp");
-	*/
+	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(pbr_test_0), 
@@ -201,7 +201,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-    /*
+    
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(house), 
@@ -217,7 +217,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-	
+	*/
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain), 
@@ -225,7 +225,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-        
+    /*  
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         32, 64, 256,
         _N(house_4), 

@@ -934,8 +934,9 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 		for (int z = 0; z < 64; z+= 1)
 		{
 			float voxel = getVoxel(*mesh, x, y, z);
+            float voxel1 = getVoxel(*mesh, x, y + 1, z);
             //if (voxel > 0.001 || voxel < -0.001)
-            if (voxel > 0.0)
+            if (voxel > 0.0 && voxel1 < 0.0)
 			{
                 Voxel voxel;
 				voxel.x = static_cast<float>(x);
