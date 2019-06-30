@@ -976,8 +976,8 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     ///// PJ: only for tests
 
 
-	//mesh->isCalled = true;
-    //mesh->counter++;
+	mesh->isCalled = true;
+    mesh->counter++;
   }
 }
 
