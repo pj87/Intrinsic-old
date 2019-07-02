@@ -941,7 +941,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
                 Voxel voxel;
 				voxel.x = static_cast<float>(x);
                 voxel.y = static_cast<float>(y);
-                voxel.z = static_cast<float>(z);
+                voxel.z = 64 - static_cast<float>(z);
 
                 PseudoInstancing::voxels.push_back(voxel);
 

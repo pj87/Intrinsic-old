@@ -134,7 +134,7 @@ void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
 
   glm::mat4 rotation = glm::rotate(angle, rot);
 
-  trans *= 3.0f;
+  trans *= 0.1f;
 
   glm::mat4 translation =
       glm::translate(trans);
