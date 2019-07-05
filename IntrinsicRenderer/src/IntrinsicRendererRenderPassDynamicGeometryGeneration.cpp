@@ -929,6 +929,15 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     
 	PseudoInstancing::voxels.clear();
 
+	Entity::EntityRef entityRef = 
+		Entity::EntityManager::getEntityByName(_N(Cube));
+    NodeRef nodeRef = 
+		NodeManager::getComponentForEntity(entityRef);
+	glm::vec3 position =
+        NodeManager::_worldPosition(nodeRef) + glm::vec3(0.0, 10.0, 0.0);
+    NodeManager::setPosition(nodeRef, position);
+    Components::NodeManager::rebuildTreeAndUpdateTransforms();
+
 	for (int x = 0; x < 64; x+= 1)
       for (int y = 0; y < 64; y+= 1)
 		for (int z = 0; z < 64; z+= 1)
@@ -941,7 +950,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
                 Voxel voxel;
 				voxel.x = static_cast<float>(x);
                 voxel.y = static_cast<float>(y);
-                voxel.z = 64 - static_cast<float>(z);
+                voxel.z = static_cast<float>(64 - z);
 
                 PseudoInstancing::voxels.push_back(voxel);
 
