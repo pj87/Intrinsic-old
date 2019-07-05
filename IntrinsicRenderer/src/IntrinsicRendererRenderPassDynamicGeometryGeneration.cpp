@@ -929,6 +929,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     
 	PseudoInstancing::voxels.clear();
 
+	/*
 	Entity::EntityRef entityRef = 
 		Entity::EntityManager::getEntityByName(_N(Cube));
     NodeRef nodeRef = 
@@ -937,6 +938,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
         NodeManager::_worldPosition(nodeRef) + glm::vec3(0.0, 10.0, 0.0);
     NodeManager::setPosition(nodeRef, position);
     Components::NodeManager::rebuildTreeAndUpdateTransforms();
+	*/
 
 	for (int x = 0; x < 64; x+= 1)
       for (int y = 0; y < 64; y+= 1)

@@ -277,7 +277,29 @@ void PseudoInstancing::update()
         break;
 	  }
     }
+  
+  char buffer[256];
 
+  for (int i = 0; i < 500; i++)
+  {
+    sprintf(buffer, "PJTerrain%d", i);
+    Name name = std::move(buffer);
+
+	//_INTR_LOG_WARNING("%s", name.getString().c_str());
+
+    Entity::EntityRef entityRef = Entity::EntityManager::getEntityByName(name);
+    NodeRef nodeRef = NodeManager::getComponentForEntity(entityRef);
+
+    if (nodeRef.isValid())
+    {
+      NodeManager::setSize(nodeRef, glm::vec3(0.1, 0.1, 0.1));
+      glm::vec3 position = NodeManager::_worldPosition(nodeRef) +
+                           glm::vec3(voxels[i].x, voxels[i].y, voxels[i].z);
+      NodeManager::setPosition(nodeRef, position);
+      Components::NodeManager::rebuildTreeAndUpdateTransforms();
+    }
+  }
+  
   /*
   transformMesh(0, 0, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
                 glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 1.0, 1.0));
