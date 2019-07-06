@@ -684,13 +684,27 @@ void IntrinsicEd::onCreateCube()
 
 void IntrinsicEd::onCreateSphere()
 {
-  Entity::EntityRef entityRef = spawnDefaultEntity(_N(Sphere));
-  Dod::Ref compRef = addComponentToEntity(entityRef, _N(Mesh));
+  for (int i = 0; i < 1; i++)
+  {
+    Entity::EntityRef entityRef = spawnDefaultEntity(_N(PJTerrain));
+    Dod::Ref compRef = addComponentToEntity(entityRef, _N(Mesh));
+    Components::MeshManager::_descMeshName(compRef) = _N(sphere);
 
-  Components::MeshManager::_descMeshName(compRef) = _N(sphere);
+	Components::NodeRef nodeRef =
+        Components::NodeManager::getComponentForEntity(entityRef);
+    Entity::EntityRef entityParentRef =
+        Entity::EntityManager::getEntityByName(_N(Terrain1));
+    Components::NodeRef parentRef =
+		Components::NodeManager::getComponentForEntity(entityParentRef);
 
-  Components::NodeManager::rebuildTreeAndUpdateTransforms();
-  Components::MeshManager::createResources(compRef);
+    Components::NodeManager::detachChild(nodeRef);
+    Components::NodeManager::attachChild(parentRef, nodeRef);
+    
+	Components::NodeManager::_position(nodeRef) = glm::vec3(0.0, 0.0, 0.0);
+
+    Components::NodeManager::rebuildTreeAndUpdateTransforms();
+    Components::MeshManager::createResources(compRef);
+  }
 }
 
 void IntrinsicEd::onCreateRigidBody()
