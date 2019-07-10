@@ -281,7 +281,7 @@ void PseudoInstancing::update()
   char buffer[256];
 
   int j = 0;
-  for (int i = 0; i < 1000; i ++)
+  for (int i = 0; i < 800; i ++)
   {
     sprintf(buffer, "PJTerrain%d", i);
     Name name = std::move(buffer);
@@ -297,15 +297,16 @@ void PseudoInstancing::update()
       //glm::vec3 position = 
       //    glm::vec3(100.0 + voxels[i].x / 10.0, 1640.0 + voxels[i].y / 10.0,
       //              100.0 + voxels[i].z / 10.0);
-      glm::vec3 position =
-          glm::vec3(voxels[j].x / 10.0 - 3.2, voxels[j].y / 10.0 + 0.1,
-                    voxels[j].z / 10.0 - 3.25);
+      glm::vec3 position = glm::vec3(1250.0 * (voxels[j].x / 10.0 - 3.2),
+                                     1250.0 * (voxels[j].y / 10.0 + 0.1),
+                                     1250.0 * (voxels[j].z / 10.0 - 3.25));
 
 	  //NodeManager::setOrientation(nodeRef, glm::quat(0.05, 0.05, 0.05, 0.5));
 	  NodeManager::setPosition(nodeRef, position);
+	  
       Components::NodeManager::rebuildTreeAndUpdateTransforms();
 
-	  j ++;
+	  j += 4;
     }
   }
   
