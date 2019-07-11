@@ -688,7 +688,9 @@ void IntrinsicEd::onCreateSphere()
   {
     Entity::EntityRef entityRef = spawnDefaultEntity(_N(PJTerrain));
     Dod::Ref compRef = addComponentToEntity(entityRef, _N(Mesh));
-    Components::MeshManager::_descMeshName(compRef) = _N(Tree_Tall_05_14);
+    Components::MeshManager::_descMeshName(compRef) = _N(sphere);
+    //Components::MeshManager::_descMeshName(compRef) = _N(cube);
+    //Components::MeshManager::_descMeshName(compRef) = _N(Tree_Tall_05_14);
 
 	Components::NodeRef nodeRef =
         Components::NodeManager::getComponentForEntity(entityRef);
