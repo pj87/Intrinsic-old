@@ -684,11 +684,11 @@ void IntrinsicEd::onCreateCube()
 
 void IntrinsicEd::onCreateSphere()
 {
-  for (int i = 0; i < 800; i++)
+  for (int i = 0; i < 500; i++)
   {
     Entity::EntityRef entityRef = spawnDefaultEntity(_N(PJTerrain));
     Dod::Ref compRef = addComponentToEntity(entityRef, _N(Mesh));
-    Components::MeshManager::_descMeshName(compRef) = _N(sphere);
+    Components::MeshManager::_descMeshName(compRef) = _N(Tree_Tall_05_14);
 
 	Components::NodeRef nodeRef =
         Components::NodeManager::getComponentForEntity(entityRef);
@@ -700,8 +700,8 @@ void IntrinsicEd::onCreateSphere()
     Components::NodeManager::detachChild(nodeRef);
     Components::NodeManager::attachChild(parentRef, nodeRef);
     
-	Components::NodeManager::_size(nodeRef) = glm::vec3(1.0, 1.0, 1.0);
-	Components::NodeManager::_position(nodeRef) = glm::vec3(0.0, 0.0, 0.0);
+	//Components::NodeManager::_size(nodeRef) = glm::vec3(1.0, 1.0, 1.0);
+	//Components::NodeManager::_position(nodeRef) = glm::vec3(0.0, 0.0, 0.0);
 
     Components::NodeManager::rebuildTreeAndUpdateTransforms();
     Components::MeshManager::createResources(compRef);
