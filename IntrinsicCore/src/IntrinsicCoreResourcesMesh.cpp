@@ -235,6 +235,8 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
       {
         BufferManager::resetToDefault(normalVertexBuffer);
 
+		BufferManager::_descMemoryPoolType(normalVertexBuffer) =
+            Renderer::MemoryPoolType::kStaticStagingBuffers;
         BufferManager::addResourceFlags(
             normalVertexBuffer,
             Dod::Resources::ResourceFlags::kResourceVolatile);
