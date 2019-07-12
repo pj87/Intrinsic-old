@@ -305,6 +305,12 @@ void PseudoInstancing::update()
 	  //NodeManager::setOrientation(nodeRef, glm::quat(0.05, 0.05, 0.05, 0.5));
 	  NodeManager::setPosition(nodeRef, position);
 	  
+	  const glm::vec3 euler = glm::vec3(glm::radians(45.0),
+                                            glm::radians(45.0),
+                                            glm::radians(0.0));
+
+	  NodeManager::setOrientation(nodeRef, glm::quat(euler));
+
       Components::NodeManager::rebuildTreeAndUpdateTransforms();
 
 	  j += 8;
