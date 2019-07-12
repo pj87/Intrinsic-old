@@ -71,6 +71,7 @@ struct DynamicGeneratedMesh
   BufferRef _uv0BufferRef;
   BufferRef _debugBufferRef;
   BufferRef _voxelBufferRef;
+  BufferRef _voxelNormalBufferRef;
   BufferRef _cubeEdgeFlagsBufferRef;
   BufferRef _triangleConnectionBufferRef;
   BufferRef _sizesBufferRef;

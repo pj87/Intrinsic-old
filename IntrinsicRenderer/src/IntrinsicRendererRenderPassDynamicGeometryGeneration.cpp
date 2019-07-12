@@ -422,6 +422,10 @@ _INTR_INLINE ComputeCallRef createComputeCallSDFGeneration(
         computeCallSDFGenerationRef, _N(_VoxelBuffer), GpuProgramType::kCompute,
         mesh->_voxelBufferRef, UboType::kPerInstanceCompute,
         BufferManager::_descSizeInBytes(mesh->_voxelBufferRef));
+    ComputeCallManager::bindBuffer(
+        computeCallSDFGenerationRef, _N(_VoxelNormalBuffer), GpuProgramType::kCompute,
+        mesh->_voxelNormalBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(mesh->_voxelNormalBufferRef));
     ComputeCallManager::bindImage(
         computeCallSDFGenerationRef, _N(_Gradient3D), GpuProgramType::kCompute,
         mesh->_gradient3dImageRef, Samplers::kNearestRepeat);
@@ -697,6 +701,24 @@ void DynamicGeometryGeneration::init()
       mesh->_voxelBufferRef = _voxelBufferRef;
       buffersToCreate.push_back(_voxelBufferRef);
 
+	  BufferRef _voxelNormalBufferRef = 
+		  BufferManager::createBuffer(_N(_Voxels));
+      {
+        BufferManager::resetToDefault(_voxelNormalBufferRef);
+        BufferManager::addResourceFlags(
+            _voxelNormalBufferRef, 
+			Dod::Resources::ResourceFlags::kResourceVolatile);
+        ///// PJ: only for tests
+        BufferManager::_descMemoryPoolType(_voxelNormalBufferRef) =
+            MemoryPoolType::kStaticStagingBuffers;
+        ///// PJ: only for tests
+        BufferManager::_descBufferType(_voxelNormalBufferRef) = BufferType::kStorage;
+        BufferManager::_descSizeInBytes(_voxelNormalBufferRef) =
+            (*mesh->sizeX) * (*mesh->sizeY) * (*mesh->sizeZ) * sizeof(float) * 3;
+      }
+      mesh->_voxelNormalBufferRef = _voxelNormalBufferRef;
+      buffersToCreate.push_back(_voxelNormalBufferRef);
+
       BufferRef _sizesBufferRef = 
 		  BufferManager::createBuffer(_N(_SizeBuffer));
       {
@@ -898,6 +920,10 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
                                              VK_ACCESS_SHADER_WRITE_BIT,
                                              VK_ACCESS_SHADER_READ_BIT);
 
+	BufferManager::insertBufferMemoryBarrier(mesh->_voxelNormalBufferRef,
+                                             VK_ACCESS_SHADER_WRITE_BIT,
+                                             VK_ACCESS_SHADER_READ_BIT);
+
     {
       RenderSystem::dispatchComputeCall(mesh->_computeCallMarchingCubesRef,
                                         primaryCmdBuffer);
@@ -1035,7 +1061,7 @@ glm::vec3& DynamicGeometryGeneration::getNormal(
   int index = x * (*mesh.sizeY) * (*mesh.sizeZ) + y * (*mesh.sizeZ) + z;
 
   uint16_t* srcBuffer =
-      (uint16_t*)BufferManager::getGpuMemory(mesh._normalBufferRef);
+      (uint16_t*)BufferManager::getGpuMemory(mesh._voxelNormalBufferRef);
 
   uint16_t* src0 = &srcBuffer[index];
   uint16_t* src1 = &srcBuffer[index + 1];
@@ -1046,7 +1072,7 @@ glm::vec3& DynamicGeometryGeneration::getNormal(
   float srcZ = glm::unpackHalf1x16(*src2);
 
   //if (srcX > 0.0 || srcY > 0.0 || srcZ > 0.0)
-	//_INTR_LOG_WARNING("_normalBufferGpuMemory: %f %f %f", srcX, srcY, srcZ);
+  _INTR_LOG_WARNING("_normalVertexBufferGpuMemory: %f %f %f", srcX, srcY, srcZ);
 
   //return *(_normalBufferGpuMemory + index);
   return glm::vec3(srcX, srcY, srcZ);
