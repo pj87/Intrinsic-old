@@ -30,6 +30,7 @@ std::vector<
 BufferRef PseudoInstancing::vertexBufferRef;
 uint16_t* PseudoInstancing::tempBufferRef;
 std::vector<Voxel> PseudoInstancing::voxels;
+std::vector<Voxel> PseudoInstancing::normals;
 
 void PseudoInstancing::addPseudoInstancingMesh(Name&& name,
                                                const unsigned& sizeX,
@@ -305,9 +306,14 @@ void PseudoInstancing::update()
 	  //NodeManager::setOrientation(nodeRef, glm::quat(0.05, 0.05, 0.05, 0.5));
 	  NodeManager::setPosition(nodeRef, position);
 	  
-	  const glm::vec3 euler = glm::vec3(glm::radians(45.0),
-                                            glm::radians(45.0),
-                                            glm::radians(0.0));
+	  //const glm::vec3 euler = glm::vec3(0.78, 0.78, 0.0);
+      //const glm::vec3 euler = glm::vec3(-2.1, 0.0, 0.0);
+      
+      const glm::vec3 euler = 
+		  glm::vec3(
+              normals[j].x * 3.14, normals[j].y * 3.14, normals[j].z * 3.14);
+	  
+	  _INTR_LOG_WARNING("%f %f %f", normals[j].x, normals[j].y, normals[j].z);
 
 	  NodeManager::setOrientation(nodeRef, glm::quat(euler));
 

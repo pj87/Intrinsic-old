@@ -928,6 +928,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 											 VK_ACCESS_SHADER_READ_BIT);
     
 	PseudoInstancing::voxels.clear();
+    PseudoInstancing::normals.clear();
 
 	/*
 	Entity::EntityRef entityRef = 
@@ -947,7 +948,6 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 			float voxel = getVoxel(*mesh, x, y, z);
             float voxel1 = getVoxel(*mesh, x, y + 1, z);
 
-			glm::vec3 normal = getNormal(*mesh, x, y, z);
             //if (voxel > 0.001 || voxel < -0.001)
             if (voxel > 0.0 && voxel1 < 0.0)
 			{
@@ -956,7 +956,14 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
                 voxel.y = static_cast<float>(y);
                 voxel.z = static_cast<float>(64 - z);
 
+				glm::vec3 nor = getNormal(*mesh, x, y + 1, z);
+				Voxel normal;
+                normal.x = nor.x;
+                normal.y = nor.y;
+                normal.z = nor.z;
+
                 PseudoInstancing::voxels.push_back(voxel);
+                PseudoInstancing::normals.push_back(normal);
 
 				//_INTR_LOG_WARNING("(%d, %d, %d) = %f", x, y, z, voxel);
                 //_INTR_LOG_WARNING("(%f, %f, %f) = %f", voxel.x, voxel.y,
@@ -1027,13 +1034,22 @@ glm::vec3& DynamicGeometryGeneration::getNormal(
 
   int index = x * (*mesh.sizeY) * (*mesh.sizeZ) + y * (*mesh.sizeZ) + z;
 
-  float* _normalBufferGpuMemory =
-      (float*)BufferManager::getGpuMemory(mesh._normalBufferRef);
+  uint16_t* srcBuffer =
+      (uint16_t*)BufferManager::getGpuMemory(mesh._normalBufferRef);
 
-  _INTR_LOG_WARNING("_normalBufferGpuMemory: %f", _normalBufferGpuMemory);
+  uint16_t* src0 = &srcBuffer[index];
+  uint16_t* src1 = &srcBuffer[index + 1];
+  uint16_t* src2 = &srcBuffer[index + 2];
+
+  float srcX = glm::unpackHalf1x16(*src0);
+  float srcY = glm::unpackHalf1x16(*src1);
+  float srcZ = glm::unpackHalf1x16(*src2);
+
+  //if (srcX > 0.0 || srcY > 0.0 || srcZ > 0.0)
+	//_INTR_LOG_WARNING("_normalBufferGpuMemory: %f %f %f", srcX, srcY, srcZ);
 
   //return *(_normalBufferGpuMemory + index);
-  return glm::vec3(0.0);
+  return glm::vec3(srcX, srcY, srcZ);
 }
 
 } // namespace RenderPass

@@ -66,6 +66,7 @@ public:
   }
 
   static std::vector<Voxel> voxels;
+  static std::vector<Voxel> normals;
 
 private:
   static std::vector<std::tuple<std::unique_ptr<Name>, unsigned int,
