@@ -702,7 +702,7 @@ void DynamicGeometryGeneration::init()
       buffersToCreate.push_back(_voxelBufferRef);
 
 	  BufferRef _voxelNormalBufferRef = 
-		  BufferManager::createBuffer(_N(_Voxels));
+		  BufferManager::createBuffer(_N(_VoxelNormals));
       {
         BufferManager::resetToDefault(_voxelNormalBufferRef);
         BufferManager::addResourceFlags(
@@ -714,7 +714,7 @@ void DynamicGeometryGeneration::init()
         ///// PJ: only for tests
         BufferManager::_descBufferType(_voxelNormalBufferRef) = BufferType::kStorage;
         BufferManager::_descSizeInBytes(_voxelNormalBufferRef) =
-            (*mesh->sizeX) * (*mesh->sizeY) * (*mesh->sizeZ) * sizeof(float) * 3;
+            (*mesh->sizeX) * (*mesh->sizeY) * (*mesh->sizeZ) * sizeof(float) * 4;
       }
       mesh->_voxelNormalBufferRef = _voxelNormalBufferRef;
       buffersToCreate.push_back(_voxelNormalBufferRef);
@@ -967,6 +967,8 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     Components::NodeManager::rebuildTreeAndUpdateTransforms();
 	*/
 
+	getNormal(*mesh);
+
 	for (int x = 0; x < 64; x+= 1)
       for (int y = 0; y < 64; y+= 1)
 		for (int z = 0; z < 64; z+= 1)
@@ -1058,24 +1060,51 @@ glm::vec3& DynamicGeometryGeneration::getNormal(
   // int index = x + y * (*mesh.sizeX) + z * (*mesh.sizeX) * (*mesh.sizeY);
   // int[dimX][dimY][dimZ] : 1 - D array index[i * dimY * dimZ + j * dimZ + k]
 
-  int index = x * (*mesh.sizeY) * (*mesh.sizeZ) + y * (*mesh.sizeZ) + z;
+  int index = 4 * (x * (*mesh.sizeY) * (*mesh.sizeZ) + y * (*mesh.sizeZ) + z);
 
-  uint16_t* srcBuffer =
-      (uint16_t*)BufferManager::getGpuMemory(mesh._voxelNormalBufferRef);
+  float* srcBuffer =
+      (float*)BufferManager::getGpuMemory(mesh._voxelNormalBufferRef);
 
-  uint16_t* src0 = &srcBuffer[index];
-  uint16_t* src1 = &srcBuffer[index + 1];
-  uint16_t* src2 = &srcBuffer[index + 2];
+  float* srcX = &srcBuffer[index];
+  float* srcY = &srcBuffer[index + 1];
+  float* srcZ = &srcBuffer[index + 2];
+  float* srcW = &srcBuffer[index + 3];
 
+  /*
   float srcX = glm::unpackHalf1x16(*src0);
   float srcY = glm::unpackHalf1x16(*src1);
   float srcZ = glm::unpackHalf1x16(*src2);
-
+  */
   //if (srcX > 0.0 || srcY > 0.0 || srcZ > 0.0)
-  _INTR_LOG_WARNING("_normalVertexBufferGpuMemory: %f %f %f", srcX, srcY, srcZ);
+  _INTR_LOG_WARNING("_normalVertexBufferGpuMemory: %f %f %f %f", *srcX, *srcY, *srcZ, *srcW);
 
   //return *(_normalBufferGpuMemory + index);
-  return glm::vec3(srcX, srcY, srcZ);
+  return glm::vec3(*srcX, *srcY, *srcZ);
+}
+
+void DynamicGeometryGeneration::getNormal(DynamicGeneratedMesh& mesh)
+{ /*
+    https://stackoverflow.com/questions/3613429/algorithm-to-convert-a-multi-dimensional-array-to-a-one-dimensional-array
+    https://stackoverflow.com/questions/29022714/java-mapping-multi-dimensional-arrays-to-single
+      m0,m1,.. are dimensions
+      A(i,j,k,...) -> A0[i + j*m0 + k*m0*m1 + ...]
+      */
+  // int index = x + y * (*mesh.sizeX) + z * (*mesh.sizeX) * (*mesh.sizeY);
+  // int[dimX][dimY][dimZ] : 1 - D array index[i * dimY * dimZ + j * dimZ + k]
+
+  //int index = x * (*mesh.sizeY) * (*mesh.sizeZ) + y * (*mesh.sizeZ) + z;
+
+  int index = 0;
+
+  float* srcBuffer =
+      (float*)BufferManager::getGpuMemory(mesh._voxelNormalBufferRef);
+
+  for (int index = 0; index < 100; index++)
+  {
+    float* value = &srcBuffer[index];
+    if (abs(*value) > 0.1f)
+		_INTR_LOG_WARNING("_normalVertexBufferGpuMemory: %f", *value);
+  }
 }
 
 } // namespace RenderPass

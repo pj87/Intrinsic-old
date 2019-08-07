@@ -24,7 +24,7 @@ layout(binding = 4) buffer _VoxelBuffer
 
 layout(binding = 5) buffer _VoxelNormalBuffer
 {
-	vec3 _NormalResult[];
+	vec4 _NormalResult[];
 };
 
 #define pmod(a,b)    ( mod(mod((a),(b))+(b),(b)) )
