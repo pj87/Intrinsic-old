@@ -95,14 +95,14 @@ float mapScaled(vec3 p, vec4 c)
 	//return length(p) - 20.0;
 }
 
-vec3 getNormal( in vec3 pos, vec4 c)
+vec4 getNormal( in vec3 pos, vec4 c)
 {
     vec3  eps = vec3(.001,0.0,0.0);
     vec3 nor;
     nor.x = mapScaled(pos+eps.xyy, c) - mapScaled(pos-eps.xyy, c);
     nor.y = mapScaled(pos+eps.yxy, c) - mapScaled(pos-eps.yxy, c);
     nor.z = mapScaled(pos+eps.yyx, c) - mapScaled(pos-eps.yyx, c);
-    return normalize(nor);
+    return vec4(normalize(nor), 0.0);
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;

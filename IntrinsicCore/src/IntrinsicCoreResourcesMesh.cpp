@@ -341,8 +341,8 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
     Intrinsic::Renderer::PseudoInstancing::fillWithRandomFloatValues(a.begin(), a.end(), probability);
 
-    for (auto& i : a)
-      _INTR_LOG_WARNING("%d", i);
+    //for (auto& i : a)
+    //  _INTR_LOG_WARNING("%d", i);
 
 	_INTR_LOG_INFO("instanced mesh: x: %d y: %d", sizeX, sizeY);
 
