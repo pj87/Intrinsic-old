@@ -322,8 +322,8 @@ void PseudoInstancing::update()
       //    terrainPos + glm::vec3(voxels[j].x - 22.0, voxels[j].y, voxels[j].z - 22.0);
 
 	  glm::vec3 position =
-          terrainPos + glm::vec3(1.02 * (voxels[j].x - 32.0), 1.02 * voxels[j].y,
-                                 1.02 * (voxels[j].z - 32.0));
+          glm::vec3(127.0 * (voxels[j].x - 32.0), 127.0 * voxels[j].y, 
+			  127.0 * (voxels[j].z - 32.0));
 
 	  NodeManager::setPosition(nodeRef, position);
       /*
