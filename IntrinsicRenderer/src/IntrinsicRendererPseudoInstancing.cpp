@@ -279,6 +279,12 @@ void PseudoInstancing::update()
 	  }
     }
   */
+  
+  Name name = _N(Terrain);
+  Entity::EntityRef entityRef = Entity::EntityManager::getEntityByName(name);
+  NodeRef terrainRef = NodeManager::getComponentForEntity(entityRef);
+  glm::vec3 terrainPos = NodeManager::getPosition(terrainRef);
+
   char buffer[256];
 
   int j = 0;
@@ -294,17 +300,42 @@ void PseudoInstancing::update()
 
     if (nodeRef.isValid())
     {
-      NodeManager::setSize(nodeRef, glm::vec3(0.05, 0.05, 0.05));
+      NodeManager::setSize(nodeRef, glm::vec3(0.005, 0.05, 0.005));
       //glm::vec3 position = 
       //    glm::vec3(100.0 + voxels[i].x / 10.0, 1640.0 + voxels[i].y / 10.0,
       //              100.0 + voxels[i].z / 10.0);
-      glm::vec3 position = glm::vec3(1250.0 * (voxels[j].x / 10.0 - 3.2),
-                                     //1250.0 * (voxels[j].y / 10.0 - 0.025),
-                                     1250.0 * (voxels[j].y / 10.0 + 0.1),
-                                     1250.0 * (voxels[j].z / 10.0 - 3.25));
+      /*
+      glm::vec3 position = 
+		  glm::vec3(125.0 * voxels[j].x - 3937.5,	
+		  125.0 * voxels[j].y + 125.0, 
+		  125.0 * voxels[j].z - 4000.0);
+	  */
 
-	  //NodeManager::setOrientation(nodeRef, glm::quat(0.05, 0.05, 0.05, 0.5));
+	 /*
+	 glm::vec3 position =
+		 glm::vec3(125.0 * voxels[j].x - 4000.0,
+                   125.0 * voxels[j].y + 125.0,
+                   125.0 * voxels[j].z - 4000.0);
+	 */
+
+	  //glm::vec3 position =
+      //    terrainPos + glm::vec3(voxels[j].x - 22.0, voxels[j].y, voxels[j].z - 22.0);
+
+	  glm::vec3 position =
+          terrainPos + glm::vec3(1.02 * (voxels[j].x - 32.0), 1.02 * voxels[j].y,
+                                 1.02 * (voxels[j].z - 32.0));
+
 	  NodeManager::setPosition(nodeRef, position);
+      /*
+	  glm::vec3 position = glm::vec3(1250.0 * voxels[j].x / 10.0,
+      //                               //1250.0 * (voxels[j].y / 10.0 - 0.025),
+                                     1250.0 * voxels[j].y / 10.0,
+                                     1250.0 * voxels[j].z / 10.0);
+      */
+	  //NodeManager::setOrientation(nodeRef, glm::quat(0.05, 0.05, 0.05, 0.5));
+	  //NodeManager::setPosition(nodeRef, terrainPos + position);
+
+	  //NodeManager::getPosition();
 	  
 	  //const glm::vec3 euler = glm::vec3(0.78, 0.78, 0.0);
       //const glm::vec3 euler = glm::vec3(-2.1, 0.0, 0.0);
@@ -319,7 +350,8 @@ void PseudoInstancing::update()
 
       Components::NodeManager::rebuildTreeAndUpdateTransforms();
 
-	  j += 8;
+	  //j += 8;
+      j += 1;
     }
   }
   
