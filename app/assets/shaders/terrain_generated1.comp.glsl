@@ -60,7 +60,7 @@ float terrainMed( vec2 p )
 
     float s = 1.0;
 	float t = 0.0;
-	for( int i=0; i<1; i++ )
+	for( int i=0; i<3; i++ )
 	{
         t += s*noi( p );
 		s *= 0.5;// + 0.1*t;
@@ -73,11 +73,11 @@ float terrainMed( vec2 p )
 float map( in vec3 pos, float time )
 {
     float m = 0.0;
-	//float h = pos.y - terrainMed(pos.xz);
+	float h = pos.y - terrainMed(pos.xz);
 	
 	pos *= 0.1;
 	
-	float h = sdSphere(pos, 16.0);
+	//float h = sdSphere(pos, 16.0);
 	
 	/*
     float sph = 100.0;
