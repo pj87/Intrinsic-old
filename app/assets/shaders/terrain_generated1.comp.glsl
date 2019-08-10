@@ -22,6 +22,11 @@ layout(binding = 4) buffer _VoxelBuffer
 	float _Result[];
 };
 
+layout(binding = 5) buffer _VoxelNormalBuffer
+{
+	vec4 _NormalResult[];
+};
+
 #define pmod(a,b)    ( mod(mod((a),(b))+(b),(b)) )
 #define rep(a,r)    ( pmod(((a)+(r)*.5),(r))-(r)*.5 )
 #define repxz(a,r)    vec3( rep((a).x,(r)), (a).y, rep((a).z,(r)) )
@@ -90,6 +95,16 @@ float mapScaled(vec3 p, vec4 c)
 	//return length(p) - 20.0;
 }
 
+vec4 getNormal( in vec3 pos, vec4 c)
+{
+    vec3  eps = vec3(.001,0.0,0.0);
+    vec3 nor;
+    nor.x = mapScaled(pos+eps.xyy, c) - mapScaled(pos-eps.xyy, c);
+    nor.y = mapScaled(pos+eps.yxy, c) - mapScaled(pos-eps.yxy, c);
+    nor.z = mapScaled(pos+eps.yyx, c) - mapScaled(pos-eps.yyx, c);
+    return vec4(normalize(nor), 0.0);
+}
+
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
 void main()
 {
@@ -112,6 +127,7 @@ void main()
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(25.0f, 10.0f, 0.0f), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0f, 1.0f, 100.0f), c);
 	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(32.0f, 32.0, 32.0f), c);
+	_NormalResult[id.x + id.y * _Width + id.z * _Width * _Height] = -getNormal(uv - vec3(32.0f, 32.0, 32.0f), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0f * sin(_Frequency)), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(_Frequency), vec2(5.0, 2.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(10.0), vec3(10.0, 5.0, 5.0));

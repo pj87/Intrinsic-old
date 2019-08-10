@@ -422,6 +422,10 @@ _INTR_INLINE ComputeCallRef createComputeCallSDFGeneration(
         computeCallSDFGenerationRef, _N(_VoxelBuffer), GpuProgramType::kCompute,
         mesh->_voxelBufferRef, UboType::kPerInstanceCompute,
         BufferManager::_descSizeInBytes(mesh->_voxelBufferRef));
+    ComputeCallManager::bindBuffer(
+        computeCallSDFGenerationRef, _N(_VoxelNormalBuffer), GpuProgramType::kCompute,
+        mesh->_voxelNormalBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(mesh->_voxelNormalBufferRef));
     ComputeCallManager::bindImage(
         computeCallSDFGenerationRef, _N(_Gradient3D), GpuProgramType::kCompute,
         mesh->_gradient3dImageRef, Samplers::kNearestRepeat);
@@ -697,6 +701,24 @@ void DynamicGeometryGeneration::init()
       mesh->_voxelBufferRef = _voxelBufferRef;
       buffersToCreate.push_back(_voxelBufferRef);
 
+	  BufferRef _voxelNormalBufferRef =
+		  BufferManager::createBuffer(_N(_VoxelNormals));
+      {
+        BufferManager::resetToDefault(_voxelNormalBufferRef);
+        BufferManager::addResourceFlags(
+            _voxelNormalBufferRef,
+			Dod::Resources::ResourceFlags::kResourceVolatile);
+        ///// PJ: only for tests
+        BufferManager::_descMemoryPoolType(_voxelNormalBufferRef) =
+            MemoryPoolType::kStaticStagingBuffers;
+        ///// PJ: only for tests
+        BufferManager::_descBufferType(_voxelNormalBufferRef) = BufferType::kStorage;
+        BufferManager::_descSizeInBytes(_voxelNormalBufferRef) =
+            (*mesh->sizeX) * (*mesh->sizeY) * (*mesh->sizeZ) * sizeof(float) * 4;
+      }
+      mesh->_voxelNormalBufferRef = _voxelNormalBufferRef;
+      buffersToCreate.push_back(_voxelNormalBufferRef);
+
       BufferRef _sizesBufferRef = 
 		  BufferManager::createBuffer(_N(_SizeBuffer));
       {
@@ -898,6 +920,10 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
                                              VK_ACCESS_SHADER_WRITE_BIT,
                                              VK_ACCESS_SHADER_READ_BIT);
 
+	BufferManager::insertBufferMemoryBarrier(mesh->_voxelNormalBufferRef,
+                                             VK_ACCESS_SHADER_WRITE_BIT,
+                                             VK_ACCESS_SHADER_READ_BIT);
+
     {
       RenderSystem::dispatchComputeCall(mesh->_computeCallMarchingCubesRef,
                                         primaryCmdBuffer);
@@ -928,6 +954,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 											 VK_ACCESS_SHADER_READ_BIT);
     
 	PseudoInstancing::voxels.clear();
+    PseudoInstancing::normals.clear();
 
 	/*
 	Entity::EntityRef entityRef = 
@@ -940,12 +967,15 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     Components::NodeManager::rebuildTreeAndUpdateTransforms();
 	*/
 
+	getNormal(*mesh);
+
 	for (int x = 0; x < 64; x+= 1)
       for (int y = 0; y < 64; y+= 1)
 		for (int z = 0; z < 64; z+= 1)
 		{
 			float voxel = getVoxel(*mesh, x, y, z);
             float voxel1 = getVoxel(*mesh, x, y + 1, z);
+
             //if (voxel > 0.001 || voxel < -0.001)
             if (voxel > 0.0 && voxel1 < 0.0)
 			{
@@ -954,7 +984,14 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
                 voxel.y = static_cast<float>(y);
                 voxel.z = static_cast<float>(64 - z);
 
+				glm::vec3 nor = getNormal(*mesh, x, y + 1, z);
+				Voxel normal;
+                normal.x = nor.x;
+                normal.y = nor.y;
+                normal.z = nor.z;
+
                 PseudoInstancing::voxels.push_back(voxel);
+                PseudoInstancing::normals.push_back(normal);
 
 				//_INTR_LOG_WARNING("(%d, %d, %d) = %f", x, y, z, voxel);
                 //_INTR_LOG_WARNING("(%f, %f, %f) = %f", voxel.x, voxel.y,
@@ -1010,6 +1047,65 @@ float DynamicGeometryGeneration::getVoxel(DynamicGeneratedMesh& mesh, int x,
       (float*)BufferManager::getGpuMemory(mesh._voxelBufferRef);
 
   return *(_voxelBufferGpuMemory + index);
+}
+
+glm::vec3& DynamicGeometryGeneration::getNormal(
+    DynamicGeneratedMesh& mesh, int x, int y, int z)
+{ /*
+    https://stackoverflow.com/questions/3613429/algorithm-to-convert-a-multi-dimensional-array-to-a-one-dimensional-array
+    https://stackoverflow.com/questions/29022714/java-mapping-multi-dimensional-arrays-to-single
+      m0,m1,.. are dimensions
+      A(i,j,k,...) -> A0[i + j*m0 + k*m0*m1 + ...]
+      */
+  // int index = x + y * (*mesh.sizeX) + z * (*mesh.sizeX) * (*mesh.sizeY);
+  // int[dimX][dimY][dimZ] : 1 - D array index[i * dimY * dimZ + j * dimZ + k]
+
+  int index = 4 * (x * (*mesh.sizeY) * (*mesh.sizeZ) + y * (*mesh.sizeZ) + z);
+
+  float* srcBuffer =
+      (float*)BufferManager::getGpuMemory(mesh._voxelNormalBufferRef);
+
+  float* srcX = &srcBuffer[index];
+  float* srcY = &srcBuffer[index + 1];
+  float* srcZ = &srcBuffer[index + 2];
+  float* srcW = &srcBuffer[index + 3];
+
+  /*
+  float srcX = glm::unpackHalf1x16(*src0);
+  float srcY = glm::unpackHalf1x16(*src1);
+  float srcZ = glm::unpackHalf1x16(*src2);
+  */
+  //if (srcX > 0.0 || srcY > 0.0 || srcZ > 0.0)
+  //_INTR_LOG_WARNING("_normalVertexBufferGpuMemory: %f %f %f %f", *srcX, *srcY, *srcZ, *srcW);
+
+  //return *(_normalBufferGpuMemory + index);
+  return glm::vec3(*srcX, *srcY, *srcZ);
+}
+
+void DynamicGeometryGeneration::getNormal(DynamicGeneratedMesh& mesh)
+{ /*
+    https://stackoverflow.com/questions/3613429/algorithm-to-convert-a-multi-dimensional-array-to-a-one-dimensional-array
+    https://stackoverflow.com/questions/29022714/java-mapping-multi-dimensional-arrays-to-single
+      m0,m1,.. are dimensions
+      A(i,j,k,...) -> A0[i + j*m0 + k*m0*m1 + ...]
+      */
+  // int index = x + y * (*mesh.sizeX) + z * (*mesh.sizeX) * (*mesh.sizeY);
+  // int[dimX][dimY][dimZ] : 1 - D array index[i * dimY * dimZ + j * dimZ + k]
+
+  //int index = x * (*mesh.sizeY) * (*mesh.sizeZ) + y * (*mesh.sizeZ) + z;
+  /*
+  int index = 0;
+
+  float* srcBuffer =
+      (float*)BufferManager::getGpuMemory(mesh._voxelNormalBufferRef);
+
+  for (int index = 0; index < 100; index++)
+  {
+    float* value = &srcBuffer[index];
+    if (abs(*value) > 0.1f)
+		_INTR_LOG_WARNING("_normalVertexBufferGpuMemory: %f", *value);
+  }
+  */
 }
 
 } // namespace RenderPass

@@ -118,7 +118,7 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
 		  {
 			  vkCmdDrawIndexed(
 				  secondCmdBuffer,
-				  Resources::DrawCallManager::_descIndexCount(drawCallRef) * 100u * 100u,
+				  Resources::DrawCallManager::_descIndexCount(drawCallRef) * 5u * 5u,
 				  Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
 				  0u, 0u);
 		  }

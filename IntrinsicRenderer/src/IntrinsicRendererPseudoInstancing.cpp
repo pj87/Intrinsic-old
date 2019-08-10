@@ -30,6 +30,7 @@ std::vector<
 BufferRef PseudoInstancing::vertexBufferRef;
 uint16_t* PseudoInstancing::tempBufferRef;
 std::vector<Voxel> PseudoInstancing::voxels;
+std::vector<Voxel> PseudoInstancing::normals;
 
 void PseudoInstancing::addPseudoInstancingMesh(Name&& name,
                                                const unsigned& sizeX,
@@ -253,13 +254,16 @@ void PseudoInstancing::update()
   if (voxels.size() == 0)
     return;
 
-  for (int x = 0; x < 100; x++)
-    for (int z = 0; z < 100; z++)
+  for (int x = 0; x < 5; x++)
+    for (int z = 0; z < 5; z++)
     {
-      transformMesh(x, z, 100, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                    glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, -100.0, 0.0));
+      transformMesh(x, z, 5, 1092, tempBufferRef, _vertexBufferGpuMemory, 0.0,
+          glm::vec3(0.0, 0.0, 0.0),
+		  glm::vec3(static_cast<float>(x) * 10.0, 0.0,
+			  static_cast<float>(z) * 10.0));
     }
   
+  /*
   int i = 0;
 
   for (int x = 0; x < 100; x++)
@@ -277,7 +281,7 @@ void PseudoInstancing::update()
         break;
 	  }
     }
-  
+  */
   char buffer[256];
 
   int j = 0;
@@ -293,17 +297,23 @@ void PseudoInstancing::update()
 
     if (nodeRef.isValid())
     {
-      NodeManager::setSize(nodeRef, glm::vec3(0.01, 0.01, 0.01));
-      //glm::vec3 position = 
-      //    glm::vec3(100.0 + voxels[i].x / 10.0, 1640.0 + voxels[i].y / 10.0,
-      //              100.0 + voxels[i].z / 10.0);
-      glm::vec3 position = glm::vec3(1250.0 * (voxels[j].x / 10.0 - 3.2),
-                                     1250.0 * (voxels[j].y / 10.0 - 0.025),
-                                     1250.0 * (voxels[j].z / 10.0 - 3.25));
+      //NodeManager::setSize(nodeRef, glm::vec3(0.005, 0.05, 0.005));
 
-	  //NodeManager::setOrientation(nodeRef, glm::quat(0.05, 0.05, 0.05, 0.5));
+	  NodeManager::setSize(nodeRef, glm::vec3(0.1, 0.1, 0.1));
+
+	  glm::vec3 position =
+          glm::vec3(127.0 * (voxels[j].x - 32.0), 127.0 * voxels[j].y,
+                    127.0 * (voxels[j].z - 32.0));
+
 	  NodeManager::setPosition(nodeRef, position);
-	  
+
+	  const glm::vec3 euler = glm::vec3(
+              normals[j].x, normals[j].y, normals[j].z);
+
+	  //_INTR_LOG_WARNING("%f %f %f", normals[j].x, normals[j].y, normals[j].z);
+
+	  NodeManager::setOrientation(nodeRef, glm::quat(euler));
+
       Components::NodeManager::rebuildTreeAndUpdateTransforms();
 
 	  j += 8;

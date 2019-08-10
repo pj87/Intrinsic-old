@@ -71,6 +71,7 @@ struct DynamicGeneratedMesh
   BufferRef _uv0BufferRef;
   BufferRef _debugBufferRef;
   BufferRef _voxelBufferRef;
+  BufferRef _voxelNormalBufferRef;
   BufferRef _cubeEdgeFlagsBufferRef;
   BufferRef _triangleConnectionBufferRef;
   BufferRef _sizesBufferRef;
@@ -106,6 +107,8 @@ struct DynamicGeometryGeneration
                                        const Name&&, bool isDynamic = true);
 
   static float getVoxel(DynamicGeneratedMesh& mesh, int x, int y, int z);
+  static glm::vec3& getNormal(DynamicGeneratedMesh& mesh, int x, int y, int z);
+  static void getNormal(DynamicGeneratedMesh& mesh);
 
   static bool isOverridenMesh(const Name&);
 
