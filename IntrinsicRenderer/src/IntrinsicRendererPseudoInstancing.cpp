@@ -297,9 +297,7 @@ void PseudoInstancing::update()
 
     if (nodeRef.isValid())
     {
-      //NodeManager::setSize(nodeRef, glm::vec3(0.005, 0.05, 0.005));
-
-	  NodeManager::setSize(nodeRef, glm::vec3(0.1, 0.1, 0.1));
+	  NodeManager::setSize(nodeRef, glm::vec3(0.01, 0.01, 0.01));
 
 	  glm::vec3 position =
           glm::vec3(127.0 * (voxels[j].x - 32.0), 127.0 * voxels[j].y,
