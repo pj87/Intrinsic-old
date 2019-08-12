@@ -306,9 +306,7 @@ void PseudoInstancing::update()
 	  NodeManager::setPosition(nodeRef, position);
 
 	  const glm::vec3 euler = glm::vec3(
-              normals[j].x, normals[j].y, normals[j].z);
-
-	  //_INTR_LOG_WARNING("%f %f %f", normals[j].x, normals[j].y, normals[j].z);
+              normals[j].x * 0.5, normals[j].y * 0.5, normals[j].z * 0.5);
 
 	  NodeManager::setOrientation(nodeRef, glm::quat(euler));
 
