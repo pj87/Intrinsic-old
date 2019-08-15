@@ -44,8 +44,8 @@ public:
 
   static bool isInstancedMesh(const Name&);
 
-  static std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int,
-                    float>&
+  static std::tuple<
+      std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float>&
 	  getMeshSizes(const Name&);
 
   static void addInstancedBufferRef(BufferRef bufferRef);
@@ -70,11 +70,11 @@ public:
 
 private:
   static std::vector<std::tuple<std::unique_ptr<Name>, unsigned int,
-                                unsigned int, float>>
+                                unsigned int, unsigned int, float>>
       meshes;
 
   static std::vector<std::tuple<std::unique_ptr<Name>, unsigned int,
-                                unsigned int, float>>&
+                                unsigned int, unsigned int, float>>&
 	  getMeshes();
 
   //static int getIndex(int x, int z, int sizeX, int numMeshVertices);

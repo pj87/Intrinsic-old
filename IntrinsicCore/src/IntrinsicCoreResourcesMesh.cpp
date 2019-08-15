@@ -328,12 +328,13 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
     if (!_IS_INSTANCED_MESH(name))
       continue;
 
-	const std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>&
+	const std::tuple<
+        std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float>&
         instancedMesh = _INSTANCED_MESH_SIZE(name);
 
 	const unsigned sizeX = std::get<1>(instancedMesh);
     const unsigned sizeY = std::get<2>(instancedMesh);
-    const float probability = std::get<3>(instancedMesh);
+    const float probability = std::get<4>(instancedMesh);
 
     std::vector<int> a(sizeX * sizeY);
 

@@ -24,7 +24,7 @@ namespace Intrinsic
 namespace Renderer
 {
 std::vector<
-    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>
+    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float>>
     PseudoInstancing::meshes;
 
 BufferRef PseudoInstancing::vertexBufferRef;
@@ -37,8 +37,8 @@ void PseudoInstancing::addPseudoInstancingMesh(Name&& name,
                                                const unsigned& sizeY,
                                                const float& probability)
 {
-  meshes.push_back(
-      std::make_tuple(std::make_unique<Name>(name), sizeX, sizeY, probability));
+  meshes.push_back(std::make_tuple(std::make_unique<Name>(name), sizeX, sizeY,
+                                   0, probability));
 }
 
 bool PseudoInstancing::isInstancedMesh(const Name& meshName)
@@ -55,13 +55,13 @@ bool PseudoInstancing::isInstancedMesh(const Name& meshName)
 }
 
 std::vector<
-    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>>&
+    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float>>&
 PseudoInstancing::getMeshes()
 {
   return meshes;
 }
 
-std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, float>&
+std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float>&
 PseudoInstancing::getMeshSizes(const Name& meshName)
 {
   for (auto& i : Intrinsic::Renderer::PseudoInstancing::meshes)
@@ -254,13 +254,17 @@ void PseudoInstancing::update()
   if (voxels.size() == 0)
     return;
 
-  for (int x = 0; x < 5; x++)
-    for (int z = 0; z < 5; z++)
+  // ATTENTION: it should be done separately for every mesh!!!!!
+  int sizeX = std::get<1>(meshes[0]);
+  int sizeZ = std::get<2>(meshes[0]);
+
+  for (int x = 0; x < sizeX; x++)
+    for (int z = 0; z < sizeZ; z++)
     {
-      transformMesh(x, z, 5, 1092, tempBufferRef, _vertexBufferGpuMemory, 0.0,
+      transformMesh(x, z, sizeX, 1092, tempBufferRef, _vertexBufferGpuMemory, 0.0,
           glm::vec3(0.0, 0.0, 0.0),
-		  glm::vec3(static_cast<float>(x) * 10.0, 0.0,
-			  static_cast<float>(z) * 10.0));
+		  glm::vec3(static_cast<float>(x - sizeX / 2) * 50.0, 0.0,
+			  static_cast<float>(z - sizeZ / 2) * 50.0));
     }
   
   /*
