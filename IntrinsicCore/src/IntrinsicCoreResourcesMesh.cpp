@@ -364,7 +364,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
     indexBuffers.resize(subMeshCount);
     _aabbPerSubMesh(meshRef).resize(subMeshCount);
 
-    _INTR_LOG_INFO("%s", name.getString().c_str());
+    _INTR_LOG_INFO("Instanced: %s", name.getString().c_str());
 
     // Tree_Tall_01_8
 
