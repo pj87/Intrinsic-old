@@ -259,8 +259,8 @@ void PseudoInstancing::update()
     {
       transformMesh(x, z, 5, 1092, tempBufferRef, _vertexBufferGpuMemory, 0.0,
           glm::vec3(0.0, 0.0, 0.0),
-		  glm::vec3(static_cast<float>(x) * 10.0, 0.0,
-			  static_cast<float>(z) * 10.0));
+		  glm::vec3(static_cast<float>(x - 2) * 50.0, 0.0,
+			  static_cast<float>(z - 2) * 50.0));
     }
   
   /*
@@ -297,11 +297,20 @@ void PseudoInstancing::update()
 
     if (nodeRef.isValid())
     {
-	  NodeManager::setSize(nodeRef, glm::vec3(0.01, 0.01, 0.01));
+	  //NodeManager::setSize(nodeRef, glm::vec3(0.025, 0.025, 0.025));
+      NodeManager::setSize(nodeRef, glm::vec3(0.01, 0.01, 0.01));
 
 	  glm::vec3 position =
-          glm::vec3(127.0 * (voxels[j].x - 32.0), 127.0 * voxels[j].y,
-                    127.0 * (voxels[j].z - 32.0));
+              glm::vec3(127.0 * (voxels[j].x - 32.0),
+                        127.0 * (voxels[j].y - 0.5 * (1.0 - normals[j].y)),
+                        127.0 * (voxels[j].z - 32.0));
+
+	  /*
+	  glm::vec3 position =
+              glm::vec3(127.0 * (voxels[j].x - 32.0),
+                        127.0 * (voxels[j].y - 0.5 * (1.0 - normals[j].y)),
+                        127.0 * (voxels[j].z - 32.0));
+	  */
 
 	  NodeManager::setPosition(nodeRef, position);
 
