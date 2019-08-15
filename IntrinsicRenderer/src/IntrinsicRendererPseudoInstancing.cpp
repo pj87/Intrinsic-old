@@ -257,11 +257,13 @@ void PseudoInstancing::update()
   // ATTENTION: it should be done separately for every mesh!!!!!
   int sizeX = std::get<1>(meshes[0]);
   int sizeZ = std::get<2>(meshes[0]);
+  int vertexNum = std::get<3>(meshes[0]);
 
   for (int x = 0; x < sizeX; x++)
     for (int z = 0; z < sizeZ; z++)
     {
-      transformMesh(x, z, sizeX, 1092, tempBufferRef, _vertexBufferGpuMemory, 0.0,
+      transformMesh(x, z, sizeX, vertexNum, tempBufferRef,
+                    _vertexBufferGpuMemory, 0.0,
           glm::vec3(0.0, 0.0, 0.0),
 		  glm::vec3(static_cast<float>(x - sizeX / 2) * 50.0, 0.0,
 			  static_cast<float>(z - sizeZ / 2) * 50.0));

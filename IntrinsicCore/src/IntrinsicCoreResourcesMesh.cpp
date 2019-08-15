@@ -328,7 +328,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
     if (!_IS_INSTANCED_MESH(name))
       continue;
 
-	const std::tuple<
+	std::tuple<
         std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float>&
         instancedMesh = _INSTANCED_MESH_SIZE(name);
 
@@ -409,9 +409,9 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
 		Intrinsic::Renderer::PseudoInstancing::addTempBuffer(tempBuffer);
 
-		_INTR_LOG_WARNING("Positions: %d", positions[subMeshIdx].size());
-
 		uint32_t len = positions[subMeshIdx].size();
+
+		std::get<3>(instancedMesh) = len;
 
 		_INTR_LOG_WARNING("len: %d", len);
         _INTR_LOG_WARNING("len * 2u: %d", len * 2u);		
