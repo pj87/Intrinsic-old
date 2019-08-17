@@ -399,15 +399,10 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 4u *
             sizeX * sizeY;
 
-		Intrinsic::Renderer::PseudoInstancing::addInstancedBufferRef(
-            posVertexBuffer);
-
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
             BufferManager::_descSizeInBytes(posVertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
-
-		Intrinsic::Renderer::PseudoInstancing::addTempBuffer(tempBuffer);
 
 		uint32_t len = positions[subMeshIdx].size();
 

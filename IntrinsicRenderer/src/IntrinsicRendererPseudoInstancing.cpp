@@ -73,16 +73,6 @@ PseudoInstancing::getMeshSizes(const Name& meshName)
   }
 }
 
-void PseudoInstancing::addInstancedBufferRef(BufferRef bufferRef) 
-{
-  vertexBufferRef = bufferRef;
-}
-
-void PseudoInstancing::addTempBuffer(uint16_t* tempBuffer)
-{ 
-  tempBufferRef = tempBuffer;
-}
-
 void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i, glm::vec3& offset)
 {
   uint16_t* src0 = &srcBuffer[i];

@@ -48,10 +48,6 @@ public:
       std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float, uint16_t*, BufferRef>&
 	  getMeshSizes(const Name&);
 
-  static void addInstancedBufferRef(BufferRef bufferRef);
-
-  static void addTempBuffer(uint16_t *tempBuffer);
-
   static void update();
 
   template <class Iter>
