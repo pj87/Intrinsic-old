@@ -73,41 +73,6 @@ PseudoInstancing::getMeshSizes(const Name& meshName)
   }
 }
 
-void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i, glm::vec3& offset)
-{
-  uint16_t* src0 = &srcBuffer[i];
-  uint16_t* src1 = &srcBuffer[i + 1];
-  uint16_t* src2 = &srcBuffer[i + 2];
-
-  float result0 = glm::unpackHalf1x16(*src0);
-  float result1 = glm::unpackHalf1x16(*src1);
-  float result2 = glm::unpackHalf1x16(*src2);
-
-  glm::vec4 pos = glm::vec4(result0 - offset.x, result1 - offset.y,
-                            result2 - offset.z, 1.0);
-  
-  glm::mat4 rotation(glm::cos(0.5), -glm::sin(0.5), 0.0, 0.0, 
-					 glm::sin(0.5),  glm::cos(0.5), 0.0, 0.0, 
-					           0.0,            0.0, 1.0, 0.0, 
-						   	   0.0,            0.0, 0.0, 1.0);
-  
-  glm::mat4 translation(1.0, 0.0, 0.0, 0.0, 
-						0.0, 1.0, 0.0, 0.0, 
-						0.0, 0.0, 1.0, 0.0,
-						0.0, 10.0, 0.0, 1.0);
-
-  glm::vec4 result = translation * rotation * pos;
-  result += glm::vec4(offset.x, offset.y, offset.z, 0.0);
-
-  uint16_t* dst0 = &dstBuffer[i];
-  uint16_t* dst1 = &dstBuffer[i + 1];
-  uint16_t* dst2 = &dstBuffer[i + 2];
-
-  *dst0 = glm::packHalf1x16(result.x);
-  *dst1 = glm::packHalf1x16(result.y);
-  *dst2 = glm::packHalf1x16(result.z);
-}
-
 void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
                        float angle, glm::vec3& rot, glm::vec3 trans, glm::vec3& offset)
 {
@@ -141,21 +106,6 @@ void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
   *dst1 = glm::packHalf1x16(result.y);
   *dst2 = glm::packHalf1x16(result.z);
 }
-
-/*
-void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
-                       float angle, glm::vec3& rot, glm::vec3& trans, glm::vec3&
-					   offset)
-{
-  uint16_t* dst0 = &dstBuffer[i];
-  uint16_t* dst1 = &dstBuffer[i + 1];
-  uint16_t* dst2 = &dstBuffer[i + 2];
-
-  *dst0 = glm::packHalf1x16(trans.x);
-  *dst1 = glm::packHalf1x16(trans.y);
-  *dst2 = glm::packHalf1x16(trans.z);
-}
-*/
 
 int getIndex(int x, int z, int sizeX, int numMeshVertices)
 {
@@ -200,23 +150,7 @@ void transformMesh(int x, int y, int sizeX, int numMeshVertices,
     transformPosition(srcBuffer, dstBuffer, i, angle, rot, trans, offset);
   }
 }
-/*
-void transformMesh(int x, int y, int sizeX, int numMeshVertices,
-                   uint16_t* srcBuffer, uint16_t* dstBuffer, float angle,
-                   glm::vec3& rot, glm::vec3& trans)
-{
-  int ref = getIndex(0, y, sizeX, numMeshVertices);
-  int start = getIndex(x, y, sizeX, numMeshVertices);
-  int end = getIndex(x + 1, y, sizeX, numMeshVertices);
 
-  glm::vec3 offset = getOffset(srcBuffer, ref, start);
-
-  for (int i = start; i < end; i += 3)
-  {
-    transformPosition(srcBuffer, dstBuffer, i, angle, rot, trans, offset);
-  }
-}
-*/
 void PseudoInstancing::update()
 {
   for (auto& i : Intrinsic::Renderer::PseudoInstancing::meshes)
@@ -224,25 +158,6 @@ void PseudoInstancing::update()
 
   uint16_t* _vertexBufferGpuMemory = 
 	  (uint16_t*)BufferManager::getGpuMemory(std::get<6>(i));
-  /*
-  //int reference = getIndex(0, 0, 10, 24);
-  int index = getIndex(1, 0, 10, 24);
-  int index1 = getIndex(2, 0, 10, 24);
-
-  glm::vec3 offset = getOffset(tempBufferRef, _vertexBufferGpuMemory, index, index1);
-
-  _INTR_LOG_WARNING("PJ: offset %f %f %f", offset.x, offset.y, offset.z);
-
-  for (int i = index; i < index1; i += 3)
-  {
-    //updatePosition(_vertexBufferGpuMemory, i, glm::vec3(0.0f, 0.01f, 0.0f));
-    //transformPosition(tempBufferRef, _vertexBufferGpuMemory, i,
-    //                  offset);
-    transformPosition(tempBufferRef, _vertexBufferGpuMemory, i, 0.5,
-                      glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, 10.0, 0.0),
-                      offset);
-  }
-  */
   
   if (voxels.size() == 0)
     return;
@@ -260,26 +175,7 @@ void PseudoInstancing::update()
 		  glm::vec3(static_cast<float>(x - sizeX / 2) * 50.0, 0.0,
 			  static_cast<float>(z - sizeZ / 2) * 50.0));
     }
-  
-  /*
-  int i = 0;
 
-  for (int x = 0; x < 100; x++)
-    for (int z = 0; z < 100; z++)
-    {
-      transformMesh(x, z, 100, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                    glm::vec3(0.0, 0.0, 0.0),
-                    glm::vec3(voxels[i].x, voxels[i].y, voxels[i].z));
-
-	  i++;
-
-      if (i >= voxels.size())
-	  {
-        x = z = 100;
-        break;
-	  }
-    }
-  */
   char buffer[256];
 
   int j = 0;
@@ -314,112 +210,9 @@ void PseudoInstancing::update()
     }
   }
   
-  /*
-  transformMesh(0, 0, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 1.0, 1.0));
-
-  transformMesh(0, 1, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 2.0, 1.0));
-
-  transformMesh(0, 2, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 3.0, 1.0));
-  */
-
-  /*
-  transformMesh(0, 0, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 1.0, 1.0));
-  
-  transformMesh(0, 1, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 1.0, 2.0));
-
-  transformMesh(0, 2, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 1.0, 3.0));
-
-
-  transformMesh(0, 3, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 2.0, 1.0));
-
-  transformMesh(0, 4, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 2.0, 2.0));
-
-  transformMesh(0, 5, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 2.0, 3.0));
-
-
-  transformMesh(0, 6, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 3.0, 1.0));
-
-  transformMesh(0, 7, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 3.0, 2.0));
-
-  transformMesh(0, 8, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 3.0, 3.0));
-
-
-  transformMesh(2, 4, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(2.0, 1.0, 1.0));
-
-  transformMesh(2, 5, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(2.0, 1.0, 2.0));
-
-  transformMesh(2, 6, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(2.0, 1.0, 3.0));
-
-
-  transformMesh(0, 9, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(2.0, 2.0, 1.0));
-  
-  transformMesh(1, 0, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(2.0, 2.0, 2.0));
-
-  transformMesh(1, 1, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(2.0, 2.0, 3.0));
-
-
-  transformMesh(1, 2, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(2.0, 3.0, 1.0));
-
-  transformMesh(1, 3, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(2.0, 3.0, 2.0));
-
-  transformMesh(1, 4, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(2.0, 3.0, 3.0));
-
-
-  transformMesh(1, 5, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(3.0, 1.0, 1.0));
-
-  transformMesh(1, 6, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(3.0, 1.0, 2.0));
-
-  transformMesh(1, 7, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(3.0, 1.0, 3.0));
-
-
-  transformMesh(1, 8, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(3.0, 2.0, 1.0));
-
-  transformMesh(1, 9, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(3.0, 2.0, 2.0));
-
-  transformMesh(2, 0, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(3.0, 2.0, 3.0));
-
-
-  transformMesh(2, 1, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(3.0, 3.0, 1.0));
-
-  transformMesh(2, 2, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(3.0, 3.0, 2.0));
-
-  transformMesh(2, 3, 10, 24, tempBufferRef, _vertexBufferGpuMemory, 0.0,
-                glm::vec3(0.0, 0.0, 0.0), glm::vec3(3.0, 3.0, 3.0));
-  */
-
   BufferManager::updateResources(
       std::get<6>(i), reinterpret_cast<void*>(_vertexBufferGpuMemory));
   }
-  //getMeshIndicesRange(1, 1);
 }
 
 } // namespace Renderer
