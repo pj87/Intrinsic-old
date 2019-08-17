@@ -434,7 +434,7 @@ void PseudoInstancing::update()
 	  */
 
 	  BufferManager::updateResources(
-		  vertexBufferRef, reinterpret_cast<void*>(_vertexBufferGpuMemory));
+		  std::get<6>(i), reinterpret_cast<void*>(_vertexBufferGpuMemory));
   }
   //getMeshIndicesRange(1, 1);
 }
