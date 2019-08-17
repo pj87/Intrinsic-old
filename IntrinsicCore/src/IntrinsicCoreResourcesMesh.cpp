@@ -329,7 +329,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
       continue;
 
 	std::tuple<
-        std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float>&
+        std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float, uint16_t*, BufferRef>&
         instancedMesh = _INSTANCED_MESH_SIZE(name);
 
 	const unsigned sizeX = std::get<1>(instancedMesh);
@@ -412,6 +412,17 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 		uint32_t len = positions[subMeshIdx].size();
 
 		std::get<3>(instancedMesh) = len;
+        std::get<5>(instancedMesh) = tempBuffer;
+        std::get<6>(instancedMesh) = posVertexBuffer;
+
+		_INTR_LOG_WARNING("%s, %d, %d, %d, %f, %p, %p",
+                          std::get<0>(instancedMesh)->getString().c_str(),
+                          std::get<1>(instancedMesh), 
+						  std::get<2>(instancedMesh), 
+						  std::get<3>(instancedMesh), 
+						  std::get<4>(instancedMesh), 
+						  std::get<5>(instancedMesh), 
+					      std::get<6>(instancedMesh));
 
 		_INTR_LOG_WARNING("len: %d", len);
         _INTR_LOG_WARNING("len * 2u: %d", len * 2u);		
