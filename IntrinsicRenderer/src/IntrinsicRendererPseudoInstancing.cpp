@@ -24,39 +24,34 @@ namespace Intrinsic
 namespace Renderer
 {
 
-typedef struct
-{
-  std::unique_ptr<Name> name;
-  unsigned int sizeX, sizeZ;
-  unsigned int vertexNum;
-  float probability;
-  uint16_t* tempVexrtexBuffer;
-  BufferRef vertexBufferRef;
-} InstancedMesh;
-
-std::vector<
-    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float, uint16_t*, BufferRef>>
+std::vector<std::unique_ptr<InstancedMesh>>
     PseudoInstancing::meshes;
 
-BufferRef PseudoInstancing::vertexBufferRef;
-uint16_t* PseudoInstancing::tempBufferRef;
 std::vector<Voxel> PseudoInstancing::voxels;
 std::vector<Voxel> PseudoInstancing::normals;
 
 void PseudoInstancing::addPseudoInstancingMesh(Name&& name,
                                                const unsigned& sizeX,
-                                               const unsigned& sizeY,
+                                               const unsigned& sizeZ,
                                                const float& probability)
 {
-  meshes.push_back(std::make_tuple(std::make_unique<Name>(name), sizeX, sizeY,
-                                   0, probability, nullptr, BufferRef()));
+  std::unique_ptr<InstancedMesh> mesh = std::make_unique<InstancedMesh>();
+  mesh->name = std::make_unique<Name>(name);
+  mesh->sizeX = sizeX;
+  mesh->sizeZ = sizeZ;
+  mesh->vertexNum = 0;
+  mesh->probability = probability;
+  mesh->tempVexrtexBuffer = nullptr;
+  mesh->vertexBufferRef = BufferRef();
+
+  meshes.push_back(std::move(mesh));
 }
 
 bool PseudoInstancing::isInstancedMesh(const Name& meshName)
 {
   for (auto& i : Intrinsic::Renderer::PseudoInstancing::meshes)
   {
-    const Name& name = *(std::get<0>(i));
+    const Name& name = *(i->name);
 
     if (meshName == name)
       return true;
@@ -65,19 +60,17 @@ bool PseudoInstancing::isInstancedMesh(const Name& meshName)
   return false;
 }
 
-std::vector<
-    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float, uint16_t*, BufferRef>>&
-PseudoInstancing::getMeshes()
+std::vector<std::unique_ptr<InstancedMesh>>& PseudoInstancing::getMeshes()
 {
   return meshes;
 }
 
-std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float, uint16_t*, BufferRef>&
+std::unique_ptr<InstancedMesh>&
 PseudoInstancing::getMeshSizes(const Name& meshName)
 {
   for (auto& i : Intrinsic::Renderer::PseudoInstancing::meshes)
   {
-    const Name& name = *(std::get<0>(i));
+    const Name& name = *(i->name);
 
     if (meshName == name)
       return i;
@@ -168,19 +161,19 @@ void PseudoInstancing::update()
   {
 
   uint16_t* _vertexBufferGpuMemory = 
-	  (uint16_t*)BufferManager::getGpuMemory(std::get<6>(i));
+	  (uint16_t*)BufferManager::getGpuMemory(i->vertexBufferRef);
   
   if (voxels.size() == 0)
     return;
 
-  int sizeX = std::get<1>(i);
-  int sizeZ = std::get<2>(i);
-  int vertexNum = std::get<3>(i);
+  int sizeX = i->sizeX;
+  int sizeZ = i->sizeZ;
+  int vertexNum = i->vertexNum;
 
   for (int x = 0; x < sizeX; x++)
     for (int z = 0; z < sizeZ; z++)
     {
-      transformMesh(x, z, sizeX, vertexNum, std::get<5>(i),
+      transformMesh(x, z, sizeX, vertexNum, i->tempVexrtexBuffer,
                     _vertexBufferGpuMemory, 0.0,
           glm::vec3(0.0, 0.0, 0.0),
 		  glm::vec3(static_cast<float>(x - sizeX / 2) * 50.0, 0.0,
@@ -222,7 +215,7 @@ void PseudoInstancing::update()
   }
   
   BufferManager::updateResources(
-      std::get<6>(i), reinterpret_cast<void*>(_vertexBufferGpuMemory));
+      i->vertexBufferRef, reinterpret_cast<void*>(_vertexBufferGpuMemory));
   }
 }
 

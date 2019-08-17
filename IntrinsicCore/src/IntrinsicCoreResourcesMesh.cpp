@@ -328,22 +328,21 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
     if (!_IS_INSTANCED_MESH(name))
       continue;
 
-	std::tuple<
-        std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float, uint16_t*, BufferRef>&
+	std::unique_ptr<Intrinsic::Renderer::InstancedMesh>&
         instancedMesh = _INSTANCED_MESH_SIZE(name);
 
-	const unsigned sizeX = std::get<1>(instancedMesh);
-    const unsigned sizeY = std::get<2>(instancedMesh);
-    const float probability = std::get<4>(instancedMesh);
+	const unsigned sizeX = instancedMesh->sizeX;
+    const unsigned sizeZ = instancedMesh->sizeZ;
+    const float probability = instancedMesh->probability;
 
-    std::vector<int> a(sizeX * sizeY);
+    std::vector<int> a(sizeX * sizeZ);
 
     Intrinsic::Renderer::PseudoInstancing::fillWithRandomFloatValues(a.begin(), a.end(), probability);
 
     //for (auto& i : a)
     //  _INTR_LOG_WARNING("%d", i);
 
-	_INTR_LOG_INFO("instanced mesh: x: %d y: %d", sizeX, sizeY);
+	_INTR_LOG_INFO("instanced mesh: x: %d y: %d", sizeX, sizeZ);
 
 	const PositionsPerSubMeshArray& positions =
         _descPositionsPerSubMesh(meshRef);
@@ -397,7 +396,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(posVertexBuffer) =
             (uint32_t)positions[subMeshIdx].size() * sizeof(uint16_t) * 4u *
-            sizeX * sizeY;
+            sizeX * sizeZ;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -406,16 +405,16 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
 		uint32_t len = positions[subMeshIdx].size();
 
-		std::get<3>(instancedMesh) = len;
-        std::get<5>(instancedMesh) = tempBuffer;
-        std::get<6>(instancedMesh) = posVertexBuffer;
+		instancedMesh->vertexNum = len;
+        instancedMesh->tempVexrtexBuffer = tempBuffer;
+        instancedMesh->vertexBufferRef = posVertexBuffer;
 
 		_INTR_LOG_WARNING("len: %d", len);
         _INTR_LOG_WARNING("len * 2u: %d", len * 2u);		
 
         for (uint32_t i = 0u; i < positions[subMeshIdx].size(); ++i)
         {
-          for (uint32_t j = 0; j < sizeX * sizeY; ++j)
+          for (uint32_t j = 0; j < sizeX * sizeZ; ++j)
           { 
             uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(
                 positions[subMeshIdx][i].x, positions[subMeshIdx][i].y));
@@ -442,7 +441,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(uv0VertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(uv0VertexBuffer) =
-            (uint32_t)uv0s[subMeshIdx].size() * sizeof(uint16_t) * 2u * sizeX * sizeY;
+            (uint32_t)uv0s[subMeshIdx].size() * sizeof(uint16_t) * 2u * sizeX * sizeZ;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -455,7 +454,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
         {
           uint32_t packedUv = glm::packHalf2x16(uv0s[subMeshIdx][i]);
 
-          for (uint32_t j = 0; j < sizeX * sizeY; ++j)
+          for (uint32_t j = 0; j < sizeX * sizeZ; ++j)
           {
             tempBuffer[(len * j + i) * 2u] = packedUv;
             tempBuffer[(len * j + i) * 2u + 1u] = packedUv >> 16u;
@@ -478,7 +477,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(normalVertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(normalVertexBuffer) =
-            (uint32_t)normals[subMeshIdx].size() * sizeof(uint16_t) * 4u * sizeX * sizeY;
+            (uint32_t)normals[subMeshIdx].size() * sizeof(uint16_t) * 4u * sizeX * sizeZ;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -494,7 +493,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           uint32_t packedNormal1 =
               glm::packHalf2x16(glm::vec2(normals[subMeshIdx][i].z, 0.0f));
 
-          for (uint32_t j = 0; j < sizeX * sizeY; ++j)
+          for (uint32_t j = 0; j < sizeX * sizeZ; ++j)
           {
             tempBuffer[(len * j + i) * 3u] = packedNormal0;
             tempBuffer[(len * j + i) * 3u + 1u] = packedNormal0 >> 16u;
@@ -519,7 +518,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(tangentVertexBuffer) =
             (uint32_t)tangents[subMeshIdx].size() * sizeof(uint16_t) * 4u *
-            sizeX * sizeY;
+            sizeX * sizeZ;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -535,7 +534,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           uint32_t packedTangent1 =
               glm::packHalf2x16(glm::vec2(tangents[subMeshIdx][i].z, 0.0f));
 
-          for (uint32_t j = 0; j < sizeX * sizeY; ++j)
+          for (uint32_t j = 0; j < sizeX * sizeZ; ++j)
           {
             tempBuffer[(len * j + i) * 3u] = packedTangent0;
             tempBuffer[(len * j + i) * 3u + 1u] = packedTangent0 >> 16u;
@@ -560,7 +559,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(binormalVertexBuffer) =
             (uint32_t)binormals[subMeshIdx].size() * sizeof(uint16_t) * 4u *
-            sizeX * sizeY;
+            sizeX * sizeZ;
 
         // Convert to half
         uint16_t* tempBuffer = (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -576,7 +575,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           uint32_t packedBinormal1 =
               glm::packHalf2x16(glm::vec2(binormals[subMeshIdx][i].z, 0.0f));
 
-		  for (uint32_t j = 0; j < sizeX * sizeY; ++j)
+		  for (uint32_t j = 0; j < sizeX * sizeZ; ++j)
           {
             tempBuffer[(len * j + i) * 3u] = packedBinormal0;
             tempBuffer[(len * j + i) * 3u + 1u] = packedBinormal0 >> 16u;
@@ -601,7 +600,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             R::BufferType::kVertex;
 
         BufferManager::_descSizeInBytes(vtxColorVertexBuffer) =
-            (uint32_t)vtxColors[subMeshIdx].size() * sizeof(uint32_t) * sizeX * sizeY;
+            (uint32_t)vtxColors[subMeshIdx].size() * sizeof(uint32_t) * sizeX * sizeZ;
 
         // Convert color
         uint32_t* tempBuffer = (uint32_t*)Memory::Tlsf::MainAllocator::allocate(
@@ -612,7 +611,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
         for (uint32_t i = 0u; i < vtxColors[subMeshIdx].size(); ++i)
         {
-          for (uint32_t j = 0; j < sizeX * sizeY; ++j)
+          for (uint32_t j = 0; j < sizeX * sizeZ; ++j)
           {
             tempBuffer[i + len * j] =
                 Math::convertColorToBGRA(vtxColors[subMeshIdx][i]);
@@ -631,10 +630,10 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
         BufferManager::addResourceFlags(
             indexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
 
-        if (indices[subMeshIdx].size() * sizeX * sizeY <= 0xFFFF)
+        if (indices[subMeshIdx].size() * sizeX * sizeZ <= 0xFFFF)
         {
           uint32_t indexBufferSizeInBytes =
-              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t) * sizeX * sizeY;
+              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t) * sizeX * sizeZ;
           uint16_t* tempIndexBuffer =
               (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
                   indexBufferSizeInBytes);
@@ -644,7 +643,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
           for (uint32_t i = 0u; i < indices[subMeshIdx].size(); ++i)
           {
-            for (int j = 0; j < sizeX * sizeY; ++j)
+            for (int j = 0; j < sizeX * sizeZ; ++j)
             {
               tempIndexBuffer[i + indices[subMeshIdx].size() * j] =
                   (uint16_t)indices[subMeshIdx][i] + len * j;
@@ -658,7 +657,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
         else
         {
           uint32_t indexBufferSizeInBytes =
-              (uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t) * sizeX * sizeY;
+              (uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t) * sizeX * sizeZ;
           uint32_t* tempIndexBuffer =
               (uint32_t*)Memory::Tlsf::MainAllocator::allocate(
                   indexBufferSizeInBytes);
@@ -668,7 +667,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
           for (uint32_t i = 0u; i < indices[subMeshIdx].size(); ++i)
           {
-            for (int j = 0; j < sizeX * sizeY; ++j)
+            for (int j = 0; j < sizeX * sizeZ; ++j)
             {
               if (a[j] == 0)
               {

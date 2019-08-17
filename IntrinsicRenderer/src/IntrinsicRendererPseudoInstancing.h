@@ -36,6 +36,16 @@ struct Voxel
   float x, y, z;
 };
 
+typedef struct
+{
+  std::unique_ptr<Name> name;
+  unsigned int sizeX, sizeZ;
+  unsigned int vertexNum;
+  float probability;
+  uint16_t* tempVexrtexBuffer;
+  BufferRef vertexBufferRef;
+} InstancedMesh;
+
 struct PseudoInstancing
 {
 public:
@@ -44,8 +54,7 @@ public:
 
   static bool isInstancedMesh(const Name&);
 
-  static std::tuple<
-      std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float, uint16_t*, BufferRef>&
+  static std::unique_ptr<InstancedMesh>&
 	  getMeshSizes(const Name&);
 
   static void update();
@@ -65,16 +74,11 @@ public:
   static std::vector<Voxel> normals;
 
 private:
-  static std::vector<std::tuple<std::unique_ptr<Name>, unsigned int,
-                                unsigned int, unsigned int, float, uint16_t*, BufferRef>>
+  static std::vector<std::unique_ptr<InstancedMesh>>
       meshes;
 
-  static std::vector<std::tuple<std::unique_ptr<Name>, unsigned int,
-                                unsigned int, unsigned int, float, uint16_t*, BufferRef>>&
+  static std::vector<std::unique_ptr<InstancedMesh>>&
 	  getMeshes();
-
-  static BufferRef vertexBufferRef;
-  static uint16_t *tempBufferRef;
 };
 }
 }
