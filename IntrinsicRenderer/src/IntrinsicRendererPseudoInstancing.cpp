@@ -24,7 +24,7 @@ namespace Intrinsic
 namespace Renderer
 {
 std::vector<
-    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float>>
+    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float, uint16_t*, BufferRef>>
     PseudoInstancing::meshes;
 
 BufferRef PseudoInstancing::vertexBufferRef;
@@ -38,7 +38,7 @@ void PseudoInstancing::addPseudoInstancingMesh(Name&& name,
                                                const float& probability)
 {
   meshes.push_back(std::make_tuple(std::make_unique<Name>(name), sizeX, sizeY,
-                                   0, probability));
+                                   0, probability, nullptr, BufferRef()));
 }
 
 bool PseudoInstancing::isInstancedMesh(const Name& meshName)
@@ -55,13 +55,13 @@ bool PseudoInstancing::isInstancedMesh(const Name& meshName)
 }
 
 std::vector<
-    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float>>&
+    std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float, uint16_t*, BufferRef>>&
 PseudoInstancing::getMeshes()
 {
   return meshes;
 }
 
-std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float>&
+std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float, uint16_t*, BufferRef>&
 PseudoInstancing::getMeshSizes(const Name& meshName)
 {
   for (auto& i : Intrinsic::Renderer::PseudoInstancing::meshes)
@@ -229,8 +229,11 @@ void transformMesh(int x, int y, int sizeX, int numMeshVertices,
 */
 void PseudoInstancing::update()
 {
-  uint16_t* _vertexBufferGpuMemory =
-      (uint16_t*)BufferManager::getGpuMemory(vertexBufferRef);
+  for (auto& i : Intrinsic::Renderer::PseudoInstancing::meshes)
+  {
+
+  uint16_t* _vertexBufferGpuMemory = 
+	  (uint16_t*)BufferManager::getGpuMemory(std::get<6>(i));
   /*
   //int reference = getIndex(0, 0, 10, 24);
   int index = getIndex(1, 0, 10, 24);
@@ -255,14 +258,14 @@ void PseudoInstancing::update()
     return;
 
   // ATTENTION: it should be done separately for every mesh!!!!!
-  int sizeX = std::get<1>(meshes[0]);
-  int sizeZ = std::get<2>(meshes[0]);
-  int vertexNum = std::get<3>(meshes[0]);
+  int sizeX = std::get<1>(i);
+  int sizeZ = std::get<2>(i);
+  int vertexNum = std::get<3>(i);
 
   for (int x = 0; x < sizeX; x++)
     for (int z = 0; z < sizeZ; z++)
     {
-      transformMesh(x, z, sizeX, vertexNum, tempBufferRef,
+      transformMesh(x, z, sizeX, vertexNum, std::get<5>(i),
                     _vertexBufferGpuMemory, 0.0,
           glm::vec3(0.0, 0.0, 0.0),
 		  glm::vec3(static_cast<float>(x - sizeX / 2) * 50.0, 0.0,
@@ -425,8 +428,8 @@ void PseudoInstancing::update()
   */
 
   BufferManager::updateResources(
-      vertexBufferRef, reinterpret_cast<void*>(_vertexBufferGpuMemory));
-
+      std::get<6>(i), reinterpret_cast<void*>(_vertexBufferGpuMemory));
+  }
   //getMeshIndicesRange(1, 1);
 }
 
