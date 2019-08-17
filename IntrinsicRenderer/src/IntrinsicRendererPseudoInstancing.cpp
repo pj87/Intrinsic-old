@@ -23,6 +23,17 @@ namespace Intrinsic
 {
 namespace Renderer
 {
+
+typedef struct
+{
+  std::unique_ptr<Name> name;
+  unsigned int sizeX, sizeZ;
+  unsigned int vertexNum;
+  float probability;
+  uint16_t* tempVexrtexBuffer;
+  BufferRef vertexBufferRef;
+} InstancedMesh;
+
 std::vector<
     std::tuple<std::unique_ptr<Name>, unsigned int, unsigned int, unsigned int, float, uint16_t*, BufferRef>>
     PseudoInstancing::meshes;
