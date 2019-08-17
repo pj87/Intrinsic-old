@@ -247,7 +247,6 @@ void PseudoInstancing::update()
   if (voxels.size() == 0)
     return;
 
-  // ATTENTION: it should be done separately for every mesh!!!!!
   int sizeX = std::get<1>(i);
   int sizeZ = std::get<2>(i);
   int vertexNum = std::get<3>(i);
