@@ -73,6 +73,8 @@ public:
   static std::vector<Voxel> voxels;
   static std::vector<Voxel> normals;
 
+  static void populateMeshes();
+
 private:
   static std::vector<std::unique_ptr<InstancedMesh>>
       meshes;

@@ -155,67 +155,71 @@ void transformMesh(int x, int y, int sizeX, int numMeshVertices,
   }
 }
 
-void PseudoInstancing::update()
+void PseudoInstancing::populateMeshes() 
 {
-  for (auto& mesh : Intrinsic::Renderer::PseudoInstancing::meshes)
-  {
-
-  uint16_t* _vertexBufferGpuMemory = 
-	  (uint16_t*)BufferManager::getGpuMemory(mesh->vertexBufferRef);
-  
   if (voxels.size() == 0)
     return;
-
-  int sizeX = mesh->sizeX;
-  int sizeZ = mesh->sizeZ;
-  int vertexNum = mesh->vertexNum;
-
-  for (int x = 0; x < sizeX; x++)
-    for (int z = 0; z < sizeZ; z++)
-    {
-      transformMesh(x, z, sizeX, vertexNum, mesh->tempVexrtexBuffer,
-                    _vertexBufferGpuMemory, 0.0,
-          glm::vec3(0.0, 0.0, 0.0),
-		  glm::vec3(static_cast<float>(x - sizeX / 2) * 50.0, 0.0,
-			  static_cast<float>(z - sizeZ / 2) * 50.0));
-    }
 
   char buffer[256];
 
   int j = 0;
-  for (int i = 0; i < 500; i ++)
+  for (int i = 0; i < 500; i++)
   {
     sprintf(buffer, "PJTerrain%d", i);
     Name name = std::move(buffer);
 
-	//_INTR_LOG_WARNING("%s", name.getString().c_str());
+    //_INTR_LOG_WARNING("%s", name.getString().c_str());
 
     Entity::EntityRef entityRef = Entity::EntityManager::getEntityByName(name);
     NodeRef nodeRef = NodeManager::getComponentForEntity(entityRef);
 
     if (nodeRef.isValid())
     {
-	  NodeManager::setSize(nodeRef, glm::vec3(0.01, 0.01, 0.01));
+      NodeManager::setSize(nodeRef, glm::vec3(0.01, 0.01, 0.01));
 
-	  glm::vec3 position =
+      glm::vec3 position =
           glm::vec3(127.0 * (voxels[j].x - 32.0), 127.0 * voxels[j].y,
                     127.0 * (voxels[j].z - 32.0));
 
-	  NodeManager::setPosition(nodeRef, position);
+      NodeManager::setPosition(nodeRef, position);
 
-	  const glm::vec3 euler = glm::vec3(
-              normals[j].x * 0.5, normals[j].y * 0.5, normals[j].z * 0.5);
+      const glm::vec3 euler =
+          glm::vec3(normals[j].x * 0.5, normals[j].y * 0.5, normals[j].z * 0.5);
 
-	  NodeManager::setOrientation(nodeRef, glm::quat(euler));
+      NodeManager::setOrientation(nodeRef, glm::quat(euler));
 
       Components::NodeManager::rebuildTreeAndUpdateTransforms();
 
-	  j += 8;
+      j += 8;
     }
   }
+}
+
+void PseudoInstancing::update()
+{
+  for (auto& mesh : Intrinsic::Renderer::PseudoInstancing::meshes)
+  {
+	  uint16_t* _vertexBufferGpuMemory = 
+		  (uint16_t*)BufferManager::getGpuMemory(mesh->vertexBufferRef);
+
+	  int sizeX = mesh->sizeX;
+	  int sizeZ = mesh->sizeZ;
+	  int vertexNum = mesh->vertexNum;
+
+	  for (int x = 0; x < sizeX; x++)
+		for (int z = 0; z < sizeZ; z++)
+		{
+		  transformMesh(x, z, sizeX, vertexNum, mesh->tempVexrtexBuffer,
+						_vertexBufferGpuMemory, 0.0,
+			  glm::vec3(0.0, 0.0, 0.0),
+			  glm::vec3(static_cast<float>(x - sizeX / 2) * 50.0, 0.0,
+				  static_cast<float>(z - sizeZ / 2) * 50.0));
+		}
   
-  BufferManager::updateResources(
-      mesh->vertexBufferRef, reinterpret_cast<void*>(_vertexBufferGpuMemory));
+	  populateMeshes();
+
+	  BufferManager::updateResources(
+		  mesh->vertexBufferRef, reinterpret_cast<void*>(_vertexBufferGpuMemory));
   }
 }
 
