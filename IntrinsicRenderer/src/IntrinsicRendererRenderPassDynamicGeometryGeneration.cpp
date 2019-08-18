@@ -956,30 +956,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 	PseudoInstancing::voxels.clear();
     PseudoInstancing::normals.clear();
 
-	for (int x = 0; x < 64; x+= 1)
-      for (int y = 0; y < 64; y+= 1)
-		for (int z = 0; z < 64; z+= 1)
-		{
-			float voxel = getVoxel(*mesh, x, y, z);
-            float voxel1 = getVoxel(*mesh, x, y + 1, z);
-
-            if (voxel > 0.0 && voxel1 < 0.0)
-			{
-                Voxel voxel;
-				voxel.x = static_cast<float>(x);
-                voxel.y = static_cast<float>(y);
-                voxel.z = static_cast<float>(64 - z);
-
-				glm::vec3 nor = getNormal(*mesh, x, y + 1, z);
-				Voxel normal;
-                normal.x = nor.x;
-                normal.y = nor.y;
-                normal.z = nor.z;
-
-                PseudoInstancing::voxels.push_back(voxel);
-                PseudoInstancing::normals.push_back(normal);
-			}
-		}
+	aquireVoxelsAndNormals(*mesh);
 
 	PseudoInstancing::populateMeshes();
 	PseudoInstancing::generateInstances();
@@ -987,6 +964,35 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 	mesh->isCalled = true;
     mesh->counter++;
   }
+}
+
+void DynamicGeometryGeneration::aquireVoxelsAndNormals(
+    DynamicGeneratedMesh& mesh)
+{
+  for (int x = 0; x < 64; x += 1)
+    for (int y = 0; y < 64; y += 1)
+      for (int z = 0; z < 64; z += 1)
+      {
+			float voxel = getVoxel(mesh, x, y, z);
+			float voxel1 = getVoxel(mesh, x, y + 1, z);
+
+			if (voxel > 0.0 && voxel1 < 0.0)
+			{
+				  Voxel voxel;
+				  voxel.x = static_cast<float>(x);
+				  voxel.y = static_cast<float>(y);
+				  voxel.z = static_cast<float>(64 - z);
+
+				  glm::vec3 nor = getNormal(mesh, x, y + 1, z);
+				  Voxel normal;
+				  normal.x = nor.x;
+				  normal.y = nor.y;
+				  normal.z = nor.z;
+
+				  PseudoInstancing::voxels.push_back(voxel);
+				  PseudoInstancing::normals.push_back(normal);
+			}
+      }
 }
 
 float DynamicGeometryGeneration::getVoxel(DynamicGeneratedMesh& mesh, int x,

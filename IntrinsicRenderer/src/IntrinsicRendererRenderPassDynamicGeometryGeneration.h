@@ -108,6 +108,7 @@ struct DynamicGeometryGeneration
 
   static float getVoxel(DynamicGeneratedMesh& mesh, int x, int y, int z);
   static glm::vec3& getNormal(DynamicGeneratedMesh& mesh, int x, int y, int z);
+  static void aquireVoxelsAndNormals(DynamicGeneratedMesh& mesh);
 
   static bool isOverridenMesh(const Name&);
 
