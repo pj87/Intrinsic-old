@@ -956,17 +956,6 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 	PseudoInstancing::voxels.clear();
     PseudoInstancing::normals.clear();
 
-	/*
-	Entity::EntityRef entityRef = 
-		Entity::EntityManager::getEntityByName(_N(Cube));
-    NodeRef nodeRef = 
-		NodeManager::getComponentForEntity(entityRef);
-	glm::vec3 position =
-        NodeManager::_worldPosition(nodeRef) + glm::vec3(0.0, 10.0, 0.0);
-    NodeManager::setPosition(nodeRef, position);
-    Components::NodeManager::rebuildTreeAndUpdateTransforms();
-	*/
-
 	getNormal(*mesh);
 
 	for (int x = 0; x < 64; x+= 1)
@@ -976,7 +965,6 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 			float voxel = getVoxel(*mesh, x, y, z);
             float voxel1 = getVoxel(*mesh, x, y + 1, z);
 
-            //if (voxel > 0.001 || voxel < -0.001)
             if (voxel > 0.0 && voxel1 < 0.0)
 			{
                 Voxel voxel;
@@ -992,37 +980,8 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
                 PseudoInstancing::voxels.push_back(voxel);
                 PseudoInstancing::normals.push_back(normal);
-
-				//_INTR_LOG_WARNING("(%d, %d, %d) = %f", x, y, z, voxel);
-                //_INTR_LOG_WARNING("(%f, %f, %f) = %f", voxel.x, voxel.y,
-                //                  voxel.z, voxel);
 			}
 		}
-
-	//_INTR_LOG_WARNING("size = %d", PseudoInstancing::voxels.size());
-
-	PseudoInstancing::update();
-
-	///// PJ: only for tests
-    /*
-	uint16_t* _cubeEdgeFlagsBufferGpuMemory =
-        (uint16_t*)BufferManager::getGpuMemory(mesh->_cubeEdgeFlagsBufferRef);
-
-	for (int i = 0; i < 10; i++)
-		_INTR_LOG_WARNING("X0%x", *(_cubeEdgeFlagsBufferGpuMemory + i));
-	*/
-    /*
-	float* _voxelBufferGpuMemory =
-            (float*)BufferManager::getGpuMemory(mesh->_voxelBufferRef);
-
-    for (int i = 0; i < (*mesh->sizeX) * (*mesh->sizeY) * (*mesh->sizeZ); i++)
-    {
-      float f = *(_voxelBufferGpuMemory + i);
-      if (f > 0.00001)
-		_INTR_LOG_WARNING("%f", f);
-    }
-	*/
-    ///// PJ: only for tests
 
 	PseudoInstancing::populateMeshes();
 	PseudoInstancing::generateInstances();
