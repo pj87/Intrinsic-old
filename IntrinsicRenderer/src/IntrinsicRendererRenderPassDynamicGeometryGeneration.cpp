@@ -1024,6 +1024,8 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 	*/
     ///// PJ: only for tests
 
+	PseudoInstancing::populateMeshes();
+	PseudoInstancing::generateInstances();
 
 	mesh->isCalled = true;
     mesh->counter++;

@@ -57,7 +57,7 @@ public:
   static std::unique_ptr<InstancedMesh>&
 	  getMeshSizes(const Name&);
 
-  static void update();
+  static void generateInstances();
 
   template <class Iter>
   static void fillWithRandomFloatValues(Iter start, Iter end, float probability)

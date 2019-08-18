@@ -195,7 +195,7 @@ void PseudoInstancing::populateMeshes()
   }
 }
 
-void PseudoInstancing::update()
+void PseudoInstancing::generateInstances()
 {
   for (auto& mesh : Intrinsic::Renderer::PseudoInstancing::meshes)
   {
@@ -215,8 +215,6 @@ void PseudoInstancing::update()
 			  glm::vec3(static_cast<float>(x - sizeX / 2) * 50.0, 0.0,
 				  static_cast<float>(z - sizeZ / 2) * 50.0));
 		}
-  
-	  populateMeshes();
 
 	  BufferManager::updateResources(
 		  mesh->vertexBufferRef, reinterpret_cast<void*>(_vertexBufferGpuMemory));
