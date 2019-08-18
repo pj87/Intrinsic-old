@@ -956,8 +956,6 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 	PseudoInstancing::voxels.clear();
     PseudoInstancing::normals.clear();
 
-	getNormal(*mesh);
-
 	for (int x = 0; x < 64; x+= 1)
       for (int y = 0; y < 64; y+= 1)
 		for (int z = 0; z < 64; z+= 1)
@@ -1041,32 +1039,6 @@ glm::vec3& DynamicGeometryGeneration::getNormal(
 
   //return *(_normalBufferGpuMemory + index);
   return glm::vec3(*srcX, *srcY, *srcZ);
-}
-
-void DynamicGeometryGeneration::getNormal(DynamicGeneratedMesh& mesh)
-{ /*
-    https://stackoverflow.com/questions/3613429/algorithm-to-convert-a-multi-dimensional-array-to-a-one-dimensional-array
-    https://stackoverflow.com/questions/29022714/java-mapping-multi-dimensional-arrays-to-single
-      m0,m1,.. are dimensions
-      A(i,j,k,...) -> A0[i + j*m0 + k*m0*m1 + ...]
-      */
-  // int index = x + y * (*mesh.sizeX) + z * (*mesh.sizeX) * (*mesh.sizeY);
-  // int[dimX][dimY][dimZ] : 1 - D array index[i * dimY * dimZ + j * dimZ + k]
-
-  //int index = x * (*mesh.sizeY) * (*mesh.sizeZ) + y * (*mesh.sizeZ) + z;
-  /*
-  int index = 0;
-
-  float* srcBuffer =
-      (float*)BufferManager::getGpuMemory(mesh._voxelNormalBufferRef);
-
-  for (int index = 0; index < 100; index++)
-  {
-    float* value = &srcBuffer[index];
-    if (abs(*value) > 0.1f)
-		_INTR_LOG_WARNING("_normalVertexBufferGpuMemory: %f", *value);
-  }
-  */
 }
 
 } // namespace RenderPass
