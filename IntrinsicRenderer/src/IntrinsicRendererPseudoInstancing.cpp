@@ -157,23 +157,23 @@ void transformMesh(int x, int y, int sizeX, int numMeshVertices,
 
 void PseudoInstancing::update()
 {
-  for (auto& i : Intrinsic::Renderer::PseudoInstancing::meshes)
+  for (auto& mesh : Intrinsic::Renderer::PseudoInstancing::meshes)
   {
 
   uint16_t* _vertexBufferGpuMemory = 
-	  (uint16_t*)BufferManager::getGpuMemory(i->vertexBufferRef);
+	  (uint16_t*)BufferManager::getGpuMemory(mesh->vertexBufferRef);
   
   if (voxels.size() == 0)
     return;
 
-  int sizeX = i->sizeX;
-  int sizeZ = i->sizeZ;
-  int vertexNum = i->vertexNum;
+  int sizeX = mesh->sizeX;
+  int sizeZ = mesh->sizeZ;
+  int vertexNum = mesh->vertexNum;
 
   for (int x = 0; x < sizeX; x++)
     for (int z = 0; z < sizeZ; z++)
     {
-      transformMesh(x, z, sizeX, vertexNum, i->tempVexrtexBuffer,
+      transformMesh(x, z, sizeX, vertexNum, mesh->tempVexrtexBuffer,
                     _vertexBufferGpuMemory, 0.0,
           glm::vec3(0.0, 0.0, 0.0),
 		  glm::vec3(static_cast<float>(x - sizeX / 2) * 50.0, 0.0,
@@ -215,7 +215,7 @@ void PseudoInstancing::update()
   }
   
   BufferManager::updateResources(
-      i->vertexBufferRef, reinterpret_cast<void*>(_vertexBufferGpuMemory));
+      mesh->vertexBufferRef, reinterpret_cast<void*>(_vertexBufferGpuMemory));
   }
 }
 
