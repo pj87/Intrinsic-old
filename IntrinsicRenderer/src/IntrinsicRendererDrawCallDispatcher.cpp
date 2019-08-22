@@ -116,9 +116,12 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
           }
 		  else
 		  {
+              std::unique_ptr<Intrinsic::Renderer::InstancedMesh>& 
+				  instancedMesh = _INSTANCED_MESH_SIZE(name);
+
 			  vkCmdDrawIndexed(
 				  secondCmdBuffer,
-				  Resources::DrawCallManager::_descIndexCount(drawCallRef) * 5u * 5u,
+                  Resources::DrawCallManager::_descIndexCount(drawCallRef) * instancedMesh->sizeX * instancedMesh->sizeZ,
 				  Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
 				  0u, 0u);
 		  }
