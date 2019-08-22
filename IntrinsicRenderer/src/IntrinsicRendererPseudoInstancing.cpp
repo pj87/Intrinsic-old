@@ -163,7 +163,8 @@ void PseudoInstancing::populateMeshes()
   char buffer[256];
 
   int j = 0;
-  for (int i = 0; i < 500; i++)
+  int i = 0;
+  for (i = 0; i < 500; i++)
   {
     sprintf(buffer, "PJTerrain%d", i);
     Name name = std::move(buffer);
@@ -175,10 +176,18 @@ void PseudoInstancing::populateMeshes()
 
     if (nodeRef.isValid())
     {
+      if (voxels[j].y < 32.0)
+      {
+        j += 8;
+        //_INTR_LOG_WARNING("Pomijam");
+        continue;
+      }
+
       NodeManager::setSize(nodeRef, glm::vec3(0.01, 0.01, 0.01));
 
-      glm::vec3 position =
-          glm::vec3(127.0 * (voxels[j].x - 32.0), 127.0 * voxels[j].y,
+	  glm::vec3 position =
+          glm::vec3(127.0 * (voxels[j].x - 32.0),
+                    127.0 * (voxels[j].y - 0.5 * (1.0 - normals[j].y)),
                     127.0 * (voxels[j].z - 32.0));
 
       NodeManager::setPosition(nodeRef, position);
