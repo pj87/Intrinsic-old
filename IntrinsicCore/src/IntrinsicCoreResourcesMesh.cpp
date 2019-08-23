@@ -645,6 +645,12 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           {
             for (int j = 0; j < sizeX * sizeZ; ++j)
             {
+              if (a[j] == 0)
+              {
+                tempIndexBuffer[i + indices[subMeshIdx].size() * j] = 0;
+                continue;
+              }
+
               tempIndexBuffer[i + indices[subMeshIdx].size() * j] =
                   (uint16_t)indices[subMeshIdx][i] + len * j;
             }
