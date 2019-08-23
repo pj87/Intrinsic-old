@@ -155,7 +155,7 @@ void transformMesh(int x, int y, int sizeX, int numMeshVertices,
   }
 }
 
-void PseudoInstancing::populateMeshes() 
+void PseudoInstancing::populateMeshes()
 {
   if (voxels.size() == 0)
     return;
@@ -164,7 +164,7 @@ void PseudoInstancing::populateMeshes()
 
   int j = 0;
   int i = 0;
-  for (i = 0; i < 500; i++)
+  for (i = 0; i < 500;)
   {
     sprintf(buffer, "PJTerrain%d", i);
     Name name = std::move(buffer);
@@ -174,34 +174,41 @@ void PseudoInstancing::populateMeshes()
     Entity::EntityRef entityRef = Entity::EntityManager::getEntityByName(name);
     NodeRef nodeRef = NodeManager::getComponentForEntity(entityRef);
 
-    if (nodeRef.isValid())
+    if (!nodeRef.isValid())
     {
-      if (voxels[j].y < 32.0)
-      {
-        j += 8;
-        //_INTR_LOG_WARNING("Pomijam");
-        continue;
-      }
-
-      NodeManager::setSize(nodeRef, glm::vec3(0.01, 0.01, 0.01));
-
-	  glm::vec3 position =
-          glm::vec3(127.0 * (voxels[j].x - 32.0),
-                    127.0 * (voxels[j].y - 0.5 * (1.0 - normals[j].y)),
-                    127.0 * (voxels[j].z - 32.0));
-
-      NodeManager::setPosition(nodeRef, position);
-
-      const glm::vec3 euler =
-          glm::vec3(normals[j].x * 0.5, normals[j].y * 0.5, normals[j].z * 0.5);
-
-      NodeManager::setOrientation(nodeRef, glm::quat(euler));
-
-      Components::NodeManager::rebuildTreeAndUpdateTransforms();
-
-      j += 8;
+      i++;
+      continue;
     }
+
+    if (voxels[j].y < 32.0)
+    {
+      j += 4;
+      continue;
+    }
+
+    //_INTR_LOG_WARNING("Ustawiam %s", name.getString().c_str());
+
+    NodeManager::setSize(nodeRef, glm::vec3(0.01, 0.01, 0.01));
+
+    glm::vec3 position =
+        glm::vec3(127.0 * (voxels[j].x - 32.0),
+                  127.0 * (voxels[j].y - 0.5 * (1.0 - normals[j].y)),
+                  127.0 * (voxels[j].z - 32.0));
+
+    NodeManager::setPosition(nodeRef, position);
+
+    const glm::vec3 euler =
+        glm::vec3(normals[j].x * 0.5, normals[j].y * 0.5, normals[j].z * 0.5);
+
+    NodeManager::setOrientation(nodeRef, glm::quat(euler));
+
+    Components::NodeManager::rebuildTreeAndUpdateTransforms();
+
+    j += 4;
+    i++;
   }
+
+  _INTR_LOG_WARNING("%d", j);
 }
 
 void PseudoInstancing::generateInstances()
