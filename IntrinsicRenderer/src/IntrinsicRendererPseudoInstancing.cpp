@@ -160,6 +160,11 @@ void PseudoInstancing::populateMeshes()
   if (voxels.size() == 0)
     return;
 
+  static std::random_device rd;  // you only need to initialize it once
+  static std::mt19937 mte(rd()); // this is a relative big object to create
+
+  std::uniform_real_distribution<float> dist(-0.005f, 0.005f);
+
   char buffer[256];
 
   int j = 0;
@@ -188,7 +193,8 @@ void PseudoInstancing::populateMeshes()
 
     //_INTR_LOG_WARNING("Ustawiam %s", name.getString().c_str());
 
-    NodeManager::setSize(nodeRef, glm::vec3(0.01, 0.01, 0.01));
+    NodeManager::setSize(nodeRef,
+                         glm::vec3(0.01, 0.01 + dist(mte), 0.01));
 
     glm::vec3 position =
         glm::vec3(127.0 * (voxels[j].x - 32.0),
@@ -207,8 +213,6 @@ void PseudoInstancing::populateMeshes()
     j += 4;
     i++;
   }
-
-  _INTR_LOG_WARNING("%d", j);
 }
 
 void PseudoInstancing::generateInstances()
