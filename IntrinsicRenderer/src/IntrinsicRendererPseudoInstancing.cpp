@@ -78,7 +78,7 @@ PseudoInstancing::getMeshSizes(const Name& meshName)
 }
 
 void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
-                       float angle, glm::vec3& rot, glm::vec3 trans, glm::vec3& offset)
+                       float angle, glm::vec3& rot, glm::vec3 trans, glm::vec3& scale, glm::vec3& offset)
 {
   uint16_t* src0 = &srcBuffer[i];
   uint16_t* src1 = &srcBuffer[i + 1];
@@ -93,13 +93,15 @@ void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
   glm::vec4 pos = glm::vec4(result0, result1, result2, 1.0) - offset4;
 
   glm::mat4 rotation = glm::rotate(angle, rot);
-
+  
+  glm::mat4 dimention = glm::scale(scale);
+  
   trans *= 0.1f;
 
   glm::mat4 translation =
       glm::translate(trans);
 
-  glm::vec4 result = translation /* rotation */ * pos;
+  glm::vec4 result = translation * rotation * dimention * pos;
   result += offset4;
 
   uint16_t* dst0 = &dstBuffer[i];
@@ -141,7 +143,7 @@ glm::vec3 getOffset(uint16_t* srcBuffer, int i1, int i2)
 
 void transformMesh(int x, int y, int sizeX, int numMeshVertices,
                    uint16_t* srcBuffer, uint16_t* dstBuffer, float angle,
-                   glm::vec3& rot, glm::vec3& trans)
+                   glm::vec3& rot, glm::vec3& trans, glm::vec3 scale)
 {
   int ref = getIndex(0, y, sizeX, numMeshVertices);
   int start = getIndex(x, y, sizeX, numMeshVertices);
@@ -151,7 +153,7 @@ void transformMesh(int x, int y, int sizeX, int numMeshVertices,
 
   for (int i = start; i < end; i += 3)
   {
-    transformPosition(srcBuffer, dstBuffer, i, angle, rot, trans, offset);
+    transformPosition(srcBuffer, dstBuffer, i, angle, rot, trans, scale, offset);
   }
 }
 
@@ -226,14 +228,22 @@ void PseudoInstancing::generateInstances()
 	  int sizeZ = mesh->sizeZ;
 	  int vertexNum = mesh->vertexNum;
 
+	  static std::random_device rd; // you only need to initialize it once
+      static std::mt19937 mte(rd()); // this is a relative big object to create
+
+      std::uniform_real_distribution<float> height(0.8f, 1.2f);
+      std::uniform_real_distribution<float> rot(0.0f, 2 * 3.1415);
+
 	  for (int x = 0; x < sizeX; x++)
 		for (int z = 0; z < sizeZ; z++)
 		{
+          glm::vec3 scale = glm::vec3(glm::vec3(1.0, height(mte), 1.0));
+
 		  transformMesh(x, z, sizeX, vertexNum, mesh->tempVexrtexBuffer,
-						_vertexBufferGpuMemory, 0.0,
-			  glm::vec3(0.0, 0.0, 0.0),
+						_vertexBufferGpuMemory, rot(mte),
+			  glm::vec3(0.0, 1.0, 0.0),
 			  glm::vec3(static_cast<float>(x - sizeX / 2) * 50.0, 0.0,
-				  static_cast<float>(z - sizeZ / 2) * 50.0));
+				  static_cast<float>(z - sizeZ / 2) * 50.0), scale);
 		}
 
 	  BufferManager::updateResources(
