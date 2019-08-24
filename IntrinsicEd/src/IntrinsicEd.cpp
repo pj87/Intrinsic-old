@@ -684,11 +684,26 @@ void IntrinsicEd::onCreateCube()
 
 void IntrinsicEd::onCreateSphere()
 {
+  static std::random_device rd;  // you only need to initialize it once
+  static std::mt19937 mte(rd()); // this is a relative big object to create
+
+  std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+
   for (int i = 0; i < 500; i++)
   {
     Entity::EntityRef entityRef = spawnDefaultEntity(_N(PJTerrain));
     Dod::Ref compRef = addComponentToEntity(entityRef, _N(Mesh));
-    Components::MeshManager::_descMeshName(compRef) = _N(Tree_Tall_05_14);
+    
+	float r = dist(mte);
+
+	if (r <= 0.25)
+      Components::MeshManager::_descMeshName(compRef) = _N(Tree_Tall_01_8);
+    else if (r <= 0.5)
+      Components::MeshManager::_descMeshName(compRef) = _N(Tree_Tall_02_10);
+    else if (r <= 0.75)
+      Components::MeshManager::_descMeshName(compRef) = _N(Tree_Tall_04_12);
+    else
+      Components::MeshManager::_descMeshName(compRef) = _N(Tree_Tall_05_14);
 
 	Components::NodeRef nodeRef =
         Components::NodeManager::getComponentForEntity(entityRef);
