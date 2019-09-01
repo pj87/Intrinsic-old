@@ -159,6 +159,7 @@ void transformMesh(int x, int y, int sizeX, int numMeshVertices,
 
 void PseudoInstancing::populateMeshes()
 {
+  /*
   if (voxels.size() == 0)
     return;
 
@@ -215,6 +216,7 @@ void PseudoInstancing::populateMeshes()
     j += 4;
     i++;
   }
+  */
 }
 
 void PseudoInstancing::generateInstances()
