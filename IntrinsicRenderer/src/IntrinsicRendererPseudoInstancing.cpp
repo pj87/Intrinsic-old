@@ -214,6 +214,10 @@ void PseudoInstancing::populateMeshes()
 
     j += 4;
     i++;
+
+	//sprintf(buffer, "PJTerrain%d", i - 500);
+	//Name newName = Name(buffer);
+    //Entity::EntityManager::rename(entityRef, newName);
   }
 }
 
