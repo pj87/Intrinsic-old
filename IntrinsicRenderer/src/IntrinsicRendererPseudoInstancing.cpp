@@ -159,6 +159,7 @@ void transformMesh(int x, int y, int sizeX, int numMeshVertices,
 
 void PseudoInstancing::populateMeshes()
 {
+  /*
   if (voxels.size() == 0)
     return;
 
@@ -219,6 +220,7 @@ void PseudoInstancing::populateMeshes()
 	//Name newName = Name(buffer);
     //Entity::EntityManager::rename(entityRef, newName);
   }
+  */
 }
 
 void PseudoInstancing::generateInstances()
