@@ -181,7 +181,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
     /*
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
 		64, 64, 64,
-		_N(pbr_test_075),
+		_N(pbr_test_0),
         "perlin_noise_3d.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
@@ -201,15 +201,15 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-    /*
+    
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
-        _N(house), 
-		"cathedral.comp", 
+        _N(pbr_test_075), 
+		"cave1.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-
+    /*
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(house_2), 

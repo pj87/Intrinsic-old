@@ -24,6 +24,11 @@ layout(binding = 4) buffer _VoxelBuffer
 	float _Result[];
 };
 
+layout(binding = 5) buffer _VoxelNormalBuffer
+{
+    vec4 _NormalResult[];
+};
+
 vec3 fmod(vec3 x, float y)
 {
 	return (x - y * trunc(x/y));
@@ -139,5 +144,7 @@ void main()
 	//float n = ridgedmf(uv, 4, 1.0);
 	
 	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = n;
+	
+	_NormalResult[id.x + id.y * _Width + id.z * _Width * _Height] = vec4(0.0);
 
 }

@@ -22,6 +22,11 @@ layout(binding = 4) buffer _VoxelBuffer
 	float _Result[];
 };
 
+layout(binding = 5) buffer _VoxelNormalBuffer
+{
+    vec4 _NormalResult[];
+};
+
 const mat3 m = mat3( 0.00,  0.80,  0.60,
                     -0.80,  0.36, -0.48,
                     -0.60, -0.48,  0.64 );
@@ -99,4 +104,5 @@ void main()
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(10.0), vec3(10.0, 5.0, 5.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdSphere(uv - vec3(10.0), 10.0);
 
+	_NormalResult[id.x + id.y * _Width + id.z * _Width * _Height] = vec4(0.0);
 }
