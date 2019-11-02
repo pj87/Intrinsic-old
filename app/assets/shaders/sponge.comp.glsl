@@ -27,6 +27,13 @@ layout(binding = 5) buffer _VoxelNormalBuffer
     vec4 _NormalResult[];
 };
 
+float sdBox( vec3 p, vec3 b )
+{
+  vec3 d = abs(p) - b;
+  return length(max(d,0.0))
+         + min(max(d.x,max(d.y,d.z)),0.0); // remove this line for an only partially signed sdf 
+}
+
 // Regular Menger Sponge formula. Very simple, but if you're not sure, look it
 // up on Wikipedia, and look up a Void Cube image.
 float sponge(vec3 q){
