@@ -1,0 +1,10 @@
+{
+    "name": "temple.comp",
+    "properties": {
+        "name": "temple.comp",
+        "gpuProgramName": "temple.comp.glsl",
+        "entryPoint": "main",
+        "preprocessorDefines": "",
+        "gpuProgramType": 3
+    }
+}
