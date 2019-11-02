@@ -1,0 +1,10 @@
+{
+    "name": "sponge.comp",
+    "properties": {
+        "name": "sponge.comp",
+        "gpuProgramName": "sponge.comp.glsl",
+        "entryPoint": "main",
+        "preprocessorDefines": "",
+        "gpuProgramType": 3
+    }
+}
