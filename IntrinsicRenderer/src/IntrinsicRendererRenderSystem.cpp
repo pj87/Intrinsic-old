@@ -201,7 +201,16 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-    
+
+		RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(pbr_test_1), 
+		"temple_ground.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+
+
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(pbr_test_075), 

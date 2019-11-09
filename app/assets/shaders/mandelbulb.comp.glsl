@@ -266,7 +266,7 @@ float map3( in vec3 p)
     float m = dot(w,w);
 	float dz = 1.0;
     
-	for( int i=0; i<3; i++ )
+	for( int i=0; i<1; i++ )
     {
         dz = 8.0*pow(sqrt(m),7.0)*dz + 1.0;
 		//dz = 8.0*pow(m,3.5)*dz + 1.0;

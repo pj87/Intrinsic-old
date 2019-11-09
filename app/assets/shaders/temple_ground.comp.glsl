@@ -109,43 +109,26 @@ float fOpUnionStairs(float a, float b, float r, float n) {
 
 //------------------------------------------------------------------ MAP
 float cathedral( in vec3 pos ) {
-    //arch
+	/*
+    vec3 q = pos;
+	float d = 0.0f;
+    d = max(-fBox(q-vec3(0.,10.5,0.),vec3(500.,30.,500.)),d);
+    return d;
+	*/
+	
+	//arch
     vec3 q = pos;
     pModMirror2(q.xz,vec2(22.));
     q.y -= 40.;
 	//q.y -= 10.;
     q.zx -= 21.;
-    pR(q.yz,PI/2.);
-    pR45(q.xy);
-    float d = fTorus(q,6.3,44.);
 	
-    q = pos;
-    pModMirror2(q.xz,vec2(500.));
-    d = max(-fBox(q-vec3(0.,10.5,0.),vec3(500.,30.,500.)),d);
-
-    //column
-    q = pos;
-    q.zx -= 22.;
-    //q.zx += texture(iChannel0,pos.xy/50.).x*.5;
-    vec2 idx = pModMirror2(q.xz,vec2(22.));
-    q.xz -= 9.5;
-    d = fOpUnionStairs(d, fCylinder(q,6.,40.),4.,10.);
+	float d = 0.0f;
 
     //ground
     //d = fOpUnionStairs(d, pos.y+40.1+texture(iChannel0,pos.xz/50.).x*.5, 5., 5.);
 	d = fOpUnionStairs(d, pos.y+40.1, 5., 5.);
-    
-    //pyramid on top of arch
-    q = pos;
-    q.y -= 80.;
-    q.zx += 11.;
-    pModMirror2(q.xz,vec2(44.));
-    pR45(q.xz);
-    float d2 = pyramid( q, 32. );
-    pR(q.xy,PI);
-    d2 = min(d2,pyramid( q, 12. ));
-    d = fOpUnionRound(d, d2,1.);
-	
+    	
     return d;
 }
 //------------------------------------------------------------------------
