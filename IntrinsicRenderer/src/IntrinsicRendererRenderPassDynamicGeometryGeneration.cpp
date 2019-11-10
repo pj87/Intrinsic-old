@@ -825,9 +825,9 @@ void DynamicGeometryGeneration::init()
 			Dod::Resources::ResourceFlags::kResourceVolatile);
 
         ImageManager::_descDimensions(_normalsImageRef) =
-            glm::uvec3(mesh->sizes[0], 
-					   mesh->sizes[1], 
-					   mesh->sizes[2]);
+            glm::uvec3(sqrt(mesh->sizes[0]), 
+					   sqrt(mesh->sizes[1]), 
+					   sqrt(mesh->sizes[2]));
 
         ImageManager::_descImageFormat(_normalsImageRef) =
             Format::kR16G16B16A16Float;
