@@ -42,6 +42,8 @@ OUTPUT
 
 vec4 tex3d(vec3 pos, vec3 normal)
 {
+	pos /= 8.0;
+
 	// loook up brick texture, blended across xyz axis based on normal.
 	vec4 texX = texture(albedoTex, pos.yz);
 	vec4 texY = texture(albedoTex, pos.xz);
