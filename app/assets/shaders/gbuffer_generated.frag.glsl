@@ -42,12 +42,31 @@ OUTPUT
 
 vec4 tex3d(vec3 pos, vec3 normal)
 {
-	pos /= 8.0;
+	pos /= 4.0;
 
 	// loook up brick texture, blended across xyz axis based on normal.
 	vec4 texX = texture(albedoTex, pos.yz);
 	vec4 texY = texture(albedoTex, pos.xz);
 	vec4 texZ = texture(albedoTex, pos.xy);
+	//vec4 tex = mix(texX, texZ, abs(normal.z));
+	//tex = mix(tex, texY, abs(normal.y));//.zxyw;
+	
+	vec3 avgNormal = abs(normal);
+	avgNormal / (avgNormal.x + avgNormal.y + avgNormal.z);
+	
+	vec4 albedo = texX * avgNormal.x + texY * avgNormal.y + texZ * avgNormal.z;
+	
+	return albedo;
+}
+
+vec4 tex3d_1(vec3 pos, vec3 normal)
+{
+	pos /= 4.0;
+
+	// loook up brick texture, blended across xyz axis based on normal.
+	vec4 texX = texture(emissiveTex, pos.yz);
+	vec4 texY = texture(emissiveTex, pos.xz);
+	vec4 texZ = texture(emissiveTex, pos.xy);
 	//vec4 tex = mix(texX, texZ, abs(normal.z));
 	//tex = mix(tex, texY, abs(normal.y));//.zxyw;
 	
@@ -69,7 +88,10 @@ void main()
 	//gbuffer.albedo = vec4(inColor, 1.0) + 0.000001 * texture(albedoTex, uv0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = 0.000001 * vec4(inColor, 1.0) + texture(albedoTex, uv0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = vec4(inColor, 1.0) + texture(albedoTex, uv0) * uboPerInstance.colorTint;
-	gbuffer.albedo = vec4(inColor, 1.0) + tex3d(inPosition, inNormal) * uboPerInstance.colorTint;
+	gbuffer.albedo = vec4(inColor, 1.0) + mix(tex3d(inPosition, inNormal), tex3d_1(inPosition, inNormal), 1.0) * uboPerInstance.colorTint;
+	
+	//gbuffer.albedo = vec4(inColor, 1.0) + tex3d_1(inPosition, inNormal) * uboPerInstance.colorTint;
+	
 	/*
 	gbuffer.normal = normalize(TBN * textureNormal(normalTex, uv0));
     const vec2 pbr = texture(pbrTex, uv0).rg;
