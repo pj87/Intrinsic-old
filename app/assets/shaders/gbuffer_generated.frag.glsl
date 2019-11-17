@@ -92,6 +92,8 @@ void main()
 	
 	//gbuffer.albedo = vec4(inColor, 1.0) + tex3d_1(inPosition, inNormal) * uboPerInstance.colorTint;
 	
+	// Uncomment the gbuffer properties below to have a good julia. 
+	
 	/*
 	gbuffer.normal = normalize(TBN * textureNormal(normalTex, uv0));
     const vec2 pbr = texture(pbrTex, uv0).rg;
