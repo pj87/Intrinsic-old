@@ -689,7 +689,7 @@ void IntrinsicEd::onCreateSphere()
 
   std::uniform_real_distribution<float> dist(0.0f, 1.0f);
 
-  for (int i = 0; i < 500; i++)
+  for (int i = 0; i < 270; i++)
   {
     Entity::EntityRef entityRef = spawnDefaultEntity(_N(PJTerrain));
     Dod::Ref compRef = addComponentToEntity(entityRef, _N(Mesh));

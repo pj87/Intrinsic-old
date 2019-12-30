@@ -824,6 +824,8 @@ void DynamicGeometryGeneration::init()
             _normalsImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
 
+		// sqrt for the fractals
+
         ImageManager::_descDimensions(_normalsImageRef) =
             glm::uvec3(sqrt(mesh->sizes[0]), 
 					   sqrt(mesh->sizes[1]), 

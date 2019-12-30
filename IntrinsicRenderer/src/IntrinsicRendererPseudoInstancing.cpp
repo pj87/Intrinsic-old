@@ -171,7 +171,7 @@ void PseudoInstancing::populateMeshes()
 
   int j = 0;
   int i = 0;
-  for (i = 0; i < 500;)
+  for (i = 0; i < 270;)
   {
     sprintf(buffer, "PJTerrain%d", i);
     Name name = std::move(buffer);
