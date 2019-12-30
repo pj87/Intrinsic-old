@@ -178,11 +178,19 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 
     RenderPass::Clustering::init();
     RenderPass::VolumetricLighting::init();
-    /*
+
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
 		64, 64, 64,
-		_N(pbr_test_075),
-        "perlin_noise_3d.comp", 
+		_N(house),
+        "temple_ruins.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+		64, 64, 64,
+		_N(house_2),
+        "temple_ruins.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
@@ -196,12 +204,12 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
-        _N(pbr_test_0), 
+        _N(pbr_test_0125), 
 		"mandelbulb.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-    
+    /*
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(house), 

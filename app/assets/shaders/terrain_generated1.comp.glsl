@@ -68,7 +68,8 @@ float terrainMed( vec2 p )
 float map( in vec3 pos, float time )
 {
     float m = 0.0;
-	float h = pos.y - terrainMed(pos.xz);
+	//float h = pos.y - terrainMed(pos.xz);
+	float h = pos.y + terrainMed(pos.xz) + 10.0;
 	
 	/*
     float sph = 100.0;

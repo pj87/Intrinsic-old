@@ -953,6 +953,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 											 VK_ACCESS_SHADER_WRITE_BIT, 
 											 VK_ACCESS_SHADER_READ_BIT);
     
+	/*
 	PseudoInstancing::voxels.clear();
     PseudoInstancing::normals.clear();
 
@@ -960,6 +961,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
 	PseudoInstancing::populateMeshes();
 	PseudoInstancing::generateInstances();
+	*/
 
 	mesh->isCalled = true;
     mesh->counter++;
