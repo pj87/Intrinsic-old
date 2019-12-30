@@ -824,12 +824,21 @@ void DynamicGeometryGeneration::init()
             _normalsImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
 
-		// sqrt for the fractals
+		// hack (for the demo): sqrt in normals texture are only for the
+        // fractals
+        const Name& name = *(mesh->meshName);
 
-        ImageManager::_descDimensions(_normalsImageRef) =
-            glm::uvec3(sqrt(mesh->sizes[0]), 
-					   sqrt(mesh->sizes[1]), 
-					   sqrt(mesh->sizes[2]));
+        if (name != _N(pbr_test_0125) && name != _N(pbr_test_025))
+        {
+          ImageManager::_descDimensions(_normalsImageRef) = glm::uvec3(
+              sqrt(mesh->sizes[0]), sqrt(mesh->sizes[1]), sqrt(mesh->sizes[2]));
+        }
+        else
+        {
+          ImageManager::_descDimensions(_normalsImageRef) =
+              glm::uvec3(mesh->sizes[0], mesh->sizes[1], mesh->sizes[2]);
+        }
+        // end of hack (for the demo)
 
         ImageManager::_descImageFormat(_normalsImageRef) =
             Format::kR16G16B16A16Float;
