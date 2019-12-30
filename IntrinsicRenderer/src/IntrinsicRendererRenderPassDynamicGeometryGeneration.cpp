@@ -963,19 +963,28 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     BufferManager::insertBufferMemoryBarrier(mesh->_colorBufferRef, 
 											 VK_ACCESS_SHADER_WRITE_BIT, 
 											 VK_ACCESS_SHADER_READ_BIT);
-    
-	/*
-	PseudoInstancing::voxels.clear();
-    PseudoInstancing::normals.clear();
-
-	aquireVoxelsAndNormals(*mesh);
-
-	PseudoInstancing::populateMeshes();
-	PseudoInstancing::generateInstances();
-	*/
 
 	mesh->isCalled = true;
     mesh->counter++;
+
+	const Name& name = *(mesh->meshName);
+
+    // hack (for the demo): generate the normals and voxels only for the terrain
+	
+	if (name != _N(terrain))
+		continue;
+
+	// end of hack (for the demo)
+
+	// Uncommet the following lines only when generating a new terrain with new trees
+
+    //PseudoInstancing::voxels.clear();
+	//PseudoInstancing::normals.clear();
+
+    //aquireVoxelsAndNormals(*mesh);
+
+    //PseudoInstancing::populateMeshes();
+    PseudoInstancing::generateInstances();
   }
 }
 
