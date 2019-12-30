@@ -828,7 +828,7 @@ void DynamicGeometryGeneration::init()
         // fractals
         const Name& name = *(mesh->meshName);
 
-        if (name != _N(pbr_test_0125) && name != _N(pbr_test_025))
+        if (name != _N(pbr_test_0125) && name != _N(pbr_test_025) && name != _N(house))
         {
           ImageManager::_descDimensions(_normalsImageRef) = glm::uvec3(
               sqrt(mesh->sizes[0]), sqrt(mesh->sizes[1]), sqrt(mesh->sizes[2]));
