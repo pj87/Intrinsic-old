@@ -91,7 +91,7 @@ void main()
 
   GBuffer gbuffer;
   {
-    gbuffer.albedo = vec4(inColor, 1.0) + vec4(tex3D(normalize(inPosition), inNormal, emissiveTex), 1.0) * uboPerInstance.colorTint;
+    gbuffer.albedo = vec4(inColor, 1.0) + vec4(tex3D(normalize(sin(inPosition)), inNormal, albedoTex), 1.0) * uboPerInstance.colorTint;
     //gbuffer.albedo = vec4(inColor, 1.0) + tex3d(inPosition, inNormal) * uboPerInstance.colorTint;
 	//gbuffer.albedo = vec4(inColor, 1.0) + mix(texture(albedoTex, uv0), texture(emissiveTex, uv0), 1.0) * uboPerInstance.colorTint;
 	/*
