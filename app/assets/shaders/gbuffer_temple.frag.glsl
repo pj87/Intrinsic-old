@@ -87,7 +87,8 @@ vec4 tex3d_1(vec3 pos, vec3 normal)
 void main()
 {
   const mat3 TBN = mat3(inTangent, inBinormal, inNormal);
-  const vec2 uv0 = UV0_TRANSFORM_ANIMATED(inUV0);
+  //const vec2 uv0 = UV0_TRANSFORM_ANIMATED(inUV0);
+  const vec2 uv0 = inUV0;
 
   GBuffer gbuffer;
   {
