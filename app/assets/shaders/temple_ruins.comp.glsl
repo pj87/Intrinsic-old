@@ -112,7 +112,7 @@ float temp(vec3 p)
 {
   //return sdCylinder(p, vec2(5.0, 20.0));
   
-  return sdrBox(p, vec3(1000.0, 100.0, 1000.0), 0.1);
+  return sdrBox(p, vec3(1.0, 1.0, 1.0), 0.1);
 }
 
 float mapScaled(vec3 p, vec4 c)
@@ -123,7 +123,9 @@ float mapScaled(vec3 p, vec4 c)
 	//return sponge2(p / 0.0025) * 0.0025;
 	
 	//return ruins(p/0.000025f) * 0.000025f;
-	return ruins(p/1.0f) * 1.0f;
+	//return ruins(p/1.0f) * 1.0f;
+	
+	return temp(p/1.0f) * 1.0f;
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
