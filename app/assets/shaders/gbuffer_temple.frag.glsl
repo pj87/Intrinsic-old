@@ -101,7 +101,7 @@ void main()
 	
     //gbuffer.albedo = vec4(normalize(inPosition), 1.0) + vec4(tex3D(normalize(inPosition), inNormal, albedoTex), 1.0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = /*vec4(normalize(pos), 1.0) + */vec4(tex3D(normalize(pos * vec3(100.0, 100.0, 100.0)), inNormal, albedoTex), 1.0) * uboPerInstance.colorTint;
-	gbuffer.albedo = vec4(tex3D(pos * vec3(100.0, 100.0, 100.0), inNormal, albedoTex), 1.0) * uboPerInstance.colorTint;
+	gbuffer.albedo = vec4(tex3D(pos * vec3(1.0, 1.0, 1.0), inNormal, albedoTex), 1.0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = vec4(normalize(pos), 1.0);
 	//gbuffer.albedo = vec4(pos, 1.0);
 	
