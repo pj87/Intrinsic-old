@@ -76,16 +76,16 @@ float ruins(vec3 p) {
 
     //bottom platform
     q.y+=3.55;
-    c=min(c, sdrBox(q, vec3(3.65,0.2,3.65), 0.05) -o);
+    //c=min(c, sdrBox(q, vec3(3.65,0.2,3.65), 0.05) -o);
     q.x-=2.0;
-    c=min(c, sdrBox(q, vec3(7.65,0.2,1.65), 0.05) -o);
+    //c=min(c, sdrBox(q, vec3(7.65,0.2,1.65), 0.05) -o);
     
     //ground platform
     q.x+=2.0;
     q.y+=0.8;
-    c=min(c, sdrBox(q, vec3(4.65,0.6,4.65), 0.05) -o);
+    //c=min(c, sdrBox(q, vec3(4.65,0.6,4.65), 0.05) -o);
     q.x-=2.0;
-    c=min(c, sdrBox(q, vec3(8.65,0.6,2.65), 0.05) -o);
+    //c=min(c, sdrBox(q, vec3(8.65,0.6,2.65), 0.05) -o);
     
     //top part
     q.y-=8.0;
@@ -106,6 +106,13 @@ c=max(c, -sdrBox(q, vec3(2.25,4.5,2.25), 0.05) -o);
     d=min(min(c,d),t);
 	
     return d;
+}
+
+float temp(vec3 p) 
+{
+  //return sdCylinder(p, vec2(5.0, 20.0));
+  
+  return sdrBox(p, vec3(1000.0, 100.0, 1000.0), 0.1);
 }
 
 float mapScaled(vec3 p, vec4 c)

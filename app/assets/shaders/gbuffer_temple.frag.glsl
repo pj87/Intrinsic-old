@@ -91,10 +91,11 @@ void main()
 
   GBuffer gbuffer;
   {
-    vec3 pos = inPosition;// * 100.0;
+    vec3 pos = inColor;// * 100.0;
 	
 	//pos.x = 0.0;
-    //pos.y = 0.0;
+    //pos.y = mix(0.0, 1.0, pos.y);
+	//pos.y = 0.0;
 	//pos.z = 0.0;
 	
     //gbuffer.albedo = vec4(normalize(inPosition), 1.0) + vec4(tex3D(normalize(inPosition), inNormal, albedoTex), 1.0) * uboPerInstance.colorTint;
