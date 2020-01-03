@@ -296,7 +296,7 @@ void main()
 			//storeColor(idx * 15 + (3 * i + 0), vec4((v0.position.x + _Width / 2.0) / _Width, (v0.position.y + _Height / 2.0) / _Height, (v0.position.z + _Depth / 2.0) / _Depth, 1.0));
 			//storeColor(idx * 15 + (3 * i + 0), vec4((v0.position.x + _Width / 2.0) / _Width, v0.position.y * 100.0, (v0.position.z + _Depth / 2.0) / _Depth, 1.0));
 			//storeColor(idx * 15 + (3 * i + 0), vec4((v0.position.x + _Width / 2.0) / _Width, v0.position.y * 0.01, (v0.position.z + _Depth / 2.0) / _Depth, 1.0));
-			storeColor(idx * 15 + (3 * i + 0), vec4((v0.position.x + _Width / 2.0) * 0.005, (v0.position.y + _Height / 2.0) * 0.005, (v0.position.z + _Depth / 2.0) * 0.005, 1.0));
+			storeColor(idx * 15 + (3 * i + 0), vec4((v0.position.x + _Width / 2.0) * 0.5, (v0.position.y + _Height / 2.0) * 0.5, (v0.position.z + _Depth / 2.0) * 0.5, 1.0));
 			storeUV(idx * 15 + (3 * i + 0), uv);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 1)]];
@@ -310,7 +310,7 @@ void main()
 			storeNormal(idx * 15 + (3 * i + 1), v1.normal);
 			//storeColor(idx * 15 + (3 * i + 1), vec4((v1.position.x + _Width / 2.0) / _Width, (v1.position.y + _Height / 2.0) / _Height, (v1.position.z + _Depth / 2.0) / _Depth, 1.0));
 			//storeColor(idx * 15 + (3 * i + 1), vec4((v1.position.x + _Width / 2.0) / _Width, v1.position.y * 0.01, (v1.position.z + _Depth / 2.0) / _Depth, 1.0));
-			storeColor(idx * 15 + (3 * i + 1), vec4((v1.position.x + _Width / 2.0) * 0.005, (v1.position.y + _Height / 2.0) * 0.005, (v1.position.z + _Depth / 2.0) * 0.005, 1.0));
+			storeColor(idx * 15 + (3 * i + 1), vec4((v1.position.x + _Width / 2.0) * 0.5, (v1.position.y + _Height / 2.0) * 0.5, (v1.position.z + _Depth / 2.0) * 0.5, 1.0));
 			storeUV(idx * 15 + (3 * i + 1), uv);
 			
 			position = edgeVertex[_TriangleConnectionTable[flagIndex * 16 + (3 * i + 2)]];
@@ -324,7 +324,7 @@ void main()
 			storeNormal(idx * 15 + (3 * i + 2), v2.normal);
 			//storeColor(idx * 15 + (3 * i + 2), vec4((v2.position.x + _Width / 2.0) / _Width, (v2.position.y + _Height / 2.0) / _Height, (v2.position.z + _Depth / 2.0) / _Depth, 1.0));
 			//storeColor(idx * 15 + (3 * i + 2), vec4((v2.position.x + _Width / 2.0) / _Width, v2.position.y * 0.01, (v2.position.z + _Depth / 2.0) / _Depth, 1.0));
-			storeColor(idx * 15 + (3 * i + 2), vec4((v2.position.x + _Width / 2.0) * 0.005, (v2.position.y + _Height / 2.0) * 0.005, (v2.position.z + _Depth / 2.0) * 0.005, 1.0));
+			storeColor(idx * 15 + (3 * i + 2), vec4((v2.position.x + _Width / 2.0) * 0.5, (v2.position.y + _Height / 2.0) * 0.5, (v2.position.z + _Depth / 2.0) * 0.5, 1.0));
 			storeUV(idx * 15 + (3 * i + 2), uv);
 			
 			vec3 tangent0 = normalize(v0.position.xyz - v2.position.xyz);
