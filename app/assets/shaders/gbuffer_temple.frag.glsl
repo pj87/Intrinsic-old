@@ -41,6 +41,12 @@ layout(location = 7) in vec3 inNormalTPM;
 // Output
 OUTPUT
 
+vec3 tex3D(vec3 pos, vec3 nor, sampler2D s) {
+    return texture( s, pos.yz).xyz*abs(nor.x)+
+           texture( s, pos.xz).xyz*abs(nor.y)+
+           texture( s, pos.xy).xyz*abs(nor.z);
+}
+
 vec4 tex3d(vec3 pos, vec3 normal)
 {
 	pos /= 4.0;
@@ -86,7 +92,8 @@ void main()
 
   GBuffer gbuffer;
   {
-    gbuffer.albedo = vec4(inColor, 1.0) + mix(tex3d(inPosition, inNormalTPM), tex3d_1(inPosition, inNormalTPM), 1.0) * uboPerInstance.colorTint;
+    gbuffer.albedo = vec4(inColor, 1.0) + vec4(tex3D(inPosition, inNormalTPM, albedoTex), 1.0) * uboPerInstance.colorTint;
+    //gbuffer.albedo = vec4(inColor, 1.0) + mix(tex3d(inPosition, inNormalTPM), tex3d_1(inPosition, inNormalTPM), 1.0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = vec4(inColor, 1.0) + mix(texture(albedoTex, uv0), texture(emissiveTex, uv0), 1.0) * uboPerInstance.colorTint;
 	/*
     gbuffer.normal = normalize(TBN * textureNormal(normalTex, uv0));
