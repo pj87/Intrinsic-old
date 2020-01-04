@@ -8,7 +8,7 @@
             "Shadow",
             "PerPixelPicking"
         ],
-        "albedoTextureName": "checker_numbers",
+        "albedoTextureName": "terrain_rock",
         "emissiveTextureName": "terrain_rock",
         "uvOffsetScale": [
             0.0,
