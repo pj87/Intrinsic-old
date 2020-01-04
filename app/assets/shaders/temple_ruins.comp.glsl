@@ -76,16 +76,16 @@ float ruins(vec3 p) {
 
     //bottom platform
     q.y+=3.55;
-    c=min(c, sdrBox(q, vec3(3.65,0.2,3.65), 0.05) -o);
+    //c=min(c, sdrBox(q, vec3(3.65,0.2,3.65), 0.05) -o);
     q.x-=2.0;
-    c=min(c, sdrBox(q, vec3(7.65,0.2,1.65), 0.05) -o);
+    //c=min(c, sdrBox(q, vec3(7.65,0.2,1.65), 0.05) -o);
     
     //ground platform
     q.x+=2.0;
     q.y+=0.8;
-    c=min(c, sdrBox(q, vec3(4.65,0.6,4.65), 0.05) -o);
+    //c=min(c, sdrBox(q, vec3(4.65,0.6,4.65), 0.05) -o);
     q.x-=2.0;
-    c=min(c, sdrBox(q, vec3(8.65,0.6,2.65), 0.05) -o);
+    //c=min(c, sdrBox(q, vec3(8.65,0.6,2.65), 0.05) -o);
     
     //top part
     q.y-=8.0;
@@ -138,7 +138,7 @@ void main()
 
 	vec4 c = 0.45*cos( vec4(0.5,3.9,1.4,1.1) + _Frequency*vec4(1.2,1.7,1.3,2.5) ) - vec4(0.3,0.0,0.0,0.0);
 	//vec4 c = vec4(0.4);
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(20.0f), c);
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(26.0f, 21.0f, 19.9f), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0f * sin(_Frequency)), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(_Frequency), vec2(5.0, 2.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(1.5), vec3(1.5, 1.5, 1.5));
