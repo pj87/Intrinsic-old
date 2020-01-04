@@ -36,6 +36,7 @@ layout(location = 2) in vec3 inBinormal;
 layout(location = 3) in vec3 inColor;
 layout(location = 4) in vec2 inUV0;
 layout(location = 5) in vec3 inPosition;
+layout(location = 7) in vec3 inNormalTPM;
 
 // Output
 OUTPUT
@@ -85,7 +86,7 @@ void main()
 
   GBuffer gbuffer;
   {
-    gbuffer.albedo = vec4(inColor, 1.0) + mix(tex3d(inPosition, inNormal), tex3d_1(inPosition, inNormal), 1.0) * uboPerInstance.colorTint;
+    gbuffer.albedo = vec4(inColor, 1.0) + mix(tex3d(inPosition, inNormalTPM), tex3d_1(inPosition, inNormalTPM), 1.0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = vec4(inColor, 1.0) + mix(texture(albedoTex, uv0), texture(emissiveTex, uv0), 1.0) * uboPerInstance.colorTint;
 	/*
     gbuffer.normal = normalize(TBN * textureNormal(normalTex, uv0));
