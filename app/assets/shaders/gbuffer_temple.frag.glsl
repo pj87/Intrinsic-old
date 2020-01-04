@@ -101,17 +101,16 @@ void main()
     gbuffer.albedo = vec4(inColor, 1.0) + vec4(tex3D(inPosition, inNormalTPM, albedoTex), 1.0) * uboPerInstance.colorTint;
     //gbuffer.albedo = vec4(inColor, 1.0) + mix(tex3d(inPosition, inNormalTPM), tex3d_1(inPosition, inNormalTPM), 1.0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = vec4(inColor, 1.0) + mix(texture(albedoTex, uv0), texture(emissiveTex, uv0), 1.0) * uboPerInstance.colorTint;
-	/*
-    gbuffer.normal = normalize(TBN * textureNormal(normalTex, uv0));
-    const vec2 pbr = texture(pbrTex, uv0).rg;
+	
+    gbuffer.normal = normalize(TBN * tex3DNormal(inPosition, inNormalTPM, normalTex));
+	const vec2 pbr = tex3D(inPosition, inNormalTPM, pbrTex).rg;
     gbuffer.metalMask = pbr.r + uboPerMaterial.pbrBias.r;
     gbuffer.specular = 0.5 + uboPerMaterial.pbrBias.g;
     gbuffer.roughness = adjustRoughness(pbr.g + uboPerMaterial.pbrBias.b,
                                         uboPerMaterial.data1.x);
     gbuffer.materialBufferIdx = uboPerMaterial.data0.x;
-    gbuffer.emissive = texture(emissiveTex, uv0).r;
+	gbuffer.emissive = tex3D(inPosition, inNormalTPM, emissiveTex).r;
     gbuffer.occlusion = 1.0;
-	*/
   }
   writeGBuffer(gbuffer, outAlbedo, outNormal, outParameter0);
 }

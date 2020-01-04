@@ -22,8 +22,8 @@
         ],
         "translucencyThickness": 0.0,
         "emissiveIntensity": 3.0,
-        "normalTextureName": "house_01_NRM",
-        "pbrTextureName": "house_01_PBR",
+        "normalTextureName": "concrete_NRM",
+        "pbrTextureName": "concrete_PBR",
         "metalMaskBias": 0.0,
         "roughnessBias": 0.0,
         "specularBias": 0.0
