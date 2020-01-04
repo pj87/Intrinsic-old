@@ -37,6 +37,7 @@ layout(location = 3) in vec3 inColor;
 layout(location = 4) in vec2 inUV0;
 layout(location = 5) in vec3 inPosition;
 
+layout(location = 7) in vec3 inNormalPJ;
 // Output
 OUTPUT
 
@@ -102,9 +103,9 @@ void main()
     //gbuffer.albedo = vec4(normalize(inPosition), 1.0) + vec4(tex3D(normalize(inPosition), inNormal, albedoTex), 1.0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = /*vec4(normalize(pos), 1.0) + */vec4(tex3D(normalize(pos * vec3(100.0, 100.0, 100.0)), inNormal, albedoTex), 1.0) * uboPerInstance.colorTint;
 	
-	gbuffer.albedo = vec4(tex3D(pos * vec3(1.0, 1.0, 1.0), inNormal, albedoTex), 1.0) * uboPerInstance.colorTint;
+	gbuffer.albedo = vec4(tex3D(pos * vec3(1.0, 1.0, 1.0), inNormalPJ, albedoTex), 1.0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = vec4(normalize(pos), 1.0);
-	//gbuffer.albedo = vec4(pos, 1.0);
+	//gbuffer.albedo = vec4(inNormalPJ, 1.0);
     //gbuffer.albedo = vec4(inColor, 1.0) + tex3d(inPosition, inNormal) * uboPerInstance.colorTint;
 	//gbuffer.albedo = vec4(inColor, 1.0) + mix(texture(albedoTex, uv0), texture(emissiveTex, uv0), 1.0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = texture(albedoTex, uv0) * uboPerInstance.colorTint;
