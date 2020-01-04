@@ -47,6 +47,12 @@ vec3 tex3D(vec3 pos, vec3 nor, sampler2D s) {
            texture( s, pos.xy).xyz*abs(nor.z);
 }
 
+vec3 tex3DNormal(vec3 pos, vec3 nor, sampler2D s) {
+    return textureNormal( s, pos.yz).xyz*abs(nor.x)+
+           textureNormal( s, pos.xz).xyz*abs(nor.y)+
+           textureNormal( s, pos.xy).xyz*abs(nor.z);
+}
+
 vec4 tex3d(vec3 pos, vec3 normal)
 {
 	pos /= 4.0;
