@@ -116,7 +116,7 @@ float mapScaled(vec3 p, vec4 c)
 	//return sponge2(p / 0.0025) * 0.0025;
 	
 	//return ruins(p/0.000025f) * 0.000025f;
-	return ruins(p/0.0005f) * 0.0005f;
+	return ruins(p/5.0f) * 5.0f;
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
@@ -125,7 +125,7 @@ void main()
     uvec3 id = gl_GlobalInvocationID;
 	vec3 uv = vec3(id);
 
-	uv *= 0.0001;
+	//uv *= 0.1;
 
 	//uncomment this for fractal noise
 	//float n = fBm(uv, 4);
@@ -138,7 +138,7 @@ void main()
 
 	vec4 c = 0.45*cos( vec4(0.5,3.9,1.4,1.1) + _Frequency*vec4(1.2,1.7,1.3,2.5) ) - vec4(0.3,0.0,0.0,0.0);
 	//vec4 c = vec4(0.4);
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(0.002f), c);
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(20.0f), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0f * sin(_Frequency)), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(_Frequency), vec2(5.0, 2.0));
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdBox(uv - vec3(1.5), vec3(1.5, 1.5, 1.5));
