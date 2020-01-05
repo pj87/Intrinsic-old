@@ -816,8 +816,10 @@ void DynamicGeometryGeneration::init()
       mesh->_permTable2dImageRef =
           ImageManager::getResourceByName(_N(perm_table2d));
 
-	  ImageRef _normalsImageRef;
+	  ImageRef _normalsImageRef =
+          ImageManager::getResourceByName(_N(checkerboard));
 
+	  /*
 	  if (*mesh->shaders[1] != _N(normal_generation.comp))
 	  {
          _normalsImageRef = 
@@ -828,9 +830,9 @@ void DynamicGeometryGeneration::init()
          _normalsImageRef = 
 			 ImageManager::createImage(_N(normalsTex));
 	  }
-
+	  */
       {
-        ImageManager::resetToDefault(_normalsImageRef);
+        //ImageManager::resetToDefault(_normalsImageRef);
         ImageManager::addResourceFlags(
             _normalsImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
@@ -841,13 +843,13 @@ void DynamicGeometryGeneration::init()
 
         if (name != _N(pbr_test_0125) && name != _N(pbr_test_025) && name != _N(house))
         {
-          ImageManager::_descDimensions(_normalsImageRef) = glm::uvec3(
-              sqrt(mesh->sizes[0]), sqrt(mesh->sizes[1]), sqrt(mesh->sizes[2]));
+          //ImageManager::_descDimensions(_normalsImageRef) = glm::uvec3(
+          //    sqrt(mesh->sizes[0]), sqrt(mesh->sizes[1]), sqrt(mesh->sizes[2]));
         }
         else
         {
-          ImageManager::_descDimensions(_normalsImageRef) =
-              glm::uvec3(mesh->sizes[0], mesh->sizes[1], mesh->sizes[2]);
+          //ImageManager::_descDimensions(_normalsImageRef) =
+          //    glm::uvec3(mesh->sizes[0], mesh->sizes[1], mesh->sizes[2]);
         }
         // end of hack (for the demo)
 

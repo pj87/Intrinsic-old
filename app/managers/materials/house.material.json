@@ -9,7 +9,7 @@
             "PerPixelPicking"
         ],
         "albedoTextureName": "concrete",
-        "emissiveTextureName": "terrain_rock",
+        "emissiveTextureName": "checkerboard",
         "uvOffsetScale": [
             0.0,
             0.0,

@@ -4,7 +4,7 @@ layout(binding = 0) buffer _NoiseBuffer
 {
 	float _Noise[];
 };
-layout(binding = 1) uniform writeonly image2D _NormalTex;
+layout(binding = 1, RGBA8) uniform image2D _NormalTex;
 
 layout(binding = 2) buffer _SizeBuffer 
 {
@@ -30,5 +30,5 @@ void main()
 
 	//imageStore(_NormalTex, id, vec4(normalize(vec3(dx,dy,dz)), 0.0));
 	
-	imageStore(_NormalTex, id.xy, vec4(1.0, 0.0, 0.0, 1.0));
+	imageStore(_NormalTex, id.xy, vec4(1.0, 0.0, 1.0, 1.0));
 }
