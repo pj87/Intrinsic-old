@@ -849,6 +849,9 @@ void ImageManager::createResources(const ImageRefArray& p_Images)
   {
     ImageRef ref = p_Images[i];
 
+	_INTR_LOG_WARNING("Loading Image: %s",
+                      ImageManager::_name(ref).getString().c_str());
+
     if (_descImageType(ref) == ImageType::kExternal)
     {
       continue;
