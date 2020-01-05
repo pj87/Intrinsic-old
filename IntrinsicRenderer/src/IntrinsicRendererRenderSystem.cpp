@@ -251,6 +251,14 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false);
 		*/
 
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(metal_torus), 
+		"mandelbulb.comp", 
+		"texture_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+
 	PseudoInstancing::addPseudoInstancingMesh(_N(cube), 10, 10, 0.1f);
 
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_01_8), 6, 6, 0.5f);

@@ -816,9 +816,19 @@ void DynamicGeometryGeneration::init()
       mesh->_permTable2dImageRef =
           ImageManager::getResourceByName(_N(perm_table2d));
 
-      ImageRef _normalsImageRef = 
-          ImageManager::getResourceByName(_N(concrete));
-		  //ImageManager::createImage(_N(normalsTex));
+	  ImageRef _normalsImageRef;
+
+	  if (*mesh->shaders[1] != _N(normal_generation.comp))
+	  {
+         _normalsImageRef = 
+			 ImageManager::getResourceByName(_N(concrete));
+	  }
+	  else
+	  {
+         _normalsImageRef = 
+			 ImageManager::createImage(_N(normalsTex));
+	  }
+
       {
         ImageManager::resetToDefault(_normalsImageRef);
         ImageManager::addResourceFlags(
