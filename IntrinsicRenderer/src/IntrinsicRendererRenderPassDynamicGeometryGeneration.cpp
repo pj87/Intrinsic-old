@@ -817,7 +817,8 @@ void DynamicGeometryGeneration::init()
           ImageManager::getResourceByName(_N(perm_table2d));
 
       ImageRef _normalsImageRef = 
-		  ImageManager::createImage(_N(normalsTex));
+          ImageManager::getResourceByName(_N(concrete));
+		  //ImageManager::createImage(_N(normalsTex));
       {
         ImageManager::resetToDefault(_normalsImageRef);
         ImageManager::addResourceFlags(
@@ -894,6 +895,8 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 {
   _INTR_PROFILE_CPU("Render Pass", "Render Dynamic Geometry Generation");
   _INTR_PROFILE_GPU("Dynamic Geometry Generation");
+
+  ImageRef dupa = ImageManager::getResourceByName(_N(concrete));
 
   noiseParams[0] += p_DeltaT;
 
