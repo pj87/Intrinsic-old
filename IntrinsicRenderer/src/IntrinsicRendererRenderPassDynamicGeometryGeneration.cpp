@@ -821,7 +821,7 @@ void DynamicGeometryGeneration::init()
 	  if (*mesh->shaders[1] != _N(normal_generation.comp))
 	  {
          _normalsImageRef = 
-			 ImageManager::getResourceByName(_N(concrete));
+			 ImageManager::getResourceByName(_N(terrain_rock));
 	  }
 	  else
 	  {
