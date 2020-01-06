@@ -30,5 +30,5 @@ void main()
 
 	//imageStore(_NormalTex, id, vec4(normalize(vec3(dx,dy,dz)), 0.0));
 	
-	imageStore(_NormalTex, id.xy, vec4(1.0, 0.0, 1.0, 1.0));
+	imageStore(_NormalTex, id.xy, vec4(0.0, 1.0, 1.0, 1.0));
 }

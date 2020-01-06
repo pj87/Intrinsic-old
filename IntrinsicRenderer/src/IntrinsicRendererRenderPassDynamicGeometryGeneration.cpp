@@ -817,7 +817,7 @@ void DynamicGeometryGeneration::init()
           ImageManager::getResourceByName(_N(perm_table2d));
 
 	  ImageRef _normalsImageRef =
-          ImageManager::getResourceByName(_N(checkerboard));
+          ImageManager::getResourceByName(_N(terrain_rock));
 
 	  /*
 	  if (*mesh->shaders[1] != _N(normal_generation.comp))
@@ -854,7 +854,12 @@ void DynamicGeometryGeneration::init()
         // end of hack (for the demo)
 
         ImageManager::_descImageFormat(_normalsImageRef) =
-            Format::kR16G16B16A16Float;
+            // Format::kR16G16B16A16Float;
+            // Format::kB10G11R11UFloat;
+            // Format::kR8UNorm;
+            // Format::kR16G16Float;
+            // Format::kR16G16Float;
+            Format::kB8G8R8A8UNorm;
         ImageManager::_descImageType(_normalsImageRef) = 
 			ImageType::kTexture;
         ImageManager::_descImageFlags(_normalsImageRef) =
