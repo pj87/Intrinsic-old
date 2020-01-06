@@ -200,7 +200,8 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(pbr_test_025), 
 		"julia.comp", 
 		"normal_generation.comp",
-        "geometry_generation_new.comp");
+        "geometry_generation_new.comp",
+		false);
 	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
@@ -250,6 +251,14 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "geometry_generation_cave.comp", 
 		false);
 		*/
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        64, 64, 64, 
+		_N(metal_torus),
+		"mandelbulb.comp", 
+		"texture_generation.comp",
+        "geometry_generation_new.comp", 
+		true);
 
 	PseudoInstancing::addPseudoInstancingMesh(_N(cube), 10, 10, 0.1f);
 

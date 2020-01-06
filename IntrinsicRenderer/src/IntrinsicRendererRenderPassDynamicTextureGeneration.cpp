@@ -816,10 +816,10 @@ void DynamicTextureGeneration::init()
       texture->_permTable2dImageRef =
           ImageManager::getResourceByName(_N(perm_table2d));
 
-      ImageRef _normalsImageRef = 
-		  ImageManager::createImage(_N(normalsTex));
+      ImageRef _normalsImageRef =
+          ImageManager::getResourceByName(_N(terrain_rock));
       {
-        ImageManager::resetToDefault(_normalsImageRef);
+        //ImageManager::resetToDefault(_normalsImageRef);
         ImageManager::addResourceFlags(
             _normalsImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
@@ -827,7 +827,7 @@ void DynamicTextureGeneration::init()
 		// hack (for the demo): sqrt in normals texture are only for the
         // fractals
         const Name& name = *(texture->textureName);
-
+        /*
         if (name != _N(pbr_test_0125) && name != _N(pbr_test_025) && name != _N(house))
         {
           ImageManager::_descDimensions(_normalsImageRef) = glm::uvec3(
@@ -839,9 +839,9 @@ void DynamicTextureGeneration::init()
               glm::uvec3(texture->sizes[0], texture->sizes[1], texture->sizes[2]);
         }
         // end of hack (for the demo)
-
+		*/
         ImageManager::_descImageFormat(_normalsImageRef) =
-            Format::kR16G16B16A16Float;
+            Format::kB8G8R8A8UNorm;
         ImageManager::_descImageType(_normalsImageRef) = 
 			ImageType::kTexture;
         ImageManager::_descImageFlags(_normalsImageRef) =
