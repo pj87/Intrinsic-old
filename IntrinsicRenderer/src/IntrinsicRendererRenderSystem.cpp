@@ -264,6 +264,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
     
 
 	RenderPass::DynamicGeometryGeneration::init();
+    RenderPass::DynamicTextureGeneration::init();
 	RenderPass::GeometryGeneration::init();
     RenderPass::MarchingCubes::init();
 
