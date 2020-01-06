@@ -340,6 +340,10 @@ void createTexture(ImageRef p_Ref)
   imageCreateInfo.extent.height = (uint32_t)dimensions.y;
   imageCreateInfo.extent.depth = (uint32_t)dimensions.z;
   imageCreateInfo.mipLevels = mipLevelCount;
+
+  if (ImageManager::_name(p_Ref) == _N(terrain_rock))
+	imageCreateInfo.mipLevels = 1;
+
   imageCreateInfo.arrayLayers = arrayLayerCount;
   imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
   imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
