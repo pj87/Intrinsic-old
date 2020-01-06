@@ -321,17 +321,17 @@ int triangleConnectionTable[4096] = {
 };
 
 _INTR_INLINE ComputeCallRef createComputeCallPolygonization(
-    std::unique_ptr<DynamicGeneratedTexture>& mesh, glm::vec3 p_Dim)
+    std::unique_ptr<DynamicGeneratedTexture>& texture, glm::vec3 p_Dim)
 {
-  const Name& name = *(mesh->meshName);
+  const Name& name = *(texture->textureName);
   const uint32_t index = BufferManager::_nameToInitlialBufferMap[name];
 
-  mesh->_positionBufferRef = BufferManager::_dynamicBuffers[index];
-  mesh->_uv0BufferRef = BufferManager::_dynamicBuffers[index + 1];
-  mesh->_normalBufferRef = BufferManager::_dynamicBuffers[index + 2];
-  mesh->_tangentBufferRef = BufferManager::_dynamicBuffers[index + 3];
-  mesh->_binormalBufferRef = BufferManager::_dynamicBuffers[index + 4];
-  mesh->_colorBufferRef = BufferManager::_dynamicBuffers[index + 5];
+  texture->_positionBufferRef = BufferManager::_dynamicBuffers[index];
+  texture->_uv0BufferRef = BufferManager::_dynamicBuffers[index + 1];
+  texture->_normalBufferRef = BufferManager::_dynamicBuffers[index + 2];
+  texture->_tangentBufferRef = BufferManager::_dynamicBuffers[index + 3];
+  texture->_binormalBufferRef = BufferManager::_dynamicBuffers[index + 4];
+  texture->_colorBufferRef = BufferManager::_dynamicBuffers[index + 5];
   
   ComputeCallRef computeCallPloygonizationRef =
       ComputeCallManager::createComputeCall(_N(DynamicTextureGeneration));
@@ -344,67 +344,67 @@ _INTR_INLINE ComputeCallRef createComputeCallPolygonization(
     ComputeCallManager::_descDimensions(computeCallPloygonizationRef) =
         glm::uvec3(p_Dim);
     ComputeCallManager::_descPipeline(computeCallPloygonizationRef) =
-        mesh->_pipelineScatteringRef;
+        texture->_pipelineScatteringRef;
 
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_PositionBuffer), GpuProgramType::kCompute,
-        mesh->_positionBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_positionBufferRef));
+        texture->_positionBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_positionBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_NormalBuffer), GpuProgramType::kCompute,
-        mesh->_normalBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_normalBufferRef));
+        texture->_normalBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_normalBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_BinormalBuffer), GpuProgramType::kCompute,
-        mesh->_binormalBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_binormalBufferRef));
+        texture->_binormalBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_binormalBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_TangentBuffer), GpuProgramType::kCompute,
-        mesh->_tangentBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_tangentBufferRef));
+        texture->_tangentBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_tangentBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_Uv0Buffer), GpuProgramType::kCompute,
-        mesh->_uv0BufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_uv0BufferRef));
+        texture->_uv0BufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_uv0BufferRef));
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_ColorBuffer), GpuProgramType::kCompute,
-        mesh->_colorBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_colorBufferRef));
+        texture->_colorBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_colorBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_CubeEdgeBuffer), GpuProgramType::kCompute,
-        mesh->_cubeEdgeFlagsBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_cubeEdgeFlagsBufferRef));
+        texture->_cubeEdgeFlagsBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_cubeEdgeFlagsBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_TriangleConnectionBuffer),
-        GpuProgramType::kCompute, mesh->_triangleConnectionBufferRef,
+        GpuProgramType::kCompute, texture->_triangleConnectionBufferRef,
         UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_triangleConnectionBufferRef));
+        BufferManager::_descSizeInBytes(texture->_triangleConnectionBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_VoxelBuffer), GpuProgramType::kCompute,
-        mesh->_voxelBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_voxelBufferRef));
+        texture->_voxelBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_voxelBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_DebugBuffer), GpuProgramType::kCompute,
-        mesh->_debugBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_debugBufferRef));
+        texture->_debugBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_debugBufferRef));
     ComputeCallManager::bindImage(
         computeCallPloygonizationRef, _N(_NormalsTex), GpuProgramType::kCompute,
-        mesh->_normalsImageRef, Samplers::kNearestRepeat);
+        texture->_normalsImageRef, Samplers::kNearestRepeat);
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_SizesBuffer), GpuProgramType::kCompute,
-        mesh->_sizesBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_sizesBufferRef));
+        texture->_sizesBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_sizesBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallPloygonizationRef, _N(_TargetBuffer), GpuProgramType::kCompute,
-        mesh->_targetBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_targetBufferRef));
+        texture->_targetBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_targetBufferRef));
   }
 
   return computeCallPloygonizationRef;
 }
 
 _INTR_INLINE ComputeCallRef createComputeCallSDFGeneration(
-    std::unique_ptr<DynamicGeneratedTexture>& mesh, glm::vec3 p_Dim)
+    std::unique_ptr<DynamicGeneratedTexture>& texture, glm::vec3 p_Dim)
 {
   ComputeCallRef computeCallSDFGenerationRef =
       ComputeCallManager::createComputeCall(_N(SDFGenerationNoiseGeneration));
@@ -416,37 +416,37 @@ _INTR_INLINE ComputeCallRef createComputeCallSDFGeneration(
     ComputeCallManager::_descDimensions(computeCallSDFGenerationRef) =
         glm::uvec3(p_Dim);
     ComputeCallManager::_descPipeline(computeCallSDFGenerationRef) =
-        mesh->_pipelineSDFGenerationRef;
+        texture->_pipelineSDFGenerationRef;
 
     ComputeCallManager::bindBuffer(
         computeCallSDFGenerationRef, _N(_VoxelBuffer), GpuProgramType::kCompute,
-        mesh->_voxelBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_voxelBufferRef));
+        texture->_voxelBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_voxelBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallSDFGenerationRef, _N(_VoxelNormalBuffer), GpuProgramType::kCompute,
-        mesh->_voxelNormalBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_voxelNormalBufferRef));
+        texture->_voxelNormalBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_voxelNormalBufferRef));
     ComputeCallManager::bindImage(
         computeCallSDFGenerationRef, _N(_Gradient3D), GpuProgramType::kCompute,
-        mesh->_gradient3dImageRef, Samplers::kNearestRepeat);
+        texture->_gradient3dImageRef, Samplers::kNearestRepeat);
     ComputeCallManager::bindImage(
         computeCallSDFGenerationRef, _N(_PermTable2D), GpuProgramType::kCompute,
-        mesh->_permTable2dImageRef, Samplers::kNearestRepeat);
+        texture->_permTable2dImageRef, Samplers::kNearestRepeat);
     ComputeCallManager::bindBuffer(
         computeCallSDFGenerationRef, _N(_SizeBuffer), GpuProgramType::kCompute,
-        mesh->_sizesBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_sizesBufferRef));
+        texture->_sizesBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_sizesBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallSDFGenerationRef, _N(_ParametersBuffer), GpuProgramType::kCompute,
-        mesh->_noiseParametersRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_noiseParametersRef));
+        texture->_noiseParametersRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_noiseParametersRef));
   }
 
   return computeCallSDFGenerationRef;
 }
 
 _INTR_INLINE ComputeCallRef createComputeCallNormal(
-    std::unique_ptr<DynamicGeneratedTexture>& mesh, glm::vec3 p_Dim)
+    std::unique_ptr<DynamicGeneratedTexture>& texture, glm::vec3 p_Dim)
 {
   ComputeCallRef computeCallNormalRef =
       ComputeCallManager::createComputeCall(_N(NormalGeneration));
@@ -458,19 +458,19 @@ _INTR_INLINE ComputeCallRef createComputeCallNormal(
     ComputeCallManager::_descDimensions(computeCallNormalRef) =
         glm::uvec3(p_Dim);
     ComputeCallManager::_descPipeline(computeCallNormalRef) =
-        mesh->_pipelineNormalRef;
+        texture->_pipelineNormalRef;
 
     ComputeCallManager::bindImage(
         computeCallNormalRef, _N(_NormalTex), GpuProgramType::kCompute,
-        mesh->_normalsImageRef, Samplers::kNearestRepeat);
+        texture->_normalsImageRef, Samplers::kNearestRepeat);
     ComputeCallManager::bindBuffer(
         computeCallNormalRef, _N(_NoiseBuffer), GpuProgramType::kCompute,
-        mesh->_voxelBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_voxelBufferRef));
+        texture->_voxelBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_voxelBufferRef));
     ComputeCallManager::bindBuffer(
         computeCallNormalRef, _N(_SizeBuffer), GpuProgramType::kCompute,
-        mesh->_sizesBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(mesh->_sizesBufferRef));
+        texture->_sizesBufferRef, UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_sizesBufferRef));
   }
 
   return computeCallNormalRef;
@@ -481,9 +481,9 @@ _INTR_INLINE ComputeCallRef createComputeCallNormal(
 // Static members
 
 std::vector<std::unique_ptr<DynamicGeneratedTexture>>
-    DynamicTextureGeneration::dynamicGenerationMeshes;
+    DynamicTextureGeneration::dynamicGenerationTextures;
 
-std::vector<std::unique_ptr<Name>> pseudoInstancedMeshes;
+//std::vector<std::unique_ptr<Name>> pseudoInstancedMeshes;
 
 void DynamicTextureGeneration::postInit()
 {
@@ -491,7 +491,7 @@ void DynamicTextureGeneration::postInit()
   PipelineLayoutRefArray pipelineLayoutsToCreate;
   ComputeCallRefArray computeCallsToCreate;
 
-  for (auto& mesh : dynamicGenerationMeshes)
+  for (auto& texture : dynamicGenerationTextures)
   {
     // Pipeline layouts
     PipelineLayoutRef pipelineLayoutSDFGeneration;
@@ -502,7 +502,7 @@ void DynamicTextureGeneration::postInit()
         PipelineLayoutManager::resetToDefault(pipelineLayoutSDFGeneration);
 
         GpuProgramManager::reflectPipelineLayout(
-            1u, {GpuProgramManager::getResourceByName(*(mesh->shaders[0]))},
+            1u, {GpuProgramManager::getResourceByName(*(texture->shaders[0]))},
             pipelineLayoutSDFGeneration);
       }
       pipelineLayoutsToCreate.push_back(pipelineLayoutSDFGeneration);
@@ -515,11 +515,11 @@ void DynamicTextureGeneration::postInit()
       {
 		  PipelineManager::resetToDefault(_pipelineSDFGenerationRef);
 		  PipelineManager::_descComputeProgram(_pipelineSDFGenerationRef) =
-			  GpuProgramManager::getResourceByName(*(mesh->shaders[0]));
+			  GpuProgramManager::getResourceByName(*(texture->shaders[0]));
 		  PipelineManager::_descPipelineLayout(_pipelineSDFGenerationRef) =
 			  pipelineLayoutSDFGeneration;
 	  }
-      mesh->_pipelineSDFGenerationRef = _pipelineSDFGenerationRef;
+      texture->_pipelineSDFGenerationRef = _pipelineSDFGenerationRef;
       pipelinesToCreate.push_back(_pipelineSDFGenerationRef);
     }
 
@@ -532,7 +532,7 @@ void DynamicTextureGeneration::postInit()
         PipelineLayoutManager::resetToDefault(pipelineLayoutNormal);
 
         GpuProgramManager::reflectPipelineLayout(
-            1u, {GpuProgramManager::getResourceByName(*(mesh->shaders[1]))},
+            1u, {GpuProgramManager::getResourceByName(*(texture->shaders[1]))},
             pipelineLayoutNormal);
       }
       pipelineLayoutsToCreate.push_back(pipelineLayoutNormal);
@@ -546,11 +546,11 @@ void DynamicTextureGeneration::postInit()
         PipelineManager::resetToDefault(_pipelineNormalRef);
 
         PipelineManager::_descComputeProgram(_pipelineNormalRef) =
-            GpuProgramManager::getResourceByName(*(mesh->shaders[1]));
+            GpuProgramManager::getResourceByName(*(texture->shaders[1]));
         PipelineManager::_descPipelineLayout(_pipelineNormalRef) =
             pipelineLayoutNormal;
       }
-      mesh->_pipelineNormalRef = _pipelineNormalRef;
+      texture->_pipelineNormalRef = _pipelineNormalRef;
       pipelinesToCreate.push_back(_pipelineNormalRef);
     }
 
@@ -563,7 +563,7 @@ void DynamicTextureGeneration::postInit()
         PipelineLayoutManager::resetToDefault(pipelineLayoutScattering);
 
         GpuProgramManager::reflectPipelineLayout(
-            1u, {GpuProgramManager::getResourceByName(*(mesh->shaders[2]))},
+            1u, {GpuProgramManager::getResourceByName(*(texture->shaders[2]))},
             pipelineLayoutScattering);
       }
       pipelineLayoutsToCreate.push_back(pipelineLayoutScattering);
@@ -577,11 +577,11 @@ void DynamicTextureGeneration::postInit()
         PipelineManager::resetToDefault(_pipelineScatteringRef);
 
         PipelineManager::_descComputeProgram(_pipelineScatteringRef) =
-            GpuProgramManager::getResourceByName(*(mesh->shaders[2]));
+            GpuProgramManager::getResourceByName(*(texture->shaders[2]));
         PipelineManager::_descPipelineLayout(_pipelineScatteringRef) =
             pipelineLayoutScattering;
       }
-      mesh->_pipelineScatteringRef = _pipelineScatteringRef;
+      texture->_pipelineScatteringRef = _pipelineScatteringRef;
       pipelinesToCreate.push_back(_pipelineScatteringRef);
     }
 
@@ -589,25 +589,25 @@ void DynamicTextureGeneration::postInit()
     PipelineManager::createResources(pipelinesToCreate);
 
     const glm::uvec3 computeDim = 
-		glm::uvec3(sqrt(mesh->sizes[0]), 
-				   sqrt(mesh->sizes[1]), 
-				   sqrt(mesh->sizes[2]));
+		glm::uvec3(sqrt(texture->sizes[0]), 
+				   sqrt(texture->sizes[1]), 
+				   sqrt(texture->sizes[2]));
 
     {
       // SDF generation
       ComputeCallRef _computeCallSDFGenerationRef =
-          createComputeCallSDFGeneration(mesh, computeDim);
+          createComputeCallSDFGeneration(texture, computeDim);
 
-	  mesh->_computeCallSDFGenerationRef = _computeCallSDFGenerationRef;
+	  texture->_computeCallSDFGenerationRef = _computeCallSDFGenerationRef;
       computeCallsToCreate.push_back(_computeCallSDFGenerationRef);
     }
 
     {
       // Normal
       ComputeCallRef _computeCallNormalRef =
-          createComputeCallNormal(mesh, computeDim);
+          createComputeCallNormal(texture, computeDim);
 
-	  mesh->_computeCallNormalRef = _computeCallNormalRef;
+	  texture->_computeCallNormalRef = _computeCallNormalRef;
       computeCallsToCreate.push_back(_computeCallNormalRef);
     }
 
@@ -615,9 +615,9 @@ void DynamicTextureGeneration::postInit()
     {
       // Polygonization
       ComputeCallRef _computeCallMarchingCubesRef =
-          createComputeCallPolygonization(mesh, computeDim);
+          createComputeCallPolygonization(texture, computeDim);
 
-	  mesh->_computeCallMarchingCubesRef = _computeCallMarchingCubesRef;
+	  texture->_computeCallMarchingCubesRef = _computeCallMarchingCubesRef;
       computeCallsToCreate.push_back(_computeCallMarchingCubesRef);
     }
 
@@ -630,26 +630,26 @@ void DynamicTextureGeneration::postInit()
 
 void DynamicTextureGeneration::addDynamicGeneradtedTexture(
     const int& sizeX, const int& sizeY, const int& sizeZ, 
-	const Name& meshName, const Name&& voxelGenerationShadera,
+	const Name& textureName, const Name&& voxelGenerationShadera,
     const Name&& normalGenerationShader, const Name&& geometryGenerationShader, 
 	bool isDynamic)
 {
-  std::unique_ptr<DynamicGeneratedTexture> dynamicGenerationMesh =
+  std::unique_ptr<DynamicGeneratedTexture> dynamicGenerationTexture =
       std::make_unique<DynamicGeneratedTexture>(
           sizeX, sizeY, sizeZ, 
-          std::move(meshName), std::move(voxelGenerationShadera),
+          std::move(textureName), std::move(voxelGenerationShadera),
           std::move(normalGenerationShader),
           std::move(geometryGenerationShader), 
 		  isDynamic);
 
-  dynamicGenerationMeshes.push_back(std::move(dynamicGenerationMesh));
+  dynamicGenerationTextures.push_back(std::move(dynamicGenerationTexture));
 }
 
-bool DynamicTextureGeneration::isOverridenTexture(const Name& meshName)
+bool DynamicTextureGeneration::isOverridenTexture(const Name& textureName)
 {
-  for (auto& mesh : dynamicGenerationMeshes)
+  for (auto& texture : dynamicGenerationTextures)
   {
-    if ((*mesh->meshName) == meshName)
+    if ((*texture->textureName) == textureName)
       return true;
   }
   return false;
@@ -661,7 +661,7 @@ void DynamicTextureGeneration::init()
   BufferRefArray buffersToCreate;
   ImageRefArray imgsToCreate;
     
-  for (auto& mesh : dynamicGenerationMeshes)
+  for (auto& texture : dynamicGenerationTextures)
   {
       BufferRef _noiseParametersRef =
           BufferManager::createBuffer(_N(_ParametersBuffer));
@@ -679,7 +679,7 @@ void DynamicTextureGeneration::init()
         BufferManager::_descInitialData(_noiseParametersRef) = 
 			noiseParams;
       }
-      mesh->_noiseParametersRef = _noiseParametersRef;
+      texture->_noiseParametersRef = _noiseParametersRef;
       buffersToCreate.push_back(_noiseParametersRef);
 
       BufferRef _voxelBufferRef = 
@@ -696,9 +696,9 @@ void DynamicTextureGeneration::init()
         BufferManager::_descBufferType(_voxelBufferRef) = 
 			BufferType::kStorage;
         BufferManager::_descSizeInBytes(_voxelBufferRef) = 
-			(*mesh->sizeX) * (*mesh->sizeY) * (*mesh->sizeZ) * sizeof(float);
+			(*texture->sizeX) * (*texture->sizeY) * (*texture->sizeZ) * sizeof(float);
       }
-      mesh->_voxelBufferRef = _voxelBufferRef;
+      texture->_voxelBufferRef = _voxelBufferRef;
       buffersToCreate.push_back(_voxelBufferRef);
 
 	  BufferRef _voxelNormalBufferRef =
@@ -714,9 +714,9 @@ void DynamicTextureGeneration::init()
         ///// PJ: only for tests
         BufferManager::_descBufferType(_voxelNormalBufferRef) = BufferType::kStorage;
         BufferManager::_descSizeInBytes(_voxelNormalBufferRef) =
-            (*mesh->sizeX) * (*mesh->sizeY) * (*mesh->sizeZ) * sizeof(float) * 4;
+            (*texture->sizeX) * (*texture->sizeY) * (*texture->sizeZ) * sizeof(float) * 4;
       }
-      mesh->_voxelNormalBufferRef = _voxelNormalBufferRef;
+      texture->_voxelNormalBufferRef = _voxelNormalBufferRef;
       buffersToCreate.push_back(_voxelNormalBufferRef);
 
       BufferRef _sizesBufferRef = 
@@ -729,11 +729,11 @@ void DynamicTextureGeneration::init()
         BufferManager::_descBufferType(_sizesBufferRef) = 
 			BufferType::kStorage;
         BufferManager::_descSizeInBytes(_sizesBufferRef) = 
-			sizeof(mesh->sizes);
+			sizeof(texture->sizes);
         BufferManager::_descInitialData(_sizesBufferRef) = 
-			mesh->sizes;
+			texture->sizes;
       }
-      mesh->_sizesBufferRef = _sizesBufferRef;
+      texture->_sizesBufferRef = _sizesBufferRef;
       buffersToCreate.push_back(_sizesBufferRef);
 
       BufferRef _targetBufferRef =
@@ -750,7 +750,7 @@ void DynamicTextureGeneration::init()
         BufferManager::_descInitialData(_targetBufferRef) = 
 			&target;
       }
-      mesh->_targetBufferRef = _targetBufferRef;
+      texture->_targetBufferRef = _targetBufferRef;
       buffersToCreate.push_back(_targetBufferRef);
 
       BufferRef _cubeEdgeFlagsBufferRef =
@@ -773,7 +773,7 @@ void DynamicTextureGeneration::init()
         BufferManager::_descInitialData(_cubeEdgeFlagsBufferRef) =
             cubeEdgeFlags;
       }
-      mesh->_cubeEdgeFlagsBufferRef = _cubeEdgeFlagsBufferRef;
+      texture->_cubeEdgeFlagsBufferRef = _cubeEdgeFlagsBufferRef;
       buffersToCreate.push_back(_cubeEdgeFlagsBufferRef);
 
       BufferRef _triangleConnectionBufferRef =
@@ -791,7 +791,7 @@ void DynamicTextureGeneration::init()
         BufferManager::_descInitialData(_triangleConnectionBufferRef) =
             triangleConnectionTable;
       }
-      mesh->_triangleConnectionBufferRef = _triangleConnectionBufferRef;
+      texture->_triangleConnectionBufferRef = _triangleConnectionBufferRef;
       buffersToCreate.push_back(_triangleConnectionBufferRef);
 
       BufferRef _debugBufferRef = 
@@ -806,14 +806,14 @@ void DynamicTextureGeneration::init()
         BufferManager::_descSizeInBytes(_debugBufferRef) =
             150000 * 8 * sizeof(float);
       }
-      mesh->_debugBufferRef = _debugBufferRef;
+      texture->_debugBufferRef = _debugBufferRef;
       buffersToCreate.push_back(_debugBufferRef);
 
 	  // Images
-      mesh->_gradient3dImageRef =
+      texture->_gradient3dImageRef =
           ImageManager::getResourceByName(_N(gradient3d));
 
-      mesh->_permTable2dImageRef =
+      texture->_permTable2dImageRef =
           ImageManager::getResourceByName(_N(perm_table2d));
 
       ImageRef _normalsImageRef = 
@@ -826,17 +826,17 @@ void DynamicTextureGeneration::init()
 
 		// hack (for the demo): sqrt in normals texture are only for the
         // fractals
-        const Name& name = *(mesh->meshName);
+        const Name& name = *(texture->textureName);
 
         if (name != _N(pbr_test_0125) && name != _N(pbr_test_025) && name != _N(house))
         {
           ImageManager::_descDimensions(_normalsImageRef) = glm::uvec3(
-              sqrt(mesh->sizes[0]), sqrt(mesh->sizes[1]), sqrt(mesh->sizes[2]));
+              sqrt(texture->sizes[0]), sqrt(texture->sizes[1]), sqrt(texture->sizes[2]));
         }
         else
         {
           ImageManager::_descDimensions(_normalsImageRef) =
-              glm::uvec3(mesh->sizes[0], mesh->sizes[1], mesh->sizes[2]);
+              glm::uvec3(texture->sizes[0], texture->sizes[1], texture->sizes[2]);
         }
         // end of hack (for the demo)
 
@@ -847,7 +847,7 @@ void DynamicTextureGeneration::init()
         ImageManager::_descImageFlags(_normalsImageRef) =
             ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
       }
-      mesh->_normalsImageRef = _normalsImageRef;
+      texture->_normalsImageRef = _normalsImageRef;
       imgsToCreate.push_back(_normalsImageRef);
   }
   
@@ -897,176 +897,76 @@ void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
   noiseParams[0] += p_DeltaT;
 
-  for (auto& mesh : dynamicGenerationMeshes)
+  for (auto& texture : dynamicGenerationTextures)
   {
-    if (mesh->isDynamic)
+    if (texture->isDynamic)
 	{
-	  BufferRef buffer = mesh->_noiseParametersRef;
+	  BufferRef buffer = texture->_noiseParametersRef;
       updateDataMemory(noiseParams, buffer,
                        BufferManager::_descSizeInBytes(buffer), 0);
 	}
 	else
 	{
-	  if (mesh->isCalled && mesh->counter > 2)
+	  if (texture->isCalled && texture->counter > 2)
 		continue;
 	}
 
     VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
 
     {
-      RenderSystem::dispatchComputeCall(mesh->_computeCallNormalRef,
+      RenderSystem::dispatchComputeCall(texture->_computeCallNormalRef,
                                         primaryCmdBuffer);
     }
 
-    ImageManager::insertImageMemoryBarrier(mesh->_normalsImageRef, 
+    ImageManager::insertImageMemoryBarrier(texture->_normalsImageRef, 
 										   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
 										   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
     {
-      RenderSystem::dispatchComputeCall(mesh->_computeCallSDFGenerationRef,
+      RenderSystem::dispatchComputeCall(texture->_computeCallSDFGenerationRef,
                                         primaryCmdBuffer);
     }
 
-    BufferManager::insertBufferMemoryBarrier(mesh->_voxelBufferRef,
+    BufferManager::insertBufferMemoryBarrier(texture->_voxelBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
                                              VK_ACCESS_SHADER_READ_BIT);
 
-	BufferManager::insertBufferMemoryBarrier(mesh->_voxelNormalBufferRef,
+	BufferManager::insertBufferMemoryBarrier(texture->_voxelNormalBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
                                              VK_ACCESS_SHADER_READ_BIT);
 
     {
-      RenderSystem::dispatchComputeCall(mesh->_computeCallMarchingCubesRef,
+      RenderSystem::dispatchComputeCall(texture->_computeCallMarchingCubesRef,
                                         primaryCmdBuffer);
     }
 
-    BufferManager::insertBufferMemoryBarrier(mesh->_positionBufferRef,
+    BufferManager::insertBufferMemoryBarrier(texture->_positionBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
                                              VK_ACCESS_SHADER_READ_BIT);
 
-    BufferManager::insertBufferMemoryBarrier(mesh->_normalBufferRef,
+    BufferManager::insertBufferMemoryBarrier(texture->_normalBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
                                              VK_ACCESS_SHADER_READ_BIT);
 
-    BufferManager::insertBufferMemoryBarrier(mesh->_binormalBufferRef,
+    BufferManager::insertBufferMemoryBarrier(texture->_binormalBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
                                              VK_ACCESS_SHADER_READ_BIT);
 
-    BufferManager::insertBufferMemoryBarrier(mesh->_tangentBufferRef,
+    BufferManager::insertBufferMemoryBarrier(texture->_tangentBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
                                              VK_ACCESS_SHADER_READ_BIT);
 
-    BufferManager::insertBufferMemoryBarrier(mesh->_uv0BufferRef,
+    BufferManager::insertBufferMemoryBarrier(texture->_uv0BufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
                                              VK_ACCESS_SHADER_READ_BIT);
 
-    BufferManager::insertBufferMemoryBarrier(mesh->_colorBufferRef, 
+    BufferManager::insertBufferMemoryBarrier(texture->_colorBufferRef, 
 											 VK_ACCESS_SHADER_WRITE_BIT, 
 											 VK_ACCESS_SHADER_READ_BIT);
 
-	mesh->isCalled = true;
-    mesh->counter++;
-
-	const Name& name = *(mesh->meshName);
-
-    // hack (for the demo): generate the normals and voxels only for the terrain
-	
-	if (name != _N(terrain))
-		continue;
-
-	// end of hack (for the demo)
-
-	// Uncommet the following lines only when generating a new terrain with new trees
-
-    //PseudoInstancing::voxels.clear();
-	//PseudoInstancing::normals.clear();
-
-    //aquireVoxelsAndNormals(*mesh);
-
-    //PseudoInstancing::populateMeshes();
-    PseudoInstancing::generateInstances();
+	texture->isCalled = true;
+    texture->counter++;
   }
-}
-
-void DynamicTextureGeneration::aquireVoxelsAndNormals(
-    DynamicGeneratedTexture& mesh)
-{
-  for (int x = 0; x < 64; x += 1)
-    for (int y = 0; y < 64; y += 1)
-      for (int z = 0; z < 64; z += 1)
-      {
-			float voxel = getVoxel(mesh, x, y, z);
-			float voxel1 = getVoxel(mesh, x, y + 1, z);
-
-			if (voxel > 0.0 && voxel1 < 0.0)
-			{
-				  Voxel voxel;
-				  voxel.x = static_cast<float>(x);
-				  voxel.y = static_cast<float>(y);
-				  voxel.z = static_cast<float>(64 - z);
-
-				  glm::vec3 nor = getNormal(mesh, x, y + 1, z);
-				  Voxel normal;
-				  normal.x = nor.x;
-				  normal.y = nor.y;
-				  normal.z = nor.z;
-
-				  PseudoInstancing::voxels.push_back(voxel);
-				  PseudoInstancing::normals.push_back(normal);
-			}
-      }
-}
-
-float DynamicTextureGeneration::getVoxel(DynamicGeneratedTexture& mesh, int x,
-                                          int y, int z)
-{ /*
-	https://stackoverflow.com/questions/3613429/algorithm-to-convert-a-multi-dimensional-array-to-a-one-dimensional-array
-    https://stackoverflow.com/questions/29022714/java-mapping-multi-dimensional-arrays-to-single
-      m0,m1,.. are dimensions
-      A(i,j,k,...) -> A0[i + j*m0 + k*m0*m1 + ...]
-      */
-  //int index = x + y * (*mesh.sizeX) + z * (*mesh.sizeX) * (*mesh.sizeY);
-  //int[dimX][dimY][dimZ] : 1 - D array index[i * dimY * dimZ + j * dimZ + k]
-
-  int index = x * (*mesh.sizeY) * (*mesh.sizeZ) + y * (*mesh.sizeZ) + z;
-
-  float* _voxelBufferGpuMemory =
-      (float*)BufferManager::getGpuMemory(mesh._voxelBufferRef);
-
-  return *(_voxelBufferGpuMemory + index);
-}
-
-glm::vec3& DynamicTextureGeneration::getNormal(
-    DynamicGeneratedTexture& mesh, int x, int y, int z)
-{ /*
-    https://stackoverflow.com/questions/3613429/algorithm-to-convert-a-multi-dimensional-array-to-a-one-dimensional-array
-    https://stackoverflow.com/questions/29022714/java-mapping-multi-dimensional-arrays-to-single
-      m0,m1,.. are dimensions
-      A(i,j,k,...) -> A0[i + j*m0 + k*m0*m1 + ...]
-      */
-  // int index = x + y * (*mesh.sizeX) + z * (*mesh.sizeX) * (*mesh.sizeY);
-  // int[dimX][dimY][dimZ] : 1 - D array index[i * dimY * dimZ + j * dimZ + k]
-
-  int index = 4 * (x * (*mesh.sizeY) * (*mesh.sizeZ) + y * (*mesh.sizeZ) + z);
-
-  float* srcBuffer =
-      (float*)BufferManager::getGpuMemory(mesh._voxelNormalBufferRef);
-
-  float* srcX = &srcBuffer[index];
-  float* srcY = &srcBuffer[index + 1];
-  float* srcZ = &srcBuffer[index + 2];
-  float* srcW = &srcBuffer[index + 3];
-
-  /*
-  float srcX = glm::unpackHalf1x16(*src0);
-  float srcY = glm::unpackHalf1x16(*src1);
-  float srcZ = glm::unpackHalf1x16(*src2);
-  */
-  //if (srcX > 0.0 || srcY > 0.0 || srcZ > 0.0)
-  //_INTR_LOG_WARNING("_normalVertexBufferGpuMemory: %f %f %f %f", *srcX, *srcY, *srcZ, *srcW);
-
-  //return *(_normalBufferGpuMemory + index);
-  return glm::vec3(*srcX, *srcY, *srcZ);
 }
 
 } // namespace RenderPass

@@ -36,13 +36,13 @@ typedef _INTR_ARRAY(ComputeCallRef) ComputeCallRefArray;
 struct DynamicGeneratedTexture
 {
   DynamicGeneratedTexture(const int& sizeX, const int& sizeY, 
-					   const int& sizeZ, const Name& meshName,
+					   const int& sizeZ, const Name& textureName,
                        const Name&& voxelGenerationShader,
                        const Name&& normalGenerationShader, 
 					   const Name&& geometryGenerationShader, 
 					   bool isDynamic)
   {
-    this->meshName = std::make_unique<Name>(meshName);
+    this->textureName = std::make_unique<Name>(textureName);
     this->isDynamic = isDynamic;
 
 	sizes[0] = sizeX;
@@ -61,7 +61,7 @@ struct DynamicGeneratedTexture
   }
 
   std::vector<std::unique_ptr<Name>> shaders;
-  std::unique_ptr<Name> meshName;
+  std::unique_ptr<Name> textureName;
 
   BufferRef _positionBufferRef;
   BufferRef _normalBufferRef;
@@ -100,17 +100,12 @@ struct DynamicGeneratedTexture
 struct DynamicTextureGeneration
 {
   static std::vector<std::unique_ptr<DynamicGeneratedTexture>>
-      dynamicGenerationMeshes;
+      dynamicGenerationTextures;
 
   static void addDynamicGeneradtedTexture(const int& sizeX, const int& sizeY,
                                           const int& sizeZ,
 									   const Name&, const Name&&, const Name&&,
                                        const Name&&, bool isDynamic = true);
-
-  static float getVoxel(DynamicGeneratedTexture& mesh, int x, int y, int z);
-  static glm::vec3& getNormal(DynamicGeneratedTexture& mesh, int x, int y,
-                              int z);
-  static void aquireVoxelsAndNormals(DynamicGeneratedTexture& mesh);
 
   static bool isOverridenTexture(const Name&);
 
