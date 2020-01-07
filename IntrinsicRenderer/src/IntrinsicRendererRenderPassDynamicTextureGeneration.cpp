@@ -48,14 +48,6 @@ _INTR_INLINE ComputeCallRef createComputeCallNormal(
     ComputeCallManager::bindImage(
         computeCallNormalRef, _N(_NormalTex), GpuProgramType::kCompute,
         texture->_normalsImageRef, Samplers::kNearestRepeat);
-    ComputeCallManager::bindBuffer(
-        computeCallNormalRef, _N(_NoiseBuffer), GpuProgramType::kCompute,
-        texture->_voxelBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_voxelBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallNormalRef, _N(_SizeBuffer), GpuProgramType::kCompute,
-        texture->_sizesBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_sizesBufferRef));
   }
 
   return computeCallNormalRef;
@@ -163,67 +155,6 @@ void DynamicTextureGeneration::init()
     
   for (auto& texture : dynamicGenerationTextures)
   {
-      BufferRef _voxelBufferRef = 
-		  BufferManager::createBuffer(_N(_Voxels));
-      {
-        BufferManager::resetToDefault(_voxelBufferRef);
-        BufferManager::addResourceFlags(
-            _voxelBufferRef, 
-			Dod::Resources::ResourceFlags::kResourceVolatile);
-        ///// PJ: only for tests
-        BufferManager::_descMemoryPoolType(_voxelBufferRef) =
-            MemoryPoolType::kStaticStagingBuffers;
-        ///// PJ: only for tests
-        BufferManager::_descBufferType(_voxelBufferRef) = 
-			BufferType::kStorage;
-        BufferManager::_descSizeInBytes(_voxelBufferRef) = 
-			(*texture->sizeX) * (*texture->sizeY) * (*texture->sizeZ) * sizeof(float);
-      }
-      texture->_voxelBufferRef = _voxelBufferRef;
-      buffersToCreate.push_back(_voxelBufferRef);
-
-	  BufferRef _voxelNormalBufferRef =
-		  BufferManager::createBuffer(_N(_VoxelNormals));
-      {
-        BufferManager::resetToDefault(_voxelNormalBufferRef);
-        BufferManager::addResourceFlags(
-            _voxelNormalBufferRef,
-			Dod::Resources::ResourceFlags::kResourceVolatile);
-        ///// PJ: only for tests
-        BufferManager::_descMemoryPoolType(_voxelNormalBufferRef) =
-            MemoryPoolType::kStaticStagingBuffers;
-        ///// PJ: only for tests
-        BufferManager::_descBufferType(_voxelNormalBufferRef) = BufferType::kStorage;
-        BufferManager::_descSizeInBytes(_voxelNormalBufferRef) =
-            (*texture->sizeX) * (*texture->sizeY) * (*texture->sizeZ) * sizeof(float) * 4;
-      }
-      texture->_voxelNormalBufferRef = _voxelNormalBufferRef;
-      buffersToCreate.push_back(_voxelNormalBufferRef);
-
-      BufferRef _sizesBufferRef = 
-		  BufferManager::createBuffer(_N(_SizeBuffer));
-      {
-        BufferManager::resetToDefault(_sizesBufferRef);
-        BufferManager::addResourceFlags(
-            _sizesBufferRef, 
-			Dod::Resources::ResourceFlags::kResourceVolatile);
-        BufferManager::_descBufferType(_sizesBufferRef) = 
-			BufferType::kStorage;
-        BufferManager::_descSizeInBytes(_sizesBufferRef) = 
-			sizeof(texture->sizes);
-        BufferManager::_descInitialData(_sizesBufferRef) = 
-			texture->sizes;
-      }
-      texture->_sizesBufferRef = _sizesBufferRef;
-      buffersToCreate.push_back(_sizesBufferRef);
-
-	  // Images
-      texture->_gradient3dImageRef =
-          ImageManager::getResourceByName(_N(gradient3d));
-
-      texture->_permTable2dImageRef =
-          ImageManager::getResourceByName(_N(perm_table2d));
-
       ImageRef _normalsImageRef =
           ImageManager::getResourceByName(_N(terrain_rock));
       {
