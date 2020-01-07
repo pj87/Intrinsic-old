@@ -48,6 +48,12 @@ _INTR_INLINE ComputeCallRef createComputeCallTexture(
     ComputeCallManager::bindImage(
         computeCallTextureRef, _N(_TextureTex), GpuProgramType::kCompute,
         texture->_textureImageRef, Samplers::kNearestRepeat);
+    ComputeCallManager::bindImage(
+        computeCallTextureRef, _N(_NormalTex), GpuProgramType::kCompute,
+        texture->_normalImageRef, Samplers::kNearestRepeat);
+    ComputeCallManager::bindImage(
+        computeCallTextureRef, _N(_PBRTex), GpuProgramType::kCompute,
+        texture->_pbrImageRef, Samplers::kNearestRepeat);
   }
 
   return computeCallTextureRef;
@@ -158,27 +164,9 @@ void DynamicTextureGeneration::init()
       ImageRef _textureImageRef =
           ImageManager::getResourceByName(_N(terrain_rock));
       {
-        //ImageManager::resetToDefault(_textureImageRef);
         ImageManager::addResourceFlags(
             _textureImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
-
-		// hack (for the demo): sqrt in normals texture are only for the
-        // fractals
-        const Name& name = *(texture->textureName);
-        /*
-        if (name != _N(pbr_test_0125) && name != _N(pbr_test_025) && name != _N(house))
-        {
-          ImageManager::_descDimensions(_textureImageRef) = glm::uvec3(
-              sqrt(texture->sizes[0]), sqrt(texture->sizes[1]), sqrt(texture->sizes[2]));
-        }
-        else
-        {
-          ImageManager::_descDimensions(_textureImageRef) =
-              glm::uvec3(texture->sizes[0], texture->sizes[1], texture->sizes[2]);
-        }
-        // end of hack (for the demo)
-		*/
         ImageManager::_descImageFormat(_textureImageRef) =
             Format::kB8G8R8A8UNorm;
         ImageManager::_descImageType(_textureImageRef) = 
@@ -188,6 +176,34 @@ void DynamicTextureGeneration::init()
       }
       texture->_textureImageRef = _textureImageRef;
       imgsToCreate.push_back(_textureImageRef);
+
+	  ImageRef _normalImageRef =
+          ImageManager::getResourceByName(_N(terrain_rock_N));
+      {
+        ImageManager::addResourceFlags(
+            _normalImageRef, Dod::Resources::ResourceFlags::kResourceVolatile);
+        //ImageManager::_descImageFormat(_normalImageRef) =
+            // Format::kB8G8R8A8UNorm;
+        //ImageManager::_descImageType(_normalImageRef) = ImageType::kTexture;
+        //ImageManager::_descImageFlags(_normalImageRef) =
+        //    ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
+      }
+      texture->_normalImageRef = _normalImageRef;
+      imgsToCreate.push_back(_normalImageRef);
+
+	  ImageRef _pbrImageRef =
+          ImageManager::getResourceByName(_N(terrain_rock_PBR));
+      {
+        ImageManager::addResourceFlags(
+            _pbrImageRef, Dod::Resources::ResourceFlags::kResourceVolatile);
+        //ImageManager::_descImageFormat(_pbrImageRef) =
+        //    Format::kB8G8R8A8UNorm;
+        //ImageManager::_descImageType(_pbrImageRef) = ImageType::kTexture;
+        //ImageManager::_descImageFlags(_pbrImageRef) =
+        //    ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
+      }
+      texture->_pbrImageRef = _pbrImageRef;
+      imgsToCreate.push_back(_pbrImageRef);
   }
   
   BufferManager::createResources(buffersToCreate);
@@ -253,6 +269,14 @@ void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     }
 
     ImageManager::insertImageMemoryBarrier(texture->_textureImageRef, 
+										   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+										   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+	ImageManager::insertImageMemoryBarrier(texture->_normalImageRef, 
+										   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+										   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+	ImageManager::insertImageMemoryBarrier(texture->_pbrImageRef, 
 										   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
 										   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
