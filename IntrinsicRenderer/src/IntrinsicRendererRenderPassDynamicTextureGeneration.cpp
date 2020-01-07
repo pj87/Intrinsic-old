@@ -320,131 +320,6 @@ int triangleConnectionTable[4096] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
 };
 
-_INTR_INLINE ComputeCallRef createComputeCallPolygonization(
-    std::unique_ptr<DynamicGeneratedTexture>& texture, glm::vec3 p_Dim)
-{
-  const Name& name = *(texture->textureName);
-  const uint32_t index = BufferManager::_nameToInitlialBufferMap[name];
-
-  texture->_positionBufferRef = BufferManager::_dynamicBuffers[index];
-  texture->_uv0BufferRef = BufferManager::_dynamicBuffers[index + 1];
-  texture->_normalBufferRef = BufferManager::_dynamicBuffers[index + 2];
-  texture->_tangentBufferRef = BufferManager::_dynamicBuffers[index + 3];
-  texture->_binormalBufferRef = BufferManager::_dynamicBuffers[index + 4];
-  texture->_colorBufferRef = BufferManager::_dynamicBuffers[index + 5];
-  
-  ComputeCallRef computeCallPloygonizationRef =
-      ComputeCallManager::createComputeCall(_N(DynamicTextureGeneration));
-  {
-    ComputeCallManager::resetToDefault(computeCallPloygonizationRef);
-    ComputeCallManager::addResourceFlags(
-        computeCallPloygonizationRef,
-        Dod::Resources::ResourceFlags::kResourceVolatile);
-
-    ComputeCallManager::_descDimensions(computeCallPloygonizationRef) =
-        glm::uvec3(p_Dim);
-    ComputeCallManager::_descPipeline(computeCallPloygonizationRef) =
-        texture->_pipelineScatteringRef;
-
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_PositionBuffer), GpuProgramType::kCompute,
-        texture->_positionBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_positionBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_NormalBuffer), GpuProgramType::kCompute,
-        texture->_normalBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_normalBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_BinormalBuffer), GpuProgramType::kCompute,
-        texture->_binormalBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_binormalBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_TangentBuffer), GpuProgramType::kCompute,
-        texture->_tangentBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_tangentBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_Uv0Buffer), GpuProgramType::kCompute,
-        texture->_uv0BufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_uv0BufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_ColorBuffer), GpuProgramType::kCompute,
-        texture->_colorBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_colorBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_CubeEdgeBuffer), GpuProgramType::kCompute,
-        texture->_cubeEdgeFlagsBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_cubeEdgeFlagsBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_TriangleConnectionBuffer),
-        GpuProgramType::kCompute, texture->_triangleConnectionBufferRef,
-        UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_triangleConnectionBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_VoxelBuffer), GpuProgramType::kCompute,
-        texture->_voxelBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_voxelBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_DebugBuffer), GpuProgramType::kCompute,
-        texture->_debugBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_debugBufferRef));
-    ComputeCallManager::bindImage(
-        computeCallPloygonizationRef, _N(_NormalsTex), GpuProgramType::kCompute,
-        texture->_normalsImageRef, Samplers::kNearestRepeat);
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_SizesBuffer), GpuProgramType::kCompute,
-        texture->_sizesBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_sizesBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallPloygonizationRef, _N(_TargetBuffer), GpuProgramType::kCompute,
-        texture->_targetBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_targetBufferRef));
-  }
-
-  return computeCallPloygonizationRef;
-}
-
-_INTR_INLINE ComputeCallRef createComputeCallSDFGeneration(
-    std::unique_ptr<DynamicGeneratedTexture>& texture, glm::vec3 p_Dim)
-{
-  ComputeCallRef computeCallSDFGenerationRef =
-      ComputeCallManager::createComputeCall(_N(SDFGenerationNoiseGeneration));
-  {
-    ComputeCallManager::resetToDefault(computeCallSDFGenerationRef);
-    ComputeCallManager::addResourceFlags(
-        computeCallSDFGenerationRef, Dod::Resources::ResourceFlags::kResourceVolatile);
-
-    ComputeCallManager::_descDimensions(computeCallSDFGenerationRef) =
-        glm::uvec3(p_Dim);
-    ComputeCallManager::_descPipeline(computeCallSDFGenerationRef) =
-        texture->_pipelineSDFGenerationRef;
-
-    ComputeCallManager::bindBuffer(
-        computeCallSDFGenerationRef, _N(_VoxelBuffer), GpuProgramType::kCompute,
-        texture->_voxelBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_voxelBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallSDFGenerationRef, _N(_VoxelNormalBuffer), GpuProgramType::kCompute,
-        texture->_voxelNormalBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_voxelNormalBufferRef));
-    ComputeCallManager::bindImage(
-        computeCallSDFGenerationRef, _N(_Gradient3D), GpuProgramType::kCompute,
-        texture->_gradient3dImageRef, Samplers::kNearestRepeat);
-    ComputeCallManager::bindImage(
-        computeCallSDFGenerationRef, _N(_PermTable2D), GpuProgramType::kCompute,
-        texture->_permTable2dImageRef, Samplers::kNearestRepeat);
-    ComputeCallManager::bindBuffer(
-        computeCallSDFGenerationRef, _N(_SizeBuffer), GpuProgramType::kCompute,
-        texture->_sizesBufferRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_sizesBufferRef));
-    ComputeCallManager::bindBuffer(
-        computeCallSDFGenerationRef, _N(_ParametersBuffer), GpuProgramType::kCompute,
-        texture->_noiseParametersRef, UboType::kPerInstanceCompute,
-        BufferManager::_descSizeInBytes(texture->_noiseParametersRef));
-  }
-
-  return computeCallSDFGenerationRef;
-}
-
 _INTR_INLINE ComputeCallRef createComputeCallNormal(
     std::unique_ptr<DynamicGeneratedTexture>& texture, glm::vec3 p_Dim)
 {
@@ -494,36 +369,6 @@ void DynamicTextureGeneration::postInit()
   for (auto& texture : dynamicGenerationTextures)
   {
     // Pipeline layouts
-    PipelineLayoutRef pipelineLayoutSDFGeneration;
-    {
-      {
-        pipelineLayoutSDFGeneration = PipelineLayoutManager::createPipelineLayout(
-            _N(SDFGenerationNoiseGeneration));
-        PipelineLayoutManager::resetToDefault(pipelineLayoutSDFGeneration);
-
-        GpuProgramManager::reflectPipelineLayout(
-            1u, {GpuProgramManager::getResourceByName(*(texture->shaders[0]))},
-            pipelineLayoutSDFGeneration);
-      }
-      pipelineLayoutsToCreate.push_back(pipelineLayoutSDFGeneration);
-    }
-
-    // Pipeline
-    {
-      PipelineRef _pipelineSDFGenerationRef =
-          PipelineManager::createPipeline(_N(SDFGenerationNoiseGeneration));
-      {
-		  PipelineManager::resetToDefault(_pipelineSDFGenerationRef);
-		  PipelineManager::_descComputeProgram(_pipelineSDFGenerationRef) =
-			  GpuProgramManager::getResourceByName(*(texture->shaders[0]));
-		  PipelineManager::_descPipelineLayout(_pipelineSDFGenerationRef) =
-			  pipelineLayoutSDFGeneration;
-	  }
-      texture->_pipelineSDFGenerationRef = _pipelineSDFGenerationRef;
-      pipelinesToCreate.push_back(_pipelineSDFGenerationRef);
-    }
-
-    // Pipeline layouts
     PipelineLayoutRef pipelineLayoutNormal;
     {
       {
@@ -554,54 +399,10 @@ void DynamicTextureGeneration::postInit()
       pipelinesToCreate.push_back(_pipelineNormalRef);
     }
 
-    // Pipeline layouts
-    PipelineLayoutRef pipelineLayoutScattering;
-    {
-      {
-        pipelineLayoutScattering = PipelineLayoutManager::createPipelineLayout(
-            _N(DynamicTextureGeneration));
-        PipelineLayoutManager::resetToDefault(pipelineLayoutScattering);
-
-        GpuProgramManager::reflectPipelineLayout(
-            1u, {GpuProgramManager::getResourceByName(*(texture->shaders[2]))},
-            pipelineLayoutScattering);
-      }
-      pipelineLayoutsToCreate.push_back(pipelineLayoutScattering);
-    }
-
-    // Pipeline
-    {
-        PipelineRef _pipelineScatteringRef =
-            PipelineManager::createPipeline(_N(DynamicTextureGeneration));
-      {
-        PipelineManager::resetToDefault(_pipelineScatteringRef);
-
-        PipelineManager::_descComputeProgram(_pipelineScatteringRef) =
-            GpuProgramManager::getResourceByName(*(texture->shaders[2]));
-        PipelineManager::_descPipelineLayout(_pipelineScatteringRef) =
-            pipelineLayoutScattering;
-      }
-      texture->_pipelineScatteringRef = _pipelineScatteringRef;
-      pipelinesToCreate.push_back(_pipelineScatteringRef);
-    }
-
-    PipelineLayoutManager::createResources(pipelineLayoutsToCreate);
-    PipelineManager::createResources(pipelinesToCreate);
-
     const glm::uvec3 computeDim = 
 		glm::uvec3(sqrt(texture->sizes[0]), 
 				   sqrt(texture->sizes[1]), 
 				   sqrt(texture->sizes[2]));
-
-    {
-      // SDF generation
-      ComputeCallRef _computeCallSDFGenerationRef =
-          createComputeCallSDFGeneration(texture, computeDim);
-
-	  texture->_computeCallSDFGenerationRef = _computeCallSDFGenerationRef;
-      computeCallsToCreate.push_back(_computeCallSDFGenerationRef);
-    }
-
     {
       // Normal
       ComputeCallRef _computeCallNormalRef =
@@ -610,17 +411,6 @@ void DynamicTextureGeneration::postInit()
 	  texture->_computeCallNormalRef = _computeCallNormalRef;
       computeCallsToCreate.push_back(_computeCallNormalRef);
     }
-
-    // Compute calls
-    {
-      // Polygonization
-      ComputeCallRef _computeCallMarchingCubesRef =
-          createComputeCallPolygonization(texture, computeDim);
-
-	  texture->_computeCallMarchingCubesRef = _computeCallMarchingCubesRef;
-      computeCallsToCreate.push_back(_computeCallMarchingCubesRef);
-    }
-
   }
 
   PipelineLayoutManager::createResources(pipelineLayoutsToCreate);
@@ -663,25 +453,6 @@ void DynamicTextureGeneration::init()
     
   for (auto& texture : dynamicGenerationTextures)
   {
-      BufferRef _noiseParametersRef =
-          BufferManager::createBuffer(_N(_ParametersBuffer));
-      {
-        BufferManager::resetToDefault(_noiseParametersRef);
-        BufferManager::addResourceFlags(
-            _noiseParametersRef,
-            Dod::Resources::ResourceFlags::kResourceVolatile);
-        BufferManager::_descBufferType(_noiseParametersRef) =
-            BufferType::kStorage;
-        BufferManager::_descMemoryPoolType(_noiseParametersRef) =
-            MemoryPoolType::kStaticStagingBuffers;
-        BufferManager::_descSizeInBytes(_noiseParametersRef) =
-            sizeof(noiseParams);
-        BufferManager::_descInitialData(_noiseParametersRef) = 
-			noiseParams;
-      }
-      texture->_noiseParametersRef = _noiseParametersRef;
-      buffersToCreate.push_back(_noiseParametersRef);
-
       BufferRef _voxelBufferRef = 
 		  BufferManager::createBuffer(_N(_Voxels));
       {
@@ -735,79 +506,6 @@ void DynamicTextureGeneration::init()
       }
       texture->_sizesBufferRef = _sizesBufferRef;
       buffersToCreate.push_back(_sizesBufferRef);
-
-      BufferRef _targetBufferRef =
-          BufferManager::createBuffer(_N(_TargetBuffer));
-      {
-        BufferManager::resetToDefault(_targetBufferRef);
-        BufferManager::addResourceFlags(
-            _targetBufferRef, 
-			Dod::Resources::ResourceFlags::kResourceVolatile);
-        BufferManager::_descBufferType(_targetBufferRef) = 
-			BufferType::kStorage;
-        BufferManager::_descSizeInBytes(_targetBufferRef) = 
-			sizeof(float);
-        BufferManager::_descInitialData(_targetBufferRef) = 
-			&target;
-      }
-      texture->_targetBufferRef = _targetBufferRef;
-      buffersToCreate.push_back(_targetBufferRef);
-
-      BufferRef _cubeEdgeFlagsBufferRef =
-          BufferManager::createBuffer(_N(_CubeEdgeFlags));
-      {
-        BufferManager::resetToDefault(_cubeEdgeFlagsBufferRef);
-        BufferManager::addResourceFlags(
-            _cubeEdgeFlagsBufferRef,
-            Dod::Resources::ResourceFlags::kResourceVolatile);
-
-		///// PJ: only for tests
-        BufferManager::_descMemoryPoolType(_cubeEdgeFlagsBufferRef) =
-            MemoryPoolType::kStaticStagingBuffers;
-        ///// PJ: only for tests
-
-        BufferManager::_descBufferType(_cubeEdgeFlagsBufferRef) =
-            BufferType::kStorage;
-        BufferManager::_descSizeInBytes(_cubeEdgeFlagsBufferRef) =
-            sizeof(cubeEdgeFlags);
-        BufferManager::_descInitialData(_cubeEdgeFlagsBufferRef) =
-            cubeEdgeFlags;
-      }
-      texture->_cubeEdgeFlagsBufferRef = _cubeEdgeFlagsBufferRef;
-      buffersToCreate.push_back(_cubeEdgeFlagsBufferRef);
-
-      BufferRef _triangleConnectionBufferRef =
-          BufferManager::createBuffer(_N(_TriangleConnectionTable));
-      {
-        BufferManager::resetToDefault(_triangleConnectionBufferRef);
-        BufferManager::addResourceFlags(
-            _triangleConnectionBufferRef,
-            Dod::Resources::ResourceFlags::kResourceVolatile);
-
-        BufferManager::_descBufferType(_triangleConnectionBufferRef) =
-            BufferType::kStorage;
-        BufferManager::_descSizeInBytes(_triangleConnectionBufferRef) =
-            sizeof(triangleConnectionTable);
-        BufferManager::_descInitialData(_triangleConnectionBufferRef) =
-            triangleConnectionTable;
-      }
-      texture->_triangleConnectionBufferRef = _triangleConnectionBufferRef;
-      buffersToCreate.push_back(_triangleConnectionBufferRef);
-
-      BufferRef _debugBufferRef = 
-		  BufferManager::createBuffer(_N(_DebugBuffer));
-      {
-        BufferManager::resetToDefault(_debugBufferRef);
-        BufferManager::addResourceFlags(
-            _debugBufferRef, 
-			Dod::Resources::ResourceFlags::kResourceVolatile);
-        BufferManager::_descBufferType(_debugBufferRef) = 
-			BufferType::kStorage;
-        BufferManager::_descSizeInBytes(_debugBufferRef) =
-            150000 * 8 * sizeof(float);
-      }
-      texture->_debugBufferRef = _debugBufferRef;
-      buffersToCreate.push_back(_debugBufferRef);
 
 	  // Images
       texture->_gradient3dImageRef =
@@ -901,9 +599,6 @@ void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   {
     if (texture->isDynamic)
 	{
-	  BufferRef buffer = texture->_noiseParametersRef;
-      updateDataMemory(noiseParams, buffer,
-                       BufferManager::_descSizeInBytes(buffer), 0);
 	}
 	else
 	{
@@ -921,48 +616,6 @@ void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     ImageManager::insertImageMemoryBarrier(texture->_normalsImageRef, 
 										   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
 										   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-    {
-      RenderSystem::dispatchComputeCall(texture->_computeCallSDFGenerationRef,
-                                        primaryCmdBuffer);
-    }
-
-    BufferManager::insertBufferMemoryBarrier(texture->_voxelBufferRef,
-                                             VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
-
-	BufferManager::insertBufferMemoryBarrier(texture->_voxelNormalBufferRef,
-                                             VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
-
-    {
-      RenderSystem::dispatchComputeCall(texture->_computeCallMarchingCubesRef,
-                                        primaryCmdBuffer);
-    }
-
-    BufferManager::insertBufferMemoryBarrier(texture->_positionBufferRef,
-                                             VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
-
-    BufferManager::insertBufferMemoryBarrier(texture->_normalBufferRef,
-                                             VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
-
-    BufferManager::insertBufferMemoryBarrier(texture->_binormalBufferRef,
-                                             VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
-
-    BufferManager::insertBufferMemoryBarrier(texture->_tangentBufferRef,
-                                             VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
-
-    BufferManager::insertBufferMemoryBarrier(texture->_uv0BufferRef,
-                                             VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
-
-    BufferManager::insertBufferMemoryBarrier(texture->_colorBufferRef, 
-											 VK_ACCESS_SHADER_WRITE_BIT, 
-											 VK_ACCESS_SHADER_READ_BIT);
 
 	texture->isCalled = true;
     texture->counter++;
