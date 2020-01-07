@@ -30,27 +30,27 @@ namespace RenderPass
 namespace
 {
 
-_INTR_INLINE ComputeCallRef createComputeCallNormal(
+_INTR_INLINE ComputeCallRef createComputeCallTexture(
     std::unique_ptr<DynamicGeneratedTexture>& texture, glm::vec3 p_Dim)
 {
-  ComputeCallRef computeCallNormalRef =
-      ComputeCallManager::createComputeCall(_N(NormalGeneration));
+  ComputeCallRef computeCallTextureRef =
+      ComputeCallManager::createComputeCall(_N(TextureGeneration));
   {
-    ComputeCallManager::resetToDefault(computeCallNormalRef);
+    ComputeCallManager::resetToDefault(computeCallTextureRef);
     ComputeCallManager::addResourceFlags(
-        computeCallNormalRef, Dod::Resources::ResourceFlags::kResourceVolatile);
+        computeCallTextureRef, Dod::Resources::ResourceFlags::kResourceVolatile);
 
-    ComputeCallManager::_descDimensions(computeCallNormalRef) =
+    ComputeCallManager::_descDimensions(computeCallTextureRef) =
         glm::uvec3(p_Dim);
-    ComputeCallManager::_descPipeline(computeCallNormalRef) =
-        texture->_pipelineNormalRef;
+    ComputeCallManager::_descPipeline(computeCallTextureRef) =
+        texture->_pipelineTextureRef;
 
     ComputeCallManager::bindImage(
-        computeCallNormalRef, _N(_NormalTex), GpuProgramType::kCompute,
-        texture->_normalsImageRef, Samplers::kNearestRepeat);
+        computeCallTextureRef, _N(_TextureTex), GpuProgramType::kCompute,
+        texture->_textureImageRef, Samplers::kNearestRepeat);
   }
 
-  return computeCallNormalRef;
+  return computeCallTextureRef;
 }
 
 } // namespace
@@ -71,34 +71,34 @@ void DynamicTextureGeneration::postInit()
   for (auto& texture : dynamicGenerationTextures)
   {
     // Pipeline layouts
-    PipelineLayoutRef pipelineLayoutNormal;
+    PipelineLayoutRef pipelineLayoutTexture;
     {
       {
-        pipelineLayoutNormal =
-            PipelineLayoutManager::createPipelineLayout(_N(NormalGeneration));
-        PipelineLayoutManager::resetToDefault(pipelineLayoutNormal);
+        pipelineLayoutTexture =
+            PipelineLayoutManager::createPipelineLayout(_N(TextureGeneration));
+        PipelineLayoutManager::resetToDefault(pipelineLayoutTexture);
 
         GpuProgramManager::reflectPipelineLayout(
             1u, {GpuProgramManager::getResourceByName(*(texture->shaders[1]))},
-            pipelineLayoutNormal);
+            pipelineLayoutTexture);
       }
-      pipelineLayoutsToCreate.push_back(pipelineLayoutNormal);
+      pipelineLayoutsToCreate.push_back(pipelineLayoutTexture);
     }
 
     // Pipeline
     {
-        PipelineRef _pipelineNormalRef =
-            PipelineManager::createPipeline(_N(NormalGeneration));
+        PipelineRef _pipelineTextureRef =
+            PipelineManager::createPipeline(_N(TextureGeneration));
       {
-        PipelineManager::resetToDefault(_pipelineNormalRef);
+        PipelineManager::resetToDefault(_pipelineTextureRef);
 
-        PipelineManager::_descComputeProgram(_pipelineNormalRef) =
+        PipelineManager::_descComputeProgram(_pipelineTextureRef) =
             GpuProgramManager::getResourceByName(*(texture->shaders[1]));
-        PipelineManager::_descPipelineLayout(_pipelineNormalRef) =
-            pipelineLayoutNormal;
+        PipelineManager::_descPipelineLayout(_pipelineTextureRef) =
+            pipelineLayoutTexture;
       }
-      texture->_pipelineNormalRef = _pipelineNormalRef;
-      pipelinesToCreate.push_back(_pipelineNormalRef);
+      texture->_pipelineTextureRef = _pipelineTextureRef;
+      pipelinesToCreate.push_back(_pipelineTextureRef);
     }
 
     const glm::uvec3 computeDim = 
@@ -106,12 +106,12 @@ void DynamicTextureGeneration::postInit()
 				   sqrt(texture->sizes[1]), 
 				   sqrt(texture->sizes[2]));
     {
-      // Normal
-      ComputeCallRef _computeCallNormalRef =
-          createComputeCallNormal(texture, computeDim);
+      // Texture
+      ComputeCallRef _computeCallTextureRef =
+          createComputeCallTexture(texture, computeDim);
 
-	  texture->_computeCallNormalRef = _computeCallNormalRef;
-      computeCallsToCreate.push_back(_computeCallNormalRef);
+	  texture->_computeCallTextureRef = _computeCallTextureRef;
+      computeCallsToCreate.push_back(_computeCallTextureRef);
     }
   }
 
@@ -155,12 +155,12 @@ void DynamicTextureGeneration::init()
     
   for (auto& texture : dynamicGenerationTextures)
   {
-      ImageRef _normalsImageRef =
+      ImageRef _textureImageRef =
           ImageManager::getResourceByName(_N(terrain_rock));
       {
-        //ImageManager::resetToDefault(_normalsImageRef);
+        //ImageManager::resetToDefault(_textureImageRef);
         ImageManager::addResourceFlags(
-            _normalsImageRef, 
+            _textureImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
 
 		// hack (for the demo): sqrt in normals texture are only for the
@@ -169,25 +169,25 @@ void DynamicTextureGeneration::init()
         /*
         if (name != _N(pbr_test_0125) && name != _N(pbr_test_025) && name != _N(house))
         {
-          ImageManager::_descDimensions(_normalsImageRef) = glm::uvec3(
+          ImageManager::_descDimensions(_textureImageRef) = glm::uvec3(
               sqrt(texture->sizes[0]), sqrt(texture->sizes[1]), sqrt(texture->sizes[2]));
         }
         else
         {
-          ImageManager::_descDimensions(_normalsImageRef) =
+          ImageManager::_descDimensions(_textureImageRef) =
               glm::uvec3(texture->sizes[0], texture->sizes[1], texture->sizes[2]);
         }
         // end of hack (for the demo)
 		*/
-        ImageManager::_descImageFormat(_normalsImageRef) =
+        ImageManager::_descImageFormat(_textureImageRef) =
             Format::kB8G8R8A8UNorm;
-        ImageManager::_descImageType(_normalsImageRef) = 
+        ImageManager::_descImageType(_textureImageRef) = 
 			ImageType::kTexture;
-        ImageManager::_descImageFlags(_normalsImageRef) =
+        ImageManager::_descImageFlags(_textureImageRef) =
             ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
       }
-      texture->_normalsImageRef = _normalsImageRef;
-      imgsToCreate.push_back(_normalsImageRef);
+      texture->_textureImageRef = _textureImageRef;
+      imgsToCreate.push_back(_textureImageRef);
   }
   
   BufferManager::createResources(buffersToCreate);
@@ -248,11 +248,11 @@ void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
 
     {
-      RenderSystem::dispatchComputeCall(texture->_computeCallNormalRef,
+      RenderSystem::dispatchComputeCall(texture->_computeCallTextureRef,
                                         primaryCmdBuffer);
     }
 
-    ImageManager::insertImageMemoryBarrier(texture->_normalsImageRef, 
+    ImageManager::insertImageMemoryBarrier(texture->_textureImageRef, 
 										   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
 										   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 

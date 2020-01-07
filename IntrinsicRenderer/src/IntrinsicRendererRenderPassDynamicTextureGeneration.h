@@ -62,33 +62,10 @@ struct DynamicGeneratedTexture
 
   std::vector<std::unique_ptr<Name>> shaders;
   std::unique_ptr<Name> textureName;
-
-  BufferRef _positionBufferRef;
-  BufferRef _normalBufferRef;
-  BufferRef _binormalBufferRef;
-  BufferRef _tangentBufferRef;
-  BufferRef _colorBufferRef;
-  BufferRef _uv0BufferRef;
-  BufferRef _debugBufferRef;
-  BufferRef _voxelBufferRef;
-  BufferRef _voxelNormalBufferRef;
-  BufferRef _cubeEdgeFlagsBufferRef;
-  BufferRef _triangleConnectionBufferRef;
-  BufferRef _sizesBufferRef;
-  BufferRef _targetBufferRef;
-  BufferRef _noiseParametersRef;
-
-  ImageRef _normalsImageRef;
-  ImageRef _gradient3dImageRef;
-  ImageRef _permTable2dImageRef;
-
-  PipelineRef _pipelineScatteringRef;
-  PipelineRef _pipelineSDFGenerationRef;
-  PipelineRef _pipelineNormalRef;
   
-  ComputeCallRef _computeCallMarchingCubesRef;
-  ComputeCallRef _computeCallSDFGenerationRef;
-  ComputeCallRef _computeCallNormalRef;
+  ImageRef _textureImageRef;
+  PipelineRef _pipelineTextureRef;
+  ComputeCallRef _computeCallTextureRef;
 
   int counter = 0;
   bool isCalled = false;
