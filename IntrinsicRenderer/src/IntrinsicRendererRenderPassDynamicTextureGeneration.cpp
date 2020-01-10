@@ -155,8 +155,6 @@ bool DynamicTextureGeneration::isOverridenTexture(const Name& textureName)
 
 void DynamicTextureGeneration::init()
 {
-  // Buffers
-  BufferRefArray buffersToCreate;
   ImageRefArray imgsToCreate;
     
   for (auto& texture : dynamicGenerationTextures)
@@ -206,7 +204,6 @@ void DynamicTextureGeneration::init()
       imgsToCreate.push_back(_pbrImageRef);
   }
   
-  BufferManager::createResources(buffersToCreate);
   ImageManager::createResources(imgsToCreate);
 }
 
