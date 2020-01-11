@@ -217,6 +217,9 @@ enum Enum
   kB10G11R11UFloat,
   kR8UNorm,
 
+  // For normal/PBR generation
+  kR8G8Unorm,
+
   kCount
 };
 }

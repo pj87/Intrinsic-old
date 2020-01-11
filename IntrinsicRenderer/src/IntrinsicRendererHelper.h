@@ -268,6 +268,10 @@ _INTR_INLINE VkFormat mapFormatToVkFormat(Format::Enum p_Format)
 
   case Format::kR8UNorm:
     return VK_FORMAT_R8_UNORM;
+  
+  case Format::kR8G8Unorm:
+    return VK_FORMAT_R8G8_UNORM;
+
   default:
     _INTR_ASSERT(false && "Failed to map format");
     return VK_FORMAT_R32G32B32_SFLOAT;
