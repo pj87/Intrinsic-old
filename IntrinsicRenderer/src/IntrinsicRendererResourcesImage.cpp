@@ -339,7 +339,8 @@ void createTexture(ImageRef p_Ref)
   imageCreateInfo.extent.width = (uint32_t)dimensions.x;
   imageCreateInfo.extent.height = (uint32_t)dimensions.y;
   imageCreateInfo.extent.depth = (uint32_t)dimensions.z;
-  imageCreateInfo.mipLevels = mipLevelCount;
+  //imageCreateInfo.mipLevels = mipLevelCount;
+  imageCreateInfo.mipLevels = 1;
   imageCreateInfo.arrayLayers = arrayLayerCount;
   imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
   imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;

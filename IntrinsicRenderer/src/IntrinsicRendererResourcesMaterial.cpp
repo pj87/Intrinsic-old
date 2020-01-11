@@ -91,6 +91,14 @@ void MaterialManager::createResources(const MaterialRefArray& p_Materiales)
   {
     MaterialRef matRef = p_Materiales[i];
 
+	/*
+	_INTR_LOG_WARNING("PJ: %s", _name(matRef).getString().c_str());
+    _INTR_LOG_WARNING("PJ: %s", _descAlbedoTextureName(matRef).getString().c_str());
+    _INTR_LOG_WARNING("PJ: %s", _descEmissiveTextureName(matRef).getString().c_str());
+	_INTR_LOG_WARNING("PJ: %s", _descNormalTextureName(matRef).getString().c_str());
+    _INTR_LOG_WARNING("PJ: %s", _descPbrTextureName(matRef).getString().c_str());
+	*/
+
     _perMaterialDataVertexOffset(matRef) =
         UniformManager::allocatePerMaterialDataMemory();
     _perMaterialDataFragmentOffset(matRef) =

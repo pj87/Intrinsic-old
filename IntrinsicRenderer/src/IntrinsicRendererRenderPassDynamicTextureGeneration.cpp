@@ -174,29 +174,75 @@ void DynamicTextureGeneration::init()
       }
       texture->_textureImageRef = _textureImageRef;
       imgsToCreate.push_back(_textureImageRef);
-
+      
+	  /*
 	  ImageRef _normalImageRef =
-          ImageManager::getResourceByName(_N(terrain_rock_N));
+          //ImageManager::getResourceByName(_N(normalsTexPJ));
+      ImageManager::createImage(_N(normalsTexPJ));
+	  ImageManager::addResourceFlags(
+		  _normalImageRef, Dod::Resources::ResourceFlags::kResourceVolatile);
+      ImageManager::_descDimensions(_normalImageRef) = glm::uvec3(2048, 2048, 1);
+      ImageManager::_descImageFormat(_normalImageRef) =
+		  Format::kR16G16Float;
+	  ImageManager::_descImageType(_normalImageRef) = 
+		  ImageType::kTexture;
+	  ImageManager::_descImageFlags(_normalImageRef) = 
+		  ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
+	  */
+	  
+	  ImageRef _normalImageRef =
+          ImageManager::getResourceByName(_N(concrete_NRM));
       {
         ImageManager::addResourceFlags(
-            _normalImageRef, Dod::Resources::ResourceFlags::kResourceVolatile);
-        //ImageManager::_descImageFormat(_normalImageRef) =
+            _normalImageRef, 
+			Dod::Resources::ResourceFlags::kResourceVolatile);
+        ImageManager::_descImageFormat(_normalImageRef) = Format::kR8G8Unorm;
+            // Format::kR16G16B16A16Float;
             // Format::kB8G8R8A8UNorm;
-        //ImageManager::_descImageType(_normalImageRef) = ImageType::kTexture;
-        //ImageManager::_descImageFlags(_normalImageRef) =
-        //    ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
+            // Format::kR16G16Float;
+            // Format::kR32G32SFloat;
+			// Format::kR32G32SFloat;
+            // Format::kB8G8R8A8UNorm;
+        ImageManager::_descImageType(_normalImageRef) = 
+			ImageType::kTexture;
+        ImageManager::_descImageFlags(_normalImageRef) =
+            ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
       }
+	  
       texture->_normalImageRef = _normalImageRef;
       imgsToCreate.push_back(_normalImageRef);
+	  
+	  /*
+	  MaterialRef matRef = MaterialManager::getResourceByName(_N(house));
+
+	  _INTR_LOG_WARNING("PJ: %s",
+                            MaterialManager::_name(matRef).getString().c_str());
+      _INTR_LOG_WARNING("PJ: %s",
+                            MaterialManager::_descAlbedoTextureName(matRef).getString().c_str());
+      _INTR_LOG_WARNING("PJ: %s",
+                            MaterialManager::_descEmissiveTextureName(matRef).getString().c_str());
+	  _INTR_LOG_WARNING("PJ: %s",
+                            MaterialManager::_descNormalTextureName(matRef).getString().c_str());
+      _INTR_LOG_WARNING("PJ: %s",
+							MaterialManager::_descPbrTextureName(matRef).getString().c_str());
+	  
+	  MaterialManager::_descNormalTextureName(matRef) = _N(normalsTexPJ);
+
+	  _INTR_LOG_WARNING("PJ: %s",
+                            MaterialManager::_descNormalTextureName(matRef).getString().c_str());
+	  */
 
 	  ImageRef _pbrImageRef =
-          ImageManager::getResourceByName(_N(terrain_rock_PBR));
+          ImageManager::getResourceByName(_N(concrete_PBR));
       {
         ImageManager::addResourceFlags(
             _pbrImageRef, Dod::Resources::ResourceFlags::kResourceVolatile);
-        //ImageManager::_descImageFormat(_pbrImageRef) =
+        //ImageManager::_descImageFormat(_pbrImageRef) = 
+		//	Format::kB8G8R8A8UNorm;
+			//Format::kR16G16Float;
         //    Format::kB8G8R8A8UNorm;
-        //ImageManager::_descImageType(_pbrImageRef) = ImageType::kTexture;
+        //ImageManager::_descImageType(_pbrImageRef) = 
+		//	ImageType::kTexture;
         //ImageManager::_descImageFlags(_pbrImageRef) =
         //    ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
       }
