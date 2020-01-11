@@ -191,6 +191,9 @@
 		{
 			"type" : "RenderPassDynamicGeometryGeneration"
 		},
+		{
+            "type": "RenderPassDynamicTextureGeneration"
+        },
 		//{
 		//	"type" : "RenderPassGeometryGeneration"
 		//},
