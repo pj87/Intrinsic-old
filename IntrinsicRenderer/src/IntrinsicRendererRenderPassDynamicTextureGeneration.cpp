@@ -108,9 +108,9 @@ void DynamicTextureGeneration::postInit()
     }
 
     const glm::uvec3 computeDim = 
-		glm::uvec3(sqrt(texture->sizes[0]), 
-				   sqrt(texture->sizes[1]), 
-				   sqrt(texture->sizes[2]));
+		glm::uvec3(texture->sizes[0], 
+				   texture->sizes[1], 
+				   texture->sizes[2]);
     {
       // Texture
       ComputeCallRef _computeCallTextureRef =

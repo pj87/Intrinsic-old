@@ -252,7 +252,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		*/
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
-        64, 64, 64, 
+        2048, 2048, 1, 
         _N(),
         "", 
         "texture_generation.comp",
