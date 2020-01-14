@@ -37,9 +37,7 @@ struct DynamicGeneratedTexture
 {
   DynamicGeneratedTexture(const int& sizeX, const int& sizeY, 
 					   const int& sizeZ, const Name& textureName,
-                       const Name&& voxelGenerationShader,
-                       const Name&& normalGenerationShader, 
-					   const Name&& geometryGenerationShader, 
+					   const Name&& textureGenerationShader, 
 					   bool isDynamic)
   {
     this->textureName = std::make_unique<Name>(textureName);
@@ -55,17 +53,13 @@ struct DynamicGeneratedTexture
     this->sizeY = &sizes[1];
     this->sizeZ = &sizes[2];
 
-    shaders.push_back(std::make_unique<Name>(voxelGenerationShader));
-    shaders.push_back(std::make_unique<Name>(normalGenerationShader));
-    shaders.push_back(std::make_unique<Name>(geometryGenerationShader));
+    shaders.push_back(std::make_unique<Name>(textureGenerationShader));
   }
 
   std::vector<std::unique_ptr<Name>> shaders;
   std::unique_ptr<Name> textureName;
   
   ImageRef _textureImageRef;
-  ImageRef _normalImageRef;
-  ImageRef _pbrImageRef;
   PipelineRef _pipelineTextureRef;
   ComputeCallRef _computeCallTextureRef;
 
@@ -83,8 +77,8 @@ struct DynamicTextureGeneration
 
   static void addDynamicGeneradtedTexture(const int& sizeX, const int& sizeY,
                                           const int& sizeZ,
-									   const Name&, const Name&&, const Name&&,
-                                       const Name&&, bool isDynamic = true);
+										  const Name&,const Name&&, 
+										  bool isDynamic = true);
 
   static bool isOverridenTexture(const Name&);
 

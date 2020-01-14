@@ -48,12 +48,6 @@ _INTR_INLINE ComputeCallRef createComputeCallTexture(
     ComputeCallManager::bindImage(
         computeCallTextureRef, _N(_TextureTex), GpuProgramType::kCompute,
         texture->_textureImageRef, Samplers::kNearestRepeat);
-    ComputeCallManager::bindImage(
-        computeCallTextureRef, _N(_NormalTex), GpuProgramType::kCompute,
-        texture->_normalImageRef, Samplers::kNearestRepeat);
-    ComputeCallManager::bindImage(
-        computeCallTextureRef, _N(_PBRTex), GpuProgramType::kCompute,
-        texture->_pbrImageRef, Samplers::kNearestRepeat);
   }
 
   return computeCallTextureRef;
@@ -85,7 +79,7 @@ void DynamicTextureGeneration::postInit()
         PipelineLayoutManager::resetToDefault(pipelineLayoutTexture);
 
         GpuProgramManager::reflectPipelineLayout(
-            1u, {GpuProgramManager::getResourceByName(*(texture->shaders[1]))},
+            1u, {GpuProgramManager::getResourceByName(*(texture->shaders[0]))},
             pipelineLayoutTexture);
       }
       pipelineLayoutsToCreate.push_back(pipelineLayoutTexture);
@@ -99,7 +93,7 @@ void DynamicTextureGeneration::postInit()
         PipelineManager::resetToDefault(_pipelineTextureRef);
 
         PipelineManager::_descComputeProgram(_pipelineTextureRef) =
-            GpuProgramManager::getResourceByName(*(texture->shaders[1]));
+            GpuProgramManager::getResourceByName(*(texture->shaders[0]));
         PipelineManager::_descPipelineLayout(_pipelineTextureRef) =
             pipelineLayoutTexture;
       }
@@ -128,16 +122,14 @@ void DynamicTextureGeneration::postInit()
 
 void DynamicTextureGeneration::addDynamicGeneradtedTexture(
     const int& sizeX, const int& sizeY, const int& sizeZ, 
-	const Name& textureName, const Name&& voxelGenerationShadera,
-    const Name&& normalGenerationShader, const Name&& geometryGenerationShader, 
+	const Name& textureName, const Name&& textureGenerationShader,
 	bool isDynamic)
 {
   std::unique_ptr<DynamicGeneratedTexture> dynamicGenerationTexture =
       std::make_unique<DynamicGeneratedTexture>(
           sizeX, sizeY, sizeZ, 
-          std::move(textureName), std::move(voxelGenerationShadera),
-          std::move(normalGenerationShader),
-          std::move(geometryGenerationShader), 
+          std::move(textureName),
+          std::move(textureGenerationShader),
 		  isDynamic);
 
   dynamicGenerationTextures.push_back(std::move(dynamicGenerationTexture));
@@ -160,15 +152,22 @@ void DynamicTextureGeneration::init()
   for (auto& texture : dynamicGenerationTextures)
   {
       ImageRef _textureImageRef =
-          ImageManager::getResourceByName(_N(terrain_rock));
+          ImageManager::getResourceByName(*texture->textureName);
       {
         ImageManager::addResourceFlags(
             _textureImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
-        ImageManager::_descMemoryPoolType(_textureImageRef) =
-            MemoryPoolType::kResolutionDependentImages;
-        ImageManager::_descImageFormat(_textureImageRef) =
-            Format::kB8G8R8A8UNorm;
+        ImageManager::_descMipLevelCount(_textureImageRef) = 1u;
+        if (texture->isDynamic)
+		{
+			ImageManager::_descImageFormat(_textureImageRef) =
+              Format::kR8G8Unorm;
+		}
+		else
+		{
+			ImageManager::_descImageFormat(_textureImageRef) =
+			  Format::kB8G8R8A8UNorm;
+		}
         ImageManager::_descImageType(_textureImageRef) = 
 			ImageType::kTexture;
         ImageManager::_descImageFlags(_textureImageRef) =
@@ -176,42 +175,6 @@ void DynamicTextureGeneration::init()
       }
       texture->_textureImageRef = _textureImageRef;
       imgsToCreate.push_back(_textureImageRef);
-	  
-	  ImageRef _normalImageRef =
-          ImageManager::getResourceByName(_N(concrete_NRM));
-      {
-        ImageManager::addResourceFlags(
-            _normalImageRef, 
-			Dod::Resources::ResourceFlags::kResourceVolatile);
-        ImageManager::_descMemoryPoolType(_normalImageRef) =
-            MemoryPoolType::kResolutionDependentImages;
-        ImageManager::_descImageFormat(_normalImageRef) = 
-			Format::kR8G8Unorm;
-        ImageManager::_descImageType(_normalImageRef) = 
-			ImageType::kTexture;
-        ImageManager::_descImageFlags(_normalImageRef) =
-            ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
-      }
-      texture->_normalImageRef = _normalImageRef;
-      imgsToCreate.push_back(_normalImageRef);
-
-	  ImageRef _pbrImageRef =
-          ImageManager::getResourceByName(_N(concrete_PBR));
-      {
-        ImageManager::addResourceFlags(
-            _pbrImageRef, 
-			Dod::Resources::ResourceFlags::kResourceVolatile);
-        ImageManager::_descMemoryPoolType(_pbrImageRef) =
-            MemoryPoolType::kResolutionDependentImages;
-        ImageManager::_descImageFormat(_pbrImageRef) = 
-			Format::kR8G8Unorm;
-        ImageManager::_descImageType(_pbrImageRef) = 
-			ImageType::kTexture;
-        ImageManager::_descImageFlags(_pbrImageRef) =
-            ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
-      }
-      texture->_pbrImageRef = _pbrImageRef;
-      imgsToCreate.push_back(_pbrImageRef);
   }
   
   ImageManager::createResources(imgsToCreate);
@@ -276,14 +239,6 @@ void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     }
 
     ImageManager::insertImageMemoryBarrier(texture->_textureImageRef, 
-										   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-										   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-	ImageManager::insertImageMemoryBarrier(texture->_normalImageRef, 
-										   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-										   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-	ImageManager::insertImageMemoryBarrier(texture->_pbrImageRef, 
 										   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
 										   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 

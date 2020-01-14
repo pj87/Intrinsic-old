@@ -253,12 +253,22 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
-        _N(),
-        "", 
+        _N(terrain_rock), 
         "texture_generation.comp",
-        "", 
+        false);
+    
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(concrete_NRM), 
+        "texture_NRM_generation.comp",
         true);
-
+    
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(concrete_PBR), 
+        "texture_NRM_generation.comp",
+        true);
+	
 	PseudoInstancing::addPseudoInstancingMesh(_N(cube), 10, 10, 0.1f);
 
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_01_8), 6, 6, 0.5f);

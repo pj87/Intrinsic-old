@@ -1,6 +1,6 @@
 #version 450
 
-layout(binding = 0, RGBA8) uniform image2D _TextureTex;
+layout(binding = 0, RG8) uniform image2D _TextureTex;
 //layout(binding = 1, RG8) uniform image2D _NormalTex;
 //layout(binding = 2, RG8) uniform image2D _PBRTex;
 
@@ -9,7 +9,7 @@ void main()
 {
     ivec3 id = ivec3(gl_GlobalInvocationID);
 	
-	imageStore(_TextureTex, id.xy, vec4(1.0, 0.0, 0.0, 1.0));
+	imageStore(_TextureTex, id.xy, vec4(0.5, 0.5, 0.0, 1.0));
 	//imageStore(_NormalTex, id.xy, vec4(1.0, 1.0, 0.0, 1.0));
 	//imageStore(_PBRTex, id.xy, vec4(0.0, 1.0, 0.0, 1.0));
 }
