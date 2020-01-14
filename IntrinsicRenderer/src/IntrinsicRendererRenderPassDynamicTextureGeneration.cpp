@@ -165,17 +165,43 @@ void DynamicTextureGeneration::init()
         ImageManager::addResourceFlags(
             _textureImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
-        ImageManager::_descMemoryPoolType(_textureImageRef) =
+
+		_INTR_LOG_WARNING(
+					"PJ sfdsfdsfdasfdasfdsfd: %d",
+                    ImageManager::_descImageFormat(_textureImageRef));
+
+		ImageManager::_descImageFormat(_textureImageRef) =
+                    Format::kB8G8R8A8UNorm;
+
+		_INTR_LOG_WARNING(
+                    "PJ sfdsfdsfdasfdasfdsfd: %d",
+                    ImageManager::_descImageFormat(_textureImageRef));
+
+		_INTR_LOG_WARNING(
+                    "PJ SFDSFDSFDSFDSFDSFD: %d",
+                    ImageManager::ImageManager::_descMemoryPoolType(
+                        _textureImageRef));
+
+		_INTR_LOG_WARNING(
+                    "PJ SFDSFDSFDSFDSFDSFD: %d",
+                    ImageManager::_descMemoryPoolType(_textureImageRef));
+
+        
+        ImageManager::_descMipLevelCount(_textureImageRef) = 1;
+        ImageManager::_descArrayLayerCount(_textureImageRef) = 1;
+        /*
+		ImageManager::_descMemoryPoolType(_textureImageRef) =
             MemoryPoolType::kResolutionDependentImages;
         ImageManager::_descImageFormat(_textureImageRef) =
             Format::kB8G8R8A8UNorm;
+		*/
         ImageManager::_descImageType(_textureImageRef) = 
 			ImageType::kTexture;
         ImageManager::_descImageFlags(_textureImageRef) =
             ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
       }
       texture->_textureImageRef = _textureImageRef;
-      imgsToCreate.push_back(_textureImageRef);
+      //imgsToCreate.push_back(_textureImageRef);
 	  
 	  ImageRef _normalImageRef =
           ImageManager::getResourceByName(_N(concrete_NRM));
@@ -183,10 +209,12 @@ void DynamicTextureGeneration::init()
         ImageManager::addResourceFlags(
             _normalImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
-        ImageManager::_descMemoryPoolType(_normalImageRef) =
-            MemoryPoolType::kResolutionDependentImages;
-        ImageManager::_descImageFormat(_normalImageRef) = 
-			Format::kR8G8Unorm;
+        ImageManager::_descMipLevelCount(_normalImageRef) = 1;
+        ImageManager::_descArrayLayerCount(_normalImageRef) = 1;
+        //ImageManager::_descMemoryPoolType(_normalImageRef) =
+        //    MemoryPoolType::kResolutionDependentImages;
+        ImageManager::_descImageFormat(_normalImageRef) =
+            Format::kR8G8Unorm;
         ImageManager::_descImageType(_normalImageRef) = 
 			ImageType::kTexture;
         ImageManager::_descImageFlags(_normalImageRef) =
@@ -201,8 +229,8 @@ void DynamicTextureGeneration::init()
         ImageManager::addResourceFlags(
             _pbrImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
-        ImageManager::_descMemoryPoolType(_pbrImageRef) =
-            MemoryPoolType::kResolutionDependentImages;
+        //ImageManager::_descMemoryPoolType(_pbrImageRef) =
+        //    MemoryPoolType::kResolutionDependentImages;
         ImageManager::_descImageFormat(_pbrImageRef) = 
 			Format::kR8G8Unorm;
         ImageManager::_descImageType(_pbrImageRef) = 
@@ -211,7 +239,7 @@ void DynamicTextureGeneration::init()
             ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
       }
       texture->_pbrImageRef = _pbrImageRef;
-      imgsToCreate.push_back(_pbrImageRef);
+      //imgsToCreate.push_back(_pbrImageRef);
   }
   
   ImageManager::createResources(imgsToCreate);
