@@ -113,7 +113,7 @@ mat3 cotangent_frame( vec3 N, vec3 p, vec2 uv )
 void main()
 {
   //const mat3 TBN = mat3(inTangent, inBinormal, inNormal);
-  const mat3 TBN = cotangent_frame(inNormalTPM, inPosition, inUV0);
+  const mat3 TBN = cotangent_frame(inNormal, inPosition, inUV0);
   const vec2 uv0 = UV0_TRANSFORM_ANIMATED(inUV0);
 
   GBuffer gbuffer;
