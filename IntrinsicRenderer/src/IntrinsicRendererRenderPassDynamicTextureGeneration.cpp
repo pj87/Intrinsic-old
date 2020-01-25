@@ -29,6 +29,7 @@ namespace RenderPass
 {
 namespace
 {
+ float noiseParams[] = {0.02, 2.0, 0.5};
 
 _INTR_INLINE ComputeCallRef createComputeCallTexture(
     std::unique_ptr<DynamicGeneratedTexture>& texture, glm::vec3 p_Dim)
@@ -48,6 +49,11 @@ _INTR_INLINE ComputeCallRef createComputeCallTexture(
     ComputeCallManager::bindImage(
         computeCallTextureRef, _N(_TextureTex), GpuProgramType::kCompute,
         texture->_textureImageRef, Samplers::kNearestRepeat);
+    ComputeCallManager::bindBuffer(
+        computeCallTextureRef, _N(_ParametersBuffer),
+        GpuProgramType::kCompute, texture->_noiseParametersRef,
+        UboType::kPerInstanceCompute,
+        BufferManager::_descSizeInBytes(texture->_noiseParametersRef));
   }
 
   return computeCallTextureRef;
@@ -147,10 +153,29 @@ bool DynamicTextureGeneration::isOverridenTexture(const Name& textureName)
 
 void DynamicTextureGeneration::init()
 {
+  BufferRefArray buffersToCreate;
   ImageRefArray imgsToCreate;
     
   for (auto& texture : dynamicGenerationTextures)
   {
+    BufferRef _noiseParametersRef =
+        BufferManager::createBuffer(_N(_ParametersBuffer));
+    {
+      BufferManager::resetToDefault(_noiseParametersRef);
+      BufferManager::addResourceFlags(
+          _noiseParametersRef,
+          Dod::Resources::ResourceFlags::kResourceVolatile);
+      BufferManager::_descBufferType(_noiseParametersRef) =
+          BufferType::kStorage;
+      BufferManager::_descMemoryPoolType(_noiseParametersRef) =
+          MemoryPoolType::kStaticStagingBuffers;
+      BufferManager::_descSizeInBytes(_noiseParametersRef) =
+          sizeof(noiseParams);
+      BufferManager::_descInitialData(_noiseParametersRef) = noiseParams;
+	}
+    texture->_noiseParametersRef = _noiseParametersRef;
+    buffersToCreate.push_back(_noiseParametersRef);
+
       ImageRef _textureImageRef =
           ImageManager::getResourceByName(*texture->textureName);
       {
@@ -158,12 +183,13 @@ void DynamicTextureGeneration::init()
             _textureImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
         ImageManager::_descMipLevelCount(_textureImageRef) = 1u;
+        /*
         if (texture->isDynamic)
 		{
 			ImageManager::_descImageFormat(_textureImageRef) =
               Format::kR8G8Unorm;
 		}
-		else
+		else*/
 		{
 			ImageManager::_descImageFormat(_textureImageRef) =
 			  Format::kB8G8R8A8UNorm;
@@ -178,6 +204,7 @@ void DynamicTextureGeneration::init()
   }
   
   ImageManager::createResources(imgsToCreate);
+  BufferManager::createResources(buffersToCreate);
 }
 
 // <-
@@ -220,10 +247,16 @@ void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   _INTR_PROFILE_CPU("Render Pass", "Render Dynamic Geometry Generation");
   _INTR_PROFILE_GPU("Dynamic Geometry Generation");
 
+  noiseParams[0] += p_DeltaT * 0.1;
+
   for (auto& texture : dynamicGenerationTextures)
   {
+
     if (texture->isDynamic)
 	{
+      BufferRef buffer = texture->_noiseParametersRef;
+      updateDataMemory(noiseParams, buffer,
+                       BufferManager::_descSizeInBytes(buffer), 0);
 	}
 	else
 	{

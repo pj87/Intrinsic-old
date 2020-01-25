@@ -1,6 +1,12 @@
 #version 450
 
 layout(binding = 0, rgba8) uniform image2D _TextureTex;
+layout(binding = 1) buffer _ParametersBuffer 
+{
+	float _Frequency;
+	float _Lacunarity;
+	float _Gain;
+};
 
 vec2 hash( vec2 x )  // replace this by something better
 {
@@ -70,20 +76,22 @@ void main()
 		imageStore(_TextureTex, id.xy, vec4(1.0 - qx, qy, 1.0, 1.0));
 	*/
 	
+	float color = 0.5 + 0.5 * abs(sin(_Frequency));
+	
 	if (id.x % 99 == 0)
 	{
-		imageStore(_TextureTex, id.xy, vec4(0.9, 0.5, 1.0, 1.0));
+		imageStore(_TextureTex, id.xy, vec4(0.9, color, 1.0, 1.0));
 	}
 	else if (id.x % 100 == 0)
 	{
-		imageStore(_TextureTex, id.xy, vec4(0.8, 0.5, 1.0, 1.0));
+		imageStore(_TextureTex, id.xy, vec4(0.8, color, 1.0, 1.0));
 	}
 	else if (id.x % 101 == 0)
 	{
-		imageStore(_TextureTex, id.xy, vec4(0.1, 0.5, 1.0, 1.0));
+		imageStore(_TextureTex, id.xy, vec4(0.1, color, 1.0, 1.0));
 	}
 	else
 	{
-		imageStore(_TextureTex, id.xy, vec4(0.5, 0.5, 1.0, 1.0));
+		imageStore(_TextureTex, id.xy, vec4(0.5, color, 1.0, 1.0));
 	}
 }

@@ -60,6 +60,7 @@ struct DynamicGeneratedTexture
   std::unique_ptr<Name> textureName;
   
   ImageRef _textureImageRef;
+  BufferRef _noiseParametersRef;
   PipelineRef _pipelineTextureRef;
   ComputeCallRef _computeCallTextureRef;
 

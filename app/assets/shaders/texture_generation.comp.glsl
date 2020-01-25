@@ -1,6 +1,12 @@
 #version 450
 
 layout(binding = 0, RGBA8) uniform image2D _TextureTex;
+layout(binding = 1) buffer _ParametersBuffer 
+{
+	float _Frequency;
+	float _Lacunarity;
+	float _Gain;
+};
 
 vec2 hash( vec2 x )  // replace this by something better
 {
@@ -28,10 +34,10 @@ void main()
     ivec3 id = ivec3(gl_GlobalInvocationID);
 	vec3 uv = vec3(id) / 2048.0;
 
-	float f = noise( 64.0*uv.xy );
+	float f = noise( 64.0*uv.xy);
 
     f = 0.5 + 0.5*f;
 	
-	imageStore(_TextureTex, id.xy, vec4(f, f, f, 1.0));
+	imageStore(_TextureTex, id.xy, vec4(f, f + abs(sin(_Frequency)), f, 1.0));
 	
 }
