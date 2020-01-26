@@ -183,24 +183,15 @@ void DynamicTextureGeneration::init()
             _textureImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
         ImageManager::_descMipLevelCount(_textureImageRef) = 1u;
-        /*
-        if (texture->isDynamic)
-		{
-			ImageManager::_descImageFormat(_textureImageRef) =
-              Format::kR8G8Unorm;
-		}
-		else*/
-		{
-			ImageManager::_descImageFormat(_textureImageRef) =
-			  Format::kB8G8R8A8UNorm;
-		}
+		ImageManager::_descImageFormat(_textureImageRef) =
+			Format::kB8G8R8A8UNorm;
         ImageManager::_descImageType(_textureImageRef) = 
 			ImageType::kTexture;
         ImageManager::_descImageFlags(_textureImageRef) =
             ImageFlags::kUsageSampled | ImageFlags::kUsageStorage;
       }
-      texture->_textureImageRef = _textureImageRef;
-      imgsToCreate.push_back(_textureImageRef);
+    texture->_textureImageRef = _textureImageRef;
+    imgsToCreate.push_back(_textureImageRef);
   }
   
   ImageManager::createResources(imgsToCreate);
