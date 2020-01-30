@@ -131,6 +131,10 @@ mapGpuProgramTypeToVkShaderStage(GpuProgramType::Enum p_Type)
     return VK_SHADER_STAGE_GEOMETRY_BIT;
   case GpuProgramType::kCompute:
     return VK_SHADER_STAGE_COMPUTE_BIT;
+  case GpuProgramType::kControl:
+    return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+  case GpuProgramType::kEvaluation:
+    return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
   }
 
   _INTR_ASSERT(false && "Failed to map GPU program type");
@@ -151,6 +155,10 @@ _INTR_INLINE EShLanguage mapGpuProgramTypeToEshLang(GpuProgramType::Enum p_Type)
     return EShLangGeometry;
   case GpuProgramType::kCompute:
     return EShLangCompute;
+  case GpuProgramType::kControl:
+    return EShLangTessControl;
+  case GpuProgramType::kEvaluation:
+    return EShLangTessEvaluation;
   }
 
   _INTR_ASSERT(false && "Failed to map GPU program type");

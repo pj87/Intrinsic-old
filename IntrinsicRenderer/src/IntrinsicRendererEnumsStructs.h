@@ -127,7 +127,9 @@ enum Enum
   kVertex,
   kFragment,
   kGeometry,
-  kCompute
+  kCompute,
+  kControl,
+  kEvaluation
 };
 }
 

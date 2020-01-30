@@ -1,0 +1,10 @@
+{
+    "name": "pass_through.tcs",
+    "properties": {
+        "name": "pass_through.tcs",
+        "gpuProgramName": "pass_through.tcs.glsl",
+        "entryPoint": "main",
+        "preprocessorDefines": "",
+        "gpuProgramType": 4
+    }
+}
