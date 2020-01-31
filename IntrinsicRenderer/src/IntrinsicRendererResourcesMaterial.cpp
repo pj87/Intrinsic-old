@@ -403,6 +403,13 @@ void MaterialManager::loadMaterialPassConfig()
                 GpuProgramManager::getResourceByName(
                     materialPassDesc["baseVertexGpuProgram"].GetString());
           }
+
+		  PipelineManager::_descTesselationControlProgram(pipelineRef) =
+               GpuProgramManager::getResourceByName("debug_line.tcs");
+
+          PipelineManager::_descTesselationEvaluationProgram(pipelineRef) =
+               GpuProgramManager::getResourceByName("debug_line.tes");
+
           PipelineManager::_descRenderPass(pipelineRef) = renderPassRef;
           PipelineManager::_descPipelineLayout(pipelineRef) = pipelineLayoutRef;
           PipelineManager::_descVertexLayout(pipelineRef) =
