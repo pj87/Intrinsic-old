@@ -1,14 +1,23 @@
 #version 450
 
-layout (points) in;
-layout (line_strip, max_vertices = 2) out;
+layout (triangles) in;
+layout (triangle_strip, max_vertices = 6) out;
 
 void main() {    
-    gl_Position = gl_in[0].gl_Position + vec4(-0.1, 0.0, 0.0, 0.0); 
-    EmitVertex();
+	
+	int i,j; 
+	vec4 scale = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	
+	for (j= 0; j < 2; j++)
+	{
+		for (i = 0; i < 3; i++)
+		{
+			gl_Position = gl_in[i].gl_Position * scale;
 
-    gl_Position = gl_in[0].gl_Position + vec4( 0.1, 0.0, 0.0, 0.0);
-    EmitVertex();
-    
-    EndPrimitive();
+			EmitVertex();
+		}
+		
+		EndPrimitive();
+		scale.xy = -scale.xy;
+	}
 }  
