@@ -35,6 +35,8 @@ struct PipelineData : Dod::Resources::ResourceDataBase
     descFragmentProgram.resize(_INTR_MAX_PIPELINE_COUNT);
     descGeometryProgram.resize(_INTR_MAX_PIPELINE_COUNT);
     descComputeProgram.resize(_INTR_MAX_PIPELINE_COUNT);
+    descTesselationControlProgram.resize(_INTR_MAX_PIPELINE_COUNT);
+    descTesselationEvaluationProgram.resize(_INTR_MAX_PIPELINE_COUNT);
 
     descDepthStencilState.resize(_INTR_MAX_PIPELINE_COUNT);
     descInputAssemblyState.resize(_INTR_MAX_PIPELINE_COUNT);
@@ -57,6 +59,8 @@ struct PipelineData : Dod::Resources::ResourceDataBase
   _INTR_ARRAY(GpuProgramRef) descFragmentProgram;
   _INTR_ARRAY(GpuProgramRef) descGeometryProgram;
   _INTR_ARRAY(GpuProgramRef) descComputeProgram;
+  _INTR_ARRAY(GpuProgramRef) descTesselationControlProgram;
+  _INTR_ARRAY(GpuProgramRef) descTesselationEvaluationProgram;
 
   _INTR_ARRAY(uint8_t) descDepthStencilState;
   _INTR_ARRAY(uint8_t) descInputAssemblyState;
@@ -100,6 +104,8 @@ struct PipelineManager
     _descFragmentProgram(p_Ref) = GpuProgramRef();
     _descGeometryProgram(p_Ref) = GpuProgramRef();
     _descComputeProgram(p_Ref) = GpuProgramRef();
+    _descTesselationControlProgram(p_Ref) = GpuProgramRef();
+    _descTesselationEvaluationProgram(p_Ref) = GpuProgramRef();
 
     _descDepthStencilState(p_Ref) = DepthStencilStates::kDefault;
     _descInputAssemblyState(p_Ref) = InputAssemblyStates::kTriangleList;
@@ -228,6 +234,16 @@ struct PipelineManager
   _INTR_INLINE static GpuProgramRef& _descComputeProgram(PipelineRef p_Ref)
   {
     return _data.descComputeProgram[p_Ref._id];
+  }
+  _INTR_INLINE static GpuProgramRef& 
+	  _descTesselationControlProgram(PipelineRef p_Ref)
+  {
+    return _data.descTesselationControlProgram[p_Ref._id];
+  }
+  _INTR_INLINE static GpuProgramRef& 
+	  _descTesselationEvaluationProgram(PipelineRef p_Ref)
+  {
+    return _data.descTesselationEvaluationProgram[p_Ref._id];
   }
 
   _INTR_INLINE static uint8_t& _descDepthStencilState(PipelineRef p_Ref)

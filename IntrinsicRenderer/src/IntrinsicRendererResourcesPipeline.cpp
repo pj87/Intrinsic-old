@@ -117,6 +117,8 @@ void createGraphicsPipeline(PipelineRef p_PipelineRef)
   RenderPassRef rp = PipelineManager::_descRenderPass(p_PipelineRef);
   GpuProgramRef vp = PipelineManager::_descVertexProgram(p_PipelineRef);
   GpuProgramRef fp = PipelineManager::_descFragmentProgram(p_PipelineRef);
+  GpuProgramRef tcp = PipelineManager::_descTesselationControlProgram(p_PipelineRef);
+  GpuProgramRef tep = PipelineManager::_descTesselationEvaluationProgram(p_PipelineRef);
   GpuProgramRef gp = PipelineManager::_descGeometryProgram(p_PipelineRef);
 
   uint8_t dss = PipelineManager::_descDepthStencilState(p_PipelineRef);
@@ -140,6 +142,16 @@ void createGraphicsPipeline(PipelineRef p_PipelineRef)
   {
     shaderStages[shaderStageCount++] =
         GpuProgramManager::_vkPipelineShaderStageCreateInfo(gp);
+  }
+  if (tcp.isValid())
+  {
+    shaderStages[shaderStageCount++] =
+        GpuProgramManager::_vkPipelineShaderStageCreateInfo(tcp);
+  }
+  if (tep.isValid())
+  {
+    shaderStages[shaderStageCount++] =
+        GpuProgramManager::_vkPipelineShaderStageCreateInfo(tep);
   }
 
   VkPipelineVertexInputStateCreateInfo vtxInputState = {};
