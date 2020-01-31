@@ -1,0 +1,10 @@
+{
+    "name": "debug_line.tcs",
+    "properties": {
+        "name": "debug_line.tcs",
+        "gpuProgramName": "debug_line.tcs.glsl",
+        "entryPoint": "main",
+        "preprocessorDefines": "",
+        "gpuProgramType": 4
+    }
+}

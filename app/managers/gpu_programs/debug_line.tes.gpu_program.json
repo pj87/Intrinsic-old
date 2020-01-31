@@ -1,0 +1,10 @@
+{
+    "name": "debug_line.tes",
+    "properties": {
+        "name": "debug_line.tes",
+        "gpuProgramName": "debug_line.tes.glsl",
+        "entryPoint": "main",
+        "preprocessorDefines": "",
+        "gpuProgramType": 5
+    }
+}
