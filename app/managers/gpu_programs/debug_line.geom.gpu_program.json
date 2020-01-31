@@ -1,0 +1,10 @@
+{
+    "name": "debug_line.geom",
+    "properties": {
+        "name": "debug_line.geom",
+        "gpuProgramName": "debug_line.geom.glsl",
+        "entryPoint": "main",
+        "preprocessorDefines": "",
+        "gpuProgramType": 2
+    }
+}
