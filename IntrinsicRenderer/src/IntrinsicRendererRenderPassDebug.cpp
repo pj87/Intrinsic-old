@@ -306,6 +306,10 @@ void Debug::onReinitRendering()
         GpuProgramManager::getResourceByName("debug_line.frag");
     PipelineManager::_descVertexProgram(pipeline) =
         GpuProgramManager::getResourceByName("debug_line.vert");
+    PipelineManager::_descTesselationControlProgram(pipeline) =
+        GpuProgramManager::getResourceByName("debug_line.tcs");
+    PipelineManager::_descTesselationEvaluationProgram(pipeline) =
+        GpuProgramManager::getResourceByName("debug_line.tes");
     PipelineManager::_descRenderPass(pipeline) = _renderPassRef;
     PipelineManager::_descPipelineLayout(pipeline) = _debugLinePipelineLayout;
     PipelineManager::_descVertexLayout(pipeline) =

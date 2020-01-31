@@ -117,8 +117,10 @@ void createGraphicsPipeline(PipelineRef p_PipelineRef)
   RenderPassRef rp = PipelineManager::_descRenderPass(p_PipelineRef);
   GpuProgramRef vp = PipelineManager::_descVertexProgram(p_PipelineRef);
   GpuProgramRef fp = PipelineManager::_descFragmentProgram(p_PipelineRef);
-  GpuProgramRef tcp = PipelineManager::_descTesselationControlProgram(p_PipelineRef);
-  GpuProgramRef tep = PipelineManager::_descTesselationEvaluationProgram(p_PipelineRef);
+  GpuProgramRef tcp =
+      PipelineManager::_descTesselationControlProgram(p_PipelineRef);
+  GpuProgramRef tep =
+      PipelineManager::_descTesselationEvaluationProgram(p_PipelineRef);
   GpuProgramRef gp = PipelineManager::_descGeometryProgram(p_PipelineRef);
 
   uint8_t dss = PipelineManager::_descDepthStencilState(p_PipelineRef);
@@ -126,7 +128,7 @@ void createGraphicsPipeline(PipelineRef p_PipelineRef)
   uint8_t rs = PipelineManager::_descRasterizationState(p_PipelineRef);
 
   uint32_t shaderStageCount = 0u;
-  VkPipelineShaderStageCreateInfo shaderStages[3];
+  VkPipelineShaderStageCreateInfo shaderStages[5];
 
   if (vp.isValid())
   {
@@ -172,6 +174,23 @@ void createGraphicsPipeline(PipelineRef p_PipelineRef)
     vtxInputState.pVertexAttributeDescriptions = nullptr;
   }
 
+  VkPipelineTessellationStateCreateInfo tessInputState = {};
+  /*
+  if (vtxLayout.isValid())
+  {
+    vtxInputState =
+        VertexLayoutManager::_vkPipelineVertexInputStateCreateInfo(vtxLayout);
+  }
+  else
+  */
+  {
+    tessInputState.sType =
+        VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
+    tessInputState.pNext = nullptr;
+    tessInputState.flags = 0u;
+    tessInputState.patchControlPoints = 0u;
+  }
+
   VkGraphicsPipelineCreateInfo pipelineCreateInfo = {};
   {
     pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -187,7 +206,8 @@ void createGraphicsPipeline(PipelineRef p_PipelineRef)
     pipelineCreateInfo.pRasterizationState =
         &RenderStates::rasterizationStates[rs];
     pipelineCreateInfo.pColorBlendState = &cb;
-    pipelineCreateInfo.pTessellationState = nullptr;
+    pipelineCreateInfo.pTessellationState = 
+        &tessInputState;
     pipelineCreateInfo.pMultisampleState = &ms;
     pipelineCreateInfo.pDynamicState = nullptr;
     pipelineCreateInfo.pViewportState = &viewportStateCreateinfo;

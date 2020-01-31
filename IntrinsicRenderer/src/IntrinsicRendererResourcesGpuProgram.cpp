@@ -457,7 +457,11 @@ void GpuProgramManager::compileShaders(GpuProgramRefArray p_Refs,
               ref ||
           Resources::PipelineManager::_descGeometryProgram(pipelineRef) ==
               ref ||
-          Resources::PipelineManager::_descComputeProgram(pipelineRef) == ref)
+          Resources::PipelineManager::_descComputeProgram(pipelineRef) == ref || 
+		  Resources::PipelineManager::_descTesselationControlProgram(
+			  pipelineRef) == ref || 
+		  Resources::PipelineManager::_descTesselationEvaluationProgram(
+              pipelineRef) == ref)
       {
         changedPipelines.push_back(pipelineRef);
       }
