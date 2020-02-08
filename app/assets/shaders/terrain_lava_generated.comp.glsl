@@ -148,8 +148,8 @@ float terrain( in vec2 q )
 	//float th = smoothstep( 0.0, 0.7, textureLod( iChannel0, 0.001*q, 0.0 ).x );
 	//float th = textureLod( iChannel0, 0.001*q, 0.0 ).x;
 	//float th = noise(.5 * q) * 0.25;
-	float th = noise(0.1 * q);
-	float th = noise(.001 * q) * 0.25;
+	//float th = noise(0.1 * q);
+	float th = noise(0.5 * q) * 0.25;
 	//float th = noise(0.1 * q);
 	//float th = smoothstep( 0.0, 0.7, noise(1.*q) * 1.5 );
     //float rr = smoothstep( 0.1, 0.5, textureLod( iChannel1, 2.0*0.03*q, 0.0 ).y );
