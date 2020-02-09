@@ -381,7 +381,7 @@
 		{
 			"type" : "RenderPassGenericMesh",
 			"name" : "GBufferTransparents",
-			"materialPasses" : ["GBufferWater", "GBufferEffect"],
+			"materialPasses" : ["GBufferWater", "GBufferEffect", "GBufferLava"],
 			"renderOrder" : "BackToFront",
 			"outputs" : [
 				["GBufferTransparentsAlbedo", [0.0, 0.0, 0.0, 0.0]],
