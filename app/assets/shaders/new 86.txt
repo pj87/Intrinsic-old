@@ -1,0 +1,116 @@
+https://www.shadertoy.com/view/Ms3yzS
+
+
+geometry_generation_new.comp.glsl: 
+/*
+#define GL_NV_compute_shader_derivatives          1
+#extension GL_NV_compute_shader_derivatives : enable
+
+Zgodnie z tym co jest napisane tutaj: 
+- https://www.khronos.org/registry/OpenGL/extensions/NV/NV_compute_shader_derivatives.txt
+- https://github.com/KhronosGroup/GLSL/blob/master/extensions/nv/GLSL_NV_compute_shader_derivatives.txt
+
+Trzeba sciągnąć glslang z https://github.com/KhronosGroup/glslang (jest sciągnięte do Pobranych)
+Trzeba podmienić glslang w dependencies\ 
+Trzeba odpalić skrypt jest w scripts_win32\ConfigAndBuildDependenciesVS15.bat
+
+(i to chyba tyle)
+
+*/
+
+Benoît Mandelbrot,
+
+Nyquist -> dać o Cejrowskim
+
+https://www.shadertoy.com/results?query=tag=2d&sort=popular&from=72&num=12
+https://www.shadertoy.com/view/ldXXDj
+https://www.shadertoy.com/view/ldl3W8
+https://www.shadertoy.com/view/lsX3W4
+https://www.shadertoy.com/view/ldf3DN
+https://www.shadertoy.com/view/4dlGDN
+https://www.shadertoy.com/view/Xd2GR3
+https://www.shadertoy.com/view/XsfGzH
+https://www.shadertoy.com/view/4df3Rn
+https://www.shadertoy.com/view/XsfGDS
+
+https://www.shadertoy.com/view/lslGWr
+
+https://www.shadertoy.com/view/MdlXRS
+https://www.shadertoy.com/view/MslGD8
+https://www.shadertoy.com/view/XdBSzd
+
+https://www.shadertoy.com/view/lslXRS
+https://www.shadertoy.com/view/MssGW4
+https://www.shadertoy.com/view/Ml2GWy
+https://www.shadertoy.com/view/Mdl3RH
+
+https://thebookofshaders.com/13/
+
+https://www.shadertoy.com/results?query=terrain&sort=popular&from=24&num=12
+https://www.shadertoy.com/view/4dBBDD
+https://www.shadertoy.com/view/ldBfDR
+https://www.shadertoy.com/view/MdVSWt <- tutaj przykład czegoś w rodzaju wybuchu
+https://www.shadertoy.com/view/MdBGzG
+https://www.shadertoy.com/view/ttXGWH
+https://www.shadertoy.com/view/XsSGDy
+https://www.shadertoy.com/view/Xs33Df
+https://www.shadertoy.com/view/XslyRH
+https://www.shadertoy.com/view/4sGSRV
+https://www.shadertoy.com/view/4tSXRm
+https://www.shadertoy.com/view/MlfXWH <- fajny księżyc
+https://www.shadertoy.com/view/MsyGDh
+https://www.shadertoy.com/view/lslfRN
+
+https://www.shadertoy.com/view/XtyGzc
+https://www.shadertoy.com/view/ldSSzV
+https://www.shadertoy.com/view/4sK3RD
+https://www.shadertoy.com/view/ldjyzc
+https://www.shadertoy.com/view/ld2SzK
+https://www.shadertoy.com/view/llK3WR
+https://www.shadertoy.com/view/XdycWG
+https://www.shadertoy.com/view/4lSXR3
+https://www.shadertoy.com/view/lsd3Dl
+https://www.shadertoy.com/view/MlG3zh
+https://www.shadertoy.com/view/MdcXR8
+https://www.shadertoy.com/view/XtcGD2
+https://www.shadertoy.com/view/ldKGzK
+https://www.shadertoy.com/view/XdcfDf
+https://www.shadertoy.com/view/Xsd3z7
+https://www.shadertoy.com/view/MlG3zh
+https://www.shadertoy.com/view/llcXRN
+https://www.shadertoy.com/view/MsXBRX
+https://www.shadertoy.com/view/4lXfR7 <- super!!!!!
+https://www.shadertoy.com/view/tsGXWm
+https://www.shadertoy.com/view/MlVXzD
+https://www.shadertoy.com/view/4scGWr
+https://www.shadertoy.com/view/tltXWM
+https://www.shadertoy.com/view/3t3XRS
+https://www.shadertoy.com/view/tl3XzB
+Wolumetryczne eksplozje: 
+https://www.shadertoy.com/results?query=explosion
+https://www.shadertoy.com/view/lsySzd
+https://www.shadertoy.com/view/4sByWz
+https://www.shadertoy.com/view/4tdGzr
+https://www.shadertoy.com/view/3lsSR7
+https://www.shadertoy.com/view/tdj3Wz
+https://www.shadertoy.com/view/wdtSW4
+https://www.shadertoy.com/view/wdGGz3
+https://www.shadertoy.com/view/wsySRG <- metaballs!!!!
+https://www.youtube.com/watch?v=Vmb7VGBVZJA&feature=youtu.be <- to trzeba obejrzeć do wykładu!!!!! 
+https://www.shadertoy.com/view/wlt3WS
+https://www.shadertoy.com/view/wtGGRW
+https://www.shadertoy.com/view/wlKGzR
+https://www.shadertoy.com/view/Wsy3RW
+https://www.shadertoy.com/view/wtGGDR
+https://www.shadertoy.com/view/lt3cR8
+https://www.shadertoy.com/view/tdcXRM
+https://www.shadertoy.com/view/3dKSWR
+https://www.shadertoy.com/view/WsGSzt
+https://www.shadertoy.com/view/Xs3fDs
+https://www.shadertoy.com/view/4tGfzz
+https://www.shadertoy.com/view/MdBXDV
+https://www.shadertoy.com/view/tsSSzK
+https://www.shadertoy.com/view/WdSGzR
+https://www.shadertoy.com/view/WslXWr <- piękna julia
+https://www.shadertoy.com/view/llXXz4 <- tutaj piękna ekslozja!!!!!!!!!!!
+https://www.shadertoy.com/results?query=explode
