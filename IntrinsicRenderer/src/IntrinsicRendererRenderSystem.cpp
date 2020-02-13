@@ -186,15 +186,14 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-    /*
+    
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
 		64, 64, 64,
-		_N(house_2),
-        "temple_ruins.comp", 
+		_N(pbr_test_05),
+        "metaballs.comp", 
 		"normal_generation.comp",
-        "geometry_generation_new.comp", 
-		false);
-	*/
+        "geometry_generation_new.comp");
+	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(pbr_test_025), 
@@ -209,27 +208,27 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-    /*
+	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
-        _N(house), 
-		"cathedral.comp", 
+        _N(house_2), 
+		"cathedral2.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+	
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(house_3), 
+		"houses.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64,
-        _N(house_2), 
-		"cathedral1.comp", 
-		"normal_generation.comp",
-        "geometry_generation_new.comp", 
-		false);
-	*/
-	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain), 
-		"terrain_generated1.comp", 
+		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
@@ -250,11 +249,17 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "geometry_generation_cave.comp", 
 		false);
 		*/
+    /*
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(gravel_01), 
+        "texture_lava_generation.comp");
+    */
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_rock), 
-        "texture_generation.comp");
+        "texture_lava_generation.comp");
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         1024, 1024, 1, 
