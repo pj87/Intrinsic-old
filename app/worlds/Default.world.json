@@ -175,7 +175,7 @@
                 "properties": {
                     "localPos": [
                         -843.8748779296875,
-                        -258615008.0,
+                        -258651232.0,
                         -761.631103515625
                     ],
                     "localOrient": [
@@ -191,7 +191,7 @@
                     ],
                     "worldPos": [
                         -843.8748779296875,
-                        -258615008.0,
+                        -258651232.0,
                         -761.631103515625
                     ],
                     "worldOrient": [
@@ -1259,10 +1259,10 @@
                         -231.75
                     ],
                     "localOrient": [
-                        -0.032232072204351428,
-                        -0.9213520884513855,
-                        -0.4199613928794861,
-                        0.07070314884185791
+                        0.08125825971364975,
+                        -0.9066890478134155,
+                        -0.4132789075374603,
+                        -0.17828263342380525
                     ],
                     "localSize": [
                         3.0,
@@ -1275,10 +1275,10 @@
                         -231.75
                     ],
                     "worldOrient": [
-                        -0.032232072204351428,
-                        -0.9213520884513855,
-                        -0.4199613928794861,
-                        0.07070314884185791
+                        0.08125825971364975,
+                        -0.9066890478134155,
+                        -0.4132789075374603,
+                        -0.17828263342380525
                     ],
                     "worldSize": [
                         3.0,
@@ -1639,15 +1639,15 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        -62.09799575805664,
-                        402.6759948730469,
-                        273.8851623535156
+                        -62.232059478759769,
+                        409.2375793457031,
+                        272.13873291015627
                     ],
                     "localOrient": [
-                        0.013512088917195797,
-                        -0.9856431484222412,
-                        0.09667161107063294,
-                        0.13776639103889466
+                        0.012201174162328244,
+                        -0.9854403138160706,
+                        0.1492173671722412,
+                        0.08057727664709091
                     ],
                     "localSize": [
                         0.0,
@@ -1655,15 +1655,15 @@
                         0.0
                     ],
                     "worldPos": [
-                        -62.09799575805664,
-                        402.6759948730469,
-                        273.8851623535156
+                        -62.232059478759769,
+                        409.2375793457031,
+                        272.13873291015627
                     ],
                     "worldOrient": [
-                        0.013512088917195797,
-                        -0.9856431484222412,
-                        0.09667161107063294,
-                        0.13776639103889466
+                        0.012201174162328244,
+                        -0.9854403138160706,
+                        0.1492173671722412,
+                        0.08057727664709091
                     ],
                     "worldSize": [
                         0.0,
@@ -28678,9 +28678,9 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        1485018.875,
-                        -96009656.0,
-                        -2473571.0
+                        1485585.25,
+                        -96045832.0,
+                        -2474503.25
                     ],
                     "localOrient": [
                         0.6322597861289978,
@@ -28694,9 +28694,9 @@
                         1.25
                     ],
                     "worldPos": [
-                        -9852.125,
-                        -96052424.0,
-                        17487.75
+                        -9852.5,
+                        -96088616.0,
+                        17488.25
                     ],
                     "worldOrient": [
                         0.38535094261169436,
@@ -28740,9 +28740,9 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        1485212.375,
-                        -96010216.0,
-                        -2473569.0
+                        1485779.5,
+                        -96046384.0,
+                        -2474501.0
                     ],
                     "localOrient": [
                         0.26839375495910647,
@@ -28757,7 +28757,7 @@
                     ],
                     "worldPos": [
                         -9745.125,
-                        -96052984.0,
+                        -96089176.0,
                         17336.0
                     ],
                     "worldOrient": [
@@ -28802,9 +28802,9 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        1485217.375,
-                        -96010136.0,
-                        -2473565.75
+                        1485784.25,
+                        -96046304.0,
+                        -2474498.0
                     ],
                     "localOrient": [
                         0.9524971842765808,
@@ -28818,8 +28818,8 @@
                         1.5
                     ],
                     "worldPos": [
-                        -9741.125,
-                        -96052904.0,
+                        -9741.25,
+                        -96089096.0,
                         17331.25
                     ],
                     "worldOrient": [
@@ -29457,8 +29457,238 @@
         ]
     },
     {
-        "name": "Light10_Temple1",
+        "name": "House7",
+        "offsetToParent": -510,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        -200.0,
+                        250.0,
+                        -100.0
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        0.05000000074505806,
+                        0.05000000074505806,
+                        0.05000000074505806
+                    ],
+                    "worldPos": [
+                        -60.00091552734375,
+                        410.1000061035156,
+                        215.4063720703125
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.7716245651245117,
+                        0.0,
+                        0.6360782384872437
+                    ],
+                    "worldSize": [
+                        5.0,
+                        5.0,
+                        5.0
+                    ]
+                }
+            },
+            {
+                "type": "Mesh",
+                "properties": {
+                    "meshName": "house_5",
+                    "colorTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "type": "RigidBody",
+                "properties": {
+                    "rigidBodyType": 8,
+                    "density": 1.0
+                }
+            }
+        ]
+    },
+    {
+        "name": "Light1",
+        "offsetToParent": -1,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        -1.2311973571777344,
+                        29.460233688354493,
+                        30.791900634765626
+                    ],
+                    "localOrient": [
+                        0.07518930733203888,
+                        0.7503198385238648,
+                        -0.04777957499027252,
+                        -0.6550448536872864
+                    ],
+                    "localSize": [
+                        0.20000000298023225,
+                        0.20000000298023225,
+                        0.20000000298023225
+                    ],
+                    "worldPos": [
+                        -29.539825439453126,
+                        439.56024169921877,
+                        210.7395782470703
+                    ],
+                    "worldOrient": [
+                        0.010958388447761536,
+                        -0.02818658947944641,
+                        -0.08840946853160858,
+                        -0.9956250190734863
+                    ],
+                    "worldSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "type": "Light",
+                "properties": {
+                    "radius": 50.0,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 80.0,
+                    "temperature": 1200.0
+                }
+            }
+        ]
+    },
+    {
+        "name": "Light3",
         "offsetToParent": -2,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        -5.670696258544922,
+                        19.97365951538086,
+                        31.95733070373535
+                    ],
+                    "localOrient": [
+                        0.07518930733203888,
+                        0.7503198385238648,
+                        -0.04777957499027252,
+                        -0.6550448536872864
+                    ],
+                    "localSize": [
+                        0.20000000298023225,
+                        0.20000000298023225,
+                        0.20000000298023225
+                    ],
+                    "worldPos": [
+                        -27.54871368408203,
+                        430.07366943359377,
+                        214.87513732910157
+                    ],
+                    "worldOrient": [
+                        0.010958388447761536,
+                        -0.02818658947944641,
+                        -0.08840946853160858,
+                        -0.9956250190734863
+                    ],
+                    "worldSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "type": "Light",
+                "properties": {
+                    "radius": 50.0,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 80.0,
+                    "temperature": 1200.0
+                }
+            }
+        ]
+    },
+    {
+        "name": "Light4",
+        "offsetToParent": -3,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        16.252002716064454,
+                        10.59819221496582,
+                        26.871002197265626
+                    ],
+                    "localOrient": [
+                        0.07518930733203888,
+                        0.7503198385238648,
+                        -0.04777957499027252,
+                        -0.6550448536872864
+                    ],
+                    "localSize": [
+                        0.20000000298023225,
+                        0.20000000298023225,
+                        0.20000000298023225
+                    ],
+                    "worldPos": [
+                        -36.72463607788086,
+                        420.6982116699219,
+                        194.32574462890626
+                    ],
+                    "worldOrient": [
+                        0.010958388447761536,
+                        -0.02818658947944641,
+                        -0.08840946853160858,
+                        -0.9956250190734863
+                    ],
+                    "worldSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "type": "Light",
+                "properties": {
+                    "radius": 50.0,
+                    "color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "intensity": 80.0,
+                    "temperature": 1200.0
+                }
+            }
+        ]
+    },
+    {
+        "name": "Light10_Temple1",
+        "offsetToParent": -6,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -29514,7 +29744,7 @@
     },
     {
         "name": "Light20_Altair1",
-        "offsetToParent": -3,
+        "offsetToParent": -7,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -29906,7 +30136,7 @@
     },
     {
         "name": "Light21_Altair",
-        "offsetToParent": -11,
+        "offsetToParent": -15,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -29962,7 +30192,7 @@
     },
     {
         "name": "Light22_Altair",
-        "offsetToParent": -12,
+        "offsetToParent": -16,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30018,7 +30248,7 @@
     },
     {
         "name": "Light23_Altair",
-        "offsetToParent": -13,
+        "offsetToParent": -17,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30074,7 +30304,7 @@
     },
     {
         "name": "Light24_Altair",
-        "offsetToParent": -14,
+        "offsetToParent": -18,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30130,7 +30360,7 @@
     },
     {
         "name": "pbr_test_6",
-        "offsetToParent": -17,
+        "offsetToParent": -21,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30185,7 +30415,7 @@
     },
     {
         "name": "pbr_test_5",
-        "offsetToParent": -18,
+        "offsetToParent": -22,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30240,7 +30470,7 @@
     },
     {
         "name": "pbr_test_4",
-        "offsetToParent": -19,
+        "offsetToParent": -23,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30295,7 +30525,7 @@
     },
     {
         "name": "pbr_test_3",
-        "offsetToParent": -20,
+        "offsetToParent": -24,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30350,7 +30580,7 @@
     },
     {
         "name": "pbr_test_2",
-        "offsetToParent": -21,
+        "offsetToParent": -25,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30405,7 +30635,7 @@
     },
     {
         "name": "pbr_test_1",
-        "offsetToParent": -22,
+        "offsetToParent": -26,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30460,7 +30690,7 @@
     },
     {
         "name": "Light12_Temple",
-        "offsetToParent": -24,
+        "offsetToParent": -28,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30516,7 +30746,7 @@
     },
     {
         "name": "Light13_Temple",
-        "offsetToParent": -25,
+        "offsetToParent": -29,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30572,7 +30802,7 @@
     },
     {
         "name": "Light5",
-        "offsetToParent": -532,
+        "offsetToParent": -536,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30628,7 +30858,7 @@
     },
     {
         "name": "Light6",
-        "offsetToParent": -533,
+        "offsetToParent": -537,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30684,7 +30914,7 @@
     },
     {
         "name": "Light7",
-        "offsetToParent": -535,
+        "offsetToParent": -539,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30740,7 +30970,7 @@
     },
     {
         "name": "Light8",
-        "offsetToParent": -536,
+        "offsetToParent": -540,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -30796,7 +31026,7 @@
     },
     {
         "name": "Light9",
-        "offsetToParent": -537,
+        "offsetToParent": -541,
         "propertyEntries": [
             {
                 "type": "Node",
