@@ -557,6 +557,13 @@ void RenderSystem::initManagers()
   {
     GpuProgramManager::loadFromMultipleFiles("managers/gpu_programs/",
                                              ".gpu_program.json");
+    GpuProgramManager::loadFromMultipleFiles("managers/gpu_programs/generated/",
+                                             ".gpu_program.json");
+    GpuProgramManager::loadFromMultipleFiles("managers/gpu_programs/meshes/",
+                                             ".gpu_program.json");
+    GpuProgramManager::loadFromMultipleFiles("managers/gpu_programs/textures/",
+                                             ".gpu_program.json");
+
     ImageManager::loadFromMultipleFiles("managers/images/", ".image.json");
     MaterialManager::loadFromMultipleFiles("managers/materials/",
                                            ".material.json");
