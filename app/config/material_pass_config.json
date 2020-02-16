@@ -49,6 +49,18 @@
         ["Buffer", "PerFrame", "PerFrame", "Fragment"]
       ]
     },
+	{
+      "name": "GBufferSkyAurora",
+      "resources" : [
+        ["Buffer", "PerInstance", "PerInstance", "Vertex"],
+        ["Buffer", "PerInstance", "PerInstance", "Fragment"],
+        ["Buffer", "PerMaterial", "PerMaterial", "Fragment"],
+        ["Buffer", "PerFrame", "PerFrame", "Fragment"],
+		["Image", "MaterialAlbedo", "albedoTex", "Fragment"],
+        ["Image", "MaterialNormal", "normalTex", "Fragment"],
+        ["Image", "MaterialRoughness", "pbrTex", "Fragment"]
+      ]
+    },
     {
       "name": "GBufferWater",
       "resources" : [
@@ -190,6 +202,16 @@
       "depthStencilState" : "DefaultNoWrite",
       "rasterizationState" : "InvertedCulling",
       "boundResources" : "GBufferSky"
+    },
+	{
+      "name" : "GBufferSkyAurora",
+      "baseVertexGpuProgram" : "sky.vert",
+      "baseFragmentGpuProgram" : "sky_aurora.frag",
+      "renderPass" : "GBufferSkyAurora",
+      "blendStates" : ["Default"],
+      "depthStencilState" : "DefaultNoWrite",
+      "rasterizationState" : "InvertedCulling",
+      "boundResources" : "GBufferSkyAurora"
     },
     {
       "name" : "DebugGizmo",

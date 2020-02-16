@@ -1,0 +1,10 @@
+{
+    "name": "sky_aurora.frag",
+    "properties": {
+        "name": "sky_aurora.frag",
+        "gpuProgramName": "sky_aurora.frag.glsl",
+        "entryPoint": "main",
+        "preprocessorDefines": "",
+        "gpuProgramType": 1
+    }
+}

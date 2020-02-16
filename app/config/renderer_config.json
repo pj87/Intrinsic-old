@@ -328,6 +328,16 @@
 			]
 		},
 		{
+			"type" : "RenderPassGenericMesh",
+			"name" : "GBufferSkyAurora",
+			"materialPasses" : ["GBufferSkyAurora"],
+			"renderOrder" : "BackToFront",
+			"outputs" : [
+				["GBufferAlbedo"],
+				["GBufferDepth"]
+			]
+		},
+		{
 			"type" : "RenderPassDebug"
 		},
 		{

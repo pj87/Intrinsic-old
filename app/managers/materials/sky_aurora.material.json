@@ -1,0 +1,24 @@
+{
+    "name": "sky_aurora",
+    "properties": {
+        "name": "sky_aurora",
+        "materialPassMask": [
+            "GBufferWireframe",
+            "GBufferSkyAurora"
+        ],
+        "albedoTextureName": "generated_sky",
+        "emissiveTextureName": "white",
+        "uvOffsetScale": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+        ],
+        "uvAnimation": [
+            0.0,
+            0.0
+        ],
+        "translucencyThickness": 0.0,
+        "emissiveIntensity": 0.0
+    }
+}
