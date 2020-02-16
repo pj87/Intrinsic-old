@@ -270,7 +270,7 @@ vec2 CityBlock(vec3 p, vec2 pint)
 	float d = sdBox(baseCenter, vec3(baseRad, height, baseRad)); // large building piece
 
     // road
-    d = min(d, p.y);
+    //d = min(d, p.y);
 
     //if (length(pint.xy) > 8.0) return vec2(d, mat);	// Hack to LOD in the distance
 
@@ -316,7 +316,7 @@ vec2 CityBlock(vec3 p, vec2 pint)
     // Need to make a material variable.
     vec2 distAndMat = vec2(d, 0.0);
     // sidewalk box with material
-    distAndMat = matmin(distAndMat, vec2(sdBox(baseCenter, vec3(0.35, 0.005, 0.35)), 1.0));
+    //distAndMat = matmin(distAndMat, vec2(sdBox(baseCenter, vec3(0.35, 0.005, 0.35)), 1.0));
 
     return distAndMat;
 }
