@@ -228,7 +228,7 @@ float shape2(vec2 p,float seed) {
 
     d = min(d, roundrect(p - vec2(0, 0.9), vec2(.06, .06), vec2(0.)));
     d = min(d, roundrect(p - vec2(0, 1.9), vec2(.06, .06), vec2(0.)));
-    d=min(d, p.y + 0.9  );
+    //d=min(d, p.y + 0.9  );
  
 
 
@@ -286,7 +286,8 @@ float b= hash1(vec2(floor(p.z/tile)))*0.25;
     float d = shape2(vec2(w, p.y),g);
 
 
-    return (p.y<-0.8 ?vec4(d,grass(  p.xz*0.04)):vec4(d, vec3(r,g,b)/ max(1.,4.*(p.y-2.2)) ));
+    //return (p.y<-0.8 ?vec4(d,grass(  p.xz*0.04)):vec4(d, vec3(r,g,b)/ max(1.,4.*(p.y-2.2)) ));
+	return vec4(d, vec3(r,g,b)/ max(1.,4.*(p.y-2.2)) );
 }
 
 float mapScaled(vec3 p, vec4 c)
