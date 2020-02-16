@@ -6,7 +6,7 @@
             "GBufferWireframe",
             "GBufferSky"
         ],
-        "albedoTextureName": "trees",
+        "albedoTextureName": "terrain_rock",
         "emissiveTextureName": "white",
         "uvOffsetScale": [
             0.0,

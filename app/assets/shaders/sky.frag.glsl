@@ -88,7 +88,7 @@ void main()
                           uboPerFrame.skyModelRadiances.rgb;
   // albedo.rgb = sampleSH(uboPerFrame.skyLightSH, inNormal) / MATH_PI;
 
-  albedo = texture(albedoTex, inUV0);
+  albedo += texture(albedoTex, inUV0);
 
   // Sun/Moon
   albedo.rgb +=

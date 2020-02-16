@@ -270,12 +270,19 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(gravel_01), 
         "texture_lava_generation.comp");
     */
+    /*
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_cliff), 
+        "texture_lava_generation.comp");
+	*/
 
+    
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_rock), 
-        "texture_lava_generation.comp");
-
+        "texture_simplicity_generation.comp");
+	
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         1024, 1024, 1, 
         _N(house_01_NRM_pj1), 
