@@ -29,6 +29,12 @@ PER_INSTANCE_UBO;
 
 PER_FRAME_DATA(3);
 
+// Bindings
+//BINDINGS_GBUFFER;
+layout(binding = 4) uniform sampler2D albedoTex;
+layout(binding = 5) uniform sampler2D normalTex;
+layout(binding = 6) uniform sampler2D pbrTex;
+
 // Input
 layout(location = 0) in vec2 inUV0;
 layout(location = 1) in vec3 inNormal;
@@ -81,6 +87,8 @@ void main()
   albedo.rgb += max(calculateSkyModelRadiance(vec3(theta), vec3(gamma)), 0.0) *
                           uboPerFrame.skyModelRadiances.rgb;
   // albedo.rgb = sampleSH(uboPerFrame.skyLightSH, inNormal) / MATH_PI;
+
+  albedo = texture(albedoTex, inUV0);
 
   // Sun/Moon
   albedo.rgb +=

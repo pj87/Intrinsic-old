@@ -6,7 +6,7 @@
             "GBufferWireframe",
             "GBufferSky"
         ],
-        "albedoTextureName": "default_ibl_cube_specular",
+        "albedoTextureName": "trees",
         "emissiveTextureName": "white",
         "uvOffsetScale": [
             0.0,

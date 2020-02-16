@@ -46,7 +46,10 @@
         ["Buffer", "PerInstance", "PerInstance", "Vertex"],
         ["Buffer", "PerInstance", "PerInstance", "Fragment"],
         ["Buffer", "PerMaterial", "PerMaterial", "Fragment"],
-        ["Buffer", "PerFrame", "PerFrame", "Fragment"]
+        ["Buffer", "PerFrame", "PerFrame", "Fragment"],
+		["Image", "MaterialAlbedo", "albedoTex", "Fragment"],
+        ["Image", "MaterialNormal", "normalTex", "Fragment"],
+        ["Image", "MaterialRoughness", "pbrTex", "Fragment"]
       ]
     },
     {
