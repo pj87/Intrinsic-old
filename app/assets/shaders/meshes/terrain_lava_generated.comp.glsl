@@ -172,7 +172,7 @@ vec4 map( in vec3 p )
 
 float mapScaled(vec3 p, vec4 c)
 {
-	return map(p / 10.0).x * 10.0;
+	return map(p / 6.0).x * 6.0;
 	//return length(p) - 20.0;
 }
 
