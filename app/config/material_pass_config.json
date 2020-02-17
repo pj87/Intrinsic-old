@@ -171,6 +171,14 @@
     },
 	{
       "name" : "GBufferTemple",
+      "baseVertexGpuProgram" : "gbuffer_temple.vert",
+      "baseFragmentGpuProgram" : "gbuffer_temple.frag",
+      "renderPass" : "GBuffer",
+      "blendStates" : ["Default", "Default", "Default"],
+      "boundResources" : "GBuffer"
+    },
+	{
+      "name" : "GBufferSkyscrapers",
       "baseVertexGpuProgram" : "gbuffer_skyscrapers.vert",
       "baseFragmentGpuProgram" : "gbuffer_skyscrapers.frag",
       "renderPass" : "GBuffer",
@@ -178,9 +186,9 @@
       "boundResources" : "GBuffer"
     },
 	{
-      "name" : "GBufferSkyscrapers",
-      "baseVertexGpuProgram" : "gbuffer_temple.vert",
-      "baseFragmentGpuProgram" : "gbuffer_temple.frag",
+      "name" : "GBufferVillageHouses",
+      "baseVertexGpuProgram" : "gbuffer_village_houses.vert",
+      "baseFragmentGpuProgram" : "gbuffer_village_houses.frag",
       "renderPass" : "GBuffer",
       "blendStates" : ["Default", "Default", "Default"],
       "boundResources" : "GBuffer"
