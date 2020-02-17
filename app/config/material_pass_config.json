@@ -120,6 +120,25 @@
         ["Image", "noise", "noiseTex", "Fragment"]
       ]
     },
+	{
+      "name": "GBufferTerrainLava",
+      "resources" : [
+        ["Buffer", "PerInstance", "PerInstance", "Vertex"],
+        ["Buffer", "PerInstance", "PerInstance", "Fragment"],
+        ["Buffer", "PerMaterial", "PerMaterial", "Fragment"],
+        ["Image", "MaterialAlbedo", "albedoTex0", "Fragment"],
+        ["Image", "MaterialNormal", "normalTex0", "Fragment"],
+        ["Image", "MaterialRoughness", "pbrTex0", "Fragment"],
+        ["Image", "MaterialAlbedo1", "albedoTex1", "Fragment"],
+        ["Image", "MaterialNormal1", "normalTex1", "Fragment"],
+        ["Image", "MaterialRoughness1", "pbrTex1", "Fragment"],
+        ["Image", "MaterialAlbedo2", "albedoTex2", "Fragment"],
+        ["Image", "MaterialNormal2", "normalTex2", "Fragment"],
+        ["Image", "MaterialRoughness2", "pbrTex2", "Fragment"],
+        ["Image", "MaterialBlendMask", "blendMaskTex", "Fragment"],
+        ["Image", "noise", "noiseTex", "Fragment"]
+      ]
+    },
     {
       "name": "PerPixelPicking",
       "resources" : [
@@ -305,6 +324,14 @@
       "renderPass" : "GBuffer",
       "blendStates" : ["Default", "Default", "Default"],
       "boundResources" : "GBufferTerrain"
+    },
+	{
+      "name" : "GBufferTerrainLava",
+      "baseVertexGpuProgram" : "gbuffer_terrain_lava.vert",
+      "baseFragmentGpuProgram" : "gbuffer_terrain_lava.frag",
+      "renderPass" : "GBuffer",
+      "blendStates" : ["Default", "Default", "Default"],
+      "boundResources" : "GBufferTerrainLava"
     },
     {
       "name" : "PerPixelPicking",

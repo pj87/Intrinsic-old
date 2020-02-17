@@ -232,7 +232,7 @@
 		{
 			"type" : "RenderPassGenericMesh",
 			"name" : "GBuffer",
-			"materialPasses" : ["GBufferDefault", "GBufferTerrain"],
+			"materialPasses" : ["GBufferDefault", "GBufferTerrain", "GBufferTerrainLava"],
 			"renderOrder" : "FrontToBack",
 			"outputs" : [
 				["GBufferAlbedo", [0.0, 0.0, 0.0, 1.0]],
@@ -308,7 +308,7 @@
 		{
 			"type" : "RenderPassGenericMesh",
 			"name" : "GBuffer",
-			"materialPasses" : ["GBufferDefault", "GBufferGenerated", "GBufferTerrain", "GBufferFoliage", "GBufferGrass", "GBufferTemple", "GBufferSkyscrapers", "GBufferVillageHouses"],
+			"materialPasses" : ["GBufferDefault", "GBufferGenerated", "GBufferTerrain", "GBufferTerrainLava", "GBufferFoliage", "GBufferGrass", "GBufferTemple", "GBufferSkyscrapers", "GBufferVillageHouses"],
 			"renderOrder" : "FrontToBack",
 			"outputs" : [
 				["GBufferAlbedo", [0.1, 0.5, 1.0, 1.0]],
