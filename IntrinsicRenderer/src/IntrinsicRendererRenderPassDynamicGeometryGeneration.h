@@ -40,7 +40,8 @@ struct DynamicGeneratedMesh
                        const Name&& voxelGenerationShader,
                        const Name&& normalGenerationShader, 
 					   const Name&& geometryGenerationShader, 
-					   bool isDynamic)
+					   bool isDynamic, float firstParam,
+					   float secondParam)
   {
     this->meshName = std::make_unique<Name>(meshName);
     this->isDynamic = isDynamic;
@@ -54,6 +55,10 @@ struct DynamicGeneratedMesh
     this->sizeX = &sizes[0];
     this->sizeY = &sizes[1];
     this->sizeZ = &sizes[2];
+
+	this->params[0] = 0.0;
+	this->params[1] = firstParam;
+    this->params[2] = secondParam;
 
     shaders.push_back(std::make_unique<Name>(voxelGenerationShader));
     shaders.push_back(std::make_unique<Name>(normalGenerationShader));
@@ -90,11 +95,14 @@ struct DynamicGeneratedMesh
   ComputeCallRef _computeCallSDFGenerationRef;
   ComputeCallRef _computeCallNormalRef;
 
+  float params[3];
+
   int counter = 0;
   bool isCalled = false;
   bool isDynamic;
   int *sizeX, *sizeY, *sizeZ;
   int sizes[4];
+  float firstParam, secondParam;
 };
 
 struct DynamicGeometryGeneration
@@ -104,7 +112,8 @@ struct DynamicGeometryGeneration
 
   static void addDynamicGeneradtedMesh(const int& sizeX, const int& sizeY, const int& sizeZ,
 									   const Name&, const Name&&, const Name&&,
-                                       const Name&&, bool isDynamic = true);
+                                       const Name&&, bool isDynamic = true, 
+									   float firstParam = 0.0, float secondParam = 0.0);
 
   static float getVoxel(DynamicGeneratedMesh& mesh, int x, int y, int z);
   static glm::vec3& getNormal(DynamicGeneratedMesh& mesh, int x, int y, int z);

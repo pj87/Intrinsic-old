@@ -30,7 +30,7 @@ namespace RenderPass
 namespace
 {
 float target = 0.0;
-float noiseParams[] = {0.02, 2.0, 0.5};
+//float noiseParams[] = {0.02, 2.0, 0.5};
 
 int cubeEdgeFlags[256] = {
     0x000, 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c, 0x80c, 0x905,
@@ -632,7 +632,7 @@ void DynamicGeometryGeneration::addDynamicGeneradtedMesh(
     const int& sizeX, const int& sizeY, const int& sizeZ, 
 	const Name& meshName, const Name&& voxelGenerationShadera,
     const Name&& normalGenerationShader, const Name&& geometryGenerationShader, 
-	bool isDynamic)
+	bool isDynamic, float firstParam, float secondParam)
 {
   std::unique_ptr<DynamicGeneratedMesh> dynamicGenerationMesh =
       std::make_unique<DynamicGeneratedMesh>(
@@ -640,7 +640,7 @@ void DynamicGeometryGeneration::addDynamicGeneradtedMesh(
           std::move(meshName), std::move(voxelGenerationShadera),
           std::move(normalGenerationShader),
           std::move(geometryGenerationShader), 
-		  isDynamic);
+		  isDynamic, firstParam, secondParam);
 
   dynamicGenerationMeshes.push_back(std::move(dynamicGenerationMesh));
 }
@@ -675,9 +675,9 @@ void DynamicGeometryGeneration::init()
         BufferManager::_descMemoryPoolType(_noiseParametersRef) =
             MemoryPoolType::kStaticStagingBuffers;
         BufferManager::_descSizeInBytes(_noiseParametersRef) =
-            sizeof(noiseParams);
+            sizeof(mesh->params);
         BufferManager::_descInitialData(_noiseParametersRef) = 
-			noiseParams;
+			mesh->params;
       }
       mesh->_noiseParametersRef = _noiseParametersRef;
       buffersToCreate.push_back(_noiseParametersRef);
@@ -897,14 +897,14 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   _INTR_PROFILE_CPU("Render Pass", "Render Dynamic Geometry Generation");
   _INTR_PROFILE_GPU("Dynamic Geometry Generation");
 
-  noiseParams[0] += p_DeltaT;
-
   for (auto& mesh : dynamicGenerationMeshes)
   {
+    mesh->params[0] += p_DeltaT;
+
     if (mesh->isDynamic)
 	{
 	  BufferRef buffer = mesh->_noiseParametersRef;
-      updateDataMemory(noiseParams, buffer,
+      updateDataMemory(mesh->params, buffer,
                        BufferManager::_descSizeInBytes(buffer), 0);
 	}
 	else

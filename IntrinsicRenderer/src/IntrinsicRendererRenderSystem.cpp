@@ -251,8 +251,10 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"houses.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
-		false);
-    
+		false, 
+		1.01, 
+		-5.0);
+     
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(skyscrapers), 
@@ -268,6 +270,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
+	
 #endif
 
 	/*  
