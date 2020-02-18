@@ -257,7 +257,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
     RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain_lava), 
-		"terrain_tatooine_generated.comp", 
+		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
