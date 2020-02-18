@@ -15,10 +15,10 @@
 // Precompiled header file
 #include "stdafx.h"
 
-//#define TEMPLE
+#define TEMPLE
 //#define TATOOINE
 //#define LAVA
-#define CITY
+//#define CITY
 
 using namespace RResources;
 
