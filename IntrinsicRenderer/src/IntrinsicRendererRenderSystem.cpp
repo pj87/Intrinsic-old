@@ -244,6 +244,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "metaballs.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp");
+
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(village_houses), 

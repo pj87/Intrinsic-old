@@ -8,8 +8,8 @@
             "Shadow",
             "PerPixelPicking"
         ],
-        "albedoTextureName": "concrete",
-        "emissiveTextureName": "terrain_rock",
+        "albedoTextureName": "tiles_hexagon",
+        "emissiveTextureName": "concrete",
         "uvOffsetScale": [
             0.0,
             0.0,
@@ -22,8 +22,8 @@
         ],
         "translucencyThickness": 0.0,
         "emissiveIntensity": 3.0,
-        "normalTextureName": "house_01_NRM_pj1",
-        "pbrTextureName": "concrete_PBR",
+        "normalTextureName": "tiles_hexagon_NRM",
+        "pbrTextureName": "tiles_hexagon_PBR",
         "metalMaskBias": 0.0,
         "roughnessBias": 0.0,
         "specularBias": 0.0
