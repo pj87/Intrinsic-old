@@ -184,6 +184,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
     RenderPass::Clustering::init();
     RenderPass::VolumetricLighting::init();
 
+#if !defined TATOOINE
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
 		64, 64, 64,
 		_N(house),
@@ -244,7 +245,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"explosion.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp");
-
+#endif
 #if defined TATOOINE
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
@@ -287,12 +288,13 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(gravel_01), 
         "texture_lava_generation.comp");
     */
-
+#if defined TATOOINE
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(generated_sky), 
         "texture_simplicity_generation.comp");
-
+#endif
+#if !defined TATOOINE
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_rock), 
@@ -314,7 +316,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_02_10), 6, 6, 0.5f);
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_04_12), 6, 6, 0.5f);
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_05_14), 6, 6, 0.5f);
-
+#endif
     //PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Trunk_01_70), 10, 10, 0.5f);
     //PseudoInstancing::addPseudoInstancingMesh(_N(Bush_01_115), 10, 10, 0.5f);
 
