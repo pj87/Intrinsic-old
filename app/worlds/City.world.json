@@ -1133,15 +1133,15 @@
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        -433.37628173828127,
-                        502.760986328125,
-                        1392.2860107421876
+                        -159.60079956054688,
+                        401.0043029785156,
+                        740.5122680664063
                     ],
                     "localOrient": [
-                        0.0033500997815281154,
-                        0.9930917024612427,
-                        -0.0292927548289299,
-                        0.11357608437538147
+                        0.010053216479718686,
+                        -0.9898063540458679,
+                        0.09172593057155609,
+                        0.10848336666822434
                     ],
                     "localSize": [
                         0.0,
@@ -1149,15 +1149,15 @@
                         0.0
                     ],
                     "worldPos": [
-                        -433.37628173828127,
-                        502.760986328125,
-                        1392.2860107421876
+                        -159.60079956054688,
+                        401.0043029785156,
+                        740.5122680664063
                     ],
                     "worldOrient": [
-                        0.0033500997815281154,
-                        0.9930917024612427,
-                        -0.0292927548289299,
-                        0.11357608437538147
+                        0.010053216479718686,
+                        -0.9898063540458679,
+                        0.09172593057155609,
+                        0.10848336666822434
                     ],
                     "worldSize": [
                         0.0,
@@ -2274,8 +2274,63 @@
         ]
     },
     {
+        "name": "MarchingCubes",
+        "offsetToParent": -28,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        -175.3863525390625,
+                        380.4355163574219,
+                        666.7542724609375
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        10.0,
+                        10.0,
+                        10.0
+                    ],
+                    "worldPos": [
+                        -175.3863525390625,
+                        380.4355163574219,
+                        666.7542724609375
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        10.0,
+                        10.0,
+                        10.0
+                    ]
+                }
+            },
+            {
+                "type": "Mesh",
+                "properties": {
+                    "meshName": "water_sphere",
+                    "colorTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            }
+        ]
+    },
+    {
         "name": "Light",
-        "offsetToParent": -6,
+        "offsetToParent": -7,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2331,7 +2386,7 @@
     },
     {
         "name": "Light2",
-        "offsetToParent": -7,
+        "offsetToParent": -8,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2387,7 +2442,7 @@
     },
     {
         "name": "PathD7",
-        "offsetToParent": -25,
+        "offsetToParent": -26,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2430,7 +2485,7 @@
     },
     {
         "name": "PathD5",
-        "offsetToParent": -26,
+        "offsetToParent": -27,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2473,7 +2528,7 @@
     },
     {
         "name": "PathD4",
-        "offsetToParent": -27,
+        "offsetToParent": -28,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2516,7 +2571,7 @@
     },
     {
         "name": "PathD2",
-        "offsetToParent": -28,
+        "offsetToParent": -29,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2559,7 +2614,7 @@
     },
     {
         "name": "PathD1",
-        "offsetToParent": -29,
+        "offsetToParent": -30,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2602,7 +2657,7 @@
     },
     {
         "name": "PathD6",
-        "offsetToParent": -30,
+        "offsetToParent": -31,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2645,7 +2700,7 @@
     },
     {
         "name": "PathB2",
-        "offsetToParent": -31,
+        "offsetToParent": -32,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2688,7 +2743,7 @@
     },
     {
         "name": "PathB1",
-        "offsetToParent": -32,
+        "offsetToParent": -33,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2731,7 +2786,7 @@
     },
     {
         "name": "PathA6",
-        "offsetToParent": -33,
+        "offsetToParent": -34,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2774,7 +2829,7 @@
     },
     {
         "name": "PathA5",
-        "offsetToParent": -34,
+        "offsetToParent": -35,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2817,7 +2872,7 @@
     },
     {
         "name": "PathA4",
-        "offsetToParent": -35,
+        "offsetToParent": -36,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2860,7 +2915,7 @@
     },
     {
         "name": "PathA3",
-        "offsetToParent": -36,
+        "offsetToParent": -37,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2903,7 +2958,7 @@
     },
     {
         "name": "PathA2",
-        "offsetToParent": -37,
+        "offsetToParent": -38,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2946,7 +3001,7 @@
     },
     {
         "name": "PathA1",
-        "offsetToParent": -38,
+        "offsetToParent": -39,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -2989,7 +3044,7 @@
     },
     {
         "name": "PathB3",
-        "offsetToParent": -39,
+        "offsetToParent": -40,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3032,7 +3087,7 @@
     },
     {
         "name": "PathA7",
-        "offsetToParent": -40,
+        "offsetToParent": -41,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3075,7 +3130,7 @@
     },
     {
         "name": "PathA8",
-        "offsetToParent": -41,
+        "offsetToParent": -42,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3118,7 +3173,7 @@
     },
     {
         "name": "PathC4",
-        "offsetToParent": -42,
+        "offsetToParent": -43,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3161,7 +3216,7 @@
     },
     {
         "name": "PathC1",
-        "offsetToParent": -43,
+        "offsetToParent": -44,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3204,7 +3259,7 @@
     },
     {
         "name": "PathC2",
-        "offsetToParent": -44,
+        "offsetToParent": -45,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -3247,7 +3302,7 @@
     },
     {
         "name": "PathC3",
-        "offsetToParent": -45,
+        "offsetToParent": -46,
         "propertyEntries": [
             {
                 "type": "Node",
