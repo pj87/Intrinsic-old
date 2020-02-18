@@ -15,10 +15,10 @@
 // Precompiled header file
 #include "stdafx.h"
 
-#define TEMPLE
+//#define TEMPLE
 //#define TATOOINE
 //#define LAVA
-//#define CITY
+#define CITY
 
 using namespace RResources;
 
@@ -312,7 +312,47 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-
+    
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(skyscrapers_1), 
+		"skyscrapers.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+    
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(skyscrapers_2), 
+		"skyscrapers.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+    
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(skyscrapers_3), 
+		"skyscrapers.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+    
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(skyscrapers_4), 
+		"skyscrapers.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+    
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(skyscrapers_5), 
+		"skyscrapers.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(house_2), 
