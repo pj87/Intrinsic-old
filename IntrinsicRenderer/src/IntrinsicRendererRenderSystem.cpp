@@ -254,7 +254,57 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false, 
 		1.01, 
 		-5.0);
-     
+    
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(village_houses_1), 
+		"houses.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		10.0, 
+		-5.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(village_houses_2), 
+		"houses.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		1.01, 
+		-5.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(village_houses_3), 
+		"houses.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		1.01, 
+		-5.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(village_houses_4), 
+		"houses.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		1.01, 
+		-5.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(village_houses_5), 
+		"houses.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		1.01, 
+		-5.0);
+
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(skyscrapers), 
