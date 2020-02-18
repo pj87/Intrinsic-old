@@ -15,6 +15,11 @@
 // Precompiled header file
 #include "stdafx.h"
 
+#define TATOOINE
+//#define LAVA
+//#define CITY
+//#define TEMPLE
+
 using namespace RResources;
 
 namespace Intrinsic
@@ -216,7 +221,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-	
+    
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
         _N(village_houses), 
@@ -239,15 +244,27 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"explosion.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp");
-	
+
+#if defined TATOOINE
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
-		_N(terrain_lava), 
-		"terrain_lava_generated.comp", 
+		_N(terrain_tatooine), 
+		"terrain_tatooine_generated.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-    /*  
+#endif
+#if !defined TATOOINE
+    RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_lava), 
+		"terrain_tatooine_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+#endif
+
+	/*  
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         32, 64, 256,
         _N(house_4), 

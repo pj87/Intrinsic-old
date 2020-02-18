@@ -358,10 +358,10 @@
                         32.155487060546878
                     ],
                     "localOrient": [
-                        0.02469681389629841,
-                        -0.9464861154556274,
-                        -0.0746779665350914,
-                        -0.3130132257938385
+                        -0.024696823209524156,
+                        0.9464861154556274,
+                        0.07467799633741379,
+                        0.3130132257938385
                     ],
                     "localSize": [
                         0.0,
@@ -374,10 +374,10 @@
                         32.155487060546878
                     ],
                     "worldOrient": [
-                        0.02469681389629841,
-                        -0.9464861154556274,
-                        -0.0746779665350914,
-                        -0.3130132257938385
+                        -0.024696823209524156,
+                        0.9464861154556274,
+                        0.07467799633741379,
+                        0.3130132257938385
                     ],
                     "worldSize": [
                         0.0,
@@ -871,63 +871,8 @@
         ]
     },
     {
-        "name": "TerrainLava",
-        "offsetToParent": -15,
-        "propertyEntries": [
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        0.0,
-                        -3500.0,
-                        0.0
-                    ],
-                    "localOrient": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "localSize": [
-                        1250.0,
-                        1250.0,
-                        1250.0
-                    ],
-                    "worldPos": [
-                        0.0,
-                        -3500.0,
-                        0.0
-                    ],
-                    "worldOrient": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "worldSize": [
-                        1250.0,
-                        1250.0,
-                        1250.0
-                    ]
-                }
-            },
-            {
-                "type": "Mesh",
-                "properties": {
-                    "meshName": "terrain_lava",
-                    "colorTint": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            }
-        ]
-    },
-    {
         "name": "Planet",
-        "offsetToParent": -16,
+        "offsetToParent": -15,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -970,6 +915,61 @@
                 "type": "Mesh",
                 "properties": {
                     "meshName": "sphere",
+                    "colorTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TerrainTatooine",
+        "offsetToParent": -16,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        0.0,
+                        -3500.0,
+                        0.0
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1250.0,
+                        1250.0,
+                        1250.0
+                    ],
+                    "worldPos": [
+                        0.0,
+                        -3500.0,
+                        0.0
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        1250.0,
+                        1250.0,
+                        1250.0
+                    ]
+                }
+            },
+            {
+                "type": "Mesh",
+                "properties": {
+                    "meshName": "terrain_tatooine",
                     "colorTint": [
                         1.0,
                         1.0,
