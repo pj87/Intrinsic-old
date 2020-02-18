@@ -16,9 +16,9 @@
 #include "stdafx.h"
 
 //#define TATOOINE
-//#define LAVA
+#define LAVA
 //#define CITY
-#define TEMPLE
+//#define TEMPLE
 
 using namespace RResources;
 
@@ -184,7 +184,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
     RenderPass::Clustering::init();
     RenderPass::VolumetricLighting::init();
 
-#if !defined TATOOINE
+#if defined TEMPLE
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
 		64, 64, 64,
 		_N(house),
@@ -238,23 +238,6 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-
-	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64,
-        _N(house_5), 
-		"explosion.comp", 
-		"normal_generation.comp",
-        "geometry_generation_new.comp");
-#endif
-#if defined TATOOINE
-	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
-		_N(terrain_tatooine), 
-		"terrain_tatooine_generated.comp", 
-		"normal_generation.comp",
-        "geometry_generation_new.comp", 
-		false);
-#elif defined TEMPLE
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain), 
@@ -262,7 +245,15 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-#else
+#elif defined TATOOINE
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_tatooine), 
+		"terrain_tatooine_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+#elif defined LAVA
     RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain_lava), 
@@ -270,6 +261,12 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64,
+        _N(house_5), 
+		"explosion.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp");
 #endif
 
 	/*  
@@ -289,24 +286,8 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "geometry_generation_cave.comp", 
 		false);
 		*/
-    /*
-	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
-        2048, 2048, 1, 
-        _N(gravel_01), 
-        "texture_lava_generation.comp");
-    */
-#if defined TATOOINE
-	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
-        2048, 2048, 1, 
-        _N(generated_sky), 
-        "texture_simplicity_generation.comp");
-#endif
-#if !defined TATOOINE
-	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
-        2048, 2048, 1, 
-        _N(terrain_rock), 
-        "texture_lava_generation.comp");
 
+#if defined TEMPLE
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         1024, 1024, 1, 
         _N(house_01_NRM_pj1), 
@@ -323,11 +304,26 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_02_10), 6, 6, 0.5f);
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_04_12), 6, 6, 0.5f);
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_05_14), 6, 6, 0.5f);
-#endif
-    //PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Trunk_01_70), 10, 10, 0.5f);
-    //PseudoInstancing::addPseudoInstancingMesh(_N(Bush_01_115), 10, 10, 0.5f);
 
-    
+	//PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Trunk_01_70), 10, 10, 0.5f);
+    //PseudoInstancing::addPseudoInstancingMesh(_N(Bush_01_115), 10, 10, 0.5f);
+#elif defined TATOOINE
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(generated_sky), 
+        "texture_simplicity_generation.comp");
+#elif defined LAVA
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(generated_sky), 
+        "texture_simplicity_generation.comp");
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_rock), 
+        "texture_lava_generation.comp");
+	
+#endif
 
 	RenderPass::DynamicGeometryGeneration::init();
     RenderPass::DynamicTextureGeneration::init();
