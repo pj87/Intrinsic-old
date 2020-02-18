@@ -254,8 +254,15 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-#endif
-#if !defined TATOOINE
+#elif defined TEMPLE
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain), 
+		"terrain_generated1.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false);
+#else
     RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain_lava), 
