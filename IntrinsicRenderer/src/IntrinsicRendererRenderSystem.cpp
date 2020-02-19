@@ -210,7 +210,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
     
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
-		_N(terrain), 
+		_N(terrain_generated), 
 		"terrain_generated1.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 

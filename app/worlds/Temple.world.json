@@ -2228,20 +2228,13 @@
             {
                 "type": "Mesh",
                 "properties": {
-                    "meshName": "terrain",
+                    "meshName": "terrain_generated",
                     "colorTint": [
                         1.0,
                         1.0,
                         1.0,
                         1.0
                     ]
-                }
-            },
-            {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 2,
-                    "density": 1.0
                 }
             }
         ]
@@ -2290,20 +2283,13 @@
             {
                 "type": "Mesh",
                 "properties": {
-                    "meshName": "terrain",
+                    "meshName": "terrain_generated",
                     "colorTint": [
                         1.0,
                         1.0,
                         1.0,
                         1.0
                     ]
-                }
-            },
-            {
-                "type": "RigidBody",
-                "properties": {
-                    "rigidBodyType": 2,
-                    "density": 1.0
                 }
             }
         ]

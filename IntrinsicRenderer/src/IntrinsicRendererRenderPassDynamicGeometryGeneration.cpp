@@ -973,7 +973,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
     // hack (for the demo): generate the normals and voxels only for the terrain
 	
-	if (name != _N(terrain))
+	if (name != _N(terrain_generated))
 		continue;
 
 	// end of hack (for the demo)
