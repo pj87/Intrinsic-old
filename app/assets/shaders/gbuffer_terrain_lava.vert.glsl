@@ -30,6 +30,8 @@ layout(location = 1) out vec3 outTangent;
 layout(location = 2) out vec3 outBinormal;
 layout(location = 3) out vec3 outColor;
 layout(location = 4) out vec2 outUV0;
+layout(location = 5) out vec3 outPosition;
+layout(location = 7) out vec3 outNormalTPM;
 
 void main()
 {
@@ -43,4 +45,6 @@ void main()
   outBinormal =
       normalize(uboPerInstance.worldViewMatrix * vec4(inBinormal, 0.0)).xyz;
   outUV0 = inUV0;
+  outPosition = inPosition;
+  outNormalTPM = inNormal;
 }
