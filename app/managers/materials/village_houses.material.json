@@ -8,8 +8,8 @@
             "Shadow",
             "PerPixelPicking"
         ],
-        "albedoTextureName": "tiles_hexagon",
-        "emissiveTextureName": "concrete",
+        "albedoTextureName": "concrete",
+        "emissiveTextureName": "tiles_hexagon",
         "uvOffsetScale": [
             0.0,
             0.0,
