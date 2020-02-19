@@ -17,6 +17,7 @@ layout(binding = 1) buffer _ParametersBuffer
 
 #define iTime _Frequency
 #define iResolution vec2(2048.0, 2048)
+#define iMouse vec2(0.0, 0.0)
 
 // Auroras by nimitz 2017 (twitter: @stormoid)
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License
