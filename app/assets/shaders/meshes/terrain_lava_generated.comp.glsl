@@ -27,73 +27,98 @@ layout(binding = 5) buffer _VoxelNormalBuffer
 	vec4 _NormalResult[];
 };
 
-#define pmod(a,b)    ( mod(mod((a),(b))+(b),(b)) )
-#define rep(a,r)    ( pmod(((a)+(r)*.5),(r))-(r)*.5 )
-#define repxz(a,r)    vec3( rep((a).x,(r)), (a).y, rep((a).z,(r)) )
+#define MAX_MARCHING_STEPS 256
+#define MAX_DIST 6. // far
+#define EPSILON 0.001
+#define PI 3.1415926535
 
-float opU(float d1, float d2)
+float random(vec2 p)
 {
-	return (d1 < d2) ? d1 : d2;
+    vec3 p3  = fract(vec3(p.xyx) * .1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
 }
 
-float sdBox( vec3 p, vec3 b )
-{
-    vec3 d = abs(p) - b;
-    return min(max(d.x,max(d.y,d.z)),0.0) + length(max(d,0.0));
+
+vec3 noise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+
+  vec2 df = 20.0*f*f*(f*(f-2.0)+1.0);
+  f = f*f*f*(f*(f*6.-15.)+10.);
+
+  float a = random(i + vec2(0.5));
+  float b = random(i + vec2(1.5, 0.5));
+  float c = random(i + vec2(.5, 1.5));
+  float d = random(i + vec2(1.5, 1.5));
+
+  float k = a - b - c + d;
+  float n = mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+
+  return vec3(n, vec2(b - a + k * f.y, c - a + k * f.x) * df);
 }
 
-const mat2 m2 = mat2(1.6,-1.2,1.2,1.6);
+mat2 terrainProps = mat2(0.8,-0.4, 0.5,0.8);
+float fbmM(vec2 p) {
+  vec2 df = vec2(0.0);
+  float f = 0.0;
+  float w = 0.5;
 
-float noi( in vec2 p )
-{
-    return 0.5*(cos(6.2831*p.x) + cos(6.2831*p.y));
+  for (int i = 0; i < 8; i++) {
+    vec3 n = noise(p);
+    df += n.yz;
+    f += abs(w * n.x / (1.0 + dot(df, df)));
+    w *= 0.5;
+    p = 2. * terrainProps * p;
+  }
+  return f;
 }
 
-float terrainMed( vec2 p )
-{
-    p *= 0.0035;
+float fbmH(vec2 p) {
+  vec2 df = vec2(0.0);
+  float f = 0.0;
+  float w = 0.5;
 
-    float s = 1.0;
-	float t = 0.0;
-	for( int i=0; i<3; i++ )
-	{
-        t += s*noi( p );
-		s *= 0.5;// + 0.1*t;
-        p = 0.97*m2*p;// + (t-0.5)*0.2;
-	}
-            
-    return t*35.0;
+  for (int i = 0; i < 12; i++) {
+    vec3 n = noise(p);
+    df += n.yz;
+    f += abs(w * n.x / (1.0 + dot(df, df)));
+    w *= 0.5;
+    p = 2. * terrainProps * p;
+  }
+  return f;
 }
 
-float map( in vec3 pos, float time )
-{
-    float m = 0.0;
-	//float h = pos.y - terrainMed(pos.xz);
-	float h = pos.y + terrainMed(pos.xz) + 10.0;
-	
-	/*
-    float sph = 100.0;
-    float k = 60.0;
-    float w = clamp( 0.5 + 0.5*(h-sph)/k, 0.0, 1.0 );
-    h = mix( h, sph, w ) - k*w*(1.0-w);
-    m = mix( m, 1.0, w ) - 1.0*w*(1.0-w);
-    m = clamp(m,0.0,1.0);
-	*/
-	
-	//pos = repxz(vec3(pos.x, h, pos.z), 300.0);
+
+float fbmL(vec2 p) {
+  vec2 df = vec2(0.0);
+  float f = 0.0;
+  float w = 0.5;
+
+  for (int i = 0; i < 2; i++) {
+    vec3 n = noise(p);
+    df += n.yz;
+    f += abs(w * n.x / (1.0 + dot(df, df)));
+    w *= 0.5;
+    p = 2. * terrainProps * p;
+  }
+  return f;
+}
+
+
+
+float map(vec3 p) {
+    float scene = p.y;
     
-    //h = opU(h, sdBox(pos, vec3(2.5, 50.0, 2.5)));
-	//h = opU(h, sdBox(pos, vec3(2.5, 50.0, 2.5)));
-	
-	return h;
-	
-    //return vec2( h, m );
+    float h = fbmM(p.xz);	
+    scene -= h;
+
+  	return scene;
 }
 
 float mapScaled(vec3 p, vec4 c)
 {
-	return map(p / 0.1, 0.0) * 0.1;
-	//return length(p) - 20.0;
+	return map(p / 20.0) * 20.0;
 }
 
 vec4 getNormal( in vec3 pos, vec4 c)
