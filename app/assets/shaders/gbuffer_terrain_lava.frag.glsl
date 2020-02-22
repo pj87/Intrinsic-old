@@ -40,6 +40,146 @@ layout(location = 7) in vec3 inNormalTPM;
 // Output
 OUTPUT
 
+const float pi = 3.14159;
+const vec4 cHashA4 = vec4 (0., 1., 57., 58.);
+const vec3 cHashA3 = vec3 (1., 57., 113.);
+const float cHashM = 43758.54;
+
+vec4 Hashv4f (float p)
+{
+  return fract (sin (p + cHashA4) * cHashM);
+}
+
+float Noisefv2 (vec2 p)
+{
+  vec2 ip = floor (p);
+  vec2 fp = fract (p);
+  fp = fp * fp * (3. - 2. * fp);
+  vec4 t = Hashv4f (dot (ip, cHashA3.xy));
+  return mix (mix (t.x, t.y, fp.x), mix (t.z, t.w, fp.x), fp.y);
+}
+
+float Fbmn (vec3 p, vec3 n)
+{
+  vec3 s;
+  float a;
+  s = vec3 (0.);
+  a = 1.;
+  for (int i = 0; i < 5; i ++) {
+    s += a * vec3 (Noisefv2 (p.yz), Noisefv2 (p.zx), Noisefv2 (p.xy));
+    a *= 0.5;
+    p *= 2.;
+  }
+  return dot (s, abs (n));
+}
+
+vec3 VaryNf (vec3 p, vec3 n, float f)
+{
+  vec3 g;
+  float s;
+  vec3 e = vec3 (0.1, 0., 0.);
+  s = Fbmn (p, n);
+  g = vec3 (Fbmn (p + e.xyy, n) - s,
+     Fbmn (p + e.yxy, n) - s, Fbmn (p + e.yyx, n) - s);
+  return normalize (n + f * (g - n * dot (n, g)));
+}
+
+vec3 HsvToRgb (vec3 c)
+{
+  vec3 p = abs (fract (c.xxx + vec3 (1., 2./3., 1./3.)) * 6. - 3.);
+  return c.z * mix (vec3 (1.), clamp (p - 1., 0., 1.), c.y);
+}
+
+vec2 Rot2D (vec2 q, float a)
+{
+  return q * cos (a) * vec2 (1., 1.) + q.yx * sin (a) * vec2 (-1., 1.);
+}
+
+mat3 flMat;
+vec3 flPos, ltPos, ltAx;
+float tCur;
+float dstFar = 100.;
+
+vec3 TrackPath (float t)
+{
+  return vec3 (10. * sin (0.1 * t) * sin (0.06 * t) * cos (0.033 * t) +
+     3. * cos (0.025 * t), 6., t);
+}
+
+float GrndDf (vec3 p)
+{
+  const mat2 qRot = mat2 (1.6, -1.2, 1.2, 1.6);
+  vec2 q, t, ta, v;
+  float wAmp, pRough, ht;
+  wAmp = 1.;
+  pRough = 0.5;
+  q = 0.4 * p.xz;
+  ht = 0.;
+  for (int j = 0; j < 3; j ++) {
+    t = q + 2. * Noisefv2 (q) - 1.;
+    ta = abs (sin (t));
+    v = (1. - ta) * (ta + abs (cos (t)));
+    v = pow (1. - v, vec2 (pRough));
+    ht += (v.x + v.y) * wAmp;
+    q *= 1.5 * qRot;
+    wAmp *= 0.25;
+    pRough = 0.6 * pRough + 0.2;
+  }
+  return p.y - ht;
+}
+
+float GrndRay (vec3 ro, vec3 rd)
+{
+  vec3 p;
+  float dHit, h, s, sLo, sHi;
+  s = 0.;
+  sLo = 0.;
+  dHit = dstFar;
+  for (int j = 0; j < 100; j ++) {
+    p = ro + s * rd;
+    h = GrndDf (p);
+    if (h < 0.) break;
+    sLo = s;
+    s += 0.8 * h + 0.005 * s;
+    if (s > dstFar) break;
+  }
+  if (h < 0.) {
+    sHi = s;
+    for (int j = 0; j < 8; j ++) {
+      s = 0.5 * (sLo + sHi);
+      p = ro + s * rd;
+      h = step (0., GrndDf (p));
+      sLo += h * (s - sLo);
+      sHi += (1. - h) * (s - sHi);
+    }
+    dHit = sHi;
+  }
+  return dHit;
+}
+
+vec3 GrndNf (vec3 p)
+{
+  vec4 v;
+  const vec3 e = 0.0001 * vec3 (1., -1., 0.);
+  v = vec4 (GrndDf (p + e.xxx), GrndDf (p + e.xyy),
+     GrndDf (p + e.yxy), GrndDf (p + e.yyx));
+  return normalize (vec3 (v.x - v.y - v.z - v.w) + 2. * v.yzw);
+}
+
+float GrndGlow (vec3 ro, vec3 rd)
+{
+  float gl, f, d;
+  gl = 0.;
+  f = 1.;
+  d = 0.;
+  for (int j = 0; j < 5; j ++) {
+    d += 0.4;
+    gl += f * max (d - GrndDf (ro + rd * d), 0.);
+    f *= 0.5;
+  }
+  return clamp (gl, 0., 1.);
+}
+
 vec3 tex3D(vec3 pos, vec3 nor, sampler2D s) {
     return texture( s, pos.yz).xyz*abs(nor.x)+
            texture( s, pos.xz).xyz*abs(nor.y)+
@@ -110,9 +250,10 @@ void main()
   float noise = clamp(tex3D(inPosition * 10.0, inNormalTPM, noiseTex).r, 0.0, 1.0);
   vec3 blendMask = tex3D(inPosition * 10.0, inNormalTPM, blendMaskTex).rgb;
 
-  vec3 albedo = blend(albedo0.rgb, albedo1.rgb, albedo2.rgb, blendMask, noise);
+  vec3 albedo = vec3(0.0);// blend(albedo0.rgb, albedo1.rgb, albedo2.rgb, blendMask, noise);
+  
   vec3 normal = blend(normal0.rgb, normal1.rgb, normal2.rgb, blendMask, noise);
-  vec2 pbr = blend(pbr0.rgb, pbr1.rgb, pbr2.rgb, blendMask, noise).rg;
+  vec2 pbr = vec2(0.0); //blend(pbr0.rgb, pbr1.rgb, pbr2.rgb, blendMask, noise).rg;
 
   float occlusion =
       clamp(mix(clamp(noise * 5.0, 0.0, 1.0) * blendMask.b, 1.0 - blendMask.r,
@@ -123,8 +264,19 @@ void main()
   albedo *= occlusion;
 
   GBuffer gbuffer;
-  {
-    gbuffer.albedo = vec4(albedo, 1.0) * uboPerInstance.colorTint;
+  { 
+    vec3 vn, ltDir;
+    float dstGrnd, di, atten, glw, dk;
+	atten = 30. * pow (min (di, 1.), 1.3) * pow (max (dot (ltAx, ltDir), 0.), 64.);
+	vec3 ro = inPosition;
+	vec3 rd = vec3(0.0);
+    vn = GrndNf (ro);
+    vn = VaryNf (5. * ro, vn, max (2., 6. - 0.3 * dstGrnd));
+    glw = GrndGlow (ro, vn);
+	
+	albedo = vec3(min (0.5 * Fbmn (31. * ro, vn), 1.));
+	
+	gbuffer.albedo = vec4(albedo, 1.0) * uboPerInstance.colorTint;	
     gbuffer.normal = normalize(TBN * normal);
     gbuffer.metalMask = pbr.r + uboPerMaterial.pbrBias.r;
     gbuffer.specular = 0.5 + uboPerMaterial.pbrBias.g;
