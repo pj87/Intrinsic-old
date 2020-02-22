@@ -123,7 +123,7 @@ void main()
 		gbuffer.albedo = vec4(0.0, 1.0, 0.0, 1.0);
 	else if (inPosition.y < 0.8 && inPosition.x < -2.1)
 	// collumns
-		gbuffer.albedo = vec4(1.0, 1.0, 1.0, 1.0);
+		gbuffer.albedo = vec4(1.0, 1.0, 0.0, 1.0);
 	// roof
 	else if (inPosition.y < 0.85)
 		gbuffer.albedo = vec4(inColor, 1.0) + vec4(tex3D(inPosition, inNormalTPM, albedoTex), 1.0) * uboPerInstance.colorTint;
