@@ -118,10 +118,17 @@ void main()
 
   GBuffer gbuffer;
   {
-	if (inPosition.y < 0.9)
+   //door 
+	if (inPosition.y < 0.7 && inPosition.z > 0.8 && inPosition.z < 1.3 && inPosition.x < -2.0)
+		gbuffer.albedo = vec4(0.0, 1.0, 0.0, 1.0);
+	else if (inPosition.y < 0.8 && inPosition.x < -2.1)
+	// collumns
+		gbuffer.albedo = vec4(1.0, 1.0, 1.0, 1.0);
+	// roof
+	else if (inPosition.y < 0.85)
 		gbuffer.albedo = vec4(inColor, 1.0) + vec4(tex3D(inPosition, inNormalTPM, albedoTex), 1.0) * uboPerInstance.colorTint;
 	else
-		gbuffer.albedo = vec4(inColor, 1.0) + vec4(tex3D(inPosition, inNormalTPM, albedoTex), 1.0) * uboPerInstance.colorTint * vec4(1.0, 0.25, 0.25, 1.0);
+		gbuffer.albedo = vec4(inColor, 1.0) + vec4(tex3D(inPosition, inNormalTPM, emissiveTex), 1.0) * uboPerInstance.colorTint * vec4(1.0, 0.25, 0.25, 1.0);
 		
     //gbuffer.albedo = vec4(inColor, 1.0) + vec4(mix(tex3D(inPosition, inNormalTPM, albedoTex), tex3D(inPosition / 10.0, inNormalTPM, emissiveTex), 1.0), 1.0) * uboPerInstance.colorTint;
     //gbuffer.albedo = vec4(inColor, 1.0) + mix(tex3d(inPosition, inNormalTPM), tex3d_1(inPosition, inNormalTPM), 1.0) * uboPerInstance.colorTint;
@@ -134,7 +141,27 @@ void main()
     gbuffer.roughness = adjustRoughness(pbr.g + uboPerMaterial.pbrBias.b,
                                         uboPerMaterial.data1.x);
     gbuffer.materialBufferIdx = uboPerMaterial.data0.x;
-	gbuffer.emissive = tex3D(inPosition, inNormalTPM, emissiveTex).r * 0.1;
+	
+	// windows
+	if (inPosition.y > 0.3 && inPosition.y < 0.6 &&
+		(inPosition.x > 0.0 && inPosition.x < 0.3 || 
+		inPosition.x > -1.0 && inPosition.x < -0.7 || 
+		inPosition.z > -0.8 && inPosition.z < -0.5 || 
+		inPosition.z > -0.2 && inPosition.z < 0.1 || 
+		inPosition.z > 2.0 && inPosition.z < 2.3))
+		gbuffer.emissive = 1.0;
+	else 
+		gbuffer.emissive = 0.1;
+	
+	/*
+	if (inPosition.x > 0.2 && inPosition.x < 0.5 &&
+		inPosition.y > 0.2 && inPosition.y < 0.5)
+		gbuffer.emissive = 1.0;
+	else 
+		gbuffer.emissive = 0.1;
+	*/
+	
+	//gbuffer.emissive = tex3D(inPosition, inNormalTPM, emissiveTex).r * 0.1;
     gbuffer.occlusion = 1.0;
   }
   writeGBuffer(gbuffer, outAlbedo, outNormal, outParameter0);
