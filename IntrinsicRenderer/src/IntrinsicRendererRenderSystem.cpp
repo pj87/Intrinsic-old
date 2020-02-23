@@ -488,8 +488,26 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_rock), 
-        "texture_lava_generation.comp");
+        "texture_sand_generation.comp",
+        false);
 	
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_grass_01), 
+        "texture_lava_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_grass_stone), 
+        "texture_sand_generation.comp", 
+		false);
+     /*
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_grass_stone), 
+        "texture_sand_generation.comp");
+	*/
 #endif
 
 	RenderPass::DynamicGeometryGeneration::init();
