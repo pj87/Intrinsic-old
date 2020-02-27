@@ -300,11 +300,11 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "geometry_generation_new.comp", 
 		false);
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64,
+        36, 36, 36,
         _N(house_5), 
 		"explosion.comp", 
-		"normal_generation.comp",
-        "geometry_generation_new.comp");
+		"normal_generation_6.comp",
+        "geometry_generation_new_6.comp");
 #elif defined CITY
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
 		64, 64, 64,
