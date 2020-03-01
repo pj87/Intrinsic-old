@@ -156,7 +156,13 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
   {
     MeshRef meshRef = p_Meshes[meshIdx];
 
-	const Name& name = _name(meshRef);        
+	int vertices = 12000000;
+
+	const Name& name = _name(meshRef);
+
+	if (name == _N(pbr_test_025))
+          vertices = 1000000;
+
     if (!_IS_OVERRIDEN_MESH(name))
       continue;
 
@@ -209,7 +215,7 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
         BufferManager::_nameToInitlialBufferMap[name] =
             BufferManager::_dynamicBuffers.size();
         BufferManager::_descSizeInBytes(posVertexBuffer) =
-            20000000 * sizeof(uint32_t);
+            vertices * sizeof(uint32_t);
         BufferManager::_dynamicBuffers.push_back(posVertexBuffer);
         
         vertexBuffers[subMeshIdx].push_back(posVertexBuffer);
@@ -224,7 +230,7 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(uv0VertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(uv0VertexBuffer) =
-            20000000 * sizeof(uint32_t);
+            vertices * sizeof(uint32_t);
         BufferManager::_dynamicBuffers.push_back(uv0VertexBuffer);
         
         vertexBuffers[subMeshIdx].push_back(uv0VertexBuffer);
@@ -241,7 +247,7 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(normalVertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(normalVertexBuffer) =
-            20000000 * sizeof(uint32_t);
+            vertices * sizeof(uint32_t);
         BufferManager::_dynamicBuffers.push_back(normalVertexBuffer);
         
         vertexBuffers[subMeshIdx].push_back(normalVertexBuffer);
@@ -258,7 +264,7 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(tangentVertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(tangentVertexBuffer) =
-            20000000 * sizeof(uint32_t);
+            vertices * sizeof(uint32_t);
         BufferManager::_dynamicBuffers.push_back(tangentVertexBuffer);
         
         vertexBuffers[subMeshIdx].push_back(tangentVertexBuffer);
@@ -275,7 +281,7 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(binormalVertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(binormalVertexBuffer) =
-            20000000 * sizeof(uint32_t);
+            vertices * sizeof(uint32_t);
         BufferManager::_dynamicBuffers.push_back(binormalVertexBuffer);
         
         vertexBuffers[subMeshIdx].push_back(binormalVertexBuffer);
@@ -292,7 +298,7 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(vtxColorVertexBuffer) =
             R::BufferType::kVertex;
         BufferManager::_descSizeInBytes(vtxColorVertexBuffer) =
-            20000000 * sizeof(uint32_t);
+            vertices * sizeof(uint32_t);
         BufferManager::_dynamicBuffers.push_back(vtxColorVertexBuffer);
 
         vertexBuffers[subMeshIdx].push_back(vtxColorVertexBuffer);

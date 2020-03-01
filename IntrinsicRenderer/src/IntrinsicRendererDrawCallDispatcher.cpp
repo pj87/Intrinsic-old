@@ -130,7 +130,23 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
         {          
 		  if (_IS_OVERRIDEN_MESH(name))
 		  {
-		    vkCmdDraw(secondCmdBuffer, 12000000u, 1u, 0u, 0u);                  
+            int verticesNum = 12000000u;
+            if (name == _N(house_5))
+				verticesNum = 500000u;
+            else if (name == _N(pbr_test_025))
+              verticesNum = 1000000u;
+            else if (name == _N(pbr_test_0125))
+              verticesNum = 1000000u;
+            else if (name == _N(water_sphere))
+              verticesNum = 1000000u;
+            else if (name == _N(house))
+              verticesNum = 1000000u;
+            else if (name == _N(terrain_generated_small))
+              verticesNum = 1000000u;
+            else if (name == _N(terrain_generated))
+              verticesNum = 12000000u;
+
+			vkCmdDraw(secondCmdBuffer, verticesNum, 1u, 0u, 0u);
           }
           else 
 		  {

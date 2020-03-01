@@ -973,29 +973,30 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
     // hack (for the demo): generate the normals and voxels only for the terrain
 	
-	if (name != _N(terrain_generated))
+	if (name != _N(terrain_generated_small))
 		continue;
 
 	// end of hack (for the demo)
 
 	// Uncommet the following lines only when generating a new terrain with new trees
+    
+    PseudoInstancing::voxels.clear();
+	PseudoInstancing::normals.clear();
 
-    //PseudoInstancing::voxels.clear();
-	//PseudoInstancing::normals.clear();
+    aquireVoxelsAndNormals(*mesh);
 
-    //aquireVoxelsAndNormals(*mesh);
-
-    //PseudoInstancing::populateMeshes();
-    PseudoInstancing::generateInstances();
+    PseudoInstancing::populateMeshes();
+    //PseudoInstancing::generateInstances();
+	
   }
 }
 
 void DynamicGeometryGeneration::aquireVoxelsAndNormals(
     DynamicGeneratedMesh& mesh)
 {
-  for (int x = 0; x < 64; x += 1)
-    for (int y = 0; y < 64; y += 1)
-      for (int z = 0; z < 64; z += 1)
+  for (int x = 0; x < 36; x += 1)
+    for (int y = 0; y < 36; y += 1)
+      for (int z = 0; z < 36; z += 1)
       {
 			float voxel = getVoxel(mesh, x, y, z);
 			float voxel1 = getVoxel(mesh, x, y + 1, z);
@@ -1003,9 +1004,9 @@ void DynamicGeometryGeneration::aquireVoxelsAndNormals(
 			if (voxel > 0.0 && voxel1 < 0.0)
 			{
 				  Voxel voxel;
-				  voxel.x = static_cast<float>(x);
+				  voxel.x = static_cast<float>(z);
 				  voxel.y = static_cast<float>(y);
-				  voxel.z = static_cast<float>(64 - z);
+				  voxel.z = static_cast<float>(x);
 
 				  glm::vec3 nor = getNormal(mesh, x, y + 1, z);
 				  Voxel normal;

@@ -287,10 +287,10 @@ float map3( in vec3 p)
 float mapScaled(vec3 p, vec4 c)
 {
 	//return map2(p/0.0025f, c) * 0.0025f;
-	return map3(p/25.0f) * 25.0f;
+	return map3(p/12.5f) * 12.5f;
 }
 
-layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;
+layout(local_size_x = 6u, local_size_y = 6u, local_size_z = 6u) in;
 void main()
 {
     uvec3 id = gl_GlobalInvocationID;
