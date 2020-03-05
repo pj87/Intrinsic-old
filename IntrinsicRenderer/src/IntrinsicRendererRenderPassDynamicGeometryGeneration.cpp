@@ -986,7 +986,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     aquireVoxelsAndNormals(*mesh);
 
     PseudoInstancing::populateMeshes();
-    //PseudoInstancing::generateInstances();
+    PseudoInstancing::generateInstances();
 	
   }
 }

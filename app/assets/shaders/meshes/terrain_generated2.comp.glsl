@@ -92,7 +92,7 @@ float map( in vec3 pos, float time )
 
 float mapScaled(vec3 p, vec4 c)
 {
-	return map(p / 0.1, 0.0) * 0.1;
+	return map(p / 0.05, 0.0) * 0.05;
 	//return length(p) - 20.0;
 }
 
