@@ -514,6 +514,9 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(terrain_grass_stone), 
         "texture_sand_generation.comp", 
 		false);
+
+    World::_currentTime = 0.495f;
+
      /*
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 

@@ -541,7 +541,7 @@ void World::load(const _INTR_STRING& p_FilePath)
   // Set default camera
   _activeCamera = Components::CameraManager::getComponentForEntity(
       Entity::EntityManager::getEntityByName(_N(MainCamera)));
-  _currentTime = 0.1f;
+  //_currentTime = 0.1f;
   _filePath = p_FilePath;
 
   GameStates::Editing::_currentlySelectedEntity =
@@ -567,8 +567,8 @@ void World::updateDayNightCycle(float p_DeltaT)
   static const float dayNightFadeInPerc = 0.05f;
   static const float nightLightIntens = 0.05f;
 
-  _currentTime += p_DeltaT / dayNightCycleDurationInS;
-  _currentTime = glm::mod(_currentTime, 1.0f);
+  //_currentTime += p_DeltaT / dayNightCycleDurationInS;
+  //_currentTime = glm::mod(_currentTime, 1.0f);
 
   // Quant the current time to avoid shadow flickering due to the constant sun
   // light movement

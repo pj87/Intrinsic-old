@@ -86,7 +86,7 @@ vec3 tex3DNormal(vec3 pos, vec3 nor, sampler2D s) {
 
 vec3 blend(vec3 grass0, vec3 stone0, vec3 stone1, vec3 blendMask, float noise)
 {
-  return mix(grass0, mix(stone0, stone1, 1.0 - noise),
+  return mix(grass0 * 2.0, mix(stone0, stone1, 1.0 - noise),
              clamp(blendMask.b * 3.0, 0.0, 1.0));
 }
 
