@@ -1,13 +1,22 @@
+y = 0
+
 function tick(p_EntityRef, p_DeltaT)
   local nodeRef = nodeComponent.getComponentForEntity(p_EntityRef)
 
   local rotation = Quat.new(Vec3.new(0.0, p_DeltaT * 0.5, 0.0))
   local orientation = nodeComponent.getOrientation(nodeRef);
-  nodeComponent.setOrientation(nodeRef, glm.rotate(rotation, orientation))
+  --nodeComponent.setOrientation(nodeRef, glm.rotate(rotation, orientation))
 
   local position = nodeComponent.getPosition(nodeRef)
-
-  nodeComponent.setPosition(nodeRef, Vec3.new(position.x, position.y + p_DeltaT * 5.0, position.z))
+  
+  y = y + p_DeltaT * 1.0
+  
+  nodeComponent.setPosition(nodeRef, Vec3.new(position.x, math.abs(math.sin(y)) * 100.0, position.z))
+  
+  -- local y = position.y + p_DeltaT
+  -- print("DUPA")
+  -- print(position.y)
+  -- print(dupa)
 
   nodeComponent.updateTransforms(nodeRef)
 end
