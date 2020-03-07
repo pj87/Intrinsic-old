@@ -6,7 +6,7 @@
             "GBufferWireframe",
             "GBufferLava"
         ],
-        "albedoTextureName": "terrain_rock",
+        "albedoTextureName": "concrete",
         "emissiveTextureName": "white",
         "uvOffsetScale": [
             0.0,

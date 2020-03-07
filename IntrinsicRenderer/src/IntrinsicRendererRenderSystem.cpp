@@ -499,6 +499,12 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
+        _N(concrete), 
+        "texture_lava2_generation.comp",
+        false);
+    
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
         _N(terrain_rock), 
         "texture_sand_generation.comp",
         false);
