@@ -127,11 +127,11 @@ void main()
   const vec2 uv0 = UV0_TRANSFORM_ANIMATED(inUV0);
   const vec2 uv0Raw = UV0(inUV0);
 
-  const vec4 albedo0 = vec4(tex3D(inPosition, inNormalTPM, albedoTex0), 1.0);
+  const vec4 albedo0 = vec4(tex3D(inPosition * 0.5, inNormalTPM, albedoTex0), 1.0);
   const vec3 normal0 = tex3DNormal(inPosition, inNormalTPM, normalTex0);
   const vec3 pbr0 = tex3D(inPosition, inNormalTPM, pbrTex0).rgg;
 
-  float value = min (0.25 * Fbmn (10.0 * inPosition, vec3(0.0)), 1.);
+  float value = min (0.25 * Fbmn (1.0 * inPosition, vec3(1.0)), 1.);
   const vec4 albedo1 = vec4(value, value, value, 1.0);
 
   //const vec4 albedo1 = vec4(tex3D(inPosition * 0.5, inNormalTPM, albedoTex1), 1.0);
@@ -142,14 +142,23 @@ void main()
   const vec3 normal2 = tex3DNormal(inPosition * 0.25, inNormalTPM, normalTex2);
   const vec3 pbr2 = tex3D(inPosition * 0.1, inNormalTPM, pbrTex2).rgg;
 
-  float noise = clamp(tex3D(inPosition * 10.0, inNormalTPM, noiseTex).r, 0.0, 1.0);
-  vec3 blendMask = tex3D(inPosition * 10.0, inNormalTPM, blendMaskTex).rgb;
+  float noise = clamp(tex3D(inPosition * 1.0, inNormalTPM, noiseTex).r, 0.0, 1.0);
+  vec3 blendMask = tex3D(inPosition * 0.1, inNormalTPM, blendMaskTex).rgb;
 
-  vec3 albedo = blend(albedo0.rgb, albedo1.rgb, albedo2.rgb, blendMask, noise);
+  vec3 albedo = blend(albedo0.rgb * 2.0, albedo1.rgb, albedo2.rgb, blendMask, noise);
+  //vec3 albedo = pbr0.rgb;
+  //vec3 albedo = albedo2.rgb;
+  //vec3 albedo = blendMask;
   
-  vec3 normal = vec3(0.0);
+  //vec3 normal = vec3(0.0);
+  //vec3 normal = vec3(noise);
+  //vec3 normal = inNormalTPM;
+  //vec3 normal = normalize(inPosition);
   //vec3 normal = blend(normal0.rgb, normal1.rgb, normal2.rgb, blendMask, noise);
-  vec2 pbr = vec2(0.0); //blend(pbr0.rgb, pbr1.rgb, pbr2.rgb, blendMask, noise).rg;
+  //vec3 normal = normal0.rgb;
+  //vec2 pbr = vec2(0.0);
+  //vec2 pbr = blend(pbr0.rgb, pbr1.rgb, pbr2.rgb, blendMask, noise).rg;
+  vec2 pbr = pbr2.rg;
   
   float occlusion =
       clamp(mix(clamp(noise * 5.0, 0.0, 1.0) * blendMask.b, 1.0 - blendMask.r,
@@ -162,7 +171,8 @@ void main()
   GBuffer gbuffer;
   { 
 	gbuffer.albedo = vec4(albedo, 1.0) * uboPerInstance.colorTint;	
-    gbuffer.normal = normalize(TBN * normal);
+    //gbuffer.normal = normalize(TBN * normal);
+	gbuffer.normal = normalize(TBN * tex3DNormal(inPosition, inNormalTPM, normalTex2));
     gbuffer.metalMask = pbr.r + uboPerMaterial.pbrBias.r;
     gbuffer.specular = 0.5 + uboPerMaterial.pbrBias.g;
     gbuffer.roughness = pbr.g + uboPerMaterial.pbrBias.b;
