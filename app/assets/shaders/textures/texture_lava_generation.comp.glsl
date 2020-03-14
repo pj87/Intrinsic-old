@@ -16,7 +16,7 @@ layout(binding = 1) buffer _ParametersBuffer
 };
 
 #define iTime 1.0
-#define iResolution vec2(2048.0, 2048)
+#define iResolution vec2(4096.0, 4096.0)
 
 // Noise animation - Lava
 // by nimitz (twitter: @stormoid)
@@ -96,7 +96,7 @@ float flow(in vec2 p)
 	float z=2.;
 	float rz = 0.;
 	vec2 bp = p;
-	for (float i= 1.;i < 7.;i++ )
+	for (float i= 1.;i < 5.;i++ )
 	{
 		//primary flow speed
 		p += time*.6;

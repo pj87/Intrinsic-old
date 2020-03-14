@@ -6,7 +6,7 @@
             "GBufferWireframe",
             "GBufferLava"
         ],
-        "albedoTextureName": "concrete",
+        "albedoTextureName": "water_GEN",
         "emissiveTextureName": "white",
         "uvOffsetScale": [
             0.0,

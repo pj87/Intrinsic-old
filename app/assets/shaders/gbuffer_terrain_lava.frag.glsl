@@ -73,15 +73,11 @@ float Fbmn (vec3 p, vec3 n)
 }
 
 vec3 tex3D(vec3 pos, vec3 nor, sampler2D s) {
-    return texture( s, pos.yz).xyz*abs(nor.x)+
-           texture( s, pos.xz).xyz*abs(nor.y)+
-           texture( s, pos.xy).xyz*abs(nor.z);
+    return texture( s, pos.xz).xyz*abs(nor.y);
 }
 
 vec3 tex3DNormal(vec3 pos, vec3 nor, sampler2D s) {
-    return textureNormal( s, pos.yz).xyz*abs(nor.x)+
-           textureNormal( s, pos.xz).xyz*abs(nor.y)+
-           textureNormal( s, pos.xy).xyz*abs(nor.z);
+    return textureNormal( s, pos.xz).xyz*abs(nor.y);
 }
 
 vec3 blend(vec3 grass0, vec3 stone0, vec3 stone1, vec3 blendMask, float noise)
@@ -127,6 +123,8 @@ void main()
   const vec2 uv0 = UV0_TRANSFORM_ANIMATED(inUV0);
   const vec2 uv0Raw = UV0(inUV0);
 
+  float noise = clamp(tex3D(inPosition * 0.1, inNormalTPM, noiseTex).r, 0.0, 1.0);
+
   const vec4 albedo0 = vec4(tex3D((inPosition + 20.0) * 0.04, inNormalTPM, albedoTex0), 1.0);
   const vec3 normal0 = tex3DNormal(inPosition, inNormalTPM, normalTex0);
   const vec3 pbr0 = tex3D(inPosition, inNormalTPM, pbrTex0).rgg;
@@ -138,11 +136,11 @@ void main()
   const vec3 normal1 = tex3DNormal(inPosition * 0.5, inNormalTPM, normalTex1);
   const vec3 pbr1 = tex3D(inPosition * 0.1, inNormalTPM, pbrTex1).rgg;
 
-  const vec4 albedo2 = vec4(tex3D(inPosition * 0.25, inNormalTPM, albedoTex2), 1.0);
+  //const vec4 albedo2 = vec4(tex3D(inPosition * 0.25, inNormalTPM, albedoTex2), 1.0);
+  vec4 albedo2 = vec4(noise, noise, noise, 1.0);
   const vec3 normal2 = tex3DNormal(inPosition * 0.25, inNormalTPM, normalTex2);
   const vec3 pbr2 = tex3D(inPosition * 0.1, inNormalTPM, pbrTex2).rgg;
 
-  float noise = clamp(tex3D(inPosition * 0.1, inNormalTPM, noiseTex).r, 0.0, 1.0);
   vec3 blendMask = tex3D((inPosition + 20.0) * 0.04, inNormalTPM, blendMaskTex).rgb;
 
   vec3 albedo = blend(albedo0.rgb * 1.0, albedo1.rgb * 1.0, albedo2.rgb * 1.0, blendMask, noise);
@@ -155,11 +153,11 @@ void main()
   //vec3 normal = vec3(noise);
   //vec3 normal = inNormalTPM;
   //vec3 normal = normalize(inPosition);
-  //vec3 normal = blend(normal0.rgb, normal1.rgb, normal2.rgb, blendMask, noise);
+  vec3 normal = blend(normal0.rgb, normal1.rgb, normal2.rgb, blendMask, noise);
   //vec3 normal = normal0.rgb;
   //vec2 pbr = vec2(0.0);
-  //vec2 pbr = blend(pbr0.rgb, pbr1.rgb, pbr2.rgb, blendMask, noise).rg;
-  vec2 pbr = pbr2.rg;
+  vec2 pbr = blend(pbr0.rgb, pbr1.rgb, pbr2.rgb, blendMask, noise).rg;
+  //vec2 pbr = pbr2.rg;
   
   float occlusion =
       clamp(mix(clamp(noise * 5.0, 0.0, 1.0) * blendMask.b, 1.0 - blendMask.r,
@@ -172,6 +170,7 @@ void main()
   GBuffer gbuffer;
   { 
 	gbuffer.albedo = vec4(albedo, 1.0) * uboPerInstance.colorTint;	
+	//gbuffer.normal = vec3(0.0);
     //gbuffer.normal = normalize(TBN * normal);
 	gbuffer.normal = normalize(TBN * tex3DNormal(inPosition, inNormalTPM, normalTex2));
     gbuffer.metalMask = pbr.r + uboPerMaterial.pbrBias.r;
