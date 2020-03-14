@@ -6,7 +6,7 @@
             "GBufferWireframe",
             "GBufferSkyAurora"
         ],
-        "albedoTextureName": "generated_sky",
+        "albedoTextureName": "generated_sky_GEN",
         "emissiveTextureName": "white",
         "uvOffsetScale": [
             0.0,

@@ -15,9 +15,9 @@
 // Precompiled header file
 #include "stdafx.h"
 
-#define TEMPLE
+//#define TEMPLE
 //#define TATOOINE
-//#define LAVA
+#define LAVA
 //#define CITY
 
 using namespace RResources;
@@ -300,15 +300,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "geometry_generation_new.comp", 
 		false);
 #elif defined LAVA
-    /*
-    RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
-		_N(sky_aurora), 
-		"sky_generated.comp",
-		"normal_generation.comp",
-        "geometry_generation_new.comp", 
-		true);
-	*/
+    
     RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain_lava), 
@@ -521,32 +513,52 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 #elif defined LAVA
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
-        _N(generated_sky), 
+        _N(generated_sky_GEN), 
         "texture_aurora_generation.comp", 
 		false);
 	
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
-        _N(concrete), 
+        _N(water_GEN), 
         "texture_lava2_generation.comp",
         false);
     
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
-        _N(terrain_rock), 
+        _N(house_01_E_GEN), 
         "texture_sand_generation.comp",
         false);
 	
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
-        _N(terrain_grass_01), 
+        _N(terrain_grass_01_GEN), 
         "texture_lava_generation.comp", 
 		false);
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
-        _N(terrain_grass_stone), 
+        _N(terrain_grass_stone_GEN), 
         "texture_sand_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_BLEND_GEN), 
+        "texture_blend_generation.comp", 
+		false);
+
+	// Not really needed yet: 
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        1024, 1024, 1, 
+        _N(house_01_NRM_GEN), 
+        "texture_NRM_generation.comp", 
+		false);
+	
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(house_01_PBR_GEN), 
+        "texture_PBR_generation.comp", 
 		false);
 
     World::_currentTime = 0.495f;
