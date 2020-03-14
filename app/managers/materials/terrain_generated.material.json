@@ -8,13 +8,13 @@
             "GBufferTerrainGenerated",
             "PerPixelPicking"
         ],
-        "albedoTextureName": "terrain_grass_01",
+        "albedoTextureName": "terrain_grass_01_GEN",
         "emissiveTextureName": "white",
         "uvOffsetScale": [
             0.0,
             0.0,
-            200.0,
-            200.0
+            1.0,
+            1.0
         ],
         "uvAnimation": [
             0.0,
@@ -27,12 +27,12 @@
         "metalMaskBias": 0.0,
         "roughnessBias": 0.0,
         "specularBias": 0.0,
-        "albedo1TextureName": "terrain_grass_stone",
+        "albedo1TextureName": "terrain_grass_stone_GEN",
         "normal1TextureName": "terrain_grass_stone_NRM",
         "pbr1TextureName": "terrain_grass_stone_PBR",
         "albedo2TextureName": "terrain_cliff",
         "normal2TextureName": "terrain_cliff_NRM",
         "pbr2TextureName": "terrain_cliff_PBR",
-        "blendMaskTextureName": "terrain_BLEND"
+        "blendMaskTextureName": "terrain_BLEND_GEN"
     }
 }

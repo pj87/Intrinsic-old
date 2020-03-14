@@ -127,7 +127,7 @@ void main()
   const vec2 uv0 = UV0_TRANSFORM_ANIMATED(inUV0);
   const vec2 uv0Raw = UV0(inUV0);
 
-  const vec4 albedo0 = vec4(tex3D(inPosition * 0.5, inNormalTPM, albedoTex0), 1.0);
+  const vec4 albedo0 = vec4(tex3D((inPosition + 20.0) * 0.04, inNormalTPM, albedoTex0), 1.0);
   const vec3 normal0 = tex3DNormal(inPosition, inNormalTPM, normalTex0);
   const vec3 pbr0 = tex3D(inPosition, inNormalTPM, pbrTex0).rgg;
 
@@ -142,13 +142,14 @@ void main()
   const vec3 normal2 = tex3DNormal(inPosition * 0.25, inNormalTPM, normalTex2);
   const vec3 pbr2 = tex3D(inPosition * 0.1, inNormalTPM, pbrTex2).rgg;
 
-  float noise = clamp(tex3D(inPosition * 1.0, inNormalTPM, noiseTex).r, 0.0, 1.0);
-  vec3 blendMask = tex3D(inPosition * 0.1, inNormalTPM, blendMaskTex).rgb;
+  float noise = clamp(tex3D(inPosition * 0.1, inNormalTPM, noiseTex).r, 0.0, 1.0);
+  vec3 blendMask = tex3D((inPosition + 20.0) * 0.04, inNormalTPM, blendMaskTex).rgb;
 
-  vec3 albedo = blend(albedo0.rgb * 2.0, albedo1.rgb, albedo2.rgb, blendMask, noise);
+  vec3 albedo = blend(albedo0.rgb * 1.0, albedo1.rgb * 1.0, albedo2.rgb * 1.0, blendMask, noise);
   //vec3 albedo = pbr0.rgb;
-  //vec3 albedo = albedo2.rgb;
+  //vec3 albedo = albedo0.rgb;
   //vec3 albedo = blendMask;
+  //vec3 albedo = vec3(noise);
   
   //vec3 normal = vec3(0.0);
   //vec3 normal = vec3(noise);

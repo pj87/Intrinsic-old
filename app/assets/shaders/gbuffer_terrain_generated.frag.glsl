@@ -40,17 +40,46 @@ layout(location = 7) in vec3 inNormalTPM;
 // Output
 OUTPUT
 
+const vec4 cHashA4 = vec4 (0., 1., 57., 58.);
+const vec3 cHashA3 = vec3 (1., 57., 113.);
+const float cHashM = 43758.54;
+
+vec4 Hashv4f (float p)
+{
+  return fract (sin (p + cHashA4) * cHashM);
+}
+
+float Noisefv2 (vec2 p)
+{
+  vec2 ip = floor (p);
+  vec2 fp = fract (p);
+  fp = fp * fp * (3. - 2. * fp);
+  vec4 t = Hashv4f (dot (ip, cHashA3.xy));
+  return mix (mix (t.x, t.y, fp.x), mix (t.z, t.w, fp.x), fp.y);
+}
+
+float Fbmn (vec3 p, vec3 n)
+{
+  vec3 s;
+  float a;
+  s = vec3 (0.);
+  a = 1.;
+  for (int i = 0; i < 5; i ++) {
+    s += a * vec3 (Noisefv2 (p.yz), Noisefv2 (p.zx), Noisefv2 (p.xy));
+    a *= 0.5;
+    p *= 20.;
+  }
+  return dot (s, abs (n));
+}
+
 vec3 tex3D(vec3 pos, vec3 nor, sampler2D s) {
-    return texture( s, pos.yz).xyz*abs(nor.x)+
-           texture( s, pos.xz).xyz*abs(nor.y)+
-           texture( s, pos.xy).xyz*abs(nor.z);
+    return texture( s, pos.xz).xyz*abs(nor.y);
 }
 
 vec3 tex3DNormal(vec3 pos, vec3 nor, sampler2D s) {
-    return textureNormal( s, pos.yz).xyz*abs(nor.x)+
-           textureNormal( s, pos.xz).xyz*abs(nor.y)+
-           textureNormal( s, pos.xy).xyz*abs(nor.z);
+    return textureNormal( s, pos.xz).xyz*abs(nor.y);
 }
+
 
 vec3 blend(vec3 grass0, vec3 stone0, vec3 stone1, vec3 blendMask, float noise)
 {
@@ -95,25 +124,43 @@ void main()
   const vec2 uv0 = UV0_TRANSFORM_ANIMATED(inUV0);
   const vec2 uv0Raw = UV0(inUV0);
 
+  float value = min (1.25 * Fbmn (1.0 * inPosition, vec3(.1)), 1.);
+
   const vec4 albedo0 = vec4(tex3D(inPosition, inNormalTPM, albedoTex0), 1.0);
   const vec3 normal0 = tex3DNormal(inPosition, inNormalTPM, normalTex0);
   const vec3 pbr0 = tex3D(inPosition, inNormalTPM, pbrTex0).rgg;
 
-  const vec4 albedo1 = vec4(tex3D(inPosition * 0.5, inNormalTPM, albedoTex1), 1.0);
+  const vec4 albedo1 = vec4(tex3D(inPosition, inNormalTPM, albedoTex1), 1.0);
   const vec3 normal1 = tex3DNormal(inPosition * 0.5, inNormalTPM, normalTex1);
   const vec3 pbr1 = tex3D(inPosition * 0.1, inNormalTPM, pbrTex1).rgg;
 
-  const vec4 albedo2 = vec4(tex3D(inPosition * 0.25, inNormalTPM, albedoTex2), 1.0);
+  //const vec4 albedo2 = vec4(tex3D(inPosition * 0.25, inNormalTPM, albedoTex2), 1.0);
+  const vec4 albedo2 = vec4(value, value, value, 1.0);
   const vec3 normal2 = tex3DNormal(inPosition * 0.25, inNormalTPM, normalTex2);
   const vec3 pbr2 = tex3D(inPosition * 0.1, inNormalTPM, pbrTex2).rgg;
 
   float noise = clamp(tex3D(inPosition * 10.0, inNormalTPM, noiseTex).r, 0.0, 1.0);
-  vec3 blendMask = tex3D(inPosition * 10.0, inNormalTPM, blendMaskTex).rgb;
-
-  vec3 albedo = blend(albedo0.rgb, albedo1.rgb, albedo2.rgb, blendMask, noise);
-  vec3 normal = blend(normal0.rgb, normal1.rgb, normal2.rgb, blendMask, noise);
-  vec2 pbr = blend(pbr0.rgb, pbr1.rgb, pbr2.rgb, blendMask, noise).rg;
-
+  vec3 blendMask = tex3D(inPosition * 1.0, inNormalTPM, blendMaskTex).rgb;
+  //vec3 blendMask = texture(blendMaskTex, uv0 * 1.0).rgb;
+  
+  vec3 albedo = blend(albedo0.rgb * 1.0, albedo1.rgb * 1.0, albedo2.rgb * 1.0, blendMask, noise);
+  //vec3 normal = blend(normal0.rgb * 1.0, normal1.rgb * 1.0, normal2.rgb * 1.0, blendMask, noise) * 1.0;
+  //vec2 pbr = blend(pbr0.rgb * 1.0, pbr1.rgb * 1.0, pbr2.rgb * 1.0, blendMask, noise).rg * 1.0;  
+  //vec3 albedo = blendMask.rgb;
+  //vec3 albedo = albedo2.rgb;
+  vec3 normal = vec3(0.0);
+  vec2 pbr = vec2(0.0);
+  
+  /*
+  //vec3 albedo = blend(normal0.rgb * 1.0, albedo1.rgb * 1.0, albedo2.rgb * 0.0, blendMask, noise);
+  //vec3 albedo = normal2.rgb;
+  //vec3 albedo = pbr2.rgb;
+  //vec3 albedo = vec3(noise);
+  vec3 albedo = blendMask.rgb;
+  vec3 normal = vec3(0.0);
+  vec2 pbr = vec2(0.0);
+  */
+  /*
   float occlusion =
       clamp(mix(clamp(noise * 5.0, 0.0, 1.0) * blendMask.b, 1.0 - blendMask.r,
                 clamp((1.0 - blendMask.g) * 2.0 - 0.9, 0.0, 1.0)) *
@@ -121,7 +168,7 @@ void main()
                 0.2,
             0.0, 1.0);
   albedo *= occlusion;
-
+  */
   GBuffer gbuffer;
   {
     gbuffer.albedo = vec4(albedo, 1.0) * uboPerInstance.colorTint;

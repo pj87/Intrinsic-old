@@ -176,12 +176,19 @@ void DynamicTextureGeneration::init()
     texture->_noiseParametersRef = _noiseParametersRef;
     buffersToCreate.push_back(_noiseParametersRef);
 
-      ImageRef _textureImageRef =
-          ImageManager::getResourceByName(*texture->textureName);
+      //ImageRef _textureImageRef =
+          //ImageManager::getResourceByName(*texture->textureName);
+     ImageRef _textureImageRef =
+     ImageManager::createImage(*texture->textureName);
       {
+       ImageManager::resetToDefault(_textureImageRef);
         ImageManager::addResourceFlags(
             _textureImageRef, 
 			Dod::Resources::ResourceFlags::kResourceVolatile);
+       //ImageManager::_descMemoryPoolType(_textureImageRef) =
+       //    MemoryPoolType::kResolutionDependentImages;
+        ImageManager::_descDimensions(_textureImageRef) =
+            glm::uvec3((unsigned)*(texture->sizeX), (unsigned)*(texture->sizeY), 1);
         ImageManager::_descMipLevelCount(_textureImageRef) = 1u;
 		ImageManager::_descImageFormat(_textureImageRef) =
 			Format::kB8G8R8A8UNorm;
