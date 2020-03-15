@@ -144,11 +144,12 @@ void main()
   //vec3 blendMask = texture(blendMaskTex, uv0 * 1.0).rgb;
   
   vec3 albedo = blend(albedo0.rgb * 1.0, albedo1.rgb * 1.0, albedo2.rgb * 1.0, blendMask, noise);
-  //vec3 normal = blend(normal0.rgb * 1.0, normal1.rgb * 1.0, normal2.rgb * 1.0, blendMask, noise) * 1.0;
+  vec3 normal = blend(normal0.rgb * 1.0, normal1.rgb * 1.0, normal2.rgb * 0.0, blendMask, noise);
   //vec2 pbr = blend(pbr0.rgb * 1.0, pbr1.rgb * 1.0, pbr2.rgb * 1.0, blendMask, noise).rg * 1.0;  
   //vec3 albedo = blendMask.rgb;
   //vec3 albedo = albedo2.rgb;
-  vec3 normal = vec3(0.0);
+  //vec3 albedo = normal0.rgb * 0.9 + albedo0.rgb * 0.1;
+  //vec3 normal = vec3(0.0);
   vec2 pbr = vec2(0.0);
   
   /*
@@ -160,7 +161,7 @@ void main()
   vec3 normal = vec3(0.0);
   vec2 pbr = vec2(0.0);
   */
-  /*
+  
   float occlusion =
       clamp(mix(clamp(noise * 5.0, 0.0, 1.0) * blendMask.b, 1.0 - blendMask.r,
                 clamp((1.0 - blendMask.g) * 2.0 - 0.9, 0.0, 1.0)) *
@@ -168,7 +169,7 @@ void main()
                 0.2,
             0.0, 1.0);
   albedo *= occlusion;
-  */
+  
   GBuffer gbuffer;
   {
     gbuffer.albedo = vec4(albedo, 1.0) * uboPerInstance.colorTint;

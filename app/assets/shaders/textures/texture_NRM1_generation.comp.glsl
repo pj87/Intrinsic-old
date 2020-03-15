@@ -9,7 +9,7 @@ layout(binding = 2) buffer _ParametersBuffer
 	float _Gain;
 };
 
-#define iResolution vec2(2048.0, 2048)
+#define iResolution vec2(2048.0, 2048.0)
 
 vec3 getNormal(in ivec2 uv)
 {
