@@ -11,6 +11,8 @@ layout(binding = 2) buffer _ParametersBuffer
 
 #define iResolution vec2(2048.0, 2048.0)
 
+// Based on sobel operator
+
 vec3 getNormal(in ivec2 uv)
 {
 	ivec2 texelStep = ivec2(1);
