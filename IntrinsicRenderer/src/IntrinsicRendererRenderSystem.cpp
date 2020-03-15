@@ -462,24 +462,6 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
-        _N(terrain_grass_01_GEN), 
-        "texture_grass_generation.comp", 
-		false);
-
-	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
-        2048, 2048, 1, 
-        _N(terrain_grass_stone_GEN), 
-        "texture_sand_generation.comp", 
-		false);
-	
-	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
-        2048, 2048, 1, 
-        _N(terrain_BLEND_GEN), 
-        "texture_blend_generation.comp", 
-		false);
-    
-	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
-        2048, 2048, 1, 
         _N(house_01_E_GEN), 
         "texture_tiling_generation.comp", 
 		false);
@@ -496,6 +478,24 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		_N(house_01_E_GEN), 
         _N(house_01_PBR_GEN), 
         "texture_PBR1_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_grass_01_GEN), 
+        "texture_grass_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_grass_stone_GEN), 
+        "texture_sand_generation.comp", 
+		false);
+	
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_BLEND_GEN), 
+        "texture_blend_generation.comp", 
 		false);
 	
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
