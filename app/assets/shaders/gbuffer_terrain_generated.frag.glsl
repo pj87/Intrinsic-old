@@ -145,7 +145,7 @@ void main()
   
   vec3 albedo = blend(albedo0.rgb * 1.0, albedo1.rgb * 1.0, albedo2.rgb * 1.0, blendMask, noise);
   vec3 normal = blend(normal0.rgb * 1.0, normal1.rgb * 1.0, normal2.rgb * 0.0, blendMask, noise);
-  vec2 pbr = blend(pbr0.rgb * 1.0, pbr1.rgb * 1.0, pbr2.rgb * 1.0, blendMask, noise).rg * 1.0;  
+  vec2 pbr = blend(pbr0.rgb * 1.0, pbr1.rgb * 1.0, pbr2.rgb * 0.0, blendMask, noise).rg * 1.0;  
   //vec3 albedo = pbr0.rgb;
   //vec3 albedo = albedo2.rgb;
   //vec3 albedo = normal0.rgb * 0.9 + albedo0.rgb * 0.1;
