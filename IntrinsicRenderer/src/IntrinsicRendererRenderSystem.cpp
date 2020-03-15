@@ -510,6 +510,13 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "texture_NRM1_generation.comp", 
 		false);
 
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+		_N(terrain_grass_01_GEN),
+		_N(terrain_grass_01_PBR_GEN), 
+        "texture_PBR1_generation.comp", 
+		false);
+
 	PseudoInstancing::addPseudoInstancingMesh(_N(cube), 10, 10, 0.1f);
 
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_01_8), 6, 6, 0.5f);
