@@ -22,7 +22,7 @@
         ],
         "translucencyThickness": 0.0,
         "emissiveIntensity": 0.0,
-        "normalTextureName": "terrain_grass_01_NRM",
+        "normalTextureName": "terrain_grass_01_NRM_GEN",
         "pbrTextureName": "terrain_grass_01_PBR",
         "metalMaskBias": 0.0,
         "roughnessBias": 0.0,

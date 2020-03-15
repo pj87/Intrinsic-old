@@ -42,6 +42,7 @@ struct DynamicGeneratedTexture
   {
     this->textureName = std::make_unique<Name>(textureName);
     this->isDynamic = isDynamic;
+    this->hasSourceTex = false;
 
 	sizes[0] = sizeX;
     sizes[1] = sizeY;
@@ -56,10 +57,34 @@ struct DynamicGeneratedTexture
     shaders.push_back(std::make_unique<Name>(textureGenerationShader));
   }
 
+  DynamicGeneratedTexture(const int& sizeX, const int& sizeY, const int& sizeZ,
+                          const Name& textureSrcName, const Name& textureDstName,
+                          const Name&& textureGenerationShader, bool isDynamic)
+  {
+    this->textureSourceName = std::make_unique<Name>(textureSrcName);
+    this->textureName = std::make_unique<Name>(textureDstName);
+    this->isDynamic = isDynamic;
+    this->hasSourceTex = true;
+
+    sizes[0] = sizeX;
+    sizes[1] = sizeY;
+    sizes[2] = sizeZ;
+    sizes[3] = 1;
+
+    // redundant
+    this->sizeX = &sizes[0];
+    this->sizeY = &sizes[1];
+    this->sizeZ = &sizes[2];
+
+    shaders.push_back(std::make_unique<Name>(textureGenerationShader));
+  }
+
   std::vector<std::unique_ptr<Name>> shaders;
   std::unique_ptr<Name> textureName;
-  
+  std::unique_ptr<Name> textureSourceName;
+
   ImageRef _textureImageRef;
+  ImageRef _textureSourceRef;
   BufferRef _noiseParametersRef;
   PipelineRef _pipelineTextureRef;
   ComputeCallRef _computeCallTextureRef;
@@ -67,6 +92,7 @@ struct DynamicGeneratedTexture
   int counter = 0;
   bool isCalled = false;
   bool isDynamic;
+  bool hasSourceTex = false;
   int *sizeX, *sizeY, *sizeZ;
   int sizes[4];
 };
@@ -80,6 +106,10 @@ struct DynamicTextureGeneration
                                           const int& sizeZ,
 										  const Name&,const Name&&, 
 										  bool isDynamic = true);
+
+  static void addDynamicGeneradtedTexture(const int& sizeX, const int& sizeY,
+                                          const int& sizeZ, const Name&,
+                                          const Name&, const Name&&, bool isDynamic = true);
 
   static bool isOverridenTexture(const Name&);
 

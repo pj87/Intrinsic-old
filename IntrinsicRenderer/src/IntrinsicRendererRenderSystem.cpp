@@ -15,9 +15,9 @@
 // Precompiled header file
 #include "stdafx.h"
 
-//#define TEMPLE
+#define TEMPLE
 //#define TATOOINE
-#define LAVA
+//#define LAVA
 //#define CITY
 
 using namespace RResources;
@@ -483,7 +483,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(house_01_E_GEN), 
         "texture_tiling_generation.comp", 
 		false);
-
+    /*
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         1024, 1024, 1, 
         _N(house_01_NRM_GEN), 
@@ -495,7 +495,14 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(house_01_PBR_GEN), 
         "texture_PBR_generation.comp", 
 		false);
-	
+	*/
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        1024, 1024, 1, 
+		_N(terrain_grass_01_GEN),
+		_N(terrain_grass_01_NRM_GEN), 
+        "texture_NRM1_generation.comp", 
+		true);
+
 	PseudoInstancing::addPseudoInstancingMesh(_N(cube), 10, 10, 0.1f);
 
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_01_8), 6, 6, 0.5f);

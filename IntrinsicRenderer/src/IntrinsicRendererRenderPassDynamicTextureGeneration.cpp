@@ -46,6 +46,13 @@ _INTR_INLINE ComputeCallRef createComputeCallTexture(
     ComputeCallManager::_descPipeline(computeCallTextureRef) =
         texture->_pipelineTextureRef;
 
+	if (texture->hasSourceTex)
+	{
+		ComputeCallManager::bindImage(
+			computeCallTextureRef, _N(_SourceTex), GpuProgramType::kCompute,
+			texture->_textureSourceRef, Samplers::kNearestRepeat);
+	}
+
     ComputeCallManager::bindImage(
         computeCallTextureRef, _N(_TextureTex), GpuProgramType::kCompute,
         texture->_textureImageRef, Samplers::kNearestRepeat);
@@ -141,6 +148,21 @@ void DynamicTextureGeneration::addDynamicGeneradtedTexture(
   dynamicGenerationTextures.push_back(std::move(dynamicGenerationTexture));
 }
 
+void DynamicTextureGeneration::addDynamicGeneradtedTexture(
+    const int& sizeX, const int& sizeY, const int& sizeZ,
+    const Name& textureSrcName, const Name& textureDstName,
+    const Name&& textureGenerationShader,
+    bool isDynamic)
+{
+  std::unique_ptr<DynamicGeneratedTexture> dynamicGenerationTexture =
+      std::make_unique<DynamicGeneratedTexture>(
+          sizeX, sizeY, sizeZ, std::move(textureSrcName),
+          std::move(textureDstName), std::move(textureGenerationShader), 
+		  isDynamic);
+
+  dynamicGenerationTextures.push_back(std::move(dynamicGenerationTexture));
+}
+
 bool DynamicTextureGeneration::isOverridenTexture(const Name& textureName)
 {
   for (auto& texture : dynamicGenerationTextures)
@@ -176,6 +198,17 @@ void DynamicTextureGeneration::init()
     texture->_noiseParametersRef = _noiseParametersRef;
     buffersToCreate.push_back(_noiseParametersRef);
 
+	/*
+	ImageRef _textureSourceRef =
+        ImageManager::createImage(*texture->textureSourceName);
+	*/
+    if (texture->hasSourceTex)
+	{
+		ImageRef _textureSourceRef =
+			ImageManager::getResourceByName(*texture->textureSourceName);
+		texture->_textureSourceRef = _textureSourceRef;
+	}
+
       //ImageRef _textureImageRef =
           //ImageManager::getResourceByName(*texture->textureName);
      ImageRef _textureImageRef =
@@ -200,7 +233,7 @@ void DynamicTextureGeneration::init()
     texture->_textureImageRef = _textureImageRef;
     imgsToCreate.push_back(_textureImageRef);
   }
-  
+
   ImageManager::createResources(imgsToCreate);
   BufferManager::createResources(buffersToCreate);
 }
