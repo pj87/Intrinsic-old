@@ -307,13 +307,15 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
-		true);
+		false);
+	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         36, 36, 36,
         _N(house_5), 
 		"explosion.comp", 
 		"normal_generation_6.comp",
         "geometry_generation_new_6.comp");
+
 #elif defined CITY
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
 		64, 64, 64,
@@ -555,8 +557,22 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
+		_N(water_GEN),
+        _N(water_NRM_GEN), 
+        "texture_NRM1_generation.comp",
+        false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+		_N(water_GEN),
+        _N(water_PBR_GEN), 
+        "texture_PBR1_generation.comp",
+        false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
         _N(terrain_grass_01_GEN), 
-        "texture_lava_generation.comp", 
+        "texture_lava2_generation.comp", 
 		false);
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
@@ -596,7 +612,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_BLEND_GEN), 
-        "texture_blend_generation.comp", 
+        "texture_blend_lava_generation.comp", 
 		false);
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
