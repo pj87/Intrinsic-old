@@ -1,28 +1,46 @@
-y = 0
-t = 0
+posX = 0.0
+posY = 0.0
+posZ = 0.0
+iTime = 0.0
+offsetX = 0.0
+offsetZ = 0.0
+--initialPosX = 0.0
+--initialPosZ = 0.0
+initialized = 0
+
 
 function tick(p_EntityRef, p_DeltaT)
   local nodeRef = nodeComponent.getComponentForEntity(p_EntityRef)
 
   local rotation = Quat.new(Vec3.new(0.0, p_DeltaT * 0.5, 0.0))
   local orientation = nodeComponent.getOrientation(nodeRef);
-  --nodeComponent.setOrientation(nodeRef, glm.rotate(rotation, orientation))
+  nodeComponent.setOrientation(nodeRef, glm.rotate(rotation, orientation))
 
   local position = nodeComponent.getPosition(nodeRef)
   
-  y = y + p_DeltaT * 1.0  
-  t = t + p_DeltaT
+  if initialized == 0 then
+	posX = position.x
+	posZ = position.z
+	initialized = 1
+  end
+  
+  posY = posY + p_DeltaT * 1.0  
+  iTime = iTime + p_DeltaT
  
-  if t > 4.0 then
-    t = 0
-	y = -0.75
+  if iTime > 4.0 then
+    iTime = 0
+	posY = -0.9
+	offsetX = math.random(-20.0, 20.0)
+	offsetZ = math.random(-20.0, 20.0)
   end
   
   --nodeComponent.setPosition(nodeRef, Vec3.new(position.x, math.abs(math.sin(y)) * 100.0, position.z))
   
-  nodeComponent.setPosition(nodeRef, Vec3.new(position.x, y * 100.0, position.z))
+  nodeComponent.setPosition(nodeRef, Vec3.new(posX + offsetX, posY * 100.0, posZ + offsetZ))
   
-  print (t)
+  -- nodeComponent.setPosition(nodeRef, Vec3.new(posX, posY * 100.0, posZ))
+  
+  -- print (t)
   
   -- local y = position.y + p_DeltaT
   -- print("DUPA")
