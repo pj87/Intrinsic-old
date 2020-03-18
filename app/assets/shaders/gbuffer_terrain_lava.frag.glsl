@@ -160,7 +160,7 @@ void main()
   
   //vec2 pbr = vec2(0.0);
   //vec2 pbr = pbr1.rg;
-  /*
+  
   float occlusion =
       clamp(mix(clamp(noise * 5.0, 0.0, 1.0) * blendMask.b, 1.0 - blendMask.r,
                 clamp((1.0 - blendMask.g) * 2.0 - 0.9, 0.0, 1.0)) *
@@ -168,7 +168,7 @@ void main()
                 0.2,
             0.0, 1.0);
   albedo *= occlusion;
-  */
+  
   GBuffer gbuffer;
   { 
 	gbuffer.albedo = vec4(albedo, 1.0) * uboPerInstance.colorTint;	
