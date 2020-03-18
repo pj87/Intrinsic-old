@@ -901,6 +901,11 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   {
     mesh->params[0] += p_DeltaT;
 
+	if (mesh->params[0] > 4.0)
+      mesh->params[0] = 0.0;
+
+	_INTR_LOG_WARNING("PJ: %f", mesh->params[0]);
+
     if (mesh->isDynamic)
 	{
 	  BufferRef buffer = mesh->_noiseParametersRef;
