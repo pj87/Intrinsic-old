@@ -4,8 +4,6 @@ posZ = 0.0
 iTime = 0.0
 offsetX = 0.0
 offsetZ = 0.0
---initialPosX = 0.0
---initialPosZ = 0.0
 initialized = 0
 
 
@@ -29,18 +27,12 @@ function tick(p_EntityRef, p_DeltaT)
  
   if iTime > 4.0 then
     iTime = 0
-	posY = -0.9
-	offsetX = math.random(-20.0, 20.0)
-	offsetZ = math.random(-20.0, 20.0)
+	posY = -1.5
+	offsetX = math.random(-200.0, 200.0)
+	offsetZ = math.random(-200.0, 200.0)
   end
   
-  --nodeComponent.setPosition(nodeRef, Vec3.new(position.x, math.abs(math.sin(y)) * 100.0, position.z))
-  
   nodeComponent.setPosition(nodeRef, Vec3.new(posX + offsetX, posY * 100.0, posZ + offsetZ))
-  
-  -- nodeComponent.setPosition(nodeRef, Vec3.new(posX, posY * 100.0, posZ))
-  
-  -- print (t)
   
   -- local y = position.y + p_DeltaT
   -- print("DUPA")
