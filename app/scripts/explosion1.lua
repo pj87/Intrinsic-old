@@ -1,6 +1,6 @@
-posY = 0.0
-iTime = 0.0
-initialized = 0
+posY_1 = 0.0
+iTime_1 = 0.0
+initialized_1 = 0
 
 function tick(p_EntityRef, p_DeltaT)
   local nodeRef = nodeComponent.getComponentForEntity(p_EntityRef)
@@ -11,23 +11,23 @@ function tick(p_EntityRef, p_DeltaT)
 
   local position = nodeComponent.getPosition(nodeRef)
   
-  if initialized == 0 then
+  if initialized_1 == 0 then
 	posX = position.x
 	posZ = position.z
-	initialized = 1
+	initialized_1 = 1
   end
   
-  posY = posY + p_DeltaT * 1.0  
-  iTime = iTime + p_DeltaT
+  posY_1 = posY_1 + p_DeltaT * 1.0  
+  iTime_1 = iTime_1 + p_DeltaT
  
-  if iTime > 4.0 then
-    iTime = 0
-	posY = -1.5
-	offsetX = math.random(-200.0, 200.0)
-	offsetZ = math.random(-200.0, 200.0)
+  if iTime_1 > 4.0 then
+    iTime_1 = 0
+	posY_1 = -1.5
+	offsetX_1 = math.random(-200.0, 200.0)
+	offsetZ_1 = math.random(-200.0, 200.0)
   end
   
-  nodeComponent.setPosition(nodeRef, Vec3.new(posX + offsetX, posY * 100.0, posZ + offsetZ))
+  nodeComponent.setPosition(nodeRef, Vec3.new(posX + offsetX_1, posY_1 * 100.0, posZ + offsetZ_1))
   
   -- local y = position.y + p_DeltaT
   -- print("DUPA")
@@ -38,7 +38,7 @@ function tick(p_EntityRef, p_DeltaT)
 end
 
 function onCreate(p_EntityRef, p_DeltaT)
-	
+
 	local nodeRef = nodeComponent.getComponentForEntity(p_EntityRef)
 	local position = nodeComponent.getPosition(nodeRef)
 
