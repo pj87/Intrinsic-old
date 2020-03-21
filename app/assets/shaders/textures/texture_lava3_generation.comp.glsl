@@ -96,7 +96,7 @@ float flow(in vec2 p)
 	float z=2.;
 	float rz = 0.;
 	vec2 bp = p;
-	for (float i= 1.;i < 7.;i++ )
+	for (float i= 1.;i < 2.;i++ )
 	{
 		//primary flow speed
 		p += time*.6;
@@ -111,19 +111,19 @@ float flow(in vec2 p)
 		gr*=makem2(time*6.-(0.05*p.x+0.03*p.y)*40.);
 		
 		//displace the system
-		p += gr*.5;
+		p += gr*5.5;
 		
 		//add noise octave
-		rz+= (sin(noise(p)*7.)*0.5+0.5)/z;
+		rz+= (sin(noise(p * 0.5)*2.5)*0.5+0.5) * 1.5/z;
 		
 		//blend factor (blending displaced system with base system)
 		//you could call this advection factor (.5 being low, .95 being high)
 		p = mix(bp,p,.77);
 		
 		//intensity scaling
-		z *= 1.4;
+		z *= 2.;
 		//octave scaling
-		p *= 2.;
+		p *= 4.;
 		bp *= 1.9;
 	}
 	return rz;	
@@ -135,7 +135,7 @@ void main()
 	ivec3 id = ivec3(gl_GlobalInvocationID);
 	
 	p.x *= iResolution.x/iResolution.y;
-	p*= 5.;
+	p*= 10.;
 	float rz = flow(p);
 	
 	vec3 col = vec3(1.7,0.45,0.01)/rz;

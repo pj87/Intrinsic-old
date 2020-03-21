@@ -85,7 +85,7 @@ void main()
     vec3 pos = uv.xyy;
     
     col = clamp(mix(vec3(.7,0.4,.3),vec3(.3, 0.1, 0.1),(pos.y+.5)*.25), .0, 1.0);
-    col *= (sin(bnoise(pos*1.1)*250.)*0.5+0.5);
+    col *= (sin(bnoise(pos*10.1)*250.)*1.5+0.5);
 	
 	vec4 fragColor = vec4(col, 1.0);
 	
