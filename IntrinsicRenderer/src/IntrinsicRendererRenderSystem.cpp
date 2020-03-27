@@ -15,9 +15,9 @@
 // Precompiled header file
 #include "stdafx.h"
 
-//#define TEMPLE
+#define TEMPLE
 //#define TATOOINE
-#define LAVA
+//#define LAVA
 //#define CITY
 
 using namespace RResources;
@@ -491,7 +491,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_grass_stone_GEN), 
-        "texture_sand_generation.comp", 
+        "texture_sand1_generation.comp", 
 		false);
 	
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
@@ -504,14 +504,14 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         2048, 2048, 1, 
 		_N(terrain_grass_01_GEN),
 		_N(terrain_grass_01_NRM_GEN), 
-        "texture_NRM1_generation.comp", 
+        "texture_NRM2_generation.comp", 
 		false);
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_grass_stone_GEN), 
 		_N(terrain_grass_stone_NRM_GEN), 
-        "texture_NRM1_generation.comp", 
+        "texture_NRM2_generation.comp", 
 		false);
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
