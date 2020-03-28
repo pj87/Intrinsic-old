@@ -33,6 +33,9 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <gli/gli.hpp>
 
+// Simplify
+#include "Simplify/Simplify.h"
+
 // Tinydir
 #include "tinydir/tinydir.h"
 
