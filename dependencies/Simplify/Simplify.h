@@ -1007,16 +1007,19 @@ namespace Simplify
 		}
 		if (has_uv)
 		{
+			/*
 			loopi(0,triangles.size()) if(!triangles[i].deleted)
 			{
 				fprintf(file, "vt %g %g\n", triangles[i].uvs[0].x, triangles[i].uvs[0].y);
 				fprintf(file, "vt %g %g\n", triangles[i].uvs[1].x, triangles[i].uvs[1].y);
 				fprintf(file, "vt %g %g\n", triangles[i].uvs[2].x, triangles[i].uvs[2].y);
 			}
+			*/
 		}
 		int uv = 1;
 		loopi(0,triangles.size()) if(!triangles[i].deleted)
 		{
+            /*
 			if (triangles[i].material != cur_material)
 			{
 				cur_material = triangles[i].material;
@@ -1027,7 +1030,7 @@ namespace Simplify
 				fprintf(file, "f %d/%d %d/%d %d/%d\n", triangles[i].v[0]+1, uv, triangles[i].v[1]+1, uv+1, triangles[i].v[2]+1, uv+2);
 				uv += 3;
 			}
-			else
+			else*/
 			{
 				fprintf(file, "f %d %d %d\n", triangles[i].v[0]+1, triangles[i].v[1]+1, triangles[i].v[2]+1);
 			}

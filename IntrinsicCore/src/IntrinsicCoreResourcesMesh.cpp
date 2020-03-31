@@ -212,6 +212,11 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
         BufferManager::_descBufferType(posVertexBuffer) =
             R::BufferType::kVertex;
 
+		// PJ: Added++
+        BufferManager::_descMemoryPoolType(posVertexBuffer) =
+            Intrinsic::Renderer::MemoryPoolType::kStaticStagingBuffers;
+        // PJ: Added--
+
         BufferManager::_nameToInitlialBufferMap[name] =
             BufferManager::_dynamicBuffers.size();
         BufferManager::_descSizeInBytes(posVertexBuffer) =
@@ -420,6 +425,23 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
 
         for (uint32_t i = 0u; i < positions[subMeshIdx].size(); ++i)
         {
+          /*
+          _INTR_LOG_WARNING("%f %f %f", positions[subMeshIdx][i].x,
+                            positions[subMeshIdx][i].y,
+                            positions[subMeshIdx][i].z);
+		  */
+
+		  //Simplify::Vertex* v = new Simplify::Vertex;
+
+		  Simplify::Vertex v;
+
+		  v.p.x = positions[subMeshIdx][i].x;
+          v.p.y = positions[subMeshIdx][i].y;
+          v.p.z = positions[subMeshIdx][i].z;
+
+		  Simplify::vertices.push_back(v);
+          //_INTR_LOG_WARNING("size: %d", Simplify::vertices.size());
+
           for (uint32_t j = 0; j < sizeX * sizeZ; ++j)
           { 
             uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(
@@ -676,6 +698,17 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
           tempBuffersToRelease.push_back(tempIndexBuffer);
 
           uint32_t len = positions[subMeshIdx].size();
+          
+		  for (uint32_t i = 0u; i < indices[subMeshIdx].size(); i+=3)
+          {
+            Simplify::Triangle tri;
+            tri.v[0] = indices[subMeshIdx][i + 0];
+            tri.v[1] = indices[subMeshIdx][i + 1];
+            tri.v[2] = indices[subMeshIdx][i + 2];
+
+			//_INTR_LOG_WARNING("%d %d %d", tri.v[0], tri.v[1], tri.v[2]);
+            Simplify::triangles.push_back(tri);
+		  }
 
           for (uint32_t i = 0u; i < indices[subMeshIdx].size(); ++i)
           {
@@ -699,6 +732,10 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
         buffersToCreate.push_back(indexBuffer);
         indexBuffers[subMeshIdx] = indexBuffer;
       }
+
+	  // Simplify::simplify_mesh(10, agressiveness, true);
+      Simplify::simplify_mesh(100);
+      Simplify::write_obj("dupa.obj");
     }
 
     createOrLoadPhysicsMeshes(meshRef);
@@ -754,6 +791,9 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 
     _INTR_LOG_INFO("%s", name.getString().c_str());
 
+	Simplify::vertices.clear();
+	Simplify::triangles.clear();
+
 	//Tree_Tall_01_8
 
     for (uint32_t subMeshIdx = 0u; subMeshIdx < subMeshCount; ++subMeshIdx)
@@ -774,7 +814,10 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
           BufferManager::createBuffer(_N(MeshPositionVb));
       {
         BufferManager::resetToDefault(posVertexBuffer);
-
+		// PJ: Added++
+		BufferManager::_descMemoryPoolType(posVertexBuffer) =
+            Intrinsic::Renderer::MemoryPoolType::kStaticStagingBuffers;
+        // PJ: Added--
         BufferManager::addResourceFlags(
             posVertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
         BufferManager::_descBufferType(posVertexBuffer) =
@@ -789,6 +832,14 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
 
         for (uint32_t i = 0u; i < positions[subMeshIdx].size(); ++i)
         {
+          Simplify::Vertex v;
+
+          v.p.x = positions[subMeshIdx][i].x;
+          v.p.y = positions[subMeshIdx][i].y;
+          v.p.z = positions[subMeshIdx][i].z;
+
+          Simplify::vertices.push_back(v);
+
           uint32_t packedPosition0 = glm::packHalf2x16(glm::vec2(
               positions[subMeshIdx][i].x, positions[subMeshIdx][i].y));
           uint32_t packedPosition1 =
@@ -983,6 +1034,18 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
                   indexBufferSizeInBytes);
           tempBuffersToRelease.push_back(tempIndexBuffer);
 
+		            
+          for (uint32_t i = 0u; i < indices[subMeshIdx].size(); i += 3)
+          {
+            Simplify::Triangle tri;
+            tri.v[0] = indices[subMeshIdx][i + 0];
+            tri.v[1] = indices[subMeshIdx][i + 1];
+            tri.v[2] = indices[subMeshIdx][i + 2];
+
+            //_INTR_LOG_WARNING("%d %d %d", tri.v[0], tri.v[1], tri.v[2]);
+            Simplify::triangles.push_back(tri);
+          }
+
           for (uint32_t i = 0u; i < indices[subMeshIdx].size(); ++i)
           {
             tempIndexBuffer[i] = (uint16_t)indices[subMeshIdx][i];
@@ -1004,6 +1067,10 @@ void MeshManager::createResources(const MeshRefArray& p_Meshes)
         buffersToCreate.push_back(indexBuffer);
         indexBuffers[subMeshIdx] = indexBuffer;
       }
+
+      // Simplify::simplify_mesh(10, agressiveness, true);
+      Simplify::simplify_mesh(1000);
+      Simplify::write_obj("dupa1.obj");
     }
 
     createOrLoadPhysicsMeshes(meshRef);

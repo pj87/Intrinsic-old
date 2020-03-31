@@ -129,6 +129,13 @@ uint convert(vec2 pos0, vec2 pos1)
 
 void storePosition(uint i, vec3 pos1)
 {
+	/*
+	if (pos1 == vec3(0.0))
+		return;
+	*/
+	
+	pos1 += 0.5;
+	
 	if (i % 2 == 0)
 	{
 		uint index = i + i / 2;
