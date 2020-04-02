@@ -211,7 +211,10 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
             posVertexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
         BufferManager::_descBufferType(posVertexBuffer) =
             R::BufferType::kVertex;
-
+        // PJ: Added++
+        BufferManager::_descMemoryPoolType(posVertexBuffer) =
+            Intrinsic::Renderer::MemoryPoolType::kStaticStagingBuffers;
+        // PJ: Added--
         BufferManager::_nameToInitlialBufferMap[name] =
             BufferManager::_dynamicBuffers.size();
         BufferManager::_descSizeInBytes(posVertexBuffer) =

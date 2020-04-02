@@ -320,6 +320,133 @@ int triangleConnectionTable[4096] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
 };
 
+_INTR_INLINE static void updateDataMemory(void* p_Data, BufferRef bufferRef,
+                                          uint32_t p_Size, uint32_t p_Offset)
+{
+  // Update staging memory
+  {
+    memcpy(BufferManager::getGpuMemory(bufferRef), p_Data, p_Size);
+  }
+
+  // ... and copy to device
+  VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
+
+  VkBufferCopy bufferCopy = {};
+  {
+    bufferCopy.dstOffset = p_Offset;
+    bufferCopy.srcOffset = 0u;
+    bufferCopy.size = p_Size;
+  }
+
+  vkCmdCopyBuffer(copyCmd, BufferManager::_vkBuffer(bufferRef),
+                  BufferManager::_vkBuffer(bufferRef), 1u, &bufferCopy);
+
+  RenderSystem::flushTemporaryCommandBuffer();
+}
+
+_INTR_INLINE void write_obj(const char* name, std::vector<uint32_t>& vertices,
+                            std::vector<uint32_t>& indices)
+{
+  char fileName[256];
+  sprintf(fileName, "%s.obj", name);
+
+  FILE* file = fopen(fileName, "w");
+
+  for (int i = 0; i < vertices.size(); i += 3)
+  {
+    glm::vec2 v1 = glm::unpackHalf2x16(vertices[i]);
+    glm::vec2 v2 = glm::unpackHalf2x16(vertices[i + 1]);
+    glm::vec2 v3 = glm::unpackHalf2x16(vertices[i + 2]);
+
+    fprintf(file, "v %f %f %f\n", v1.x, v1.y, v2.x);
+    fprintf(file, "v %f %f %f\n", v2.y, v3.x, v3.y);
+  }
+
+  for (int i = 0; i < indices.size(); i += 3)
+  {
+    fprintf(file, "f %d %d %d\n", indices[i], indices[i + 1], indices[i + 2]);
+  }
+
+  fclose(file);
+}
+
+_INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
+{
+  std::vector<glm::vec2> vertices;
+  std::vector<uint32_t> vertices_data;
+  std::vector<uint32_t> indices;
+
+  int counter = 0;
+
+  //memset(zero_data, 0, DATA_SIZE);
+
+  if (mesh.counter == 1 && *(mesh.meshName) == _N(house))
+  {
+    // FILE* file = fopen("generated_mesh.obj", "w");
+
+    uint32_t* _positionCPUBufferRef =
+        (uint32_t*)BufferManager::getGpuMemory(mesh._positionBufferRef);
+
+    int index = 0;
+
+    for (int i = 0; i < 1000000; i += 3, index += 2)
+    {
+      glm::vec2 v1 = glm::unpackHalf2x16(_positionCPUBufferRef[i]);
+      glm::vec2 v2 = glm::unpackHalf2x16(_positionCPUBufferRef[i + 1]);
+      glm::vec2 v3 = glm::unpackHalf2x16(_positionCPUBufferRef[i + 2]);
+
+      vertices_data.push_back(_positionCPUBufferRef[i + 0]);
+      vertices_data.push_back(_positionCPUBufferRef[i + 1]);
+      vertices_data.push_back(_positionCPUBufferRef[i + 2]);
+
+      if (v1.x != 0.0 && v1.y != 0.0 && v2.x != 0.0)
+      {
+        /*
+        vertices.push_back(v1);
+        vertices.push_back(v2);
+        vertices.push_back(v3);
+        */
+
+        indices.push_back(index + 1);
+
+        //_INTR_LOG_WARNING("%f %f %f %f %f %f", v1.x, v1.y, v2.x, v2.y, v3.x,
+        // v3.y); _INTR_LOG_WARNING("%d, %d, %d", i, i + 1, i + 2);
+
+        // fprintf(file, "%f %f %f %f %f %f", v1.x, v1.y, v2.x, v2.y, v3.x,
+        // v3.y);
+        // fprintf(file, "%d, %d, %d, ", i, i + 1, i + 2);
+
+        // counter++;
+      }
+      if (v2.y != 0.0 && v3.x != 0.0 && v3.y != 0.0)
+      {
+        indices.push_back(index + 2);
+      }
+    }
+
+    // BufferRef buffer = mesh._positionBufferRef;
+    /*
+        updateDataMemory(zero_data, buffer,
+                         BufferManager::_descSizeInBytes(buffer), 0);
+        */
+    /*
+    updateDataMemory(vertices_data.data(), buffer, vertices_data.size(), 0);
+
+    const Name& name = *(mesh.meshName);
+    const uint32_t index = BufferManager::_nameToInitlialBufferMap[name];
+    BufferRef indicesBuffer = BufferManager::_dynamicBuffers[index + 6];
+    updateDataMemory(indices, indicesBuffer, sizeof(indices), 0);
+        */
+    // fclose(file);
+
+    _INTR_LOG_WARNING("Writing obj for mesh: %s",
+                      mesh.meshName->getString().c_str());
+    write_obj(mesh.meshName->getString().c_str(), vertices_data, indices);
+  }
+
+  _INTR_LOG_WARNING("counter = %d", counter);
+}
+
 _INTR_INLINE ComputeCallRef createComputeCallPolygonization(
     std::unique_ptr<DynamicGeneratedMesh>& mesh, glm::vec3 p_Dim)
 {
@@ -866,7 +993,7 @@ void DynamicGeometryGeneration::onReinitRendering() {}
 void DynamicGeometryGeneration::destroy() {}
 
 // <-
-
+/*
 _INTR_INLINE static void updateDataMemory(void* p_Data, BufferRef bufferRef, 
 										  uint32_t p_Size, uint32_t p_Offset)
 {
@@ -891,6 +1018,7 @@ _INTR_INLINE static void updateDataMemory(void* p_Data, BufferRef bufferRef,
 
   RenderSystem::flushTemporaryCommandBuffer();
 }
+*/
 
 void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 {
@@ -968,6 +1096,8 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     BufferManager::insertBufferMemoryBarrier(mesh->_colorBufferRef, 
 											 VK_ACCESS_SHADER_WRITE_BIT, 
 											 VK_ACCESS_SHADER_READ_BIT);
+
+	obfuscateMesh(*mesh);
 
 	mesh->isCalled = true;
     mesh->counter++;
