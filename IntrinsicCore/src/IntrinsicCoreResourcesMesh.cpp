@@ -306,6 +306,49 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
 
         vertexBuffers[subMeshIdx].push_back(vtxColorVertexBuffer);
       }
+
+	  BufferRef indexBuffer = BufferManager::createBuffer(_N(MeshIb));
+      {
+        BufferManager::resetToDefault(indexBuffer);
+
+        BufferManager::addResourceFlags(
+            indexBuffer, Dod::Resources::ResourceFlags::kResourceVolatile);
+        
+		BufferManager::_descMemoryPoolType(indexBuffer) =
+            Intrinsic::Renderer::MemoryPoolType::kStaticStagingBuffers;
+        /*
+        if (indices[subMeshIdx].size() <= 0xFFFF)
+        {
+          uint32_t indexBufferSizeInBytes =
+              (uint16_t)indices[subMeshIdx].size() * sizeof(uint16_t) * 2u;
+          uint16_t* tempIndexBuffer =
+              (uint16_t*)Memory::Tlsf::MainAllocator::allocate(
+                  indexBufferSizeInBytes);
+          tempBuffersToRelease.push_back(tempIndexBuffer);
+
+          for (uint32_t i = 0u; i < indices[subMeshIdx].size(); ++i)
+          {
+            tempIndexBuffer[i] = (uint16_t)indices[subMeshIdx][i];
+          }
+
+          BufferManager::_descBufferType(indexBuffer) = R::BufferType::kIndex16;
+          BufferManager::_descSizeInBytes(indexBuffer) = indexBufferSizeInBytes;
+          BufferManager::_descInitialData(indexBuffer) = tempIndexBuffer;
+        }
+        else */
+        {
+          BufferManager::_descBufferType(indexBuffer) = R::BufferType::kIndex32;
+          BufferManager::_descSizeInBytes(indexBuffer) = (uint32_t)200000;
+              //(uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t) * 2u;
+          BufferManager::_descInitialData(indexBuffer) =
+              (void*)indices[subMeshIdx].data();
+        }
+
+		BufferManager::_dynamicBuffers.push_back(indexBuffer);
+        //buffersToCreate.push_back(indexBuffer);
+        //indexBuffers[subMeshIdx] = indexBuffer;
+        indexBuffers[subMeshIdx] = indexBuffer;
+      }
     }
 
     createOrLoadPhysicsMeshes(meshRef);

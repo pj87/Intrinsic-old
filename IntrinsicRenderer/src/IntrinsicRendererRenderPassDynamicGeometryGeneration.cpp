@@ -407,7 +407,7 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
 
       if (v1.x != 0.0 || v1.y != 0.0 || v2.x != 0.0)
       {
-        indices.push_back(index + 1);
+        indices.push_back(index);
         /*
         vertices.push_back(v1);
         vertices.push_back(v2);
@@ -427,32 +427,36 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
       }
       if (v2.y != 0.0 || v3.x != 0.0 || v3.y != 0.0)
       {
-        indices.push_back(index + 2);
+        indices.push_back(index + 1);
 		//_INTR_LOG_WARNING("%d", (index + 2) % 3);
       }
     }
 
-    // BufferRef buffer = mesh._positionBufferRef;
+    //BufferRef buffer = mesh._positionBufferRef;
     /*
         updateDataMemory(zero_data, buffer,
                          BufferManager::_descSizeInBytes(buffer), 0);
         */
-    /*
-    updateDataMemory(vertices_data.data(), buffer, vertices_data.size(), 0);
+    
+    //updateDataMemory(vertices_data.data(), buffer, vertices_data.size(), 0);
 
     const Name& name = *(mesh.meshName);
-    const uint32_t index = BufferManager::_nameToInitlialBufferMap[name];
-    BufferRef indicesBuffer = BufferManager::_dynamicBuffers[index + 6];
-    updateDataMemory(indices, indicesBuffer, sizeof(indices), 0);
-        */
-    // fclose(file);
 
+	//_INTR_LOG_WARNING("%s", name.getString().c_str());
+
+    const uint32_t i = BufferManager::_nameToInitlialBufferMap[name];
+    BufferRef indicesBuffer = BufferManager::_dynamicBuffers[i + 6];
+    updateDataMemory(indices.data(), indicesBuffer, indices.size() * sizeof(uint32_t), 0);
+     
+    // fclose(file);
+    /*
     _INTR_LOG_WARNING("Writing obj for mesh: %s",
                       mesh.meshName->getString().c_str());
     write_obj(mesh.meshName->getString().c_str(), vertices_data, indices);
+	*/
   }
 
-  _INTR_LOG_WARNING("counter = %d", counter);
+  //_INTR_LOG_WARNING("counter = %d", counter);
 }
 
 _INTR_INLINE ComputeCallRef createComputeCallPolygonization(

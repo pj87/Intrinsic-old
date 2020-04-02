@@ -84,15 +84,6 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
       {
         Resources::BufferRef indexBufferRef =
             Resources::DrawCallManager::_descIndexBuffer(drawCallRef);
-
-		Components::MeshRef meshCompRef =
-            DrawCallManager::_descMeshComponent(drawCallRef);
-
-		if (!meshCompRef.isValid())
-			return;
-
-        const Name& name = Components::MeshManager::getMeshName(meshCompRef);
-
         if (indexBufferRef.isValid())
         {
           const VkIndexType indexType =
@@ -100,62 +91,34 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
                       BufferType::kIndex16
                   ? VK_INDEX_TYPE_UINT16
                   : VK_INDEX_TYPE_UINT32;
+          /*
+		  _INTR_LOG_WARNING(
+              "%d %d %d",
+              Resources::DrawCallManager::_indexBufferOffset(drawCallRef), 
+			  Resources::DrawCallManager::_descIndexCount(drawCallRef),
+              Resources::DrawCallManager::_descInstanceCount(drawCallRef)
+			  );
+		  */
           vkCmdBindIndexBuffer(
               secondCmdBuffer,
               Resources::BufferManager::_vkBuffer(indexBufferRef),
               Resources::DrawCallManager::_indexBufferOffset(drawCallRef),
               indexType);
-
-		  if (!_IS_INSTANCED_MESH(name))
-          {
-			  vkCmdDrawIndexed(
-				  secondCmdBuffer,
-				  Resources::DrawCallManager::_descIndexCount(drawCallRef),
-				  Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
-				  0u, 0u);
-          }
-		  else
-		  {
-              std::unique_ptr<Intrinsic::Renderer::InstancedMesh>& 
-				  instancedMesh = _INSTANCED_MESH_SIZE(name);
-
-			  vkCmdDrawIndexed(
-				  secondCmdBuffer,
-                  Resources::DrawCallManager::_descIndexCount(drawCallRef) * instancedMesh->sizeX * instancedMesh->sizeZ,
-				  Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
-				  0u, 0u);
-		  }
+          vkCmdDrawIndexed(
+              secondCmdBuffer,
+              Resources::DrawCallManager::_descIndexCount(drawCallRef),
+              Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
+              0u, 0u);
         }
         else
-        {          
-		  if (_IS_OVERRIDEN_MESH(name))
-		  {
-            int verticesNum = 12000000u;
-            if (name == _N(house_5))
-				verticesNum = 500000u;
-            else if (name == _N(pbr_test_025))
-              verticesNum = 1000000u;
-            else if (name == _N(pbr_test_0125))
-              verticesNum = 1000000u;
-            else if (name == _N(water_sphere))
-              verticesNum = 1000000u;
-            else if (name == _N(house))
-              verticesNum = 1000000u;
-            else if (name == _N(terrain_generated_small))
-              verticesNum = 1000000u;
-            else if (name == _N(terrain_generated))
-              verticesNum = 12000000u;
+        {
+          
+          vkCmdDraw(secondCmdBuffer,
+                    Resources::DrawCallManager::_descVertexCount(drawCallRef),
+                    Resources::DrawCallManager::_descInstanceCount(drawCallRef),
+                    0u, 0u);
 
-			vkCmdDraw(secondCmdBuffer, verticesNum, 1u, 0u, 0u);
-          }
-          else 
-		  {
-            vkCmdDraw(
-                secondCmdBuffer,
-                Resources::DrawCallManager::_descVertexCount(drawCallRef),
-                Resources::DrawCallManager::_descInstanceCount(drawCallRef), 
-				0u, 0u);
-		  }
+          //vkCmdDraw(secondCmdBuffer, 60000000u, 1u, 0u, 0u);
         }
 
         DrawCallDispatcher::_dispatchedDrawCallCount++;
