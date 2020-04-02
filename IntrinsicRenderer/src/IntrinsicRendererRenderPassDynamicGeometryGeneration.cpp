@@ -365,6 +365,12 @@ _INTR_INLINE void write_obj(const char* name, std::vector<uint32_t>& vertices,
   for (int i = 0; i < indices.size(); i += 3)
   {
     fprintf(file, "f %d %d %d\n", indices[i], indices[i + 1], indices[i + 2]);
+    /*
+    fprintf(file, "f %d %d %d ", indices[i], indices[i + 1],
+            indices[i + 2]);
+    fprintf(file, "%d %d %d\n", indices[i] % 3, indices[i + 1] % 3,
+            indices[i + 2] % 3);
+	*/
   }
 
   fclose(file);
@@ -380,7 +386,7 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
 
   //memset(zero_data, 0, DATA_SIZE);
 
-  if (mesh.counter == 1 && *(mesh.meshName) == _N(house))
+  if (mesh.counter == 1/* && *(mesh.meshName) == _N(house)*/)
   {
     // FILE* file = fopen("generated_mesh.obj", "w");
 
@@ -399,15 +405,16 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
       vertices_data.push_back(_positionCPUBufferRef[i + 1]);
       vertices_data.push_back(_positionCPUBufferRef[i + 2]);
 
-      if (v1.x != 0.0 && v1.y != 0.0 && v2.x != 0.0)
+      if (v1.x != 0.0 || v1.y != 0.0 || v2.x != 0.0)
       {
+        indices.push_back(index + 1);
         /*
         vertices.push_back(v1);
         vertices.push_back(v2);
         vertices.push_back(v3);
         */
 
-        indices.push_back(index + 1);
+		//_INTR_LOG_WARNING("%d", (index + 1) % 3);
 
         //_INTR_LOG_WARNING("%f %f %f %f %f %f", v1.x, v1.y, v2.x, v2.y, v3.x,
         // v3.y); _INTR_LOG_WARNING("%d, %d, %d", i, i + 1, i + 2);
@@ -418,9 +425,10 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
 
         // counter++;
       }
-      if (v2.y != 0.0 && v3.x != 0.0 && v3.y != 0.0)
+      if (v2.y != 0.0 || v3.x != 0.0 || v3.y != 0.0)
       {
         indices.push_back(index + 2);
+		//_INTR_LOG_WARNING("%d", (index + 2) % 3);
       }
     }
 
