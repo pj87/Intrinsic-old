@@ -121,6 +121,34 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
               Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
               0u, 0u);
 		  }
+         else if (name == _N(pbr_test_025))
+		 {
+           vkCmdDrawIndexed(
+			   secondCmdBuffer, 22020,
+			   Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
+               0u, 0u);
+		 }
+         else if (name == _N(pbr_test_0125))
+		 {
+           vkCmdDrawIndexed(
+               secondCmdBuffer, 20268,
+               Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
+               0u, 0u);
+		 }
+		 else if (name == _N(terrain_generated_small))
+		 {
+           vkCmdDrawIndexed(
+               secondCmdBuffer, 11928,
+               Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
+               0u, 0u);
+		 }
+		 else if (name == _N(water_sphere))
+		 {
+           vkCmdDrawIndexed(
+               secondCmdBuffer, 25482,
+               Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
+               0u, 0u);
+		 }
 		 else
 		 {
 		  vkCmdDrawIndexed(
