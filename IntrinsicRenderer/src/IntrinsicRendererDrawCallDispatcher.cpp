@@ -80,6 +80,14 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
                 .data());
       }
 
+	 Components::MeshRef meshCompRef =
+          DrawCallManager::_descMeshComponent(drawCallRef);
+
+     if (!meshCompRef.isValid())
+        return;
+
+	  const Name& name = Components::MeshManager::getMeshName(meshCompRef);
+
       // Draw
       {
         Resources::BufferRef indexBufferRef =
@@ -91,24 +99,36 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
                       BufferType::kIndex16
                   ? VK_INDEX_TYPE_UINT16
                   : VK_INDEX_TYPE_UINT32;
-          /*
-		  _INTR_LOG_WARNING(
-              "%d %d %d",
-              Resources::DrawCallManager::_indexBufferOffset(drawCallRef), 
-			  Resources::DrawCallManager::_descIndexCount(drawCallRef),
-              Resources::DrawCallManager::_descInstanceCount(drawCallRef)
-			  );
-		  */
-          vkCmdBindIndexBuffer(
+
+         vkCmdBindIndexBuffer(
               secondCmdBuffer,
               Resources::BufferManager::_vkBuffer(indexBufferRef),
               Resources::DrawCallManager::_indexBufferOffset(drawCallRef),
               indexType);
+
+		 if (name == _N(house))
+         {
+           /*
+           _INTR_LOG_WARNING(
+               "%d %d %d",
+               Resources::DrawCallManager::_indexBufferOffset(drawCallRef),
+               Resources::DrawCallManager::_descIndexCount(drawCallRef),
+               Resources::DrawCallManager::_descInstanceCount(drawCallRef));
+         */
+
           vkCmdDrawIndexed(
+              secondCmdBuffer, 22248, /* wielkoœæ bufora */
+              Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
+              0u, 0u);
+		  }
+		 else
+		 {
+		  vkCmdDrawIndexed(
               secondCmdBuffer,
               Resources::DrawCallManager::_descIndexCount(drawCallRef),
               Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
               0u, 0u);
+		 }
         }
         else
         {
