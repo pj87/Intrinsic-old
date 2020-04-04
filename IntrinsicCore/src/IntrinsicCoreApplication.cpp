@@ -93,8 +93,8 @@ void Application::init(void* p_PlatformHandle, void* p_PlatformWindow)
   // already initialized
   Renderer::RenderPass::DynamicGeometryGeneration::postInit();
   Renderer::RenderPass::DynamicTextureGeneration::postInit();
-  Renderer::RenderPass::GeometryGeneration::postInit();
-  Renderer::RenderPass::MarchingCubes::postInit();
+  //Renderer::RenderPass::GeometryGeneration::postInit();
+  //Renderer::RenderPass::MarchingCubes::postInit();
 
   // Initializes world
   {

@@ -997,7 +997,32 @@ void DynamicGeometryGeneration::onReinitRendering() {}
 void DynamicGeometryGeneration::destroy() {}
 
 // <-
+/*
+_INTR_INLINE static void updateDataMemory(void* p_Data, BufferRef bufferRef, 
+										  uint32_t p_Size, uint32_t p_Offset)
+{
+  // Update staging memory
+  {
+    memcpy(BufferManager::getGpuMemory(bufferRef), p_Data, p_Size);
+  }
 
+  // ... and copy to device
+  VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
+
+  VkBufferCopy bufferCopy = {};
+  {
+    bufferCopy.dstOffset = p_Offset;
+    bufferCopy.srcOffset = 0u;
+    bufferCopy.size = p_Size;
+  }
+
+  vkCmdCopyBuffer(copyCmd, BufferManager::_vkBuffer(bufferRef),
+                  BufferManager::_vkBuffer(bufferRef), 1u,
+                  &bufferCopy);
+
+  RenderSystem::flushTemporaryCommandBuffer();
+}
+*/
 void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 {
   _INTR_PROFILE_CPU("Render Pass", "Render Dynamic Geometry Generation");

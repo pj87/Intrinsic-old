@@ -80,19 +80,18 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
                 .data());
       }
 
+	 Components::MeshRef meshCompRef =
+          DrawCallManager::_descMeshComponent(drawCallRef);
+
+     if (!meshCompRef.isValid())
+        return;
+
+	  const Name& name = Components::MeshManager::getMeshName(meshCompRef);
+
       // Draw
       {
         Resources::BufferRef indexBufferRef =
             Resources::DrawCallManager::_descIndexBuffer(drawCallRef);
-
-		Components::MeshRef meshCompRef =
-            DrawCallManager::_descMeshComponent(drawCallRef);
-
-		if (!meshCompRef.isValid())
-			return;
-
-        const Name& name = Components::MeshManager::getMeshName(meshCompRef);
-
         if (indexBufferRef.isValid())
         {
           const VkIndexType indexType =
