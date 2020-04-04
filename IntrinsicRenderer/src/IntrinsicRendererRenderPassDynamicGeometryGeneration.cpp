@@ -346,88 +346,50 @@ _INTR_INLINE static void updateDataMemory(void* p_Data, BufferRef bufferRef,
 
 _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
 {
-  std::vector<glm::vec2> vertices;
-  std::vector<uint32_t> vertices_data;
   std::vector<uint32_t> indices;
 
-  int counter = 0;
-
-  // memset(zero_data, 0, DATA_SIZE);
-
-  if (mesh.counter == 1 /* && *(mesh.meshName) == _N(house)*/)
+  if (mesh.counter == 1 && !mesh.isDynamic)
   {
-    // FILE* file = fopen("generated_mesh.obj", "w");
-
     uint32_t* _positionCPUBufferRef =
         (uint32_t*)BufferManager::getGpuMemory(mesh._positionBufferRef);
 
     int index = 0;
+    unsigned verticesNum = 0u;
 
-    for (int i = 0; i < 1000000; i += 3, index += 2)
+	if (*mesh.meshName == _N(village_houses))
+      verticesNum = 12000000u;
+    else
+      verticesNum = 1000000u;
+
+    for (int i = 0; i < verticesNum; i += 3, index += 2)
     {
       glm::vec2 v1 = glm::unpackHalf2x16(_positionCPUBufferRef[i]);
       glm::vec2 v2 = glm::unpackHalf2x16(_positionCPUBufferRef[i + 1]);
       glm::vec2 v3 = glm::unpackHalf2x16(_positionCPUBufferRef[i + 2]);
 
-      vertices_data.push_back(_positionCPUBufferRef[i + 0]);
-      vertices_data.push_back(_positionCPUBufferRef[i + 1]);
-      vertices_data.push_back(_positionCPUBufferRef[i + 2]);
-
       if (v1.x != 0.0 || v1.y != 0.0 || v2.x != 0.0)
       {
         indices.push_back(index);
-        /*
-        vertices.push_back(v1);
-        vertices.push_back(v2);
-        vertices.push_back(v3);
-        */
-
-        //_INTR_LOG_WARNING("%d", (index + 1) % 3);
-
-        //_INTR_LOG_WARNING("%f %f %f %f %f %f", v1.x, v1.y, v2.x, v2.y, v3.x,
-        // v3.y); _INTR_LOG_WARNING("%d, %d, %d", i, i + 1, i + 2);
-
-        // fprintf(file, "%f %f %f %f %f %f", v1.x, v1.y, v2.x, v2.y, v3.x,
-        // v3.y);
-        // fprintf(file, "%d, %d, %d, ", i, i + 1, i + 2);
-
-        // counter++;
       }
       if (v2.y != 0.0 || v3.x != 0.0 || v3.y != 0.0)
       {
         indices.push_back(index + 1);
-        //_INTR_LOG_WARNING("%d", (index + 2) % 3);
       }
     }
 
-    // BufferRef buffer = mesh._positionBufferRef;
-    /*
-        updateDataMemory(zero_data, buffer,
-                         BufferManager::_descSizeInBytes(buffer), 0);
-        */
-
-    // updateDataMemory(vertices_data.data(), buffer, vertices_data.size(), 0);
-
     const Name& name = *(mesh.meshName);
-
-    //_INTR_LOG_WARNING("%s", name.getString().c_str());
-
     const uint32_t i = BufferManager::_nameToInitlialBufferMap[name];
     BufferRef indicesBuffer = BufferManager::_dynamicBuffers[i + 6];
     updateDataMemory(indices.data(), indicesBuffer,
                      indices.size() * sizeof(uint32_t), 0);
-
 	mesh.indicesNumber = indices.size();
 
-    // fclose(file);
     /*
     _INTR_LOG_WARNING("Writing obj for mesh: %s",
                       mesh.meshName->getString().c_str());
     write_obj(mesh.meshName->getString().c_str(), vertices_data, indices);
-        */
+    */
   }
-
-  //_INTR_LOG_WARNING("counter = %d", counter);
 }
 
 _INTR_INLINE ComputeCallRef createComputeCallPolygonization(
