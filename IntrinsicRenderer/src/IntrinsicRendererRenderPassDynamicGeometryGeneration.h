@@ -15,6 +15,12 @@
 #pragma once
 
 #define _IS_OVERRIDEN_MESH(name) Intrinsic::Renderer::RenderPass::DynamicGeometryGeneration::isOverridenMesh(name)
+#define _IS_DYNAMIC_MESH(name)                                               \
+  Intrinsic::Renderer::RenderPass::DynamicGeometryGeneration::isDynamicMesh( \
+      name)
+#define _GET_INDICES_NUMBER(name)                                               \
+  Intrinsic::Renderer::RenderPass::DynamicGeometryGeneration::getIndicesNumber( \
+      name)
 
 namespace Intrinsic
 {
@@ -98,6 +104,7 @@ struct DynamicGeneratedMesh
   float params[3];
 
   int counter = 0;
+  unsigned indicesNumber = 0;
   bool isCalled = false;
   bool isDynamic;
   int *sizeX, *sizeY, *sizeZ;
@@ -120,6 +127,8 @@ struct DynamicGeometryGeneration
   static void aquireVoxelsAndNormals(DynamicGeneratedMesh& mesh);
 
   static bool isOverridenMesh(const Name&);
+  static bool isDynamicMesh(const Name&);
+  static unsigned getIndicesNumber(const Name& meshName);
 
   static void init();
   static void onReinitRendering();

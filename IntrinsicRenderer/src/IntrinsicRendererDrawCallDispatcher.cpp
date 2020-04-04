@@ -106,56 +106,48 @@ struct DrawCallParallelTaskSet : enki::ITaskSet
               Resources::DrawCallManager::_indexBufferOffset(drawCallRef),
               indexType);
 
-		  if (!_IS_INSTANCED_MESH(name))
+          if (_IS_INSTANCED_MESH(name))
           {
-			  vkCmdDrawIndexed(
-				  secondCmdBuffer,
-				  Resources::DrawCallManager::_descIndexCount(drawCallRef),
-				  Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
-				  0u, 0u);
-          }
-		  else
-		  {
-              std::unique_ptr<Intrinsic::Renderer::InstancedMesh>& 
-				  instancedMesh = _INSTANCED_MESH_SIZE(name);
+            std::unique_ptr<Intrinsic::Renderer::InstancedMesh>& instancedMesh =
+                _INSTANCED_MESH_SIZE(name);
 
+            vkCmdDrawIndexed(
+                secondCmdBuffer,
+                Resources::DrawCallManager::_descIndexCount(drawCallRef) *
+                    instancedMesh->sizeX * instancedMesh->sizeZ,
+                Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
+                0u, 0u);
+          }
+          if (_IS_OVERRIDEN_MESH(name))
+          {
+            if (_IS_DYNAMIC_MESH(name))
+			{
+              vkCmdDraw(secondCmdBuffer, 1000000u, 1u, 0u, 0u);
+			}
+			else
+			{
 			  vkCmdDrawIndexed(
-				  secondCmdBuffer,
-                  Resources::DrawCallManager::_descIndexCount(drawCallRef) * instancedMesh->sizeX * instancedMesh->sizeZ,
+				  secondCmdBuffer, _GET_INDICES_NUMBER(name),
 				  Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
 				  0u, 0u);
-		  }
+			}
+          }
+          else
+          {
+            vkCmdDrawIndexed(
+                secondCmdBuffer,
+                Resources::DrawCallManager::_descIndexCount(drawCallRef),
+                Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
+                0u, 0u);
+          }
         }
         else
-        {          
-		  if (_IS_OVERRIDEN_MESH(name))
-		  {
-            int verticesNum = 12000000u;
-            if (name == _N(house_5))
-				verticesNum = 500000u;
-            else if (name == _N(pbr_test_025))
-              verticesNum = 1000000u;
-            else if (name == _N(pbr_test_0125))
-              verticesNum = 1000000u;
-            else if (name == _N(water_sphere))
-              verticesNum = 1000000u;
-            else if (name == _N(house))
-              verticesNum = 1000000u;
-            else if (name == _N(terrain_generated_small))
-              verticesNum = 1000000u;
-            else if (name == _N(terrain_generated))
-              verticesNum = 12000000u;
-
-			vkCmdDraw(secondCmdBuffer, verticesNum, 1u, 0u, 0u);
-          }
-          else 
-		  {
+        { 
             vkCmdDraw(
                 secondCmdBuffer,
                 Resources::DrawCallManager::_descVertexCount(drawCallRef),
-                Resources::DrawCallManager::_descInstanceCount(drawCallRef), 
-				0u, 0u);
-		  }
+                Resources::DrawCallManager::_descInstanceCount(drawCallRef), 0u,
+                0u);
         }
 
         DrawCallDispatcher::_dispatchedDrawCallCount++;
