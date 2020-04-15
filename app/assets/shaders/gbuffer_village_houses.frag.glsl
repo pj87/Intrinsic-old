@@ -26,8 +26,11 @@ PER_MATERIAL_UBO;
 PER_INSTANCE_UBO;
 
 // Bindings
-BINDINGS_GBUFFER;
-layout(binding = 6) uniform sampler2D emissiveTex;
+BINDINGS_TERRAIN;
+
+// Bindings
+//BINDINGS_GBUFFER;
+//layout(binding = 6) uniform sampler2D emissiveTex;
 
 // Input
 layout(location = 0) in vec3 inNormal;
@@ -43,24 +46,193 @@ OUTPUT
 
 vec3 tex3D(vec3 pos, vec3 nor, sampler2D s) {
     return texture( s, pos.yz).xyz*abs(nor.x)+
-           texture( s, pos.xz).xyz*abs(nor.y)+
+           //texture( s, pos.xz).xyz*abs(nor.y)+
            texture( s, pos.xy).xyz*abs(nor.z);
 }
 
 vec3 tex3DNormal(vec3 pos, vec3 nor, sampler2D s) {
+
     return textureNormal( s, pos.yz).xyz*abs(nor.x)+
-           textureNormal( s, pos.xz).xyz*abs(nor.y)+
+           //textureNormal( s, pos.xz).xyz*abs(nor.y)+
            textureNormal( s, pos.xy).xyz*abs(nor.z);
 }
 
+vec3 tex3DBricks(vec3 pos, vec3 nor, sampler2D s) {
+	/*
+	pos += vec3(3.5, 0.0, 3.5);
+	pos *= 0.075;
+	//pos = normalize(pos);
+	
+    return texture( s, pos.yz).xyz*abs(nor.x)+
+           //texture( s, pos.xz).xyz*abs(nor.y)+
+           texture( s, pos.xy).xyz*abs(nor.z);
+	*/
+	
+	vec2 posX = pos.yz + vec2(0.0, 3.5);
+	vec2 posZ = pos.xy + vec2(3.5, 0.0);
+	vec2 posY = vec2(posX.y, posZ.x);
+	
+	posX *= 0.075;
+	posY *= 0.075;
+	posZ *= 0.075;
+	
+    return texture( s, posX.xy).xyz*abs(nor.x)+
+           texture( s, posY.xy).xyz*abs(nor.y)+
+           texture( s, posZ.xy).xyz*abs(nor.z);
+	
+}
+
+vec3 tex3DBricksNormal(vec3 pos, vec3 nor, sampler2D s) {
+
+	vec2 posX = pos.yz + vec2(0.0, 3.5);
+	vec2 posZ = pos.xy + vec2(3.5, 0.0);
+	vec2 posY = vec2(posX.y, posZ.x);
+	
+	posX *= 0.075;
+	posY *= 0.075;
+	posZ *= 0.075;
+	
+    return textureNormal( s, posX.xy).xyz*abs(nor.x)+
+           textureNormal( s, posY.xy).xyz*abs(nor.y)+
+           textureNormal( s, posZ.xy).xyz*abs(nor.z);
+}
+
+vec3 tex3DWood(vec3 pos, vec3 nor, sampler2D s) {
+	
+	vec2 posX = pos.yz + vec2(7.0, 3.5);
+	vec2 posZ = pos.xy + vec2(-0.5, 0.0);
+	vec2 posY = vec2(posX.y + 7.0, posZ.x - 7.0);
+
+	posX *= 0.075;
+	posY *= 0.075;
+	posZ *= 0.075;
+
+    return texture( s, posX.xy).xyz*abs(nor.x)+
+           texture( s, posY.xy).xyz*abs(nor.y)+
+           texture( s, posZ.xy).xyz*abs(nor.z);
+}
+
+vec3 tex3DWoodNormal(vec3 pos, vec3 nor, sampler2D s) {
+
+	vec2 posX = pos.yz + vec2(7.0, 3.5);
+	vec2 posZ = pos.xy + vec2(-0.5, 0.0);
+	vec2 posY = vec2(posX.y + 7.0, posZ.x - 7.0);
+
+	posX *= 0.075;
+	posY *= 0.075;
+	posZ *= 0.075;
+
+    return textureNormal( s, posX.xy).xyz*abs(nor.x)+
+           textureNormal( s, posY.xy).xyz*abs(nor.y)+
+           textureNormal( s, posZ.xy).xyz*abs(nor.z);
+}
+
+vec3 tex3DWall(vec3 pos, vec3 nor, sampler2D s) {
+
+	/*
+	pos += vec3(-3.5, 7.0, -3.5);
+	pos *= 0.075;
+
+    return texture( s, pos.yz).xyz*abs(nor.x)+
+           //texture( s, pos.xz).xyz*abs(nor.y)+
+           texture( s, pos.xy).xyz*abs(nor.z);
+	*/
+	
+	vec2 posX = pos.yz + vec2(7.0, -3.5);
+	vec2 posZ = pos.xy + vec2(-3.5, 7.0);
+	vec2 posY = vec2(posX.y, posZ.x);
+	
+	posX *= 0.075;
+	posY *= 0.075;
+	posZ *= 0.075;
+
+    return texture( s, posX.xy).xyz*abs(nor.x)+
+           texture( s, posY.xy).xyz*abs(nor.y)+
+           texture( s, posZ.xy).xyz*abs(nor.z);
+	
+}
+
+vec3 tex3DWallNormal(vec3 pos, vec3 nor, sampler2D s) {
+
+	vec2 posX = pos.yz + vec2(7.0, -3.5);
+	vec2 posZ = pos.xy + vec2(-3.5, 7.0);
+	vec2 posY = vec2(posX.y, posZ.x);
+	
+	posX *= 0.075;
+	posY *= 0.075;
+	posZ *= 0.075;
+
+    return textureNormal( s, posX.xy).xyz*abs(nor.x)+
+           textureNormal( s, posY.xy).xyz*abs(nor.y)+
+           textureNormal( s, posZ.xy).xyz*abs(nor.z);
+}
+
+vec3 tex3DFloor(vec3 pos, vec3 nor, sampler2D s) {
+	
+	vec2 posX = pos.yz + vec2(0.325, -3.5);
+	vec2 posZ = pos.xy + vec2(-7.45, 7.0);
+	vec2 posY = vec2(posZ.x, posX.y);
+
+	posX *= 0.075;
+	posY *= 0.075;
+	posZ *= 0.075;
+
+    return texture( s, posX.xy).xyz*abs(nor.x)+
+           //texture( s, posY.xy).xyz*abs(nor.y)+
+           texture( s, posZ.xy).xyz*abs(nor.z);
+	
+}
+
+vec3 tex3DFloorNormal(vec3 pos, vec3 nor, sampler2D s) {
+
+	vec2 posX = pos.yz + vec2(0.325, -3.5);
+	vec2 posZ = pos.xy + vec2(-7.45, 7.0);
+	vec2 posY = vec2(posZ.x, posX.y);
+
+	posX *= 0.075;
+	posY *= 0.075;
+	posZ *= 0.075;
+
+    return textureNormal( s, posX.xy).xyz*abs(nor.x)+
+           textureNormal( s, posY.xy).xyz*abs(nor.y)+
+           textureNormal( s, posZ.xy).xyz*abs(nor.z);
+}
+
+vec3 tex3DBlendMask(vec3 pos, vec3 nor, sampler2D s) {
+    return texture( s, (pos.yz - 1.6) * 0.25).xyz*abs(nor.x)+
+		   texture( s, (pos.xz - 1.6) * 0.25).xyz*abs(nor.y)+
+		   texture( s, (pos.xy - 1.6) * 0.25).xyz*abs(nor.z);
+}
+
+vec3 blend(vec3 grass0, vec3 stone0, vec3 stone1, vec3 blendMask, float noise)
+{
+  return mix(grass0, mix(stone0, stone1, 1.0 - noise),
+             clamp(blendMask.b * 3.0, 0.0, 1.0));
+}
+
+vec3 blend(vec3 stone0, vec3 stone1, vec3 blendMask, float noise)
+{
+  return mix(stone0, stone1,
+             clamp(blendMask.b * 3.0, 0.0, 1.0));
+}
+
+/*
+vec3 blend(vec3 stone0, vec3 stone1, vec3 blendMask, float noise)
+{
+  return mix(stone0, stone1,
+             1.0 - noise);
+}
+*/
+
+/*
 vec4 tex3d(vec3 pos, vec3 normal)
 {
 	pos /= 4.0;
 
 	// loook up brick texture, blended across xyz axis based on normal.
-	vec4 texX = texture(albedoTex, pos.yz);
-	vec4 texY = texture(albedoTex, pos.xz);
-	vec4 texZ = texture(albedoTex, pos.xy);
+	vec4 texX = texture(albedoTex0, pos.yz);
+	vec4 texY = texture(albedoTex0, pos.xz);
+	vec4 texZ = texture(albedoTex0, pos.xy);
 	//vec4 tex = mix(texX, texZ, abs(normal.z));
 	//tex = mix(tex, texY, abs(normal.y));//.zxyw;
 	
@@ -90,7 +262,7 @@ vec4 tex3d_1(vec3 pos, vec3 normal)
 	
 	return albedo;
 }
-
+*/
 mat3 cotangent_frame( vec3 N, vec3 p, vec2 uv )
 {
     // get edge vectors of the pixel triangle
@@ -116,26 +288,77 @@ void main()
   const mat3 TBN = cotangent_frame(inNormal, inPosition, inUV0);
   const vec2 uv0 = UV0_TRANSFORM_ANIMATED(inUV0);
 
+  vec3 blendMask = tex3DBlendMask(inPosition, inNormalTPM, blendMaskTex).rgb;
+  float noise = clamp(tex3D(inPosition * 10.0, inNormalTPM, noiseTex).r, 0.0, 1.0);
+  float noise1 = clamp(tex3D(inPosition * 1.0, inNormalTPM, noiseTex).r, 0.0, 1.0);
+  
+  vec3 albedoDef = tex3D(inPosition, inNormalTPM, albedoTex0);
+  
+  vec3 albedo0 = tex3DBricks(inPosition, inNormalTPM, albedoTex0);
+  vec3 albedo1 = tex3DWall(inPosition, inNormalTPM, albedoTex0);
+  vec3 albedo2 = tex3DWood(inPosition, inNormalTPM, albedoTex0);
+  vec3 albedo3 = tex3DFloor(inPosition, inNormalTPM, albedoTex0);
+  vec3 albedo4 = tex3D(inPosition, inNormalTPM, albedoTex1);
+  
+  vec3 normalDef = tex3DNormal(inPosition, inNormalTPM, normalTex0);
+  
+  vec3 normal0 = tex3DBricksNormal(inPosition, inNormalTPM, normalTex0);
+  vec3 normal1 = tex3DWallNormal(inPosition, inNormalTPM, normalTex0);
+  vec3 normal2 = tex3DWoodNormal(inPosition, inNormalTPM, normalTex0);
+  vec3 normal3 = tex3DFloorNormal(inPosition, inNormalTPM, normalTex0);
+  vec3 normal4 = tex3D(inPosition, inNormalTPM, normalTex1);
+  
+  vec3 pbrDef = tex3DNormal(inPosition, inNormalTPM, pbrTex0);
+  
+  vec3 pbr0 = tex3DBricks(inPosition, inNormalTPM, pbrTex0);
+  vec3 pbr1 = tex3DWall(inPosition, inNormalTPM, pbrTex0);
+  vec3 pbr2 = tex3DWood(inPosition, inNormalTPM, pbrTex0);
+  vec3 pbr3 = tex3DFloor(inPosition, inNormalTPM, pbrTex0);
+  vec3 pbr4 = tex3D(inPosition, inNormalTPM, pbrTex1);
+  
+  vec3 albedo = blend(albedo1.rgb * 3.0, albedo0.rgb * 1.0, blendMask * 1.0, noise);
+  vec3 normal = blend(normal0.rgb * 1.0, normal1.rgb * 1.0, blendMask, noise);
+  vec3 pbr = blend(pbr0.rgb * 1.0, pbr1.rgb * 1.0, blendMask, noise);
+
   GBuffer gbuffer;
-  {
-   //door 
+  {   
+   //door
 	if (inPosition.y < 0.7 && inPosition.z > 0.8 && inPosition.z < 1.3 && inPosition.x < -2.0)
-		gbuffer.albedo = vec4(0.0, 1.0, 0.0, 1.0);
+	{
+		albedo = albedo2.rgb;
+		normal = normal2;
+		pbr = pbr2;
+	}
 	else if (inPosition.y < 0.8 && inPosition.x < -2.1)
-	// collumns
-		gbuffer.albedo = vec4(1.0, 1.0, 0.0, 1.0);
+	{
+		// collumns
+		//albedo = vec3(1.0, 1.0, 0.0);
+		//normal = vec3(0.0);
+		//pbr = vec3(0.0);
+		
+		albedo = albedo2.rgb;
+		normal = normal2;
+		pbr = pbr2;
+	}
 	// roof
 	else if (inPosition.y < 0.85)
-		gbuffer.albedo = vec4(inColor, 1.0) + vec4(tex3D(inPosition, inNormalTPM, albedoTex), 1.0) * uboPerInstance.colorTint;
+	{
+		//gbuffer.albedo = vec4(inColor, 1.0) + vec4(tex3D(inPosition, inNormalTPM, albedoTex0), 1.0) * uboPerInstance.colorTint;
+		//gbuffer.albedo = vec4(albedo.rgb, 1.0);
+		//gbuffer.normal = normal;
+		//gbuffer.pbr = pbr;
+	}
 	else
-		gbuffer.albedo = vec4(inColor, 1.0) + vec4(tex3D(inPosition, inNormalTPM, emissiveTex), 1.0) * uboPerInstance.colorTint * vec4(1.0, 0.25, 0.25, 1.0);
-		
-    //gbuffer.albedo = vec4(inColor, 1.0) + vec4(mix(tex3D(inPosition, inNormalTPM, albedoTex), tex3D(inPosition / 10.0, inNormalTPM, emissiveTex), 1.0), 1.0) * uboPerInstance.colorTint;
-    //gbuffer.albedo = vec4(inColor, 1.0) + mix(tex3d(inPosition, inNormalTPM), tex3d_1(inPosition, inNormalTPM), 1.0) * uboPerInstance.colorTint;
-	//gbuffer.albedo = vec4(inColor, 1.0) + mix(texture(albedoTex, uv0), texture(emissiveTex, uv0), 1.0) * uboPerInstance.colorTint;
+	{
+		//albedo = albedo4.rgb * vec3(1.0, 0.2, 0.2) * blendMask;
+		albedo = albedo4.rgb * vec3(1.0, 0.3, 0.3) * noise1;
+		normal = normal4;
+		pbr = pbr4;
+	}
 	
-    gbuffer.normal = normalize(TBN * tex3DNormal(inPosition, inNormalTPM, normalTex));
-	const vec2 pbr = tex3D(inPosition, inNormalTPM, pbrTex).rg;
+	gbuffer.albedo = vec4(albedo, 1.0);
+	gbuffer.normal = normal;
+	const vec2 pbr = pbr.rg;
     gbuffer.metalMask = pbr.r + uboPerMaterial.pbrBias.r;
     gbuffer.specular = uboPerMaterial.pbrBias.g;
     gbuffer.roughness = adjustRoughness(pbr.g + uboPerMaterial.pbrBias.b,

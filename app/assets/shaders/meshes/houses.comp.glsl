@@ -272,6 +272,11 @@ vec3 grass(vec2 p){
     ));
 }
 
+float sdBox1(vec3 p, vec3 radius)
+{
+  vec3 dist = abs(p) - radius;
+  return min(max(dist.x, max(dist.y, dist.z)), 0.0) + length(max(dist, 0.0));
+}
 
 vec4 map(vec3 p) {
     float plane = abs(p.y + 0.9);
@@ -293,6 +298,10 @@ float b= hash1(vec2(floor(p.z/tile)))*0.25;
 float mapScaled(vec3 p, vec4 c)
 {
 	return map(p/3.0f).x * 3.0f;
+	//return abs(p.y/3.0f).x * 3.0f;
+	//return sdBox1(p - vec3(32.0, 32.0, 15.0), vec3(6.0, 6.0, 6.0));
+	//return sdBox1(p - vec3(20.0), vec3(15.0));
+	
 }
 
 layout(local_size_x = 8u, local_size_y = 8u, local_size_z = 8u) in;

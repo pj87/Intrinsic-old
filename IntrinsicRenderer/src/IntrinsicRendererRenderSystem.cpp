@@ -198,7 +198,8 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(pbr_test_025), 
 		"julia.comp", 
 		"normal_generation_6.comp",
-        "geometry_generation_new_6.comp");
+        "geometry_generation_new_6.comp", 
+		false);
 	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         36, 36, 36,
@@ -487,13 +488,80 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(terrain_grass_01_GEN), 
         "texture_grass_generation.comp", 
 		false);
+     
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(village_houses_GEN), 
+        "texture_village_house_generation.comp", 
+		false);
+	/*
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(village_houses_GEN), 
+        "texture_tiling_generation.comp", 
+		true);
+	*/
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(village_houses_GEN), 
+		_N(village_houses_NRM_GEN), 
+        "texture_NRM2_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(village_houses_GEN), 
+		_N(village_houses_PBR_GEN), 
+        "texture_PBR1_generation.comp", 
+		false);
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_grass_stone_GEN), 
         "texture_sand1_generation.comp", 
 		false);
+    /*
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(wood_GEN), 
+        "texture_wood1_generation.comp", 
+		true);
+     
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+		_N(wood_GEN), 
+        _N(wood_NRM_GEN), 
+        "texture_NRM2_generation.comp", 
+		false);
+        
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1,
+		_N(wood_GEN), 
+        _N(wood_PBR_GEN), 
+        "texture_PBR1_generation.comp", 
+		false);
 	
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(concrete_GEN), 
+        "texture_concrete_generation.comp", 
+		true);
+     
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+		_N(concrete_GEN), 
+        _N(concrete_NRM_GEN), 
+        "texture_NRM2_generation.comp", 
+		false);
+        
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1,
+		_N(concrete_GEN), 
+        _N(concrete_PBR_GEN), 
+        "texture_PBR1_generation.comp", 
+		false);
+	*/
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_BLEND_GEN), 

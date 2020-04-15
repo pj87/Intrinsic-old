@@ -7,6 +7,9 @@
 
 #version 450
 
+#define iTime 1.0
+#define iResolution vec2(2048.0, 2048)
+
 layout(binding = 0, RGBA8) uniform image2D _TextureTex;
 layout(binding = 1) buffer _ParametersBuffer 
 {
@@ -23,7 +26,7 @@ layout(binding = 1) buffer _ParametersBuffer
 float rand(vec2 n) {
     return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
 }
-
+/*
 float noise(vec2 n) {
     const vec2 d = vec2(0.0, 1.0);
     vec2 b = floor(n), f = smoothstep(vec2(0.0), vec2(1.0), fract(n));
@@ -39,16 +42,87 @@ float fbm(vec2 n) {
     }
     return total;
 }
+*/
+// Noise
+vec2 random(vec2 st)
+{
+    st = vec2( dot(st,vec2(127.1,311.7)),
+              dot(st,vec2(269.5,183.3)) );
+    return -1.0 + 2.0*fract(sin(st)*43758.5453123);
+}
 
-#define iTime 1.0
-#define iResolution vec2(2048.0, 2048)
+float noise(vec2 st)
+{
+    vec2 f = fract(st);
+    vec2 i = floor(st);
+    
+    vec2 u = f * f * f * (f * (f * 6. - 15.) + 10.);
+    
+    float r = mix( mix( dot( random(i + vec2(0.0,0.0) ), f - vec2(0.0,0.0) ),
+                     dot( random(i + vec2(1.0,0.0) ), f - vec2(1.0,0.0) ), u.x),
+                mix( dot( random(i + vec2(0.0,1.0) ), f - vec2(0.0,1.0) ),
+                     dot( random(i + vec2(1.0,1.0) ), f - vec2(1.0,1.0) ), u.x), u.y);
+    return r * .5 + .5;
+}
+
+float fbm(vec2 st)
+{
+    float value = 0.;
+    float amplitude = .5;
+    float frequency = 0.;
+    
+    for (int i = 0; i < 8; i++)
+    {
+        value += amplitude * noise(st);
+        st *= 2.;
+        amplitude *= .5;
+    }
+    
+    return value;
+}
+
+vec3 textureWood(vec2 uv)
+{
+    uv.x *= .6;
+    
+    float no = noise(vec2(1.2, 2.4) + uv * 6.);
+
+    float n0 = .6 + .4 * smoothstep(
+        .24,
+        0.55,
+        fbm(vec2(uv.x * 10., uv.y * 30.) + vec2(15.0, 10.0)));
+    uv += no;
+    float n1 = fbm(vec2(uv.x * 5., uv.y * 20.) + vec2(2.0, 2.0));
+    float n2 = smoothstep(
+        1.0,
+        0.3,
+        fbm(vec2(uv.x * 1., uv.y * 10.)));
+    
+    vec3 col = n0 * n1 * n2 * vec3(1.92, 1.4, 1.15);
+    return pow(col, vec3(2.1));
+}
+
+vec3 textureWall(vec2 uv)
+{
+    vec2 iuv = floor(uv * 10.0);
+    vec3 col = clamp(smoothstep(0.14, 0.65, noise(uv * 10.4) * fbm(uv * 18.0)) + .9, 0.0, 1.0) * vec3(0.5);
+    return col;
+}
+
+vec3 textureFloor(vec2 uv)
+{
+    vec2 iuv = floor(uv * 100.0);
+    float v = float(mod(iuv.x + iuv.y, 2.0) <= 0.01);
+    vec3 col = vec3(0.4 + 0.5 * v) * fbm(uv * 15.5) * vec3(0.75, 0.68, 0.591);
+    return col;
+}
 
 vec3 BRICK_COLOR = vec3(192.0 / 255.0, 106.0 / 255.0, 59.0 / 255.0);
 vec3 BRICK_COLOR_VARIATION = vec3( 30.0 /255.0, 20.0/255.0, 20.0/255.0);
 
 vec3 MORTAR_COLOR = vec3(232.0 / 255.0, 216.0 / 255.0, 195.0 / 255.0);
 
-vec2 BRICK_SIZE = vec2(0.08, 0.06);
+vec2 BRICK_SIZE = vec2(0.01, 0.005);
 
 vec2 BRICK_PCT = vec2(0.95, 0.9);
 
@@ -88,6 +162,15 @@ void main()
         fragColor = vec4(color, 1.0);
     //else
     //    fragColor = vec4(0.75, 0.75, 0.75, 1.0);
+	
+	if (id.x < iResolution.x / 2 && id.y < iResolution.y / 2)
+		fragColor = vec4(color, 1.0);
+	else if (id.x >= iResolution.x / 2 && id.y < iResolution.y / 2)
+		fragColor = vec4(textureWood(uv), 1.0);
+	else if (id.x < iResolution.x / 2 && id.y >= iResolution.y / 2)
+		fragColor = vec4(textureFloor(uv), 1.0);
+	else if (id.x >= iResolution.x / 2 && id.y >= iResolution.y / 2)
+		fragColor = vec4(textureWall(uv), 1.0);
 	
 	imageStore(_TextureTex, id.xy, fragColor);
 }
