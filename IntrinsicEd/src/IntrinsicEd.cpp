@@ -695,7 +695,7 @@ void IntrinsicEd::onCreateSphere()
     Dod::Ref compRef = addComponentToEntity(entityRef, _N(Mesh));
     
 	float r = dist(mte);
-    /*
+    
 	if (r <= 0.25)
       Components::MeshManager::_descMeshName(compRef) = _N(Tree_Tall_01_8);
     else if (r <= 0.5)
@@ -704,14 +704,13 @@ void IntrinsicEd::onCreateSphere()
       Components::MeshManager::_descMeshName(compRef) = _N(Tree_Tall_04_12);
     else
       Components::MeshManager::_descMeshName(compRef) = _N(Tree_Tall_05_14);
-	*/
 
-	Components::MeshManager::_descMeshName(compRef) = _N(cube);
+	//Components::MeshManager::_descMeshName(compRef) = _N(cube);
 
 	Components::NodeRef nodeRef =
         Components::NodeManager::getComponentForEntity(entityRef);
     Entity::EntityRef entityParentRef =
-        Entity::EntityManager::getEntityByName(_N(TerrainSmall));
+        Entity::EntityManager::getEntityByName(_N(Terrain));
     Components::NodeRef parentRef =
 		Components::NodeManager::getComponentForEntity(entityParentRef);
 

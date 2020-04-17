@@ -85,11 +85,11 @@ vec3 tex3DNormalGrass(vec3 pos, vec3 nor, sampler2D s) {
 }
 
 vec3 tex3D(vec3 pos, vec3 nor, sampler2D s) {
-    return texture( s, (pos.xz - 2.0) * 1.25).xyz*abs(nor.y);
+    return texture( s, (pos.xz - 2.0) * 0.5).xyz*abs(nor.y);
 }
 
 vec3 tex3DNormal(vec3 pos, vec3 nor, sampler2D s) {
-    return textureNormal( s, (pos.xz - 2.0) * 1.25).xyz*abs(nor.y);
+    return textureNormal( s, (pos.xz - 2.0) * 0.5).xyz*abs(nor.y);
 }
 
 

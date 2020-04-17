@@ -358,6 +358,10 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
 
 	if (*mesh.meshName == _N(village_houses))
       verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(house))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_generated))
+      verticesNum = 12000000u;
     else
       verticesNum = 1000000u;
 
@@ -383,6 +387,9 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
     updateDataMemory(indices.data(), indicesBuffer,
                      indices.size() * sizeof(uint32_t), 0);
 	mesh.indicesNumber = indices.size();
+
+	_INTR_LOG_WARNING("%s: %d", name.getString().c_str(),
+                          mesh.indicesNumber);
 
     /*
     _INTR_LOG_WARNING("Writing obj for mesh: %s",
@@ -1071,19 +1078,20 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
     // hack (for the demo): generate the normals and voxels only for the terrain
 	
-	if (name != _N(terrain_generated_small))
+	if (name != _N(terrain_generated))
 		continue;
 
 	// end of hack (for the demo)
 
 	// Uncommet the following lines only when generating a new terrain with new trees
-    
+    /*
     PseudoInstancing::voxels.clear();
 	PseudoInstancing::normals.clear();
 
     aquireVoxelsAndNormals(*mesh);
 
     PseudoInstancing::populateMeshes();
+	*/
     PseudoInstancing::generateInstances();
 	
   }
@@ -1092,9 +1100,9 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 void DynamicGeometryGeneration::aquireVoxelsAndNormals(
     DynamicGeneratedMesh& mesh)
 {
-  for (int x = 0; x < 36; x += 1)
-    for (int y = 0; y < 36; y += 1)
-      for (int z = 0; z < 36; z += 1)
+  for (int x = 0; x < 64; x += 1)
+    for (int y = 0; y < 64; y += 1)
+      for (int z = 0; z < 64; z += 1)
       {
 			float voxel = getVoxel(mesh, x, y, z);
 			float voxel1 = getVoxel(mesh, x, y + 1, z);
@@ -1102,9 +1110,9 @@ void DynamicGeometryGeneration::aquireVoxelsAndNormals(
 			if (voxel > 0.0 && voxel1 < 0.0)
 			{
 				  Voxel voxel;
-				  voxel.x = static_cast<float>(z);
+				  voxel.x = static_cast<float>(x);
 				  voxel.y = static_cast<float>(y);
-				  voxel.z = static_cast<float>(x);
+				  voxel.z = static_cast<float>(64 - z);
 
 				  glm::vec3 nor = getNormal(mesh, x, y + 1, z);
 				  Voxel normal;

@@ -171,7 +171,7 @@ void PseudoInstancing::populateMeshes()
 
   int j = 0;
   int i = 0;
-  for (i = 0; i < 95;)
+  for (i = 0; i < 270;)
   {
     sprintf(buffer, "PJTerrain%d", i);
     Name name = std::move(buffer);
@@ -191,21 +191,21 @@ void PseudoInstancing::populateMeshes()
 
     if (voxels[j].y < 32.0)
     {
-      j += 3;
+      j += 4;
       continue;
     }
 
     //_INTR_LOG_WARNING("Ustawiam %s", name.getString().c_str());
     
     NodeManager::setSize(nodeRef,
-                         glm::vec3(0.01, 0.02 + dist(mte), 0.01));
+                         glm::vec3(0.01, 0.01 + dist(mte), 0.01));
 
 	//NodeManager::setSize(nodeRef, glm::vec3(0.04, 0.04, 0.04));
 
     glm::vec3 position =
-        glm::vec3(256.0 * (voxels[j].x - 18.0),
+        glm::vec3(127.0 * (voxels[j].x - 32.0),
                   127.0 * (voxels[j].y - 0.5 * (1.0 - normals[j].y)),
-                  256.0 * (voxels[j].z - 18.0));
+				  127.0 * (voxels[j].z - 32.0));
 	
     NodeManager::setPosition(nodeRef, position);
     
@@ -216,7 +216,7 @@ void PseudoInstancing::populateMeshes()
 	
     Components::NodeManager::rebuildTreeAndUpdateTransforms();
 
-    j += 3;
+    j += 4;
     i++;
 
 	//sprintf(buffer, "PJTerrain%d", i - 500);

@@ -186,11 +186,11 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 
 #if defined TEMPLE
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        36, 36, 36,
+        64, 64, 64,
 		_N(house),
         "temple_ruins.comp", 
-		"normal_generation_6.comp",
-        "geometry_generation_new_6.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
 		false);
 	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
