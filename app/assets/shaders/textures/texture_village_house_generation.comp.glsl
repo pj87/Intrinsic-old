@@ -80,6 +80,101 @@ float fbm(vec2 st)
     
     return value;
 }
+/*
+float scalesMask(vec2 p){
+
+    const float fwScale = 3.; // "fwidth" smoothing scale. Controls border blurriness to a degree.
+ 
+    // Repeat space: Breaking it up into .9 by .5 squares... just to be difficult. :)
+    // I wanted the scales to overlap slightly closer together, which meant bringing the centers
+    // closer together. This meant offsetting everything... You have my apologies. :)
+    p = mod(p, vec2(.9, .5)) - vec2(.9, .5)/2.;
+ 
+    
+    // Draw a circle, centered at the top of the .9 by .5 rectangle.
+    float c = length(p +  vec2(.0, .25)); 
+    c = smoothstep(0.,  min(fwidth(c), .01)*fwScale, c - .5);
+
+    float mask = c;
+
+    // Chopped off two partial circles at the top left and top right. They're positioned in such
+    // a way to create a fan shape.
+    //
+    // The "sign" business is just a repetitive trick to take care of two quadrants at once.
+    // "sign(p.x)" has the effect of an "if" statement.
+    c = length(p - vec2(sign(p.x)*.9, -1.)*.5);
+    
+    
+    // Combine the three circular shapes to create the fan.
+    return max(mask, smoothstep(0., min(fwidth(c), .01)*fwScale, .5 - c));    
+}
+
+// The decrotated scale tiles. Render one set of decorated fans, combine them with the
+// other set, then add some highlighting and postprocessing.
+vec3 scaleTile(vec2 p){
+    
+    // Contorting the scale a bit to add to the hand-drawn look.
+    vec2 scale = vec2(3, -2.);
+    
+    // One set of scale tiles, which take up half the space.
+    float sm = scalesMask(p*scale); // Mask.
+    vec3 col = sm*vec3(1., 0., 0.); // Decoration.
+    
+    // The other set of scale tiles.
+    float sm2 = scalesMask(p*scale + vec2(-.45, -.75)); // Mask.
+    vec3 col2 = sm2*vec3(0., 1., 0.);
+    
+    col = max(col, col2);
+    
+    // Toning the color down a bit. This was a last minute thing.
+    return col*.8 + col.zxy*.2;
+}
+*/
+
+float fan(vec2 uv)
+{
+    uv *= 1.002;
+    float l = (length(uv) - 0.5);
+    vec2 corner = sign(vec2(uv.x, -abs(uv.y))) * vec2(0.5, 0.25);
+    float x = max(0.5 - length (uv - corner), .0);
+    x = smoothstep(0.0, 0.001, x);
+    l = smoothstep(0.0, 0.001, l);
+    l = max(l, x);
+    return 1.0 - clamp(l, 0.0, 1.0);
+}
+
+vec4 texProceduralTiles(vec2 uv)
+{
+    // these variables can be tweaked
+    float floors = 64.0; 
+    float width = 9.6;
+    //
+    
+    float yblock = floor(uv.y * floors);
+    float y = mod(uv.y, 1.0 / floors) * floors;
+    
+    vec4 color = vec4(.9, 0.5, 0.25, 0.0);
+
+    float x = mod(uv.x * (2.0 + (yblock * width)), width) / width;
+    float xblock = mod( floor(uv.x * (2.0 + yblock * width) / width), 4.0);
+    
+    if(xblock == 1.0) color = vec4(1.0, 0.52, .2, 0.0);
+    else if(xblock == 2.0) color = vec4(1.0, 0.57, .2, 0.0);
+    else if(xblock == 3.0) color = vec4(1.0, 0.5, .2, 0.0);
+    
+    if (yblock == floors / 2. - 1.) color = vec4(0.9, 0.4, 0.4, 0.0);
+    
+    x = abs(x - 0.5);
+    y = abs(y - 0.5);
+    
+    return color * mix(1.0, 1.0 - smoothstep(0.4, .5, max(x, y)), 0.3);
+}
+
+vec4 getTexture(vec2 uv)
+{
+    uv = vec2(atan(uv.y, uv.x  ), length(uv));
+	return texProceduralTiles(uv);    
+}
 
 vec3 textureWood(vec2 uv)
 {
@@ -111,19 +206,43 @@ vec3 textureWall(vec2 uv)
 
 vec3 textureFloor(vec2 uv)
 {
-    vec2 iuv = floor(uv * 100.0);
-    float v = float(mod(iuv.x + iuv.y, 2.0) <= 0.01);
-    vec3 col = vec3(0.4 + 0.5 * v) * fbm(uv * 15.5) * vec3(0.75, 0.68, 0.591);
-    return col;
+	// Producing the scale tile.
+    //vec3 col = scaleTile(uv);
+
+	uv *= 100.0;
+	
+	uv.yx = vec2(1.0, 0.) - uv.xy;
+	
+    vec4 color = vec4(0.0);
+    
+    vec2 uvmod = vec2(1., 0.5);
+    for (int i = 0; i < 3; ++i)
+    {
+        vec2 _uv = uv + float(i) * uvmod * 0.5;
+        _uv = (mod(_uv, uvmod) / uvmod) * uvmod;
+        _uv -= vec2(0.5, .0);
+        
+	    vec4 c = vec4(fan(_uv));
+        c.rgb *= getTexture(_uv).rgb;
+        color += c;
+    }
+    color = clamp(color, 0.0, 1.0);
+    
+	vec4 fragColor = mix(vec4(.7, .6, .5, .0), color, step(1.0 - color.a, 0.));
+
+	// Producing the scale tile.
+    return fragColor.rgb;
 }
 
 vec3 BRICK_COLOR = vec3(192.0 / 255.0, 106.0 / 255.0, 59.0 / 255.0);
-vec3 BRICK_COLOR_VARIATION = vec3( 30.0 /255.0, 20.0/255.0, 20.0/255.0);
+//vec3 BRICK_COLOR_VARIATION = vec3( 30.0 /255.0, 20.0/255.0, 20.0/255.0);
 
-vec3 MORTAR_COLOR = vec3(232.0 / 255.0, 216.0 / 255.0, 195.0 / 255.0);
+vec3 BRICK_COLOR_VARIATION = vec3( 0.5, 0.5, 0.5);
+
+//vec3 MORTAR_COLOR = vec3(232.0 / 255.0, 216.0 / 255.0, 195.0 / 255.0);
+vec3 MORTAR_COLOR = vec3(2.0, 2.0, 2.0);
 
 vec2 BRICK_SIZE = vec2(0.01, 0.005);
-
 vec2 BRICK_PCT = vec2(0.95, 0.9);
 
 void main()
@@ -132,19 +251,21 @@ void main()
 	vec2 uv = gl_GlobalInvocationID.xy / iResolution.xy;
     
     vec2 position = uv / BRICK_SIZE;
-    
+	
     if(fract(position.y * 0.5) > 0.5)
     {
      	position.x += 0.5;   
     }
     
+	vec2 col1 = floor(position.xx) * 0.1;
+	
     position = fract(position);
     
     vec2 useBrick = step(position, BRICK_PCT);
     
     //vec3 texSample 	= texture( iChannel0, uv ).rgb;
     
-    vec3 color = mix(MORTAR_COLOR, BRICK_COLOR, useBrick.x * useBrick.y) + BRICK_COLOR_VARIATION;// * texSample;
+    vec3 color = mix(MORTAR_COLOR, BRICK_COLOR * col1.xyy, useBrick.x * useBrick.y) * BRICK_COLOR_VARIATION * fbm(position * 10.0);// * texSample;
     
 	// lightning++
 	// draw a line, left side is fixed

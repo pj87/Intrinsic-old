@@ -216,13 +216,27 @@ vec3 blend(vec3 stone0, vec3 stone1, vec3 blendMask, float noise)
              clamp(blendMask.b * 3.0, 0.0, 1.0));
 }
 
-/*
-vec3 blend(vec3 stone0, vec3 stone1, vec3 blendMask, float noise)
+vec3 stain(vec3 stone0, vec3 stone1, vec3 blendMask, float noise)
 {
-  return mix(stone0, stone1,
-             1.0 - noise);
+	if (blendMask.b * 3.0 > 1.25)
+		return stone0;
+	
+	return stone1 * noise;
 }
-*/
+
+bool isWindow(vec3 pos)
+{
+	// windows
+	if (inPosition.y > 0.25 && inPosition.y < 0.65 &&
+		(inPosition.x > -0.05 && inPosition.x < 0.35 || 
+		inPosition.x > -1.05 && inPosition.x < -0.65 || 
+		inPosition.z > -0.85 && inPosition.z < -0.45 || 
+		inPosition.z > -0.25 && inPosition.z < 0.15 || 
+		inPosition.z > 1.95 && inPosition.z < 2.35))
+		return true;
+		
+	return false;
+}
 
 /*
 vec4 tex3d(vec3 pos, vec3 normal)
@@ -316,19 +330,23 @@ void main()
   vec3 pbr3 = tex3DFloor(inPosition, inNormalTPM, pbrTex0);
   vec3 pbr4 = tex3D(inPosition, inNormalTPM, pbrTex1);
   
-  vec3 albedo = blend(albedo1.rgb * 3.0, albedo0.rgb * 1.0, blendMask * 1.0, noise);
-  vec3 normal = blend(normal0.rgb * 1.0, normal1.rgb * 1.0, blendMask, noise);
-  vec3 pbr = blend(pbr0.rgb * 1.0, pbr1.rgb * 1.0, blendMask, noise);
+  vec3 albedo = stain(albedo0.rgb * 1.0, albedo1.rgb * 1.0, blendMask, noise1);
+  vec3 normal = stain(normal0.rgb * 1.0, normal1.rgb * 1.0, blendMask, noise1);
+  vec3 pbr = stain(pbr0.rgb * 1.0, pbr1.rgb * 1.0, blendMask, noise1);
+  
+  //vec3 normal = blend(normal0.rgb * 1.0, normal1.rgb * 1.0, blendMask, noise);
+  //vec3 pbr = blend(pbr0.rgb * 1.0, pbr1.rgb * 1.0, blendMask, noise);
 
   GBuffer gbuffer;
   {   
    //door
-	if (inPosition.y < 0.7 && inPosition.z > 0.8 && inPosition.z < 1.3 && inPosition.x < -2.0)
+	if (inPosition.y < 0.7 && inPosition.z > 0.8 && inPosition.z < 1.3 && inPosition.x < -2.0 || isWindow(inPosition))
 	{
 		albedo = albedo2.rgb;
 		normal = normal2;
 		pbr = pbr2;
 	}
+	/*
 	else if (inPosition.y < 0.8 && inPosition.x < -2.1)
 	{
 		// collumns
@@ -336,10 +354,11 @@ void main()
 		//normal = vec3(0.0);
 		//pbr = vec3(0.0);
 		
-		albedo = albedo2.rgb;
-		normal = normal2;
-		pbr = pbr2;
+		//albedo = albedo2.rgb;
+		//normal = normal2;
+		//pbr = pbr2;
 	}
+	*/
 	// roof
 	else if (inPosition.y < 0.85)
 	{
@@ -351,9 +370,10 @@ void main()
 	else
 	{
 		//albedo = albedo4.rgb * vec3(1.0, 0.2, 0.2) * blendMask;
-		albedo = albedo4.rgb * vec3(1.0, 0.3, 0.3) * noise1;
-		normal = normal4;
-		pbr = pbr4;
+		//albedo = albedo4.rgb * vec3(1.0, 0.3, 0.3) * noise1;
+		albedo = albedo3.rgb/* * noise1*/;
+		normal = normal3;
+		pbr = pbr3;
 	}
 	
 	gbuffer.albedo = vec4(albedo, 1.0);
