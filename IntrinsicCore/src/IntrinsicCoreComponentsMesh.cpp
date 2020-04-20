@@ -111,6 +111,10 @@ struct UniformUpdateParallelTaskSet : enki::ITaskSet
 
     for (uint32_t dcIdx = p_Range.start; dcIdx < p_Range.end; ++dcIdx)
     {
+      // What a hack!!!!!
+      if (dcIdx >= drawCalls.size())
+        continue;
+
       DrawCallRef dcRef = drawCalls[dcIdx];
       MeshRef meshCompRef = DrawCallManager::_descMeshComponent(dcRef);
       _INTR_ASSERT(meshCompRef.isValid());
