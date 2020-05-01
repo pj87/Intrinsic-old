@@ -311,6 +311,13 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         36, 36, 36,
+        _N(house_2), 
+		"explosion1.comp", 
+		"normal_generation_6.comp",
+        "geometry_generation_new_6.comp");
+    
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        36, 36, 36,
         _N(house_5), 
 		"explosion.comp", 
 		"normal_generation_6.comp",

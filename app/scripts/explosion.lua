@@ -1,4 +1,3 @@
-posY = 0.0
 iTime = 0.0
 initialized = 0
 
@@ -7,6 +6,7 @@ function tick(p_EntityRef, p_DeltaT)
 
   local rotation = Quat.new(Vec3.new(0.0, p_DeltaT * 0.5, 0.0))
   local orientation = nodeComponent.getOrientation(nodeRef);
+  local size = nodeComponent.getSize(nodeRef)
   nodeComponent.setOrientation(nodeRef, glm.rotate(rotation, orientation))
 
   local position = nodeComponent.getPosition(nodeRef)
@@ -17,22 +17,17 @@ function tick(p_EntityRef, p_DeltaT)
 	initialized = 1
   end
   
-  posY = posY + p_DeltaT * 1.0  
   iTime = iTime + p_DeltaT
  
   if iTime > 4.0 then
-    iTime = 0
-	posY = -1.5
-	offsetX = math.random(-200.0, 200.0)
-	offsetZ = math.random(-200.0, 200.0)
+    iTime = 0.0
+	position.x = posX + math.random(-200.0, 200.0)
+	position.y = -1.5 * size.x
+	position.z = posZ + math.random(-200.0, 200.0)
   end
   
-  nodeComponent.setPosition(nodeRef, Vec3.new(posX + offsetX, posY * 100.0, posZ + offsetZ))
-  
-  -- local y = position.y + p_DeltaT
-  -- print("DUPA")
-  -- print(position.y)
-  -- print(dupa)
+  position.y = position.y + size.x * 0.1
+  nodeComponent.setPosition(nodeRef, position)
 
   nodeComponent.updateTransforms(nodeRef)
 end
