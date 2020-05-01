@@ -1,5 +1,7 @@
-iTime = 0.0
-initialized = 0
+-- Explosion entire period
+
+iTime_ep_2 = 0.0
+initialized_ep_2 = 0
 
 function tick(p_EntityRef, p_DeltaT)
   local nodeRef = nodeComponent.getComponentForEntity(p_EntityRef)
@@ -11,19 +13,19 @@ function tick(p_EntityRef, p_DeltaT)
 
   local position = nodeComponent.getPosition(nodeRef)
   
-  if initialized == 0 then
+  if initialized_ep_2 == 0 then
 	posX = position.x
 	posZ = position.z
-	initialized = 1
+	initialized_ep_2 = 1
   end
   
-  iTime = iTime + p_DeltaT
+  iTime_ep_2 = iTime_ep_2 + p_DeltaT
  
-  if iTime > 4.0 then
-    iTime = 0.0
-	position.x = posX + math.random(-200.0, 200.0)
-	position.y = -1.5 * size.x
-	position.z = posZ + math.random(-200.0, 200.0)
+  if iTime_ep_2 > 4.0 then
+    iTime_ep_2 = 0.0
+	position.x = posX + math.random(-500.0, 500.0)
+	position.y = -3.0 * size.x
+	position.z = posZ + math.random(-500.0, 500.0)
   end
   
   position.y = position.y + size.x * 0.1

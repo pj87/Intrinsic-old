@@ -1,0 +1,7 @@
+{
+    "name": "exmplosion_ep",
+    "properties": {
+        "name": "explosion_ep",
+        "scriptFileName": "explosion_ep.lua"
+    }
+}

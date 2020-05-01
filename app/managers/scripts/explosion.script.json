@@ -1,7 +1,0 @@
-{
-    "name": "exmplosion",
-    "properties": {
-        "name": "explosion",
-        "scriptFileName": "explosion.lua"
-    }
-}
