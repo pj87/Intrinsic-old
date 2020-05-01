@@ -362,6 +362,8 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
       verticesNum = 12000000u;
     else if (*mesh.meshName == _N(terrain_generated))
       verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_lava))
+      verticesNum = 12000000u;
     else
       verticesNum = 1000000u;
 
