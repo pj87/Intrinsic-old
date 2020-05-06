@@ -8,8 +8,7 @@
             "Shadow",
             "PerPixelPicking"
         ],
-        "albedoTextureName": "concrete",
-        "emissiveTextureName": "tiles_hexagon",
+        "albedoTextureName": "village_houses_GEN",
         "uvOffsetScale": [
             0.0,
             0.0,
@@ -22,8 +21,15 @@
         ],
         "translucencyThickness": 0.0,
         "emissiveIntensity": 3.0,
-        "normalTextureName": "tiles_hexagon_NRM",
-        "pbrTextureName": "tiles_hexagon_PBR",
+        "normalTextureName": "village_houses_NRM_GEN",
+        "pbrTextureName": "village_houses_PBR_GEN",
+        "albedo1TextureName": "tiles_hexagon",
+        "normal1TextureName": "tiles_hexagon_NRM",
+        "pbr1TextureName": "tiles_hexagon_PBR",
+        "albedo2TextureName": "wood_GEN",
+        "normal2TextureName": "wood_NRM_GEN",
+        "pbr2TextureName": "wood_PBR_GEN",
+        "blendMaskTextureName": "terrain_BLEND_GEN",
         "metalMaskBias": 0.0,
         "roughnessBias": 0.0,
         "specularBias": 0.0
