@@ -339,7 +339,7 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
         {
           BufferManager::_descBufferType(indexBuffer) = R::BufferType::kIndex32;
           BufferManager::_descSizeInBytes(indexBuffer) =
-              (uint32_t)65000 * sizeof(uint32_t);
+              (uint32_t)80000 * sizeof(uint32_t);
           //(uint32_t)indices[subMeshIdx].size() * sizeof(uint32_t) * 2u;
           // BufferManager::_descInitialData(indexBuffer) =
           //    (void*)indices[subMeshIdx].data();

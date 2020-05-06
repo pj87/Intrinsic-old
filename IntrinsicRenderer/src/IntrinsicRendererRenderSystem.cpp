@@ -614,8 +614,9 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 #elif defined TATOOINE
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
-        _N(generated_sky), 
-        "texture_simplicity_generation.comp");
+        _N(generated_sky_GEN), 
+        "texture_simplicity_generation.comp", 
+		false);
 #elif defined LAVA
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
