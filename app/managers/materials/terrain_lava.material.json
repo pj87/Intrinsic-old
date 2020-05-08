@@ -30,9 +30,9 @@
         "albedo1TextureName": "terrain_grass_stone_GEN",
         "normal1TextureName": "terrain_grass_stone_NRM_GEN",
         "pbr1TextureName": "terrain_grass_stone_PBR_GEN",
-        "albedo2TextureName": "terrain_cliff",
-        "normal2TextureName": "terrain_cliff_NRM",
-        "pbr2TextureName": "terrain_cliff_PBR",
+        "albedo2TextureName": "terrain_cliff_GEN",
+        "normal2TextureName": "terrain_cliff_NRM_GEN",
+        "pbr2TextureName": "terrain_cliff_PBR_GEN",
         "blendMaskTextureName": "terrain_BLEND_GEN"
     }
 }

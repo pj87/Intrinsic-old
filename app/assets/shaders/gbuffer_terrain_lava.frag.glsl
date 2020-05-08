@@ -71,7 +71,7 @@ float Fbmn (vec3 p, vec3 n)
   }
   return dot (s, abs (n));
 }
-
+/*
 vec3 tex3D(vec3 pos, vec3 nor, sampler2D s) {
     return 
 	texture( s, (pos.xz - 3.0) * 0.1).xyz*abs(nor.y);
@@ -79,6 +79,23 @@ vec3 tex3D(vec3 pos, vec3 nor, sampler2D s) {
 
 vec3 tex3DNormal(vec3 pos, vec3 nor, sampler2D s) {
     return textureNormal( s, (pos.xz - 3.0) * 0.1).xyz*abs(nor.y);
+}
+*/
+
+vec3 tex3D(vec3 pos, vec3 nor, sampler2D s) {
+    return texture( s, pos.yz).xyz*abs(nor.x)+
+           texture( s, pos.xz).xyz*abs(nor.y)+
+           texture( s, pos.xy).xyz*abs(nor.z);
+}
+
+vec3 tex3DNormal(vec3 pos, vec3 nor, sampler2D s) {
+    return textureNormal( s, pos.yz).xyz*abs(nor.x)+
+           textureNormal( s, pos.xz).xyz*abs(nor.y)+
+           textureNormal( s, pos.xy).xyz*abs(nor.z);
+}
+
+vec3 tex3DBlendMask(vec3 pos, vec3 nor, sampler2D s) {
+    return texture( s, (pos.xz - 1.6) * 0.25).xyz*abs(nor.y);
 }
 
 vec3 blend(vec3 grass0, vec3 stone0, vec3 stone1, vec3 blendMask, float noise)
@@ -126,9 +143,9 @@ void main()
 
   float noise = clamp(tex3D(inPosition * 0.1, inNormalTPM, noiseTex).r, 0.0, 1.0);
 
-  const vec4 albedo0 = vec4(tex3D(inPosition * 1.0, inNormalTPM, albedoTex0), 1.0);
-  const vec3 normal0 = tex3DNormal(inPosition * 1.0, inNormalTPM, normalTex0);
-  const vec3 pbr0 = tex3D(inPosition * 1.0, inNormalTPM, pbrTex0).rgg;
+  const vec4 albedo0 = vec4(tex3D(inPosition * 0.25, inNormalTPM, albedoTex0), 1.0);
+  const vec3 normal0 = tex3DNormal(inPosition * 0.25, inNormalTPM, normalTex0);
+  const vec3 pbr0 = tex3D(inPosition * 0.25, inNormalTPM, pbrTex0).rgg;
 
   float value = min (0.25 * Fbmn (10.0 * inPosition, vec3(1.0)), 1.);
   //const vec4 albedo1 = vec4(value, value, value, 1.0);
@@ -137,16 +154,16 @@ void main()
   const vec3 normal1 = tex3DNormal(inPosition * 1.0, inNormalTPM, normalTex1);
   const vec3 pbr1 = tex3D(inPosition * 1.0, inNormalTPM, pbrTex1).rgg;
 
-  //const vec4 albedo2 = vec4(tex3D(inPosition * 0.25, inNormalTPM, albedoTex2), 1.0);
-  const vec4 albedo2 = vec4(value, value, value, 1.0);
+  const vec4 albedo2 = vec4(tex3D(inPosition * 0.25, inNormalTPM, albedoTex2), 1.0);
+  //const vec4 albedo2 = vec4(value, value, value, 1.0);
   const vec3 normal2 = tex3DNormal(inPosition * 1.0, inNormalTPM, normalTex2);
   const vec3 pbr2 = tex3D(inPosition * 1.0, inNormalTPM, pbrTex2).rgg;
 
-  vec3 blendMask = tex3D(inPosition, inNormalTPM, blendMaskTex).rgb;
+  vec3 blendMask = tex3DBlendMask(inPosition * 1.0, inNormalTPM, blendMaskTex).rgb;
   
-  vec3 albedo = blend(albedo0.rgb * 1.0, albedo1.rgb * 1.0, albedo2.rgb * 1.0, blendMask * 0.5, noise);
-  vec3 normal = blend(normal0.rgb * 1.0, normal1.rgb * 1.0, normal2.rgb * 0.0, blendMask * 0.5, noise);
-  vec2 pbr = blend(pbr0.rgb * 1.0, pbr1.rgb * 1.0, pbr2.rgb * 0.0, blendMask * 1.5, noise).rg;
+  vec3 albedo = blend(albedo0.rgb * 1.0, albedo1.rgb * 1.0, albedo2.rgb * 1.0, blendMask, noise * 10.0) * vec3(1.0, 0.35, 0.35);
+  vec3 normal = blend(normal0.rgb * 1.0, normal1.rgb * 1.0, normal2.rgb * 1.0, blendMask, noise * 1.0);
+  vec2 pbr = blend(pbr0.rgb * 1.0, pbr1.rgb * 1.0, pbr2.rgb * 1.0, blendMask, noise).rg;
   
   //vec3 albedo = albedo1.rgb * 2.0;
   //vec3 albedo = albedo2.rgb;

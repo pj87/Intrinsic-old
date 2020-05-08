@@ -627,23 +627,23 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(water_GEN), 
-        "texture_lava2_generation.comp",
+        "texture_warping_generation_4.comp",
         false);
-	
+    
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
 		_N(water_GEN),
         _N(water_NRM_GEN), 
         "texture_NRM1_generation.comp",
         false);
-
+    
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
 		_N(water_GEN),
         _N(water_PBR_GEN), 
         "texture_PBR1_generation.comp",
         false);
-
+	
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_grass_01_GEN), 
@@ -667,7 +667,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_grass_stone_GEN), 
-        "texture_sand_generation.comp", 
+        "texture_warping_generation_3.comp", 
 		false);
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
@@ -681,6 +681,26 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         2048, 2048, 1, 
         _N(terrain_grass_stone_GEN), 
 		_N(terrain_grass_stone_PBR_GEN), 
+        "texture_PBR1_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_cliff_GEN), 
+        "texture_wood1_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_cliff_GEN), 
+		_N(terrain_cliff_NRM_GEN), 
+        "texture_NRM1_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_cliff_GEN), 
+		_N(terrain_cliff_PBR_GEN), 
         "texture_PBR1_generation.comp", 
 		false);
 
