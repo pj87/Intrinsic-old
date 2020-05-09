@@ -76,6 +76,20 @@
       ]
     },
 	{
+      "name": "GBufferExplosion",
+      "resources" : [
+        ["Buffer", "PerInstance", "PerInstance", "Vertex"],
+        ["Buffer", "PerInstance", "PerInstance", "Fragment"],
+        ["Buffer", "PerMaterial", "PerMaterial", "Fragment"],
+        ["Image", "MaterialAlbedo", "albedoTex", "Fragment"],
+        ["Image", "MaterialNormal", "normalTex", "Fragment"],
+        ["Image", "MaterialRoughness", "pbrTex", "Fragment"],
+        ["Image", "MaterialFoam", "foamTex", "Fragment"],
+        ["Image", "GBufferDepth", "gbufferDepthTex", "Fragment"],
+        ["Image", "noise", "noiseTex", "Fragment"]
+      ]
+    },
+	{
       "name": "GBufferLava",
       "resources" : [
         ["Buffer", "PerInstance", "PerInstance", "Vertex"],
@@ -365,6 +379,14 @@
       "renderPass" : "GBufferTransparents",
       "blendStates" : ["Default", "Default", "Default"],
       "boundResources" : "GBufferWater"
+    },
+	{
+      "name" : "GBufferExplosion",
+      "baseVertexGpuProgram" : "gbuffer_explosion.vert",
+      "baseFragmentGpuProgram" : "gbuffer_explosion.frag",
+      "renderPass" : "GBufferTransparents",
+      "blendStates" : ["Default", "Default", "Default"],
+      "boundResources" : "GBufferExplosion"
     },
 	{
       "name" : "GBufferLava",

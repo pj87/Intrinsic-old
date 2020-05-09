@@ -311,15 +311,15 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         36, 36, 36,
-        _N(house_2), 
-		"explosion1.comp", 
+        _N(explosion_ep), 
+		"explosion.comp", 
 		"normal_generation_6.comp",
         "geometry_generation_new_6.comp");
     
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         36, 36, 36,
-        _N(house_5), 
-		"explosion.comp", 
+        _N(explosion_hp), 
+		"explosion1.comp", 
 		"normal_generation_6.comp",
         "geometry_generation_new_6.comp");
 
@@ -775,28 +775,6 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         2048, 2048, 1, 
         _N(terrain_BLEND_GEN), 
         "texture_blend_lava_generation.comp", 
-		false);
-
-	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
-        2048, 2048, 1, 
-        _N(house_01_E_GEN), 
-        "texture_sand_generation.comp",
-        false);
-
-	// Not really needed yet: 
-
-	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
-        2048, 2048, 1, 
-		_N(house_01_E_GEN), 
-        _N(house_01_NRM_GEN), 
-        "texture_NRM1_generation.comp", 
-		false);
-	
-	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
-        2048, 2048, 1, 
-		_N(house_01_E_GEN), 
-        _N(house_01_PBR_GEN), 
-        "texture_PBR1_generation.comp", 
 		false);
 
     World::_currentTime = 0.495f;

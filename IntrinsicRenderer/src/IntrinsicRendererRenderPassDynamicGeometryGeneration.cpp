@@ -1005,9 +1005,9 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   {
     mesh->params[0] += p_DeltaT;
 
-	if (*(mesh->meshName) == _N(house_5) && mesh->params[0] > 4.0)
+	if (*(mesh->meshName) == _N(explosion_ep) && mesh->params[0] > 4.0)
       mesh->params[0] = 0.0;
-	if (*(mesh->meshName) == _N(house_2) && mesh->params[0] > 6.0)
+	if (*(mesh->meshName) == _N(explosion_hp) && mesh->params[0] > 6.0)
       mesh->params[0] = 2.0;
 
     if (mesh->isDynamic)
