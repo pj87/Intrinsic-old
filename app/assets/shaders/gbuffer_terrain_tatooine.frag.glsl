@@ -52,6 +52,10 @@ vec3 tex3DNormal(vec3 pos, vec3 nor, sampler2D s) {
            textureNormal( s, pos.xy).xyz*abs(nor.z);
 }
 
+vec3 tex3DBlendMask(vec3 pos, vec3 nor, sampler2D s) {
+    return texture( s, (pos.xz - 1.6) * 0.25).xyz*abs(nor.y);
+}
+
 vec3 blend(vec3 grass0, vec3 stone0, vec3 stone1, vec3 blendMask, float noise)
 {
   return mix(grass0, mix(stone0, stone1, 1.0 - noise),
@@ -95,25 +99,38 @@ void main()
   const vec2 uv0 = UV0_TRANSFORM_ANIMATED(inUV0);
   const vec2 uv0Raw = UV0(inUV0);
 
-  const vec4 albedo0 = vec4(tex3D(inPosition, inNormalTPM, albedoTex0), 1.0);
-  const vec3 normal0 = tex3DNormal(inPosition, inNormalTPM, normalTex0);
-  const vec3 pbr0 = tex3D(inPosition, inNormalTPM, pbrTex0).rgg;
+  const vec4 albedo0 = vec4(tex3D(inPosition * 0.25, inNormalTPM, albedoTex0), 1.0);
+  const vec3 normal0 = tex3DNormal(inPosition * 0.25, inNormalTPM, normalTex0);
+  const vec3 pbr0 = tex3D(inPosition * 0.25, inNormalTPM, pbrTex0).rgg;
 
-  const vec4 albedo1 = vec4(tex3D(inPosition * 0.5, inNormalTPM, albedoTex1), 1.0);
-  const vec3 normal1 = tex3DNormal(inPosition * 0.5, inNormalTPM, normalTex1);
-  const vec3 pbr1 = tex3D(inPosition * 0.1, inNormalTPM, pbrTex1).rgg;
+  const vec4 albedo1 = vec4(tex3D(inPosition * 1.0, inNormalTPM, albedoTex1), 1.0);
+  const vec3 normal1 = tex3DNormal(inPosition * 1.0, inNormalTPM, normalTex1);
+  const vec3 pbr1 = tex3D(inPosition * 1.0, inNormalTPM, pbrTex1).rgg;
 
   const vec4 albedo2 = vec4(tex3D(inPosition * 0.25, inNormalTPM, albedoTex2), 1.0);
   const vec3 normal2 = tex3DNormal(inPosition * 0.25, inNormalTPM, normalTex2);
-  const vec3 pbr2 = tex3D(inPosition * 0.1, inNormalTPM, pbrTex2).rgg;
+  const vec3 pbr2 = tex3D(inPosition * 0.25, inNormalTPM, pbrTex2).rgg;
 
-  float noise = clamp(tex3D(inPosition * 10.0, inNormalTPM, noiseTex).r, 0.0, 1.0);
-  vec3 blendMask = tex3D(inPosition * 10.0, inNormalTPM, blendMaskTex).rgb;
-
-  vec3 albedo = blend(albedo0.rgb, albedo1.rgb, albedo2.rgb, blendMask, noise);
-  vec3 normal = blend(normal0.rgb, normal1.rgb, normal2.rgb, blendMask, noise);
-  vec2 pbr = blend(pbr0.rgb, pbr1.rgb, pbr2.rgb, blendMask, noise).rg;
-
+  float noise = clamp(tex3D(inPosition * 1.0, inNormalTPM, noiseTex).r, 0.0, 1.0);
+  vec3 blendMask = tex3DBlendMask(inPosition * 0.25, inNormalTPM, blendMaskTex).rgb;
+  
+  vec3 albedo = blend(albedo1.rgb, albedo0.rgb, albedo2.rgb, blendMask, noise);
+  // Alternative version, very interesting:
+  //vec3 albedo = blend(albedo1.rgb, albedo0.rgb, albedo2.rgb, blendMask, noise * 100.0);
+  vec3 normal = blend(normal1.rgb, normal0.rgb, normal2.rgb, blendMask, noise);
+  vec2 pbr = blend(pbr1.rgb, pbr0.rgb, pbr2.rgb, blendMask, noise).rg;
+  
+  /*
+  vec3 albedo = blend(albedo1.rgb * 1.0, albedo0.rgb * 0.0, albedo2.rgb * 0.0, blendMask, noise);
+  vec3 normal = blend(normal1.rgb, normal0.rgb, normal2.rgb, blendMask, noise);
+  vec2 pbr = blend(pbr1.rgb, pbr0.rgb, pbr2.rgb, blendMask, noise).rg;
+  */
+  //vec3 albedo = blend(albedo0.rgb * 1.0, albedo1.rgb * 1.0, albedo2.rgb * 1.0, blendMask, noise);
+  //vec3 albedo = albedo1.rgb;
+  //vec3 normal = vec3(0.0);
+  //vec2 pbr = vec2(0.0);
+  
+  /*
   float occlusion =
       clamp(mix(clamp(noise * 5.0, 0.0, 1.0) * blendMask.b, 1.0 - blendMask.r,
                 clamp((1.0 - blendMask.g) * 2.0 - 0.9, 0.0, 1.0)) *
@@ -121,7 +138,7 @@ void main()
                 0.2,
             0.0, 1.0);
   albedo *= occlusion;
-
+  */
   GBuffer gbuffer;
   {
     gbuffer.albedo = vec4(albedo, 1.0) * uboPerInstance.colorTint;

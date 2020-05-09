@@ -617,6 +617,73 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(generated_sky_GEN), 
         "texture_simplicity_generation.comp", 
 		false);
+    
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_grass_01_GEN), 
+        "texture_sand1_generation.comp", 
+		false);
+     
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_grass_stone_GEN), 
+        "texture_warping_generation_3.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_cliff_GEN), 
+        "texture_wood1_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_BLEND_GEN), 
+        "texture_blend_generation.comp", 
+		false);
+	
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+		_N(terrain_grass_01_GEN),
+		_N(terrain_grass_01_NRM_GEN), 
+        "texture_NRM2_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_grass_stone_GEN), 
+		_N(terrain_grass_stone_NRM_GEN), 
+        "texture_NRM2_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(terrain_cliff_GEN), 
+		_N(terrain_cliff_NRM_GEN), 
+        "texture_NRM2_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+		_N(terrain_grass_01_GEN),
+		_N(terrain_grass_01_PBR_GEN), 
+        "texture_PBR1_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+		_N(terrain_grass_stone_GEN),
+        _N(terrain_grass_stone_PBR_GEN), 
+        "texture_PBR1_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+		_N(terrain_cliff_GEN),
+		_N(terrain_cliff_PBR_GEN), 
+        "texture_PBR1_generation.comp", 
+		false);
+
 #elif defined LAVA
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
