@@ -2,6 +2,8 @@
 
 iTime_ep = 0.0
 initialized_ep = 0
+spawnCounter_ep = 0
+modulus_ep = 2
 
 function tick(p_EntityRef, p_DeltaT)
   local nodeRef = nodeComponent.getComponentForEntity(p_EntityRef)
@@ -24,12 +26,15 @@ function tick(p_EntityRef, p_DeltaT)
   if iTime_ep > 4.0 then
     iTime_ep = 0.0
 	position.x = posX + math.random(-500.0, 500.0)
-	position.y = -3.0 * size.x
 	position.z = posZ + math.random(-500.0, 500.0)
+	spawnCounter_ep = spawnCounter_ep + 1
+	position.y = -5.0 * size.x
   end
   
-  position.y = position.y + size.x * 0.1
-  nodeComponent.setPosition(nodeRef, position)
+  if spawnCounter_ep % modulus_ep == 0 then
+    position.y = position.y + size.x * 0.1
+    nodeComponent.setPosition(nodeRef, position)
+  end
 
   nodeComponent.updateTransforms(nodeRef)
 end
