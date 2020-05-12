@@ -116,6 +116,8 @@ void main()
   //vec2 metalRoughness = mix(vec2(0.0, 0.0), vec2(0.0, 0.8), foamFade);
   vec2 metalRoughness = vec2(0.0, 0.0);
 
+  albedo.b *= 5.0;
+
   GBuffer gbuffer;
   {
     gbuffer.albedo = albedo;

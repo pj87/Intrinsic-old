@@ -777,7 +777,8 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "texture_blend_lava_generation.comp", 
 		false);
 
-    World::_currentTime = 0.495f;
+    //World::_currentTime = 0.495f;
+    World::_currentTime = 0.15f;
 
      /*
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
