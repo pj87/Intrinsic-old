@@ -114,10 +114,6 @@ void main()
   albedo.rgb = mix(albedo.rgb, foam.rgb, foamFade);
   vec2 metalRoughness = mix(vec2(0.0, 0.0), vec2(0.0, 0.8), foamFade);
 
-  //albedo.rgb = vec3(1.0, 0.0, 1.0) * noise.rgb;
-  //albedo.a *= 0.00001;
-  albedo.rgb = vec3(0.75, 0.0, 0.5) * noise.rgb * 100.0;
-
   GBuffer gbuffer;
   {
     gbuffer.albedo = albedo;

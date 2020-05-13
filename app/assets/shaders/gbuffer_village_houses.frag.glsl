@@ -57,7 +57,7 @@ OUTPUT
 vec3 tex3D(vec3 pos, vec3 nor, sampler2D s) {
     return texture( s, pos.yz).xyz*abs(nor.x)+
            //texture( s, pos.xz).xyz*abs(nor.y)+
-           texture( s, pos.xy).xyz*abs(nor.z);
+           texture( s, pos.yx).xyz*abs(nor.z);
 }
 
 vec3 tex3DNormal(vec3 pos, vec3 nor, sampler2D s) {
@@ -248,6 +248,20 @@ bool isWindow(vec3 pos)
 	return false;
 }
 
+bool isWindowGlass(vec3 pos)
+{
+	// windows
+	if (inPosition.y > 0.3 && inPosition.y < 0.6 &&
+		(inPosition.x > 0.0 && inPosition.x < 0.3 || 
+		inPosition.x > -1.0 && inPosition.x < -0.7 || 
+		inPosition.z > -0.8 && inPosition.z < -0.5 || 
+		inPosition.z > -0.2 && inPosition.z < 0.1 || 
+		inPosition.z > 2.0 && inPosition.z < 2.3))
+		return true;
+		
+	return false;
+}
+
 /*
 vec4 tex3d(vec3 pos, vec3 normal)
 {
@@ -347,6 +361,8 @@ void main()
   vec3 pbr = stain(pbr0.rgb * 1.0, pbr1.rgb * 1.0, blendMask, noise1);
   vec3 normal = normal0.rgb;
   
+  float emissive = 0.1;
+  
   //vec3 normal = blend(normal0.rgb * 1.0, normal1.rgb * 1.0, blendMask, noise);
   //vec3 pbr = blend(pbr0.rgb * 1.0, pbr1.rgb * 1.0, blendMask, noise);
 
@@ -382,11 +398,19 @@ void main()
 	}
 	else
 	{
-		//albedo = albedo4.rgb * vec3(1.0, 0.2, 0.2) * blendMask;
-		//albedo = albedo4.rgb * vec3(1.0, 0.3, 0.3) * noise1;
-		albedo = albedo3.rgb/* * noise1*/;
-		normal = normal3;
-		pbr = pbr3;
+		albedo = albedo4;
+		normal = normal4;
+		pbr = pbr4;
+	}
+	
+	if(isWindowGlass(inPosition))
+	{
+		
+		albedo = albedo1.rgb;
+		normal = normal1.rgb;
+		pbr = pbr1.rgb;
+		emissive = 1.0;
+		
 	}
 	
 	gbuffer.albedo = vec4(albedo, 1.0);
@@ -397,27 +421,7 @@ void main()
     gbuffer.roughness = adjustRoughness(pbr.g + uboPerMaterial.pbrBias.b,
                                         uboPerMaterial.data1.x);
     gbuffer.materialBufferIdx = uboPerMaterial.data0.x;
-	
-	// windows
-	if (inPosition.y > 0.3 && inPosition.y < 0.6 &&
-		(inPosition.x > 0.0 && inPosition.x < 0.3 || 
-		inPosition.x > -1.0 && inPosition.x < -0.7 || 
-		inPosition.z > -0.8 && inPosition.z < -0.5 || 
-		inPosition.z > -0.2 && inPosition.z < 0.1 || 
-		inPosition.z > 2.0 && inPosition.z < 2.3))
-		gbuffer.emissive = 1.0;
-	else 
-		gbuffer.emissive = 0.1;
-	
-	/*
-	if (inPosition.x > 0.2 && inPosition.x < 0.5 &&
-		inPosition.y > 0.2 && inPosition.y < 0.5)
-		gbuffer.emissive = 1.0;
-	else 
-		gbuffer.emissive = 0.1;
-	*/
-	
-	//gbuffer.emissive = tex3D(inPosition, inNormalTPM, emissiveTex).r * 0.1;
+	gbuffer.emissive = emissive;
     gbuffer.occlusion = 1.0;
   }
   writeGBuffer(gbuffer, outAlbedo, outNormal, outParameter0);
