@@ -524,6 +524,26 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
+        _N(roof_GEN), 
+		"texture_roof_generation.comp", 
+		true);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(roof_GEN), 
+		_N(roof_NRM_GEN), 
+        "texture_NRM2_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
+        _N(roof_GEN), 
+		_N(roof_PBR_GEN), 
+        "texture_PBR1_generation.comp", 
+		false);
+
+	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
+        2048, 2048, 1, 
         _N(terrain_grass_stone_GEN), 
         "texture_sand1_generation.comp", 
 		false);
