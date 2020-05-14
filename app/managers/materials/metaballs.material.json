@@ -1,0 +1,33 @@
+{
+    "name": "metaballs",
+    "properties": {
+        "name": "metaballs",
+        "materialPassMask": [
+            "GBufferWireframe",
+            "GBufferMetaballs"
+        ],
+        "albedoTextureName": "black",
+        "emissiveTextureName": "white",
+        "uvOffsetScale": [
+            0.0,
+            0.0,
+            0.5,
+            0.5
+        ],
+        "uvAnimation": [
+            0.0010000000474974514,
+            0.0010000000474974514
+        ],
+        "translucencyThickness": 0.0,
+        "emissiveIntensity": 0.0,
+        "normalTextureName": "water_NRM",
+        "pbrTextureName": "water_PBR",
+        "metalMaskBias": 0.0,
+        "roughnessBias": 0.0,
+        "specularBias": 0.0,
+        "foamTextureName": "white",
+        "foamFadeDistance": 1.0,
+        "waterFadeDistance": 0.5,
+        "refractionFactor": 0.00009999999747378752
+    }
+}

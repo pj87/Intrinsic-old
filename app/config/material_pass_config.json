@@ -381,6 +381,14 @@
       "boundResources" : "GBufferWater"
     },
 	{
+      "name" : "GBufferMetaballs",
+      "baseVertexGpuProgram" : "gbuffer_metaballs.vert",
+      "baseFragmentGpuProgram" : "gbuffer_metaballs.frag",
+      "renderPass" : "GBufferTransparents",
+      "blendStates" : ["Default", "Default", "Default"],
+      "boundResources" : "GBufferWater"
+    },
+	{
       "name" : "GBufferExplosion",
       "baseVertexGpuProgram" : "gbuffer_explosion.vert",
       "baseFragmentGpuProgram" : "gbuffer_explosion.frag",
