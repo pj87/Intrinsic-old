@@ -292,13 +292,97 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		-5.0);
 		*/
 #elif defined TATOOINE
+
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain_tatooine), 
 		"terrain_tatooine_generated.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
-		false);
+		false, 
+		32.0, 
+		32.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_tatooine1),
+		"terrain_tatooine_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		-30.0, 
+		32.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_tatooine2),
+		"terrain_tatooine_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		94.0, 
+		32.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_tatooine3),
+		"terrain_tatooine_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		32.0, 
+		-30.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_tatooine4),
+		"terrain_tatooine_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		32.0, 
+		94.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_tatooine5),
+		"terrain_tatooine_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		-30.0, 
+		-30.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_tatooine6),
+		"terrain_tatooine_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		94.0, 
+		94.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_tatooine7),
+		"terrain_tatooine_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		-30.0, 
+		94.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_tatooine8),
+		"terrain_tatooine_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		94.0, 
+		-30.0);
+
 #elif defined LAVA
     
     RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(

@@ -281,87 +281,22 @@
         ]
     },
     {
-        "name": "Player",
+        "name": "MainCamera",
         "offsetToParent": -5,
         "propertyEntries": [
             {
                 "type": "Node",
                 "properties": {
                     "localPos": [
-                        -927.0,
-                        567.0,
-                        -276.0
+                        1171.974609375,
+                        -814.2985229492188,
+                        -1140.9580078125
                     ],
                     "localOrient": [
-                        0.0,
-                        -0.5133463740348816,
-                        0.0,
-                        0.8581814765930176
-                    ],
-                    "localSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "worldPos": [
-                        -927.0,
-                        567.0,
-                        -276.0
-                    ],
-                    "worldOrient": [
-                        0.0,
-                        -0.5133463740348816,
-                        0.0,
-                        0.8581814765930176
-                    ],
-                    "worldSize": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "type": "Mesh",
-                "properties": {
-                    "meshName": "rabbit",
-                    "colorTint": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "type": "Player",
-                "properties": {
-                    "playerId": 0
-                }
-            },
-            {
-                "type": "CharacterController",
-                "properties": {}
-            }
-        ]
-    },
-    {
-        "name": "MainCamera",
-        "offsetToParent": -6,
-        "propertyEntries": [
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        629.8594970703125,
-                        607.651611328125,
-                        32.155487060546878
-                    ],
-                    "localOrient": [
-                        -0.024696823209524156,
-                        0.9464861154556274,
-                        0.07467799633741379,
-                        0.3130132257938385
+                        0.008686939254403115,
+                        -0.8604052662849426,
+                        -0.014674890786409378,
+                        -0.5093249678611755
                     ],
                     "localSize": [
                         0.0,
@@ -369,15 +304,15 @@
                         0.0
                     ],
                     "worldPos": [
-                        629.8594970703125,
-                        607.651611328125,
-                        32.155487060546878
+                        1171.974609375,
+                        -814.2985229492188,
+                        -1140.9580078125
                     ],
                     "worldOrient": [
-                        -0.024696823209524156,
-                        0.9464861154556274,
-                        0.07467799633741379,
-                        0.3130132257938385
+                        0.008686939254403115,
+                        -0.8604052662849426,
+                        -0.014674890786409378,
+                        -0.5093249678611755
                     ],
                     "worldSize": [
                         0.0,
@@ -397,63 +332,8 @@
         ]
     },
     {
-        "name": "ScenePlane",
-        "offsetToParent": -7,
-        "propertyEntries": [
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        -937.0,
-                        573.75,
-                        -293.75
-                    ],
-                    "localOrient": [
-                        0.7448785901069641,
-                        0.15005578100681306,
-                        -0.1788295954465866,
-                        0.6250272989273071
-                    ],
-                    "localSize": [
-                        0.07500000298023224,
-                        1.0,
-                        0.05000000074505806
-                    ],
-                    "worldPos": [
-                        -937.0,
-                        573.75,
-                        -293.75
-                    ],
-                    "worldOrient": [
-                        0.7448785901069641,
-                        0.15005578100681306,
-                        -0.1788295954465866,
-                        0.6250272989273071
-                    ],
-                    "worldSize": [
-                        0.07500000298023224,
-                        1.0,
-                        0.05000000074505806
-                    ]
-                }
-            },
-            {
-                "type": "Mesh",
-                "properties": {
-                    "meshName": "scene_plane",
-                    "colorTint": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
-            }
-        ]
-    },
-    {
         "name": "PostEffectVolume1",
-        "offsetToParent": -8,
+        "offsetToParent": -6,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -504,7 +384,7 @@
     },
     {
         "name": "Decal",
-        "offsetToParent": -9,
+        "offsetToParent": -7,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -566,7 +446,7 @@
     },
     {
         "name": "Decal3",
-        "offsetToParent": -10,
+        "offsetToParent": -8,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -628,7 +508,7 @@
     },
     {
         "name": "Decal4",
-        "offsetToParent": -11,
+        "offsetToParent": -9,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -690,7 +570,7 @@
     },
     {
         "name": "Decal5",
-        "offsetToParent": -12,
+        "offsetToParent": -10,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -751,73 +631,8 @@
         ]
     },
     {
-        "name": "Player1",
-        "offsetToParent": -13,
-        "propertyEntries": [
-            {
-                "type": "Node",
-                "properties": {
-                    "localPos": [
-                        -930.0005493164063,
-                        566.8560791015625,
-                        -281.0001220703125
-                    ],
-                    "localOrient": [
-                        -0.011465894989669323,
-                        -0.20488369464874268,
-                        0.009792514145374298,
-                        0.9786701798439026
-                    ],
-                    "localSize": [
-                        0.5,
-                        0.5,
-                        0.5
-                    ],
-                    "worldPos": [
-                        -930.0005493164063,
-                        566.8560791015625,
-                        -281.0001220703125
-                    ],
-                    "worldOrient": [
-                        -0.011465894989669323,
-                        -0.20488369464874268,
-                        0.009792514145374298,
-                        0.9786701798439026
-                    ],
-                    "worldSize": [
-                        0.5,
-                        0.5,
-                        0.5
-                    ]
-                }
-            },
-            {
-                "type": "Mesh",
-                "properties": {
-                    "meshName": "rabbit",
-                    "colorTint": [
-                        1.0,
-                        0.08235300332307816,
-                        0.32548999786376955,
-                        1.0
-                    ]
-                }
-            },
-            {
-                "type": "Player",
-                "properties": {
-                    "playerId": 1
-                }
-            },
-            {
-                "type": "CharacterController",
-                "properties": {}
-            }
-        ]
-    },
-    {
         "name": "SkyAurora",
-        "offsetToParent": -14,
+        "offsetToParent": -11,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -872,7 +687,7 @@
     },
     {
         "name": "Planet",
-        "offsetToParent": -15,
+        "offsetToParent": -12,
         "propertyEntries": [
             {
                 "type": "Node",
@@ -927,14 +742,14 @@
     },
     {
         "name": "TerrainTatooine",
-        "offsetToParent": -16,
+        "offsetToParent": -13,
         "propertyEntries": [
             {
                 "type": "Node",
                 "properties": {
                     "localPos": [
                         0.0,
-                        -3500.0,
+                        -2000.0,
                         0.0
                     ],
                     "localOrient": [
@@ -944,13 +759,13 @@
                         1.0
                     ],
                     "localSize": [
-                        1250.0,
-                        1250.0,
-                        1250.0
+                        500.0,
+                        500.0,
+                        500.0
                     ],
                     "worldPos": [
                         0.0,
-                        -3500.0,
+                        -2000.0,
                         0.0
                     ],
                     "worldOrient": [
@@ -960,9 +775,9 @@
                         1.0
                     ],
                     "worldSize": [
-                        1250.0,
-                        1250.0,
-                        1250.0
+                        500.0,
+                        500.0,
+                        500.0
                     ]
                 }
             },
@@ -970,6 +785,446 @@
                 "type": "Mesh",
                 "properties": {
                     "meshName": "terrain_tatooine",
+                    "colorTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TerrainTatooine1",
+        "offsetToParent": -1,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        3100.0,
+                        0.0,
+                        0.0
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "worldPos": [
+                        3100.0,
+                        -2000.0,
+                        0.0
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        500.0,
+                        500.0,
+                        500.0
+                    ]
+                }
+            },
+            {
+                "type": "Mesh",
+                "properties": {
+                    "meshName": "terrain_tatooine1",
+                    "colorTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TerrainTatooine2",
+        "offsetToParent": -2,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        -3100.0,
+                        0.0,
+                        0.0
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "worldPos": [
+                        -3100.0,
+                        -2000.0,
+                        0.0
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        500.0,
+                        500.0,
+                        500.0
+                    ]
+                }
+            },
+            {
+                "type": "Mesh",
+                "properties": {
+                    "meshName": "terrain_tatooine2",
+                    "colorTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TerrainTatooine3",
+        "offsetToParent": -3,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        0.0,
+                        0.0,
+                        3100.0
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "worldPos": [
+                        0.0,
+                        -2000.0,
+                        3100.0
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        500.0,
+                        500.0,
+                        500.0
+                    ]
+                }
+            },
+            {
+                "type": "Mesh",
+                "properties": {
+                    "meshName": "terrain_tatooine3",
+                    "colorTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TerrainTatooine4",
+        "offsetToParent": -4,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        0.0,
+                        0.0,
+                        -3100.0
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "worldPos": [
+                        0.0,
+                        -2000.0,
+                        -3100.0
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        500.0,
+                        500.0,
+                        500.0
+                    ]
+                }
+            },
+            {
+                "type": "Mesh",
+                "properties": {
+                    "meshName": "terrain_tatooine4",
+                    "colorTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TerrainTatooine5",
+        "offsetToParent": -5,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        3100.0,
+                        0.0,
+                        3100.0
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "worldPos": [
+                        3100.0,
+                        -2000.0,
+                        3100.0
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        500.0,
+                        500.0,
+                        500.0
+                    ]
+                }
+            },
+            {
+                "type": "Mesh",
+                "properties": {
+                    "meshName": "terrain_tatooine5",
+                    "colorTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TerrainTatooine6",
+        "offsetToParent": -6,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        -3100.0,
+                        0.0,
+                        -3100.0
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "worldPos": [
+                        -3100.0,
+                        -2000.0,
+                        -3100.0
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        500.0,
+                        500.0,
+                        500.0
+                    ]
+                }
+            },
+            {
+                "type": "Mesh",
+                "properties": {
+                    "meshName": "terrain_tatooine6",
+                    "colorTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TerrainTatooine7",
+        "offsetToParent": -7,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        3100.0,
+                        0.0,
+                        -3100.0
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "worldPos": [
+                        3100.0,
+                        -2000.0,
+                        -3100.0
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        500.0,
+                        500.0,
+                        500.0
+                    ]
+                }
+            },
+            {
+                "type": "Mesh",
+                "properties": {
+                    "meshName": "terrain_tatooine7",
+                    "colorTint": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "TerrainTatooine8",
+        "offsetToParent": -8,
+        "propertyEntries": [
+            {
+                "type": "Node",
+                "properties": {
+                    "localPos": [
+                        -3100.0,
+                        0.0,
+                        3100.0
+                    ],
+                    "localOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "localSize": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "worldPos": [
+                        -3100.0,
+                        -2000.0,
+                        3100.0
+                    ],
+                    "worldOrient": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "worldSize": [
+                        500.0,
+                        500.0,
+                        500.0
+                    ]
+                }
+            },
+            {
+                "type": "Mesh",
+                "properties": {
+                    "meshName": "terrain_tatooine8",
                     "colorTint": [
                         1.0,
                         1.0,

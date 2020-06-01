@@ -366,6 +366,22 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
       verticesNum = 12000000u;
     else if (*mesh.meshName == _N(terrain_tatooine))
       verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_tatooine1))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_tatooine2))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_tatooine3))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_tatooine4))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_tatooine5))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_tatooine6))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_tatooine7))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_tatooine8))
+      verticesNum = 12000000u;
 	else
       verticesNum = 1000000u;
 
