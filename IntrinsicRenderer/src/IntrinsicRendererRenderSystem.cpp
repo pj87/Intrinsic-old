@@ -384,15 +384,97 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		-30.0);
 
 #elif defined LAVA
-    
-    RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+	
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain_lava), 
 		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
-		false);
-	
+		false, 
+		32.0, 
+		32.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_lava1),
+		"terrain_lava_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		-30.0, 
+		32.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_lava2),
+		"terrain_lava_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		94.0, 
+		32.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_lava3),
+		"terrain_lava_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		32.0, 
+		-30.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_lava4),
+		"terrain_lava_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		32.0, 
+		94.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_lava5),
+		"terrain_lava_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		-30.0, 
+		-30.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_lava6),
+		"terrain_lava_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		94.0, 
+		94.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_lava7),
+		"terrain_lava_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		-30.0, 
+		94.0);
+
+	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
+        64, 64, 64, 
+		_N(terrain_lava8),
+		"terrain_lava_generated.comp", 
+		"normal_generation.comp",
+        "geometry_generation_new.comp", 
+		false, 
+		94.0, 
+		-30.0);
+
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         36, 36, 36,
         _N(explosion_ep), 

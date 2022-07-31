@@ -103,7 +103,8 @@ struct DynamicGeneratedMesh
 
   float params[3];
 
-  int counter = 0;
+  int renderCounter = 0;
+  int updateCounter = 0;
   unsigned indicesNumber = 0;
   bool isCalled = false;
   bool isDynamic;
@@ -136,7 +137,11 @@ struct DynamicGeometryGeneration
   static void postInit();
   static void destroy();
 
+  static void update(const Name& name, const float& p_DeltaT);
+  static void update(float p_DeltaT);
   static void render(float p_DeltaT, Components::CameraRef p_CameraRef);
+  static void moveEntities(const Name& name, const float& p_DeltaT, 
+						   const float& offset);
 };
 }
 }

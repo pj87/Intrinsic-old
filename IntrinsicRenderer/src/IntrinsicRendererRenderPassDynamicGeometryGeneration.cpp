@@ -348,7 +348,7 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
 {
   std::vector<uint32_t> indices;
 
-  if (mesh.counter == 1 && !mesh.isDynamic)
+  if (mesh.renderCounter == 1 && !mesh.isDynamic)
   {
     uint32_t* _positionCPUBufferRef =
         (uint32_t*)BufferManager::getGpuMemory(mesh._positionBufferRef);
@@ -363,6 +363,22 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
     else if (*mesh.meshName == _N(terrain_generated))
       verticesNum = 12000000u;
     else if (*mesh.meshName == _N(terrain_lava))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_lava1))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_lava2))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_lava3))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_lava4))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_lava5))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_lava6))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_lava7))
+      verticesNum = 12000000u;
+    else if (*mesh.meshName == _N(terrain_lava8))
       verticesNum = 12000000u;
     else if (*mesh.meshName == _N(terrain_tatooine))
       verticesNum = 12000000u;
@@ -1012,6 +1028,176 @@ _INTR_INLINE static void updateDataMemory(void* p_Data, BufferRef bufferRef,
   RenderSystem::flushTemporaryCommandBuffer();
 }
 */
+
+void DynamicGeometryGeneration::moveEntities(const Name& name, const float& p_DeltaT, const float& offset)
+{
+    static std::random_device rd;  // you only need to initialize it once
+    static std::mt19937 mte(rd()); // this is a relative big object to create
+
+    std::uniform_real_distribution<float> dist(-100.0f, 100.0f);
+    std::uniform_real_distribution<float> distCol(0.25f, 1.0f);
+    std::bernoulli_distribution d(0.5);
+
+    Entity::EntityRef entityRef =
+        Entity::EntityManager::getEntityByName(name);
+    NodeRef nodeRef = NodeManager::getComponentForEntity(entityRef);
+
+	Components::MeshRef meshCompRef =
+        Components::MeshManager::getComponentForEntity(entityRef);
+
+	glm::vec3 size = NodeManager::getSize(nodeRef);
+
+	if (!nodeRef.isValid())
+    {
+        return;
+    }
+
+    glm::vec3 position = NodeManager::getPosition(nodeRef);
+
+	float offsetX = 0.0;
+    float offsetZ = 0.0;
+    //float direction = 1.0;
+
+	for (auto& mesh : dynamicGenerationMeshes)
+    {
+        if (*(mesh->meshName) == name)
+        {
+            float& time = mesh->params[0];
+            if (time > 3.4 + offset)
+			{
+                time = offset;
+                offsetX = dist(mte);
+                offsetZ = dist(mte);
+
+				mesh->params[1] = 1.0;
+
+				if (!d(mte))
+					mesh->params[1] = -1.0;
+
+				Components::MeshManager::_descColorTint(meshCompRef) =
+                    glm::vec4(distCol(mte), distCol(mte), distCol(mte), 1.0);
+                /*
+                _INTR_LOG_WARNING("%f %f %f", 
+					Components::MeshManager::_descColorTint(meshCompRef).x, 
+					Components::MeshManager::_descColorTint(meshCompRef).y,
+					Components::MeshManager::_descColorTint(meshCompRef).z);
+				*/
+			}
+            else
+			{
+				time += p_DeltaT;
+			}
+
+			if (mesh->params[1] > 0.0)
+				position.y = (time - offset - 1.0) * size.x * 5.0;
+            else
+				position.y = -10.0 * size.x;
+			//_INTR_LOG_WARNING("%f %f %f", p_DeltaT, mesh->params[0], position.y);
+        }
+
+		BufferRef buffer = mesh->_noiseParametersRef;
+        updateDataMemory(mesh->params, buffer,
+                         BufferManager::_descSizeInBytes(buffer), 0);
+    }
+    /*
+	float posX = 0.0;
+    float posZ = 0.0;
+
+	if (Entity::EntityManager::_name(entityRef) == _N(explosion_ep))
+	{
+      posX = -228.0;
+      posZ = -471.0;
+	}
+	else if (Entity::EntityManager::_name(entityRef) == _N(explosion_hp))
+	{
+      posX = -329.0;
+      posZ = 185.0;
+	}
+	*/
+    position.x += offsetX;
+    position.z += offsetZ;
+
+	glm::vec3 rotation = glm::vec3(0.0, 0.1, 0.0);
+	glm::quat orientation = NodeManager::getOrientation(nodeRef);
+    NodeManager::setOrientation(nodeRef, glm::rotate(orientation, rotation));
+
+    NodeManager::setPosition(nodeRef, position);
+
+    NodeManager::updateTransforms(nodeRef);
+}
+
+void DynamicGeometryGeneration::update(const Name& name, const float& p_DeltaT)
+{
+  for (auto& mesh : dynamicGenerationMeshes)
+  {
+    if (*(mesh->meshName) != name)
+      continue;
+
+    mesh->params[0] += p_DeltaT * 1.0;
+
+    if (*(mesh->meshName) == _N(explosion_ep) && mesh->params[0] > 4.0)
+      mesh->params[0] = 0.0;
+    if (*(mesh->meshName) == _N(explosion_hp) && mesh->params[0] > 6.0)
+      mesh->params[0] = 2.0;
+
+    if (*(mesh->meshName) == _N(explosion_ep) && mesh->isDynamic/* &&
+              mesh->updateCounter % 10 == 0*/)
+    {
+      //_INTR_LOG_WARNING("%f", mesh->params[0]);
+    }
+
+    if (mesh->isDynamic && mesh->updateCounter % 1 == 0)
+    {
+      BufferRef buffer = mesh->_noiseParametersRef;
+      updateDataMemory(mesh->params, buffer,
+                       BufferManager::_descSizeInBytes(buffer), 0);
+    }
+    else
+    {
+      /*
+      if (mesh->isCalled && mesh->renderCounter > 2)
+      continue;
+      */
+    }
+
+    mesh->updateCounter++;
+  }
+}
+
+void DynamicGeometryGeneration::update(float p_DeltaT)
+{
+        for (auto& mesh : dynamicGenerationMeshes)
+        {
+         mesh->params[0] += p_DeltaT * 1.0;
+
+	    if (*(mesh->meshName) == _N(explosion_ep) && mesh->params[0] > 4.0)
+            mesh->params[0] = 0.0;
+        if (*(mesh->meshName) == _N(explosion_hp) && mesh->params[0] > 6.0)
+            mesh->params[0] = 2.0;
+
+		if (*(mesh->meshName) == _N(explosion_ep) && mesh->isDynamic/* &&
+              mesh->updateCounter % 10 == 0*/)
+        {
+			//_INTR_LOG_WARNING("%f", mesh->params[0]);
+        }
+
+		if (mesh->isDynamic && mesh->updateCounter % 1 == 0)
+        {
+            BufferRef buffer = mesh->_noiseParametersRef;
+            updateDataMemory(mesh->params, buffer, 
+				BufferManager::_descSizeInBytes(buffer), 0);
+        }
+        else
+        {
+            /*
+            if (mesh->isCalled && mesh->renderCounter > 2)
+            continue;
+			*/
+        }
+
+		mesh->updateCounter++;
+    }
+}
 void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 {
   _INTR_PROFILE_CPU("Render Pass", "Render Dynamic Geometry Generation");
@@ -1019,24 +1205,8 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
   for (auto& mesh : dynamicGenerationMeshes)
   {
-    mesh->params[0] += p_DeltaT;
-
-	if (*(mesh->meshName) == _N(explosion_ep) && mesh->params[0] > 4.0)
-      mesh->params[0] = 0.0;
-	if (*(mesh->meshName) == _N(explosion_hp) && mesh->params[0] > 6.0)
-      mesh->params[0] = 2.0;
-
-    if (mesh->isDynamic)
-	{
-	  BufferRef buffer = mesh->_noiseParametersRef;
-      updateDataMemory(mesh->params, buffer,
-                       BufferManager::_descSizeInBytes(buffer), 0);
-	}
-	else
-	{
-	  if (mesh->isCalled && mesh->counter > 2)
-		continue;
-	}
+    if (!mesh->isDynamic && mesh->isCalled && mesh->renderCounter > 2)
+        continue;
 
     VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
 
@@ -1094,7 +1264,7 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 	obfuscateMesh(*mesh);
 
 	mesh->isCalled = true;
-    mesh->counter++;
+    mesh->renderCounter++;
 
 	const Name& name = *(mesh->meshName);
 

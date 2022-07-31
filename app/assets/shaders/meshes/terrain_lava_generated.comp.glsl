@@ -64,53 +64,20 @@ float fbmM(vec2 p) {
   float f = 0.0;
   float w = 0.5;
 
-  for (int i = 0; i < 8; i++) {
+  for (int i = 0; i < 3; i++) {
     vec3 n = noise(p);
     df += n.yz;
     f += abs(w * n.x / (1.0 + dot(df, df)));
-    w *= 0.5;
+    w *= 0.4;
     p = 2. * terrainProps * p;
   }
   return f;
 }
-
-float fbmH(vec2 p) {
-  vec2 df = vec2(0.0);
-  float f = 0.0;
-  float w = 0.5;
-
-  for (int i = 0; i < 12; i++) {
-    vec3 n = noise(p);
-    df += n.yz;
-    f += abs(w * n.x / (1.0 + dot(df, df)));
-    w *= 0.5;
-    p = 2. * terrainProps * p;
-  }
-  return f;
-}
-
-
-float fbmL(vec2 p) {
-  vec2 df = vec2(0.0);
-  float f = 0.0;
-  float w = 0.5;
-
-  for (int i = 0; i < 2; i++) {
-    vec3 n = noise(p);
-    df += n.yz;
-    f += abs(w * n.x / (1.0 + dot(df, df)));
-    w *= 0.5;
-    p = 2. * terrainProps * p;
-  }
-  return f;
-}
-
-
 
 float map(vec3 p) {
     float scene = p.y;
     
-    float h = fbmM(p.xz);	
+    float h = fbmM(p.xz) * 1.25;
     scene -= h;
 
   	return scene;
@@ -152,7 +119,8 @@ void main()
 	//vec4 c = vec4(0.4);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(25.0f, 10.0f, 0.0f), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0f, 1.0f, 100.0f), c);
-	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(32.0f, 32.0, 32.0f), c);
+	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(_Lacunarity, 32.0, _Gain), c);
+	_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(_Lacunarity, 32.0, _Gain), c);
 	_NormalResult[id.x + id.y * _Width + id.z * _Width * _Height] = -getNormal(uv - vec3(32.0f, 32.0, 32.0f), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -mapScaled(uv - vec3(100.0f * sin(_Frequency)), c);
 	//_Result[id.x + id.y * _Width + id.z * _Width * _Height] = -sdTorus(uv - vec3(_Frequency), vec2(5.0, 2.0));
