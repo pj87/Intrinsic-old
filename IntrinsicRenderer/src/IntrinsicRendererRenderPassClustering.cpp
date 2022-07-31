@@ -917,6 +917,7 @@ void Clustering::init()
         DepthStencilStates::kDefaultNoDepthTestAndWrite;
   }
 
+  // PJ: Cos chyba jest nie tak z tworzeniem _pipelineDecalsRef
   {
     _pipelineDecalsRef = PipelineManager::createPipeline(_N(Decals));
     PipelineManager::resetToDefault(_pipelineDecalsRef);
@@ -1390,8 +1391,9 @@ void Clustering::onReinitRendering()
     DrawCallManager::addResourceFlags(
         _drawCallDecalsRef, Dod::Resources::ResourceFlags::kResourceVolatile);
 
-    DrawCallManager::_descPipeline(_drawCallDecalsRef) = _pipelineDecalsRef;
-    setupDecalsDrawCall(_drawCallDecalsRef);
+	//PJ: Hacked
+    DrawCallManager::_descPipeline(_drawCallDecalsRef) = _drawCallLightingRef;
+    //setupDecalsDrawCall(_drawCallDecalsRef);
   }
   drawcallsToCreate.push_back(_drawCallDecalsRef);
 
@@ -1489,8 +1491,8 @@ void Clustering::render(float p_DeltaT, Components::CameraRef p_CameraRef)
  
   {
     _INTR_PROFILE_GPU("Decals");
-    // PJ: Hack, to trzeba wylaczyc!!!!
-    //renderDecals(p_CameraRef);
+    // PJ: Hack (juz nie aktualny bo zostalo wylaczone cos wczesniej)
+    renderDecals(p_CameraRef);
   }
 
   {
