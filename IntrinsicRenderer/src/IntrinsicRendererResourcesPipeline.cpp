@@ -21,8 +21,18 @@ namespace Renderer
 {
 namespace Resources
 {
-void createGraphicsPipeline(PipelineRef p_PipelineRef)
+void createGraphicsPipeline(PipelineRef p_PipelineRef,
+                            const PipelineRefArray& p_Pipelines)
 {
+  if (p_PipelineRef.isValid())
+    _INTR_LOG_WARNING("p_PipelineRef: %d", p_PipelineRef._id);
+
+  if (p_PipelineRef._id == 1)
+  {
+    _INTR_LOG_WARNING("DUPA p_PipelineRef: %d", p_PipelineRef._id);
+	// PJ: Hack
+	p_PipelineRef = p_Pipelines[0];
+  }
   _INTR_ARRAY(uint8_t)& blendStates =
       PipelineManager::_descBlendStates(p_PipelineRef);
   VkPipeline& pipeline = PipelineManager::_vkPipeline(p_PipelineRef);
@@ -226,6 +236,10 @@ void PipelineManager::createResources(const PipelineRefArray& p_Pipelines)
 {
   for (uint32_t i = 0u; i < p_Pipelines.size(); ++i)
   {
+	//PJ: Wywala sie dla i == 1
+    //if (i == 1)
+    //  continue;
+
     RenderPassRef pipelineRef = p_Pipelines[i];
 
     if (_descComputeProgram(pipelineRef).isValid())
@@ -234,10 +248,10 @@ void PipelineManager::createResources(const PipelineRefArray& p_Pipelines)
     }
     else
     {
-      createGraphicsPipeline(pipelineRef);
+      createGraphicsPipeline(pipelineRef, p_Pipelines);
     }
   }
 }
-}
-}
-}
+} // namespace Resources
+} // namespace Renderer
+} // namespace Intrinsic

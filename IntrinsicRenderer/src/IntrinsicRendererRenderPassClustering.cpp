@@ -1486,11 +1486,11 @@ void Clustering::render(float p_DeltaT, Components::CameraRef p_CameraRef)
   }
 
   cullAndWriteBuffers(p_CameraRef);
-
+ 
   {
     _INTR_PROFILE_GPU("Decals");
-
-    renderDecals(p_CameraRef);
+    // PJ: Hack, to trzeba wylaczyc!!!!
+    //renderDecals(p_CameraRef);
   }
 
   {
