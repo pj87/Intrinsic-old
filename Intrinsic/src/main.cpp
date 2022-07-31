@@ -96,6 +96,7 @@ int _main(int argc, char* argv[])
 
   while (Application::_running)
   {
+    /*PJ: Wisi na którymœ tasku*/
     TaskManager::executeTasks();
   }
   R::RenderSystem::shutdown();

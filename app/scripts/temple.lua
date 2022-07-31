@@ -1,9 +1,7 @@
--- Explosion entire period
+-- Temple movement script
 
-iTime_ep_2 = 0.0
-initialized_ep_2 = 0
-spawnCounter_ep_2 = 0
-modulus_ep_2 = 3
+iTime_t = 0.0
+initialized_t = 0
 
 function tick(p_EntityRef, p_DeltaT)
   local nodeRef = nodeComponent.getComponentForEntity(p_EntityRef)
@@ -11,30 +9,20 @@ function tick(p_EntityRef, p_DeltaT)
   local rotation = Quat.new(Vec3.new(0.0, p_DeltaT * 0.5, 0.0))
   local orientation = nodeComponent.getOrientation(nodeRef);
   local size = nodeComponent.getSize(nodeRef)
-  nodeComponent.setOrientation(nodeRef, glm.rotate(rotation, orientation))
+  --nodeComponent.setOrientation(nodeRef, glm.rotate(rotation, orientation))
 
   local position = nodeComponent.getPosition(nodeRef)
   
-  if initialized_ep_2 == 0 then
+  if initialized_t == 0 then
 	posX = position.x
 	posZ = position.z
-	initialized_ep_2 = 1
+	initialized_t = 1
   end
   
-  iTime_ep_2 = iTime_ep_2 + p_DeltaT
+  iTime_t = iTime_t + p_DeltaT
  
-  if iTime_ep_2 > 3.3 then
-    iTime_ep_2 = 0.0
-	--position.x = posX + math.random(-500.0, 500.0)
-	--position.z = posZ + math.random(-500.0, 500.0)
-	spawnCounter_ep_2 = spawnCounter_ep_2 + 1
-	position.y = -10.0 * size.x
-  end
-  
-  if spawnCounter_ep_2 % modulus_ep_2 == 0 then
-    position.y = position.y + size.x * 0.1
-    nodeComponent.setPosition(nodeRef, position)
-  end
+  --position.y = position.y + size.x * 0.01
+  nodeComponent.setPosition(nodeRef, position)
 
   nodeComponent.updateTransforms(nodeRef)
 end

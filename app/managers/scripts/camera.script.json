@@ -1,0 +1,7 @@
+{
+    "name": "camera",
+    "properties": {
+        "name": "camera",
+        "scriptFileName": "camera.lua"
+    }
+}

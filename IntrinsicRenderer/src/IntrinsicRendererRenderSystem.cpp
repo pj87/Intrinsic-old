@@ -192,14 +192,14 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation.comp",
         "geometry_generation_new.comp", 
 		false);
-	
+    
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         36, 36, 36,
         _N(pbr_test_025), 
 		"julia.comp", 
 		"normal_generation_6.comp",
         "geometry_generation_new_6.comp");
-	
+	/*
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         36, 36, 36,
         _N(pbr_test_0125), 
@@ -207,7 +207,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation_6.comp",
         "geometry_generation_new_6.comp", 
 		false);
-    
+    */
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64, 
 		_N(terrain_generated), 
@@ -216,20 +216,14 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "geometry_generation_new.comp", 
 		false);
 
-	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        36, 36, 36, 
-		_N(terrain_generated_small), 
-		"terrain_generated2.comp", 
-		"normal_generation_6.comp",
-        "geometry_generation_new_6.comp", 
-		false);
-	
+    /*
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
 		36, 36, 36,
 		_N(water_sphere),
         "metaballs.comp", 
 		"normal_generation_6.comp",
         "geometry_generation_new_6.comp");
+    */
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
@@ -240,6 +234,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false, 
 		1.01, 
 		-5.0);
+	
     /*
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
@@ -385,8 +380,10 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 
 #elif defined LAVA
 	
+	constexpr int size = 64;
+
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
+        size, size, size, 
 		_N(terrain_lava), 
 		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
@@ -394,9 +391,9 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false, 
 		32.0, 
 		32.0);
-
+    /*
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
+        size, size, size, 
 		_N(terrain_lava1),
 		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
@@ -406,7 +403,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		32.0);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
+        size, size, size, 
 		_N(terrain_lava2),
 		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
@@ -416,7 +413,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		32.0);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
+        size, size, size, 
 		_N(terrain_lava3),
 		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
@@ -426,7 +423,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		-30.0);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
+        size, size, size, 
 		_N(terrain_lava4),
 		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
@@ -436,7 +433,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		94.0);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
+        size, size, size, 
 		_N(terrain_lava5),
 		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
@@ -446,7 +443,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		-30.0);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
+        size, size, size, 
 		_N(terrain_lava6),
 		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
@@ -456,7 +453,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		94.0);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
+        size, size, size, 
 		_N(terrain_lava7),
 		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
@@ -466,7 +463,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		94.0);
 
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
-        64, 64, 64, 
+        size, size, size, 
 		_N(terrain_lava8),
 		"terrain_lava_generated.comp", 
 		"normal_generation.comp",
@@ -474,7 +471,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		false, 
 		94.0, 
 		-30.0);
-
+    */
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         36, 36, 36,
         _N(explosion_ep), 
@@ -488,7 +485,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"explosion1.comp", 
 		"normal_generation_6.comp",
         "geometry_generation_new_6.comp");
-
+	
 #elif defined CITY
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
 		64, 64, 64,
@@ -639,21 +636,21 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         2048, 2048, 1, 
         _N(house_01_E_GEN), 
         "texture_tiling_generation.comp", 
-		false);
+		true);
     
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
 		_N(house_01_E_GEN), 
         _N(house_01_NRM_GEN), 
         "texture_NRM1_generation.comp", 
-		false);
+		true);
     
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
 		_N(house_01_E_GEN), 
         _N(house_01_PBR_GEN), 
         "texture_PBR1_generation.comp", 
-		false);
+		true);
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
@@ -666,6 +663,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(village_houses_GEN), 
         "texture_village_house_generation.comp", 
 		false);
+
 	/*
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
@@ -692,7 +690,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         2048, 2048, 1, 
         _N(roof_GEN), 
 		"texture_roof_generation.comp", 
-		true);
+		false);
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
@@ -779,16 +777,16 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		_N(terrain_grass_01_GEN),
 		_N(terrain_grass_01_PBR_GEN), 
         "texture_PBR1_generation.comp", 
-		false);
+		true);
 
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
 		_N(terrain_grass_stone_GEN),
         _N(terrain_grass_stone_PBR_GEN), 
         "texture_PBR1_generation.comp", 
-		false);
+		true);
 
-	PseudoInstancing::addPseudoInstancingMesh(_N(cube), 10, 10, 0.1f);
+	//PseudoInstancing::addPseudoInstancingMesh(_N(cube), 10, 10, 0.1f);
 
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_01_8), 6, 6, 0.5f);
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_02_10), 6, 6, 0.5f);

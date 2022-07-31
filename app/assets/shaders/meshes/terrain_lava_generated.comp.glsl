@@ -68,7 +68,7 @@ float fbmM(vec2 p) {
     vec3 n = noise(p);
     df += n.yz;
     f += abs(w * n.x / (1.0 + dot(df, df)));
-    w *= 0.4;
+    w *= 0.5;
     p = 2. * terrainProps * p;
   }
   return f;
@@ -77,7 +77,7 @@ float fbmM(vec2 p) {
 float map(vec3 p) {
     float scene = p.y;
     
-    float h = fbmM(p.xz) * 1.25;
+    float h = fbmM(p.xz) * 1.4;	
     scene -= h;
 
   	return scene;

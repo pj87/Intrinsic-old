@@ -49,7 +49,7 @@ struct PhysicsUpdateTaskSet : enki::ITaskSet
   };
 
 } _physicsUpdateTaskSet;
-}
+} // namespace
 
 // Static members
 float TaskManager::_lastDeltaT = 0.016f;
@@ -108,53 +108,57 @@ void TaskManager::executeTasks()
       GameStates::Manager::update(modDeltaT);
     }
 
-	// Dynamic Generated Meshes
-	{
-      //Renderer::RenderPass::DynamicGeometryGeneration::update(modDeltaT);
-	}
+    // Dynamic Generated Meshes
+    {
+        // Renderer::RenderPass::DynamicGeometryGeneration::update(modDeltaT);
+    }
 
-	/*
-	// Scripts
-	{
-          for (int i = 1; i < 3; i++)
-		  {
-              auto& mesh = Renderer::RenderPass::DynamicGeometryGeneration::
-                  dynamicGenerationMeshes[i];
-              auto time = mesh->params[0];
-
-              _INTR_PROFILE_CPU("Scripts", "Tick Scripts");
-
-			  int index = 1;
-              if (i == 2)
-                index = 0;
-
-              Resources::ScriptRef scriptRef =
-                  Components::ScriptManager::_activeRefs[index];
-              Resources::ScriptRef& scriptResRef =
-                  Components::ScriptManager::_script(scriptRef);
-
-			  if (i == 1)
-              _INTR_LOG_WARNING("%s %f", Renderer::RenderPass::DynamicGeometryGeneration::
-                                dynamicGenerationMeshes[i]->meshName->getString().c_str(), time);
-
-              if (scriptResRef.isValid())
+    /*
+    // Scripts
+    {
+      for (int i = 1; i < 3; i++)
               {
-                  Resources::ScriptManager::callTickScript(scriptResRef,
-                                                           scriptRef,
-                                                           time);
+          auto& mesh = Renderer::RenderPass::DynamicGeometryGeneration::
+              dynamicGenerationMeshes[i];
+          auto time = mesh->params[0];
+
+          _INTR_PROFILE_CPU("Scripts", "Tick Scripts");
+
+                      int index = 1;
+          if (i == 2)
+            index = 0;
+
+          Resources::ScriptRef scriptRef =
+              Components::ScriptManager::_activeRefs[index];
+          Resources::ScriptRef& scriptResRef =
+              Components::ScriptManager::_script(scriptRef);
+
+                      if (i == 1)
+          _INTR_LOG_WARNING("%s %f",
+    Renderer::RenderPass::DynamicGeometryGeneration::
+                            dynamicGenerationMeshes[i]->meshName->getString().c_str(),
+    time);
+
+          if (scriptResRef.isValid())
+          {
+              Resources::ScriptManager::callTickScript(scriptResRef,
+                                                       scriptRef,
+                                                       time);
+          }
               }
-		  }
 
-		  Renderer::RenderPass::DynamicGeometryGeneration::update(modDeltaT);
-	}
-	*/
+              Renderer::RenderPass::DynamicGeometryGeneration::update(modDeltaT);
+    }
+    */
 
-	// Move entities
-	{
+    // Move entities
+    {
+      /*
       Renderer::RenderPass::DynamicGeometryGeneration::moveEntities(
 		_N(explosion_ep), modDeltaT, 0.0);
 	  Renderer::RenderPass::DynamicGeometryGeneration::moveEntities(
         _N(explosion_hp), modDeltaT, 2.0);
+	  */
 	}
 
     // Scripts
@@ -208,6 +212,7 @@ void TaskManager::executeTasks()
     Application::_scheduler.AddTaskSetToPipe(&_physicsUpdateTaskSet);
 
     // Rendering
+	// PJ: Tutaj jest blad!!!!
     R::RenderProcess::Default::renderFrame(modDeltaT);
 
     Application::_scheduler.WaitforTaskSet(&_physicsUpdateTaskSet);

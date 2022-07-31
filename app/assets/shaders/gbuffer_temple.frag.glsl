@@ -114,6 +114,7 @@ void main()
 {
   //const mat3 TBN = mat3(inTangent, inBinormal, inNormal);
   const mat3 TBN = cotangent_frame(inNormal, inPosition, inUV0);
+  //const mat3 TBN = cotangent_frame(inNormal, inPosition, normalize(inPosition.xz));
   const vec2 uv0 = UV0_TRANSFORM_ANIMATED(inUV0);
 
   GBuffer gbuffer;
@@ -122,6 +123,7 @@ void main()
     //gbuffer.albedo = vec4(inColor, 1.0) + mix(tex3d(inPosition, inNormalTPM), tex3d_1(inPosition, inNormalTPM), 1.0) * uboPerInstance.colorTint;
 	//gbuffer.albedo = vec4(inColor, 1.0) + mix(texture(albedoTex, uv0), texture(emissiveTex, uv0), 1.0) * uboPerInstance.colorTint;
 	
+    //gbuffer.normal = normalize(tex3DNormal(inPosition, inNormalTPM, normalTex));
     gbuffer.normal = normalize(TBN * tex3DNormal(inPosition, inNormalTPM, normalTex));
 	const vec2 pbr = tex3D(inPosition, inNormalTPM, pbrTex).rg;
     gbuffer.metalMask = pbr.r + uboPerMaterial.pbrBias.r;

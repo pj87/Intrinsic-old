@@ -82,7 +82,7 @@ float mapScaled(vec3 p, vec4 c)
 	//return map2(p/25.0f, c) * 25.0f;
 	//return map3(p/0.0025f) * 0.0025f;
 	
-	return map(p/1.0f) * 1.0f;
+	return map(p/0.5f) * 0.5f;
 }
 
 layout(local_size_x = 6u, local_size_y = 6u, local_size_z = 6u) in;

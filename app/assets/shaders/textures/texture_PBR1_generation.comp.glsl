@@ -22,9 +22,11 @@ void main()
 {
     ivec3 id = ivec3(gl_GlobalInvocationID);
     
-    //vec3 normal = getNormal(id.xy);
 	float luminance = GetLuminance(id.xy);
-    vec4 fragColor = vec4(luminance, smoothstep(1.,0.,luminance*1.6), 0.0, 1.0);
+	
+	//vec4 fragColor = vec4(luminance, smoothstep(1.,0.,luminance*1.6), 0.0, 1.0);
+	//vec4 fragColor = vec4(step(luminance, 0.5), smoothstep(1.,0.,luminance*1.6), 0.0, 1.0);
+	vec4 fragColor = vec4(step(luminance, 0.5), luminance, 0.0, 1.0);
 	
 	// Maybe this version is better????
 	//vec4 fragColor = vec4(smoothstep(1.,0.,luminance*1.6), luminance, 0.0, 1.0);

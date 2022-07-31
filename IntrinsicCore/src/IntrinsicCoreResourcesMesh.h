@@ -98,6 +98,9 @@ struct MeshManager
   {
     MeshRef ref = Dod::Resources::ResourceManagerBase<
         MeshData, _INTR_MAX_MESH_COUNT>::_createResource(p_Name);
+
+	_INTR_LOG_WARNING("Mesh: %s, ref: %i", p_Name, ref);
+
     return ref;
   }
 

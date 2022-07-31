@@ -1,0 +1,7 @@
+{
+    "name": "temple",
+    "properties": {
+        "name": "temple",
+        "scriptFileName": "temple.lua"
+    }
+}

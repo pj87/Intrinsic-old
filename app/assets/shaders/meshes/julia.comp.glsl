@@ -286,7 +286,7 @@ float map3( in vec3 p)
 
 float mapScaled(vec3 p, vec4 c)
 {
-	return map2(p/20.0f, c) * 20.0f;
+	return map2(p/12.5f, c) * 12.5f;
 	//return map3(p/0.0025f) * 0.0025f;
 }
 

@@ -23,12 +23,12 @@ function tick(p_EntityRef, p_DeltaT)
   
   iTime_ep_1 = iTime_ep_1 + p_DeltaT
  
-  if iTime_ep_1 > 4.0 then
+  if iTime_ep_1 > 3.3 then
     iTime_ep_1 = 0.0
-	position.x = posX + math.random(-500.0, 500.0)
-	position.z = posZ + math.random(-500.0, 500.0)
+	--position.x = posX + math.random(-500.0, 500.0)
+	--position.z = posZ + math.random(-500.0, 500.0)
 	spawnCounter_ep_1 = spawnCounter_ep_1 + 1
-	position.y = -5.0 * size.x
+	position.y = -10.0 * size.x
   end
   
   if spawnCounter_ep_1 % modulus_ep_1 == 0 then
