@@ -1484,6 +1484,7 @@ void RenderSystem::initVkDevice()
 
   // Check if debug marker extension is supported
   bool debugMarkerExtPresent = false;
+  bool debugReportExtPresent = false;
   {
     uint32_t extensionCount;
     vkEnumerateDeviceExtensionProperties(_vkPhysicalDevice, nullptr,
@@ -1498,18 +1499,25 @@ void RenderSystem::initVkDevice()
     for (auto& ext : extensions)
     {
       if (strcmp(ext.extensionName, VK_EXT_DEBUG_MARKER_EXTENSION_NAME) == 0u)
-      {
-        _INTR_LOG_INFO("Enabling debug markers...");
         debugMarkerExtPresent = true;
-      }
+      if (strcmp(ext.extensionName, VK_EXT_DEBUG_REPORT_EXTENSION_NAME) == 0u)
+        debugReportExtPresent = true;
     }
+
+    if (debugMarkerExtPresent && debugReportExtPresent)
+      _INTR_LOG_INFO("Enabling debug markers...");
+    else
+      debugMarkerExtPresent = false;
   }
 
   _INTR_ARRAY(const char*) enabledExtensions;
   {
     enabledExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
     if (debugMarkerExtPresent)
+    {
+      enabledExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
       enabledExtensions.push_back(VK_EXT_DEBUG_MARKER_EXTENSION_NAME);
+    }
   }
 
   _INTR_ARRAY(const char*) enabledLayers;

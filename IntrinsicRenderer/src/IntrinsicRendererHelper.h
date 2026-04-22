@@ -526,6 +526,11 @@ _INTR_INLINE static void insertImageMemoryBarrier(
     imageMemoryBarrier.pNext = nullptr;
     updateAccessMask(imageMemoryBarrier.srcAccessMask, p_OldImageLayout);
     updateAccessMask(imageMemoryBarrier.dstAccessMask, p_NewImageLayout);
+    // TOP_OF_PIPE does not support any access flags — must be 0
+    if (p_SrcStages == VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
+      imageMemoryBarrier.srcAccessMask = 0;
+    if (p_DestStages == VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
+      imageMemoryBarrier.dstAccessMask = 0;
     imageMemoryBarrier.oldLayout = p_OldImageLayout;
     imageMemoryBarrier.newLayout = p_NewImageLayout;
     imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
