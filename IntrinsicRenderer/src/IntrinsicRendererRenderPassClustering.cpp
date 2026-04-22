@@ -1490,7 +1490,6 @@ void Clustering::render(float p_DeltaT, Components::CameraRef p_CameraRef)
  
   {
     _INTR_PROFILE_GPU("Decals");
-    // PJ: Hack (juz nie aktualny bo zostalo wylaczone cos wczesniej)
     renderDecals(p_CameraRef);
   }
 
