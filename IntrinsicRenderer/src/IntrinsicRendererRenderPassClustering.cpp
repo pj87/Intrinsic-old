@@ -917,7 +917,6 @@ void Clustering::init()
         DepthStencilStates::kDefaultNoDepthTestAndWrite;
   }
 
-  // PJ: Cos chyba jest nie tak z tworzeniem _pipelineDecalsRef
   {
     _pipelineDecalsRef = PipelineManager::createPipeline(_N(Decals));
     PipelineManager::resetToDefault(_pipelineDecalsRef);
@@ -937,6 +936,7 @@ void Clustering::init()
         .push_back(BlendStates::kDefault);
   }
   pipelinesToCreate.push_back(_pipelineLightingRef);
+  pipelinesToCreate.push_back(_pipelineDecalsRef);
 
   PipelineLayoutManager::createResources(pipelineLayoutsToCreate);
   RenderPassManager::createResources(renderpassesToCreate);
@@ -1391,9 +1391,8 @@ void Clustering::onReinitRendering()
     DrawCallManager::addResourceFlags(
         _drawCallDecalsRef, Dod::Resources::ResourceFlags::kResourceVolatile);
 
-	//PJ: Hacked
-    DrawCallManager::_descPipeline(_drawCallDecalsRef) = _drawCallLightingRef;
-    //setupDecalsDrawCall(_drawCallDecalsRef);
+    DrawCallManager::_descPipeline(_drawCallDecalsRef) = _pipelineDecalsRef;
+    setupDecalsDrawCall(_drawCallDecalsRef);
   }
   drawcallsToCreate.push_back(_drawCallDecalsRef);
 
