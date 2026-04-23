@@ -602,7 +602,9 @@ void createTextureFromFileCubemap(ImageRef p_Ref, gli::texture& p_Texture)
 
   Helper::insertImageMemoryBarrier(copyCmd, vkImage, VK_IMAGE_LAYOUT_UNDEFINED,
                                    VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                                   subresourceRange);
+                                   subresourceRange,
+                                   VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                   VK_PIPELINE_STAGE_TRANSFER_BIT);
 
   vkCmdCopyBufferToImage(copyCmd, stagingBuffer, vkImage,
                          VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
@@ -611,7 +613,8 @@ void createTextureFromFileCubemap(ImageRef p_Ref, gli::texture& p_Texture)
 
   Helper::insertImageMemoryBarrier(
       copyCmd, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subresourceRange);
+      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subresourceRange,
+      VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
 
   RenderSystem::flushTemporaryCommandBuffer();
 
@@ -775,7 +778,9 @@ void createTextureFromFile2D(ImageRef p_Ref, gli::texture& p_Texture)
 
   Helper::insertImageMemoryBarrier(copyCmd, vkImage, VK_IMAGE_LAYOUT_UNDEFINED,
                                    VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                                   subresourceRange);
+                                   subresourceRange,
+                                   VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                   VK_PIPELINE_STAGE_TRANSFER_BIT);
 
   vkCmdCopyBufferToImage(copyCmd, stagingBuffer, vkImage,
                          VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
@@ -784,7 +789,8 @@ void createTextureFromFile2D(ImageRef p_Ref, gli::texture& p_Texture)
 
   Helper::insertImageMemoryBarrier(
       copyCmd, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subresourceRange);
+      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, subresourceRange,
+      VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
 
   RenderSystem::flushTemporaryCommandBuffer();
 
