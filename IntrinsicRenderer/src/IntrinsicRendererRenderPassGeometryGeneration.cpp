@@ -336,7 +336,8 @@ void GeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   }
 
   BufferManager::insertBufferMemoryBarrier(
-      _voxelBufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
+      _voxelBufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT,
+      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 }
 } // namespace RenderPass
 } // namespace Renderer

@@ -606,19 +606,29 @@ void MarchingCubes::render(float p_DeltaT, CameraRef p_CameraRef)
   }
 
   BufferManager::insertBufferMemoryBarrier(
-      _positionBufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
+      _positionBufferRef, VK_ACCESS_SHADER_WRITE_BIT,
+      VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
   BufferManager::insertBufferMemoryBarrier(
-      _normalBufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
+      _normalBufferRef, VK_ACCESS_SHADER_WRITE_BIT,
+      VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
   BufferManager::insertBufferMemoryBarrier(
-      _binormalBufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
+      _binormalBufferRef, VK_ACCESS_SHADER_WRITE_BIT,
+      VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
   BufferManager::insertBufferMemoryBarrier(
-      _tangentBufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
+      _tangentBufferRef, VK_ACCESS_SHADER_WRITE_BIT,
+      VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
   BufferManager::insertBufferMemoryBarrier(
-      _uv0BufferRef, VK_ACCESS_SHADER_WRITE_BIT, VK_ACCESS_SHADER_READ_BIT);
+      _uv0BufferRef, VK_ACCESS_SHADER_WRITE_BIT,
+      VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 }
 } // namespace RenderPass
 } // namespace Renderer

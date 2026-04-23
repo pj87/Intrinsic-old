@@ -1228,11 +1228,15 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
     BufferManager::insertBufferMemoryBarrier(mesh->_voxelBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
+                                             VK_ACCESS_SHADER_READ_BIT,
+                                             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 
 	BufferManager::insertBufferMemoryBarrier(mesh->_voxelNormalBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
+                                             VK_ACCESS_SHADER_READ_BIT,
+                                             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 
     ImageManager::insertImageMemoryBarrier(mesh->_normalsImageRef,
         VK_IMAGE_LAYOUT_GENERAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
@@ -1245,27 +1249,39 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
     BufferManager::insertBufferMemoryBarrier(mesh->_positionBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
+                                             VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+                                             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                             VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
     BufferManager::insertBufferMemoryBarrier(mesh->_normalBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
+                                             VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+                                             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                             VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
     BufferManager::insertBufferMemoryBarrier(mesh->_binormalBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
+                                             VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+                                             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                             VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
     BufferManager::insertBufferMemoryBarrier(mesh->_tangentBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
+                                             VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+                                             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                             VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
     BufferManager::insertBufferMemoryBarrier(mesh->_uv0BufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
-                                             VK_ACCESS_SHADER_READ_BIT);
+                                             VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+                                             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                             VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
-    BufferManager::insertBufferMemoryBarrier(mesh->_colorBufferRef, 
-											 VK_ACCESS_SHADER_WRITE_BIT, 
-											 VK_ACCESS_SHADER_READ_BIT);
+    BufferManager::insertBufferMemoryBarrier(mesh->_colorBufferRef,
+                                             VK_ACCESS_SHADER_WRITE_BIT,
+                                             VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT,
+                                             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                             VK_PIPELINE_STAGE_VERTEX_INPUT_BIT);
 
 	obfuscateMesh(*mesh);
 
