@@ -173,7 +173,8 @@ mapBufferTypeToVkUsageFlagBits(BufferType::Enum p_BufferType)
   switch (p_BufferType)
   {
   case BufferType::kVertex:
-    return VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    return (VkBufferUsageFlagBits)(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
+                                   VK_BUFFER_USAGE_STORAGE_BUFFER_BIT);
   case BufferType::kIndex32:
   case BufferType::kIndex16:
     return VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
