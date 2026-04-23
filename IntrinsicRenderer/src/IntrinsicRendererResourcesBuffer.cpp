@@ -80,10 +80,13 @@ void BufferManager::updateResources(const BufferRef& bufferRef,
     }
 
     VkResult result;
-    result = vkBindBufferMemory(RenderSystem::_vkDevice, buffer,
-                                memoryAllocationInfo._vkDeviceMemory,
-                                memoryAllocationInfo._offset);
-    _INTR_VK_CHECK_RESULT(result);
+    if (needsAlloc)
+    {
+      result = vkBindBufferMemory(RenderSystem::_vkDevice, buffer,
+                                  memoryAllocationInfo._vkDeviceMemory,
+                                  memoryAllocationInfo._offset);
+      _INTR_VK_CHECK_RESULT(result);
+    }
 
     // void* initialData = _descInitialData(bufferRef);
     if (initialData)
