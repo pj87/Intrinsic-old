@@ -276,7 +276,9 @@ _INTR_INLINE void generateExponentialShadowMaps(uint32_t p_ShadowMapCount)
         sizeof(PerInstanceDataESMGenerate));
 
     ImageManager::insertImageMemoryBarrierSubResource(
-        _shadowBufferExp, VK_IMAGE_LAYOUT_UNDEFINED,
+        _shadowBufferExp,
+        _volLightingRendered ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+                             : VK_IMAGE_LAYOUT_UNDEFINED,
         VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 0u, shadowMapIndex);
 
     RenderSystem::beginRenderPass(_renderPassRef,
@@ -312,7 +314,9 @@ _INTR_INLINE void blurExponentialShadowMaps(uint32_t p_ShadowMapCount)
         sizeof(PerInstanceDataESMBlur));
 
     ImageManager::insertImageMemoryBarrierSubResource(
-        _shadowBufferExpPingPong, VK_IMAGE_LAYOUT_UNDEFINED,
+        _shadowBufferExpPingPong,
+        _volLightingRendered ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+                             : VK_IMAGE_LAYOUT_UNDEFINED,
         VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 0u, shadowMapIndex);
 
     RenderSystem::beginRenderPass(_renderPassRef,

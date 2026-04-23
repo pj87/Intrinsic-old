@@ -57,6 +57,8 @@ DrawCallRef _drawCallLightingRef;
 DrawCallRef _drawCallLightingTransparentsRef;
 DrawCallRef _drawCallDecalsRef;
 
+bool _clusteringRendered = false;
+
 BufferRef _lightBuffer;
 BufferRef _lightIndexBuffer;
 BufferRef _irradProbeBuffer;
@@ -769,7 +771,9 @@ _INTR_INLINE void renderLighting(FramebufferRef p_FramebufferRef,
   VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
 
   ImageManager::insertImageMemoryBarrier(
-      p_LightingBufferRef, VK_IMAGE_LAYOUT_UNDEFINED,
+      p_LightingBufferRef,
+      _clusteringRendered ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+                          : VK_IMAGE_LAYOUT_UNDEFINED,
       VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 
   RenderSystem::beginRenderPass(_renderPassLightingRef, p_FramebufferRef,
@@ -1397,6 +1401,7 @@ void Clustering::onReinitRendering()
   drawcallsToCreate.push_back(_drawCallDecalsRef);
 
   DrawCallManager::createResources(drawcallsToCreate);
+  _clusteringRendered = false;
 }
 
 // <-
@@ -1507,6 +1512,8 @@ void Clustering::render(float p_DeltaT, Components::CameraRef p_CameraRef)
                    _drawCallLightingTransparentsRef,
                    _lightingBufferTransparentsImageRef, p_CameraRef);
   }
+
+  _clusteringRendered = true;
 }
 }
 }

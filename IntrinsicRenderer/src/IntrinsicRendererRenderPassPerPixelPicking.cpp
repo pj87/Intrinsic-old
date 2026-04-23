@@ -31,6 +31,7 @@ Resources::BufferRefArray _pickingReadBackBufferRefs;
 Resources::FramebufferRef _framebufferRef;
 
 Resources::RenderPassRef _renderPassRef;
+bool _pickingRendered = false;
 }
 
 // Static members
@@ -168,6 +169,7 @@ void PerPixelPicking::onReinitRendering()
   BufferManager::createResources(buffersToCreate);
   ImageManager::createResources(imgsToCreate);
   FramebufferManager::createResources(fbsToCreate);
+  _pickingRendered = false;
 }
 
 // <-
@@ -204,10 +206,14 @@ void PerPixelPicking::render(float p_DeltaT, Components::CameraRef p_CameraRef)
   }
 
   ImageManager::insertImageMemoryBarrier(
-      _pickingImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
+      _pickingImageRef,
+      _pickingRendered ? VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
+                       : VK_IMAGE_LAYOUT_UNDEFINED,
       VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
   ImageManager::insertImageMemoryBarrier(
-      _pickingDepthImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
+      _pickingDepthImageRef,
+      _pickingRendered ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+                       : VK_IMAGE_LAYOUT_UNDEFINED,
       VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
   VkClearValue clearValues[2] = {};
@@ -255,6 +261,7 @@ void PerPixelPicking::render(float p_DeltaT, Components::CameraRef p_CameraRef)
                          VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                          BufferManager::_vkBuffer(readBackBufferToUse), 1u,
                          &bufferImageCopy);
+  _pickingRendered = true;
 }
 
 // <-
