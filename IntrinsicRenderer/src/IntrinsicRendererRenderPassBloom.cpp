@@ -67,6 +67,7 @@ ComputeCallRefArray _addComputeCallRefs;
 BufferRef _lumBuffer;
 
 bool _initAvgLum = true;
+bool _bloomRendered = false;
 
 _INTR_INLINE glm::uvec2 calcBloomBaseDim()
 {
@@ -93,7 +94,7 @@ _INTR_INLINE void dispatchLum(VkCommandBuffer p_CommandBuffer)
   ImageManager::insertImageMemoryBarrier(
       _brightImageRef, VK_IMAGE_LAYOUT_GENERAL,
       VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 }
 
 // <-
@@ -704,6 +705,7 @@ void Bloom::onReinitRendering()
   }
 
   ComputeCallManager::createResources(computeCallsToCreate);
+  _bloomRendered = false;
 }
 
 // <-
@@ -719,24 +721,38 @@ void Bloom::render(float p_DeltaT, Components::CameraRef p_CameraRef)
 
   VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
 
-  ImageManager::insertImageMemoryBarrier(
-      _brightImageRef, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL,
-      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-  ImageManager::insertImageMemoryBarrier(
-      _lumImageRef, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL,
-      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-  ImageManager::insertImageMemoryBarrier(
-      _summedImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-  ImageManager::insertImageMemoryBarrier(
-      _blurImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-  ImageManager::insertImageMemoryBarrier(
-      _blurPingPongImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+  if (!_bloomRendered)
+  {
+    ImageManager::insertImageMemoryBarrier(
+        _brightImageRef, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+    ImageManager::insertImageMemoryBarrier(
+        _lumImageRef, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+    ImageManager::insertImageMemoryBarrier(
+        _summedImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+    ImageManager::insertImageMemoryBarrier(
+        _blurImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+    ImageManager::insertImageMemoryBarrier(
+        _blurPingPongImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+  }
+  else
+  {
+    ImageManager::insertImageMemoryBarrier(
+        _brightImageRef, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_IMAGE_LAYOUT_GENERAL,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+    ImageManager::insertImageMemoryBarrier(
+        _lumImageRef, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_IMAGE_LAYOUT_GENERAL,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+  }
 
   dispatchLum(primaryCmdBuffer);
   dispatchAvgLum(primaryCmdBuffer);
@@ -755,7 +771,10 @@ void Bloom::render(float p_DeltaT, Components::CameraRef p_CameraRef)
   ImageManager::insertImageMemoryBarrier(
       _lumImageRef, VK_IMAGE_LAYOUT_GENERAL,
       VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+      VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+
+  _bloomRendered = true;
 }
 }
 }
