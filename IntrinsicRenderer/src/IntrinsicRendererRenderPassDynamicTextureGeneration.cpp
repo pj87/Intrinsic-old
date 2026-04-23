@@ -236,6 +236,17 @@ void DynamicTextureGeneration::init()
 
   ImageManager::createResources(imgsToCreate);
   BufferManager::createResources(buffersToCreate);
+
+  // Transition generated textures from UNDEFINED to GENERAL for first compute dispatch
+  VkCommandBuffer initCmd = RenderSystem::beginTemporaryCommandBuffer();
+  for (auto& texture : dynamicGenerationTextures)
+  {
+    ImageManager::insertImageMemoryBarrier(
+        initCmd, texture->_textureImageRef,
+        VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT);
+  }
+  RenderSystem::flushTemporaryCommandBuffer();
 }
 
 // <-
@@ -248,29 +259,11 @@ void DynamicTextureGeneration::destroy() {}
 
 // <-
 
-_INTR_INLINE static void updateDataMemory(void* p_Data, BufferRef bufferRef, 
-										  uint32_t p_Size, uint32_t p_Offset)
+_INTR_INLINE static void updateDataMemory(void* p_Data, BufferRef bufferRef,
+                                          uint32_t p_Size, uint32_t p_Offset)
 {
-  // Update staging memory
-  {
-    memcpy(BufferManager::getGpuMemory(bufferRef), p_Data, p_Size);
-  }
-
-  // ... and copy to device
-  VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
-
-  VkBufferCopy bufferCopy = {};
-  {
-    bufferCopy.dstOffset = p_Offset;
-    bufferCopy.srcOffset = 0u;
-    bufferCopy.size = p_Size;
-  }
-
-  vkCmdCopyBuffer(copyCmd, BufferManager::_vkBuffer(bufferRef),
-                  BufferManager::_vkBuffer(bufferRef), 1u,
-                  &bufferCopy);
-
-  RenderSystem::flushTemporaryCommandBuffer();
+  memcpy((uint8_t*)BufferManager::getGpuMemory(bufferRef) + p_Offset, p_Data,
+         p_Size);
 }
 
 void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
@@ -297,16 +290,21 @@ void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
     VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
 
+    if (texture->isCalled)
+    {
+      ImageManager::insertImageMemoryBarrier(texture->_textureImageRef,
+          VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_GENERAL);
+    }
+
     {
       RenderSystem::dispatchComputeCall(texture->_computeCallTextureRef,
                                         primaryCmdBuffer);
     }
 
-    ImageManager::insertImageMemoryBarrier(texture->_textureImageRef, 
-										   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-										   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+    ImageManager::insertImageMemoryBarrier(texture->_textureImageRef,
+        VK_IMAGE_LAYOUT_GENERAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
-	texture->isCalled = true;
+    texture->isCalled = true;
     texture->counter++;
   }
 }

@@ -323,25 +323,8 @@ int triangleConnectionTable[4096] = {
 _INTR_INLINE static void updateDataMemory(void* p_Data, BufferRef bufferRef,
                                           uint32_t p_Size, uint32_t p_Offset)
 {
-  // Update staging memory
-  {
-    memcpy(BufferManager::getGpuMemory(bufferRef), p_Data, p_Size);
-  }
-
-  // ... and copy to device
-  VkCommandBuffer copyCmd = RenderSystem::beginTemporaryCommandBuffer();
-
-  VkBufferCopy bufferCopy = {};
-  {
-    bufferCopy.dstOffset = p_Offset;
-    bufferCopy.srcOffset = 0u;
-    bufferCopy.size = p_Size;
-  }
-
-  vkCmdCopyBuffer(copyCmd, BufferManager::_vkBuffer(bufferRef),
-                  BufferManager::_vkBuffer(bufferRef), 1u, &bufferCopy);
-
-  RenderSystem::flushTemporaryCommandBuffer();
+  memcpy((uint8_t*)BufferManager::getGpuMemory(bufferRef) + p_Offset, p_Data,
+         p_Size);
 }
 
 _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
@@ -991,6 +974,16 @@ void DynamicGeometryGeneration::init()
   
   BufferManager::createResources(buffersToCreate);
   ImageManager::createResources(imgsToCreate);
+
+  VkCommandBuffer initCmd = RenderSystem::beginTemporaryCommandBuffer();
+  for (auto& mesh : dynamicGenerationMeshes)
+  {
+    ImageManager::insertImageMemoryBarrier(
+        initCmd, mesh->_normalsImageRef,
+        VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT);
+  }
+  RenderSystem::flushTemporaryCommandBuffer();
 }
 
 // <-
@@ -1210,14 +1203,23 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
     VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
 
+    if (mesh->isCalled)
+    {
+      ImageManager::insertImageMemoryBarrier(mesh->_normalsImageRef,
+          VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_GENERAL,
+          VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+    }
+
     {
       RenderSystem::dispatchComputeCall(mesh->_computeCallNormalRef,
                                         primaryCmdBuffer);
     }
 
-    ImageManager::insertImageMemoryBarrier(mesh->_normalsImageRef, 
-										   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-										   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+    ImageManager::insertImageMemoryBarrier(mesh->_normalsImageRef,
+                                           VK_IMAGE_LAYOUT_GENERAL,
+                                           VK_IMAGE_LAYOUT_GENERAL,
+                                           VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                           VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 
     {
       RenderSystem::dispatchComputeCall(mesh->_computeCallSDFGenerationRef,
@@ -1231,6 +1233,10 @@ void DynamicGeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 	BufferManager::insertBufferMemoryBarrier(mesh->_voxelNormalBufferRef,
                                              VK_ACCESS_SHADER_WRITE_BIT,
                                              VK_ACCESS_SHADER_READ_BIT);
+
+    ImageManager::insertImageMemoryBarrier(mesh->_normalsImageRef,
+        VK_IMAGE_LAYOUT_GENERAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 
     {
       RenderSystem::dispatchComputeCall(mesh->_computeCallMarchingCubesRef,

@@ -294,6 +294,13 @@ void GeometryGeneration::init()
   }
 
   ImageManager::createResources(imgsToCreate);
+
+  VkCommandBuffer initCmd = RenderSystem::beginTemporaryCommandBuffer();
+  ImageManager::insertImageMemoryBarrier(
+      initCmd, _normalsImageRef,
+      VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL,
+      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT);
+  RenderSystem::flushTemporaryCommandBuffer();
 }
 
 // <-
@@ -318,8 +325,10 @@ void GeometryGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   }
 
   ImageManager::insertImageMemoryBarrier(_normalsImageRef,
-                                         VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                                         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+                                         VK_IMAGE_LAYOUT_GENERAL,
+                                         VK_IMAGE_LAYOUT_GENERAL,
+                                         VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                                         VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 
   {
     RenderSystem::dispatchComputeCall(_computeCallPerlinRef,
