@@ -613,6 +613,37 @@ void VolumetricLighting::init()
   }
   ImageManager::createResources(imgsToCreate);
 
+  // Initialize all images to SHADER_READ_ONLY_OPTIMAL so first-frame descriptors
+  // that reference the whole image array find a consistent layout in all layers.
+  {
+    VkCommandBuffer initCmd = RenderSystem::beginTemporaryCommandBuffer();
+
+    for (uint32_t i = 0u; i < _INTR_MAX_SHADOW_MAP_COUNT; ++i)
+    {
+      ImageManager::insertImageMemoryBarrierSubResource(
+          initCmd, _shadowBufferExp,
+          VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+          0u, i);
+      ImageManager::insertImageMemoryBarrierSubResource(
+          initCmd, _shadowBufferExpPingPong,
+          VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+          0u, i);
+    }
+
+    ImageManager::insertImageMemoryBarrier(
+        initCmd, _volLightingBufferImageRef,
+        VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    ImageManager::insertImageMemoryBarrier(
+        initCmd, _volLightingBufferPrevFrameImageRef,
+        VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    ImageManager::insertImageMemoryBarrier(
+        initCmd, _volLightingScatteringBufferImageRef,
+        VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+    RenderSystem::flushTemporaryCommandBuffer();
+    _volLightingRendered = true;
+  }
+
   // Draw calls
   {
     _drawCallEsmGenerateRef = DrawCallManager::createDrawCall(_N(ESMGenerate));

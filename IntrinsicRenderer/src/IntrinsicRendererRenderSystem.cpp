@@ -15,7 +15,7 @@
 // Precompiled header file
 #include "stdafx.h"
 
-#define TEMPLE
+//#define TEMPLE
 //#define TATOOINE
 //#define LAVA
 //#define CITY
@@ -972,10 +972,10 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	*/
 #endif
 
-	RenderPass::DynamicGeometryGeneration::init();
-    RenderPass::DynamicTextureGeneration::init();
-	RenderPass::GeometryGeneration::init();
-    RenderPass::MarchingCubes::init();
+	//RenderPass::DynamicGeometryGeneration::init();
+    //RenderPass::DynamicTextureGeneration::init();
+	//RenderPass::GeometryGeneration::init();
+    //RenderPass::MarchingCubes::init();
 
     RenderPass::Bloom::init();
 

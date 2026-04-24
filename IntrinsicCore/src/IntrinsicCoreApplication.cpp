@@ -91,8 +91,8 @@ void Application::init(void* p_PlatformHandle, void* p_PlatformWindow)
 
   // Initialize GeometryGeneration render pass after everything have been
   // already initialized
-  Renderer::RenderPass::DynamicGeometryGeneration::postInit();
-  Renderer::RenderPass::DynamicTextureGeneration::postInit();
+  //Renderer::RenderPass::DynamicGeometryGeneration::postInit();
+  //Renderer::RenderPass::DynamicTextureGeneration::postInit();
   //Renderer::RenderPass::GeometryGeneration::postInit();
   //Renderer::RenderPass::MarchingCubes::postInit();
 
