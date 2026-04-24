@@ -618,17 +618,12 @@ void VolumetricLighting::init()
   {
     VkCommandBuffer initCmd = RenderSystem::beginTemporaryCommandBuffer();
 
-    for (uint32_t i = 0u; i < _INTR_MAX_SHADOW_MAP_COUNT; ++i)
-    {
-      ImageManager::insertImageMemoryBarrierSubResource(
-          initCmd, _shadowBufferExp,
-          VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-          0u, i);
-      ImageManager::insertImageMemoryBarrierSubResource(
-          initCmd, _shadowBufferExpPingPong,
-          VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-          0u, i);
-    }
+    ImageManager::insertImageMemoryBarrier(
+        initCmd, _shadowBufferExp,
+        VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    ImageManager::insertImageMemoryBarrier(
+        initCmd, _shadowBufferExpPingPong,
+        VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     ImageManager::insertImageMemoryBarrier(
         initCmd, _volLightingBufferImageRef,
@@ -795,7 +790,26 @@ void VolumetricLighting::init()
 
 void VolumetricLighting::onReinitRendering()
 {
-  _volLightingRendered = false;
+  VkCommandBuffer initCmd = RenderSystem::beginTemporaryCommandBuffer();
+
+  ImageManager::insertImageMemoryBarrier(
+      initCmd, _shadowBufferExp,
+      VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+  ImageManager::insertImageMemoryBarrier(
+      initCmd, _shadowBufferExpPingPong,
+      VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+  ImageManager::insertImageMemoryBarrier(
+      initCmd, _volLightingBufferImageRef,
+      VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+  ImageManager::insertImageMemoryBarrier(
+      initCmd, _volLightingBufferPrevFrameImageRef,
+      VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+  ImageManager::insertImageMemoryBarrier(
+      initCmd, _volLightingScatteringBufferImageRef,
+      VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+  RenderSystem::flushTemporaryCommandBuffer();
+  _volLightingRendered = true;
 }
 
 // <-
