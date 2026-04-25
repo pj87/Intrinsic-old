@@ -251,7 +251,21 @@ void DynamicTextureGeneration::init()
 
 // <-
 
-void DynamicTextureGeneration::onReinitRendering() {}
+void DynamicTextureGeneration::onReinitRendering()
+{
+  VkCommandBuffer initCmd = RenderSystem::beginTemporaryCommandBuffer();
+  for (auto& texture : dynamicGenerationTextures)
+  {
+    ImageManager::insertImageMemoryBarrier(
+        initCmd, texture->_textureImageRef,
+        VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
+    texture->isCalled = true;
+    texture->counter = 0;
+  }
+  RenderSystem::flushTemporaryCommandBuffer();
+}
 
 // <-
 
@@ -290,10 +304,17 @@ void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
 
     VkCommandBuffer primaryCmdBuffer = RenderSystem::getPrimaryCommandBuffer();
 
-    if (texture->isCalled)
+    ImageManager::insertImageMemoryBarrier(texture->_textureImageRef,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_GENERAL,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+
+    if (texture->hasSourceTex)
     {
-      ImageManager::insertImageMemoryBarrier(texture->_textureImageRef,
-          VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_GENERAL);
+      ImageManager::insertImageMemoryBarrier(texture->_textureSourceRef,
+          VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_GENERAL,
+          VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+          VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
     }
 
     {
@@ -302,7 +323,17 @@ void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
     }
 
     ImageManager::insertImageMemoryBarrier(texture->_textureImageRef,
-        VK_IMAGE_LAYOUT_GENERAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        VK_IMAGE_LAYOUT_GENERAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+
+    if (texture->hasSourceTex)
+    {
+      ImageManager::insertImageMemoryBarrier(texture->_textureSourceRef,
+          VK_IMAGE_LAYOUT_GENERAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+          VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+          VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+    }
 
     texture->isCalled = true;
     texture->counter++;

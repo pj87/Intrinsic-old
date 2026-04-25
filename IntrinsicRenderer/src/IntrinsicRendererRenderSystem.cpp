@@ -15,7 +15,7 @@
 // Precompiled header file
 #include "stdafx.h"
 
-//#define TEMPLE
+#define TEMPLE
 //#define TATOOINE
 //#define LAVA
 //#define CITY
@@ -631,27 +631,26 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		*/
 
 #if defined TEMPLE
-
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(house_01_E_GEN), 
         "texture_tiling_generation.comp", 
 		true);
-    
+        
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
 		_N(house_01_E_GEN), 
         _N(house_01_NRM_GEN), 
         "texture_NRM1_generation.comp", 
 		true);
-    
+    /*
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
 		_N(house_01_E_GEN), 
         _N(house_01_PBR_GEN), 
         "texture_PBR1_generation.comp", 
 		true);
-
+    */
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_grass_01_GEN), 
@@ -663,7 +662,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(village_houses_GEN), 
         "texture_village_house_generation.comp", 
 		false);
-
+    
 	/*
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
@@ -671,7 +670,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "texture_tiling_generation.comp", 
 		true);
 	*/
-
+        /*
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(village_houses_GEN), 
@@ -685,13 +684,14 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		_N(village_houses_PBR_GEN), 
         "texture_PBR1_generation.comp", 
 		false);
-
+        */
+    
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(roof_GEN), 
 		"texture_roof_generation.comp", 
 		false);
-
+    /*
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(roof_GEN), 
@@ -705,7 +705,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		_N(roof_PBR_GEN), 
         "texture_PBR1_generation.comp", 
 		false);
-
+    */
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_grass_stone_GEN), 
@@ -717,7 +717,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(wood_GEN), 
         "texture_wood1_generation.comp", 
 		false);
-     
+        /*
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
 		_N(wood_GEN), 
@@ -731,7 +731,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(wood_PBR_GEN), 
         "texture_PBR1_generation.comp", 
 		false);
-    /*
+    
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(concrete_GEN), 
@@ -752,12 +752,13 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         "texture_PBR1_generation.comp", 
 		false);
 	*/
+
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
         _N(terrain_BLEND_GEN), 
         "texture_blend_generation.comp", 
 		false);
-	
+        /*	
 	RenderPass::DynamicTextureGeneration::addDynamicGeneradtedTexture(
         2048, 2048, 1, 
 		_N(terrain_grass_01_GEN),
@@ -785,7 +786,7 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
         _N(terrain_grass_stone_PBR_GEN), 
         "texture_PBR1_generation.comp", 
 		true);
-
+    */
 	//PseudoInstancing::addPseudoInstancingMesh(_N(cube), 10, 10, 0.1f);
 
     PseudoInstancing::addPseudoInstancingMesh(_N(Tree_Tall_01_8), 6, 6, 0.5f);
@@ -972,10 +973,10 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 	*/
 #endif
 
-	//RenderPass::DynamicGeometryGeneration::init();
-    //RenderPass::DynamicTextureGeneration::init();
-	//RenderPass::GeometryGeneration::init();
-    //RenderPass::MarchingCubes::init();
+	RenderPass::DynamicGeometryGeneration::init();
+    RenderPass::DynamicTextureGeneration::init();
+	RenderPass::GeometryGeneration::init();
+    RenderPass::MarchingCubes::init();
 
     RenderPass::Bloom::init();
 
