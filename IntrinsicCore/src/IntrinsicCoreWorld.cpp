@@ -459,7 +459,7 @@ Components::NodeRef World::loadNodeHierarchy(const _INTR_STRING& p_FilePath)
     }
   }
 
-  int sizeNodes = loadedNodes.size();
+  int32_t sizeNodes = (int32_t)loadedNodes.size();
   /*
   for (int i = 0; i < 100; i++)
   {
@@ -473,7 +473,7 @@ Components::NodeRef World::loadNodeHierarchy(const _INTR_STRING& p_FilePath)
     {
       const Components::NodeRef nodeRef = loadedNodes[i];
 
-      rapidjson::Value& node = saveDesc[i <= (sizeNodes - 1) ? i : foundNode];
+      rapidjson::Value& node = saveDesc[i < (uint32_t)sizeNodes ? i : foundNode];
 
       const int32_t offsetToParent = node["offsetToParent"].GetInt();
 

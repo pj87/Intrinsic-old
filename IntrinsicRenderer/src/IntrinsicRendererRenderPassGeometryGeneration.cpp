@@ -46,7 +46,7 @@ ComputeCallRef _computeCallNormalRef;
 const int N = 64;
 
 int sizes[] = {N, N};
-float noiseParams[] = {0.02, 2.0, 0.5};
+float noiseParams[] = {0.02f, 2.0f, 0.5f};
 
 _INTR_INLINE ComputeCallRef createComputeCallPerlin(glm::vec3 p_Dim)
 {

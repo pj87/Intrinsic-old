@@ -216,7 +216,7 @@ void MeshManager::createGeneratedResources(const MeshRefArray& p_Meshes)
             Intrinsic::Renderer::MemoryPoolType::kStaticStagingBuffers;
         // PJ: Added--
         BufferManager::_nameToInitlialBufferMap[name] =
-            BufferManager::_dynamicBuffers.size();
+            (uint32_t)BufferManager::_dynamicBuffers.size();
         BufferManager::_descSizeInBytes(posVertexBuffer) =
             vertices * sizeof(uint32_t);
         BufferManager::_dynamicBuffers.push_back(posVertexBuffer);
@@ -457,7 +457,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             BufferManager::_descSizeInBytes(posVertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
-		uint32_t len = positions[subMeshIdx].size();
+		uint32_t len = (uint32_t)positions[subMeshIdx].size();
 
 		instancedMesh->vertexNum = len;
         instancedMesh->tempVexrtexBuffer = tempBuffer;
@@ -502,7 +502,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             BufferManager::_descSizeInBytes(uv0VertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
-		uint32_t len = uv0s[subMeshIdx].size();
+		uint32_t len = (uint32_t)uv0s[subMeshIdx].size();
 
         for (uint32_t i = 0u; i < uv0s[subMeshIdx].size(); ++i)
         {
@@ -538,7 +538,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             BufferManager::_descSizeInBytes(normalVertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
-		uint32_t len = normals[subMeshIdx].size();
+		uint32_t len = (uint32_t)normals[subMeshIdx].size();
 
         for (uint32_t i = 0u; i < normals[subMeshIdx].size(); ++i)
         {
@@ -579,7 +579,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             BufferManager::_descSizeInBytes(tangentVertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
-		uint32_t len = tangents[subMeshIdx].size();
+		uint32_t len = (uint32_t)tangents[subMeshIdx].size();
 
         for (uint32_t i = 0u; i < tangents[subMeshIdx].size(); ++i)
         {
@@ -620,7 +620,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             BufferManager::_descSizeInBytes(binormalVertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
-		uint32_t len = binormals[subMeshIdx].size();
+		uint32_t len = (uint32_t)binormals[subMeshIdx].size();
 
         for (uint32_t i = 0u; i < binormals[subMeshIdx].size(); ++i)
         {
@@ -661,7 +661,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
             BufferManager::_descSizeInBytes(vtxColorVertexBuffer));
         tempBuffersToRelease.push_back(tempBuffer);
 
-		uint32_t len = vtxColors[subMeshIdx].size();
+		uint32_t len = (uint32_t)vtxColors[subMeshIdx].size();
 
         for (uint32_t i = 0u; i < vtxColors[subMeshIdx].size(); ++i)
         {
@@ -693,11 +693,11 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
                   indexBufferSizeInBytes);
           tempBuffersToRelease.push_back(tempIndexBuffer);
 
-          uint32_t len = positions[subMeshIdx].size();
+          uint32_t len = (uint32_t)positions[subMeshIdx].size();
 
           for (uint32_t i = 0u; i < indices[subMeshIdx].size(); ++i)
           {
-            for (int j = 0; j < sizeX * sizeZ; ++j)
+            for (uint32_t j = 0u; j < (uint32_t)(sizeX * sizeZ); ++j)
             {
               if (a[j] == 0)
               {
@@ -723,11 +723,11 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
                   indexBufferSizeInBytes);
           tempBuffersToRelease.push_back(tempIndexBuffer);
 
-          uint32_t len = positions[subMeshIdx].size();
+          uint32_t len = (uint32_t)positions[subMeshIdx].size();
 
           for (uint32_t i = 0u; i < indices[subMeshIdx].size(); ++i)
           {
-            for (int j = 0; j < sizeX * sizeZ; ++j)
+            for (uint32_t j = 0u; j < (uint32_t)(sizeX * sizeZ); ++j)
             {
               if (a[j] == 0)
               {

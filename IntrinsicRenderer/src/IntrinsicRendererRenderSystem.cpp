@@ -224,21 +224,21 @@ void RenderSystem::init(void* p_PlatformHandle, void* p_PlatformWindow)
 		"normal_generation_6.comp",
         "geometry_generation_new_6.comp");
     */
-    
+
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
-        _N(village_houses), 
-		"houses.comp", 
+        _N(village_houses),
+		"houses.comp",
 		"normal_generation.comp",
-        "geometry_generation_new.comp", 
-		false, 
-		1.01, 
-		-5.0);
-	
+        "geometry_generation_new.comp",
+		false,
+		1.01f,
+		-5.0f);
+
     /*
 	RenderPass::DynamicGeometryGeneration::addDynamicGeneradtedMesh(
         64, 64, 64,
-        _N(village_houses_1), 
+        _N(village_houses_1),
 		"houses.comp", 
 		"normal_generation.comp",
         "geometry_generation_new.comp", 

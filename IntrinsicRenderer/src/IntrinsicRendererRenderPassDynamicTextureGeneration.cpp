@@ -29,7 +29,7 @@ namespace RenderPass
 {
 namespace
 {
- float noiseParams[] = {0.02, 2.0, 0.5};
+ float noiseParams[] = {0.02f, 2.0f, 0.5f};
 
 _INTR_INLINE ComputeCallRef createComputeCallTexture(
     std::unique_ptr<DynamicGeneratedTexture>& texture, glm::vec3 p_Dim)
@@ -285,7 +285,7 @@ void DynamicTextureGeneration::render(float p_DeltaT, CameraRef p_CameraRef)
   _INTR_PROFILE_CPU("Render Pass", "Render Dynamic Geometry Generation");
   _INTR_PROFILE_GPU("Dynamic Geometry Generation");
 
-  noiseParams[0] += p_DeltaT * 0.1;
+  noiseParams[0] += p_DeltaT * 0.1f;
 
   for (auto& texture : dynamicGenerationTextures)
   {
