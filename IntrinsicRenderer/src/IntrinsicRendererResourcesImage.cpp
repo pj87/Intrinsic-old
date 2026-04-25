@@ -371,12 +371,6 @@ void createTexture(ImageRef p_Ref)
   VkResult result = vkCreateImage(RenderSystem::_vkDevice, &imageCreateInfo,
                                   nullptr, &vkImage);
   _INTR_VK_CHECK_RESULT(result);
-  _INTR_LOG_INFO("DBG createTexture '%s' -> VkImage 0x%llx",
-                 ImageManager::_name(p_Ref).getString().c_str(),
-                 (unsigned long long)(uint64_t)vkImage);
-  if (ImageManager::_name(p_Ref) == _N(Scene))
-    _INTR_LOG_INFO("Dupa");
-
   VkMemoryRequirements memReqs;
   vkGetImageMemoryRequirements(RenderSystem::_vkDevice, vkImage, &memReqs);
 

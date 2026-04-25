@@ -288,8 +288,6 @@ void Default::loadRendererConfig()
 
       ImageRef imageRef = ImageManager::createImage(image["name"].GetString());
       {
-        _INTR_LOG_INFO("DEBUG: %s", image["name"].GetString());
-
         ImageManager::resetToDefault(imageRef);
         ImageManager::addResourceFlags(
             imageRef, Dod::Resources::ResourceFlags::kResourceVolatile);

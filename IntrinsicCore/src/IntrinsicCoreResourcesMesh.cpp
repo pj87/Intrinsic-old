@@ -367,7 +367,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
   _INTR_ARRAY(void*) tempBuffersToRelease;
 
   // iteruj po wszystkich meshach (tak jak jest teraz)
-  // jeœli mesh jest na liœcie (czyli jest zapisana jego nazwa)
+  // jeï¿½li mesh jest na liï¿½cie (czyli jest zapisana jego nazwa)
   // pobierz odpowiednie wartosci rozmiarow dla danego mesha
 
   float posX = 0.0f;
@@ -378,6 +378,7 @@ void MeshManager::createInstancedResources(const MeshRefArray& p_Meshes)
     MeshRef meshRef = p_Meshes[meshIdx];
 
     const Name& name = _name(meshRef);
+
     if (!_IS_INSTANCED_MESH(name))
       continue;
 
