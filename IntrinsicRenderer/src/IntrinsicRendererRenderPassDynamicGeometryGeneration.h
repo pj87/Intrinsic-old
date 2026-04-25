@@ -124,7 +124,7 @@ struct DynamicGeometryGeneration
 									   float firstParam = 0.0, float secondParam = 0.0);
 
   static float getVoxel(DynamicGeneratedMesh& mesh, int x, int y, int z);
-  static glm::vec3& getNormal(DynamicGeneratedMesh& mesh, int x, int y, int z);
+  static glm::vec3 getNormal(DynamicGeneratedMesh& mesh, int x, int y, int z);
   static void aquireVoxelsAndNormals(DynamicGeneratedMesh& mesh);
 
   static bool isOverridenMesh(const Name&);

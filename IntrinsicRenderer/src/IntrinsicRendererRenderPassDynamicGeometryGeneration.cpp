@@ -384,7 +384,7 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
 	else
       verticesNum = 1000000u;
 
-    for (int i = 0; i < verticesNum; i += 3, index += 2)
+    for (uint32_t i = 0u; i < verticesNum; i += 3, index += 2)
     {
       glm::vec2 v1 = glm::unpackHalf2x16(_positionCPUBufferRef[i]);
       glm::vec2 v2 = glm::unpackHalf2x16(_positionCPUBufferRef[i + 1]);
@@ -404,8 +404,8 @@ _INTR_INLINE void obfuscateMesh(DynamicGeneratedMesh& mesh)
     const uint32_t i = BufferManager::_nameToInitlialBufferMap[name];
     BufferRef indicesBuffer = BufferManager::_dynamicBuffers[i + 6];
     updateDataMemory(indices.data(), indicesBuffer,
-                     indices.size() * sizeof(uint32_t), 0);
-	mesh.indicesNumber = indices.size();
+                     (uint32_t)(indices.size() * sizeof(uint32_t)), 0);
+	mesh.indicesNumber = (uint32_t)indices.size();
 
 	_INTR_LOG_WARNING("%s: %d", name.getString().c_str(),
                           mesh.indicesNumber);
@@ -1082,9 +1082,9 @@ void DynamicGeometryGeneration::moveEntities(const Name& name, const float& p_De
 			}
 
 			if (mesh->params[1] > 0.0)
-				position.y = (time - offset - 1.0) * size.x * 5.0;
+				position.y = (time - offset - 1.0f) * size.x * 5.0f;
             else
-				position.y = -10.0 * size.x;
+				position.y = -10.0f * size.x;
 			//_INTR_LOG_WARNING("%f %f %f", p_DeltaT, mesh->params[0], position.y);
         }
 
@@ -1126,7 +1126,7 @@ void DynamicGeometryGeneration::update(const Name& name, const float& p_DeltaT)
     if (*(mesh->meshName) != name)
       continue;
 
-    mesh->params[0] += p_DeltaT * 1.0;
+    mesh->params[0] += p_DeltaT * 1.0f;
 
     if (*(mesh->meshName) == _N(explosion_ep) && mesh->params[0] > 4.0)
       mesh->params[0] = 0.0;
@@ -1161,7 +1161,7 @@ void DynamicGeometryGeneration::update(float p_DeltaT)
 {
         for (auto& mesh : dynamicGenerationMeshes)
         {
-         mesh->params[0] += p_DeltaT * 1.0;
+         mesh->params[0] += p_DeltaT * 1.0f;
 
 	    if (*(mesh->meshName) == _N(explosion_ep) && mesh->params[0] > 4.0)
             mesh->params[0] = 0.0;
@@ -1359,7 +1359,7 @@ float DynamicGeometryGeneration::getVoxel(DynamicGeneratedMesh& mesh, int x,
   return *(_voxelBufferGpuMemory + index);
 }
 
-glm::vec3& DynamicGeometryGeneration::getNormal(
+glm::vec3 DynamicGeometryGeneration::getNormal(
     DynamicGeneratedMesh& mesh, int x, int y, int z)
 { /*
     https://stackoverflow.com/questions/3613429/algorithm-to-convert-a-multi-dimensional-array-to-a-one-dimensional-array

@@ -75,6 +75,8 @@ PseudoInstancing::getMeshSizes(const Name& meshName)
     if (meshName == name)
       return i;
   }
+  _INTR_ASSERT(false && "getMeshSizes: mesh not found");
+  return meshes.front();
 }
 
 void transformPosition(uint16_t* srcBuffer, uint16_t* dstBuffer, unsigned int i,
@@ -240,7 +242,7 @@ void PseudoInstancing::generateInstances()
       static std::mt19937 mte(rd()); // this is a relative big object to create
 
       std::uniform_real_distribution<float> height(0.8f, 1.2f);
-      std::uniform_real_distribution<float> rot(0.0f, 2 * 3.1415);
+      std::uniform_real_distribution<float> rot(0.0f, 2.0f * 3.1415f);
 
 	  for (int x = 0; x < sizeX; x++)
 		for (int z = 0; z < sizeZ; z++)
