@@ -87,7 +87,6 @@ ComputeCallRef _computeCallAccumPrevFrameRef;
 ComputeCallRef _computeCallScatteringRef;
 ComputeCallRef _computeCallScatteringPrevFrameRef;
 
-bool _volLightingRendered = false;
 
 _INTR_INLINE void
 updatePerInstanceData(CameraRef p_CameraRef,
@@ -277,8 +276,7 @@ _INTR_INLINE void generateExponentialShadowMaps(uint32_t p_ShadowMapCount)
 
     ImageManager::insertImageMemoryBarrierSubResource(
         _shadowBufferExp,
-        _volLightingRendered ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-                             : VK_IMAGE_LAYOUT_UNDEFINED,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
         VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 0u, shadowMapIndex);
 
     RenderSystem::beginRenderPass(_renderPassRef,
@@ -315,8 +313,7 @@ _INTR_INLINE void blurExponentialShadowMaps(uint32_t p_ShadowMapCount)
 
     ImageManager::insertImageMemoryBarrierSubResource(
         _shadowBufferExpPingPong,
-        _volLightingRendered ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-                             : VK_IMAGE_LAYOUT_UNDEFINED,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
         VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, 0u, shadowMapIndex);
 
     RenderSystem::beginRenderPass(_renderPassRef,
@@ -636,7 +633,6 @@ void VolumetricLighting::init()
         VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     RenderSystem::flushTemporaryCommandBuffer();
-    _volLightingRendered = true;
   }
 
   // Draw calls
@@ -809,7 +805,6 @@ void VolumetricLighting::onReinitRendering()
       VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
   RenderSystem::flushTemporaryCommandBuffer();
-  _volLightingRendered = true;
 }
 
 // <-
@@ -831,46 +826,26 @@ void VolumetricLighting::render(float p_DeltaT, CameraRef p_CameraRef)
   blurExponentialShadowMaps(shadowMapCount);
 
   ComputeCallRef accumComputeCallRefToUse = _computeCallAccumRef;
-  const VkImageLayout prevWrittenLayout =
-      _volLightingRendered ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-                           : VK_IMAGE_LAYOUT_UNDEFINED;
-  const VkPipelineStageFlags prevWrittenStage =
-      _volLightingRendered ? VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT
-                           : VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 
   if ((TaskManager::_frameCounter % 2u) != 0u)
   {
     accumComputeCallRefToUse = _computeCallAccumPrevFrameRef;
 
     ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferPrevFrameImageRef, prevWrittenLayout,
-        VK_IMAGE_LAYOUT_GENERAL, prevWrittenStage,
+        _volLightingBufferPrevFrameImageRef,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_IMAGE_LAYOUT_GENERAL,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
         VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-
-    if (!_volLightingRendered)
-    {
-      ImageManager::insertImageMemoryBarrier(
-          _volLightingBufferImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-          VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-          VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-          VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-    }
   }
   else
   {
     ImageManager::insertImageMemoryBarrier(
-        _volLightingBufferImageRef, prevWrittenLayout,
-        VK_IMAGE_LAYOUT_GENERAL, prevWrittenStage,
+        _volLightingBufferImageRef,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_IMAGE_LAYOUT_GENERAL,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
         VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-
-    if (!_volLightingRendered)
-    {
-      ImageManager::insertImageMemoryBarrier(
-          _volLightingBufferPrevFrameImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-          VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-          VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-          VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-    }
   }
 
   {
@@ -907,11 +882,9 @@ void VolumetricLighting::render(float p_DeltaT, CameraRef p_CameraRef)
 
   ImageManager::insertImageMemoryBarrier(
       _volLightingScatteringBufferImageRef,
-      _volLightingRendered ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-                           : VK_IMAGE_LAYOUT_UNDEFINED,
+      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
       VK_IMAGE_LAYOUT_GENERAL,
-      _volLightingRendered ? VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT
-                           : VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+      VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
       VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 
   {
@@ -924,7 +897,6 @@ void VolumetricLighting::render(float p_DeltaT, CameraRef p_CameraRef)
       VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
       VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
 
-  _volLightingRendered = true;
 }
 }
 }

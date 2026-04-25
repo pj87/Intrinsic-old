@@ -31,7 +31,6 @@ Resources::BufferRefArray _pickingReadBackBufferRefs;
 Resources::FramebufferRef _framebufferRef;
 
 Resources::RenderPassRef _renderPassRef;
-bool _pickingRendered = false;
 }
 
 // Static members
@@ -169,7 +168,6 @@ void PerPixelPicking::onReinitRendering()
   BufferManager::createResources(buffersToCreate);
   ImageManager::createResources(imgsToCreate);
   FramebufferManager::createResources(fbsToCreate);
-  _pickingRendered = false;
 }
 
 // <-
@@ -207,20 +205,15 @@ void PerPixelPicking::render(float p_DeltaT, Components::CameraRef p_CameraRef)
 
   ImageManager::insertImageMemoryBarrier(
       _pickingImageRef,
-      _pickingRendered ? VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL
-                       : VK_IMAGE_LAYOUT_UNDEFINED,
+      VK_IMAGE_LAYOUT_UNDEFINED,
       VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-      _pickingRendered ? VK_PIPELINE_STAGE_TRANSFER_BIT
-                       : VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
       VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
-  if (!_pickingRendered)
-  {
-    ImageManager::insertImageMemoryBarrier(
-        _pickingDepthImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
-        VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-        VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-        VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT);
-  }
+  ImageManager::insertImageMemoryBarrier(
+      _pickingDepthImageRef, VK_IMAGE_LAYOUT_UNDEFINED,
+      VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+      VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT);
 
   VkClearValue clearValues[2] = {};
   {
@@ -269,7 +262,6 @@ void PerPixelPicking::render(float p_DeltaT, Components::CameraRef p_CameraRef)
                          VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                          BufferManager::_vkBuffer(readBackBufferToUse), 1u,
                          &bufferImageCopy);
-  _pickingRendered = true;
 }
 
 // <-

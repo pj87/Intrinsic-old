@@ -29,7 +29,6 @@ namespace
 ImageRef _shadowBufferImageRef;
 _INTR_ARRAY(FramebufferRef) _framebufferRefs;
 RenderPassRef _renderPassRef;
-bool _shadowRendered = false;
 
 // <-
 
@@ -222,7 +221,6 @@ void Shadow::init()
 
 void Shadow::onReinitRendering()
 {
-  _shadowRendered = false;
 }
 
 // <-
@@ -275,8 +273,7 @@ void Shadow::render(float p_DeltaT, Components::CameraRef p_CameraRef)
 
     ImageManager::insertImageMemoryBarrierSubResource(
         _shadowBufferImageRef,
-        _shadowRendered ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-                        : VK_IMAGE_LAYOUT_UNDEFINED,
+        VK_IMAGE_LAYOUT_UNDEFINED,
         VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 0u, shadowMapIdx);
 
     const uint32_t frustumIdx = shadowMapIdx + 1u;
@@ -325,7 +322,6 @@ void Shadow::render(float p_DeltaT, Components::CameraRef p_CameraRef)
         _shadowBufferImageRef, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
         VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 0u, shadowMapIdx);
   }
-  _shadowRendered = true;
 }
 }
 }
