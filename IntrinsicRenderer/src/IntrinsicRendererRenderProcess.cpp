@@ -61,8 +61,6 @@ _renderStepTypeMapping = {
     {"RenderPassClustering", RenderStepType::kRenderPassClustering},
     {"RenderPassVolumetricLighting",
      RenderStepType::kRenderPassVolumetricLighting},
-    
-    /* PJ: */
     {"RenderPassDynamicGeometryGeneration",
      RenderStepType::kRenderPassDynamicGeometryGeneration},
     {"RenderPassDynamicTextureGeneration",
@@ -71,8 +69,6 @@ _renderStepTypeMapping = {
      RenderStepType::kRenderPassGeometryGeneration},
     {"RenderPassMarchingCubes",
      RenderStepType::kRenderPassMarchingCubes},
-    /* PJ: */
-
     {"RenderPassBloom", RenderStepType::kRenderPassBloom}};
 
 struct RenderPassInterface
@@ -96,8 +92,6 @@ _renderStepFunctionMapping = {
     {RenderStepType::kRenderPassVolumetricLighting,
      {RenderPass::VolumetricLighting::render,
       RenderPass::VolumetricLighting::onReinitRendering}},
-
-    /* PJ: */
     {RenderStepType::kRenderPassDynamicGeometryGeneration,
      {RenderPass::DynamicGeometryGeneration::render,
       RenderPass::DynamicGeometryGeneration::onReinitRendering}},
@@ -110,8 +104,6 @@ _renderStepFunctionMapping = {
     {RenderStepType::kRenderPassMarchingCubes,
      {RenderPass::MarchingCubes::render,
       RenderPass::MarchingCubes::onReinitRendering}},
-    /* PJ: */
-
     {RenderStepType::kRenderPassBloom,
      {RenderPass::Bloom::render, RenderPass::Bloom::onReinitRendering}}};
 
