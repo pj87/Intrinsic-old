@@ -14,12 +14,20 @@ builds and runs. See `README.md` / `GETTING_STARTED.md` for initial setup.
 5. [Material System](#5-material-system)
 6. [Shader System](#6-shader-system)
 7. [Render Passes](#7-render-passes)
-8. [Asset Pipeline](#8-asset-pipeline)
-9. [Lua Scripting](#9-lua-scripting)
-10. [Procedural Systems](#10-procedural-systems)
-11. [Physics](#11-physics)
-12. [Debugging & Profiling](#12-debugging--profiling)
-13. [Common Recipes](#13-common-recipes)
+   - 7.1 [Frame execution flow](#71-frame-execution-flow)
+   - 7.2 [Resource creation patterns](#72-resource-creation-patterns)
+   - 7.3 [The two dispatch patterns](#73-the-two-dispatch-patterns)
+   - 7.4 [Adding a render pass: complete walkthrough](#74-adding-a-render-pass-complete-walkthrough)
+   - 7.5 [Image memory barriers — rules](#75-image-memory-barriers--rules)
+   - 7.6 [Accessing a render target from another pass](#76-accessing-a-render-target-from-another-pass)
+8. [Example: Forward Transparent Pass](#8-example-forward-transparent-pass)
+9. [Example: Ray Tracing Pass](#9-example-ray-tracing-pass)
+10. [Asset Pipeline](#10-asset-pipeline)
+11. [Lua Scripting](#11-lua-scripting)
+12. [Procedural Systems](#12-procedural-systems)
+13. [Physics](#13-physics)
+14. [Debugging & Profiling](#14-debugging--profiling)
+15. [Common Recipes](#15-common-recipes)
 
 ---
 
@@ -532,110 +540,1232 @@ for development.
 
 ## 7. Render Passes
 
-### The render pipeline
+### 7.1 Frame execution flow
 
-The frame is orchestrated by `RenderProcess`, which executes passes in order.
-The active pass list and their configuration live in `renderer_config.json`.
-
-Default pass order (approximately):
+`RenderProcess::Default::renderFrame()` runs every frame:
 
 ```
-GeometryGeneration     → fills G-Buffer (depth, albedo, normal, PBR)
-DynamicGeometry        → procedural geometry into G-Buffer
-DynamicTexture         → procedural texture generation (compute)
-Shadow                 → shadow map depth renders
-VolumetricLighting     → ESM generation + scatter accumulation
-Clustering             → light culling + lighting pass (reads G-Buffer)
-Bloom                  → lum downsample → blur → composite
-PerPixelPicking        → off-screen pick buffer (editor only)
-Debug                  → debug wireframes, AABBs, etc.
+1. RenderSystem::resizeSwapChain()          – handle window resize
+2. RenderSystem::beginFrame()               – acquire swapchain image, begin primary cmd buf
+3. Culling phase:
+   a. Update cameras and build frustums
+   b. Shadow::prepareFrustums()             – split camera frustum into PSSM slices
+   c. CameraManager::updateFrustumsAndMatrices()
+   d. FrustumManager::cullNodes()           – per-frustum AABB culling
+   e. MeshManager::collectDrawCallsAndMeshComponents()
+   f. UniformManager::resetAllocator()
+4. executeRenderSteps(p_DeltaT)             – dispatch each step from renderer_config.json
+5. RenderSystem::endFrame()                 – submit, present
 ```
 
-### Pass anatomy
+`executeRenderSteps` iterates `_renderSteps` (parsed from JSON). For each step it
+either dispatches a generic pass directly (`GenericFullscreen`, `GenericMesh`,
+`GenericBlur`, `ImageMemoryBarrier`, `SwitchCamera`) or looks up the specialized
+pass in `_renderStepFunctionMapping` and calls its `render()`.
 
-Each render pass follows this pattern:
+**Culling and draw calls are pre-built before the render steps run.** The render
+steps read from `RenderProcess::Default::_activeFrustums` and the corresponding
+draw call lists — they do not cull themselves.
 
-```cpp
-struct MyRenderPass
-{
-    // Called once at startup and on renderer reinit
-    static void init();
-    static void onReinitRendering();
-    static void destroy();
+Default pass order:
 
-    // Called every frame (or conditionally)
-    static void render(float p_DeltaT);
-
-    // Internal Vulkan objects
-    static ImageRef _myImageRef;
-    static RenderPassRef _renderPassRef;
-    static PipelineRef _pipelineRef;
-    // ...
-};
 ```
-
-### Adding a new render pass
-
-1. Create `IntrinsicRendererRenderPassMyPass.h` and `.cpp`
-2. Implement `init()`, `destroy()`, `onReinitRendering()`, `render()`
-3. Register in `IntrinsicRendererRenderProcess.cpp`:
-
-```cpp
-// In _renderStepTypeMapping:
-{"MyPass", RenderStepType::kMyPass},
-
-// In _renderStepFunctionMapping:
-{RenderStepType::kMyPass, RenderProcess::renderMyPass},
-
-// Add function:
-void RenderProcess::renderMyPass(float p_DeltaT) {
-    RenderPassMyPass::render(p_DeltaT);
-}
-```
-
-4. Add the pass name to `renderer_config.json` in the `"renderSteps"` array.
-
-### Image memory barriers — rules
-
-These rules avoid Vulkan validation errors:
-
-- Always use `VK_IMAGE_LAYOUT_UNDEFINED` as `oldLayout` at the start of each
-  frame. This is always valid per spec and avoids the need to track the previous
-  frame's layout.
-- `init()` / `onReinitRendering()` must transition newly created images to their
-  operational layout before the first `render()` call.
-- Match `srcStage` to the actual last stage that wrote the image
-  (`COMPUTE_SHADER_BIT`, `COLOR_ATTACHMENT_OUTPUT_BIT`, `TRANSFER_BIT`, etc.)
-  — never use `TOP_OF_PIPE` as `srcStage` if real work precedes the barrier.
-- Access masks must be `0` when the stage is `TOP_OF_PIPE` or `BOTTOM_OF_PIPE`.
-
-```cpp
-// Correct: compute write → fragment shader read
-ImageManager::insertImageMemoryBarrier(
-    imageRef,
-    VK_IMAGE_LAYOUT_UNDEFINED,            // oldLayout (always safe)
-    VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,  // newLayout
-    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, // srcStage
-    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT // dstStage
-);
-```
-
-### Accessing a render target from another pass
-
-Render targets (images) are declared in `renderer_config.json` and allocated
-once. Any pass can hold a reference:
-
-```cpp
-// In the pass header:
-static ImageRef _gbufferDepthRef;
-
-// In init():
-_gbufferDepthRef = ImageManager::getResourceByName(Name("GBufferDepth"));
+RenderPassDynamicGeometryGeneration   – voxel + marching cubes compute
+RenderPassDynamicTextureGeneration    – procedural texture compute
+RenderPassGeometryGeneration          – static procedural geometry
+SwitchCamera → ActiveCamera
+RenderPassMarchingCubes               – render computed mesh geometry
+RenderPassShadow                      – depth-only shadow maps (PSSM)
+RenderPassVolumetricLighting          – ESM + scatter accumulation (compute)
+RenderPassClustering                  – light culling + deferred lighting (fullscreen)
+GenericMesh "GBuffer"                 – fills GBufferAlbedo/Normal/Parameter0/Depth
+RenderPassBloom                       – lum downsample → blur → composite (compute)
+GenericFullscreen "PostCombine"       – tone mapping + SMAA
+RenderPassPerPixelPicking             – off-screen pick buffer (editor only)
+RenderPassDebug                       – wireframes, AABBs, probes
 ```
 
 ---
 
-## 8. Asset Pipeline
+### 7.2 Resource creation patterns
+
+Every GPU resource follows the same three-step pattern:
+
+```cpp
+// 1. Allocate a named slot in the resource pool
+ImageRef img = ImageManager::createImage(_N(MyImage));
+
+// 2. Reset to defaults, then fill in your descriptor
+ImageManager::resetToDefault(img);
+ImageManager::addResourceFlags(img, Dod::Resources::ResourceFlags::kResourceVolatile);
+ImageManager::_descDimensions(img)   = glm::uvec3(width, height, 1u);
+ImageManager::_descImageFormat(img)  = Format::kR16G16B16A16Float;
+ImageManager::_descImageType(img)    = ImageType::kTexture;
+ImageManager::_descImageFlags(img)   = ImageFlags::kUsageAttachment
+                                     | ImageFlags::kUsageSampled;
+
+// 3. Batch-create (allocates VkImage, VkDeviceMemory, VkImageView)
+ImageRefArray toCreate = { img };
+ImageManager::createResources(toCreate);
+```
+
+`kResourceVolatile` marks resources that must be recreated on reinit
+(resolution-dependent). Static resources (shadow maps, LUTs) omit this flag.
+
+Key `ImageFlags`:
+
+| Flag | Meaning |
+|------|---------|
+| `kUsageAttachment` | Can be used as color/depth attachment |
+| `kUsageSampled` | Can be read in shaders via sampler |
+| `kUsageStorage` | Can be bound as `image2D` in compute |
+
+Key `Format` values (matching Vulkan formats):
+
+| Constant | Format |
+|----------|--------|
+| `kR8G8B8A8UNorm` | `VK_FORMAT_R8G8B8A8_UNORM` |
+| `kR16G16B16A16Float` | `VK_FORMAT_R16G16B16A16_SFLOAT` |
+| `kR32SFloat` | `VK_FORMAT_R32_SFLOAT` |
+| `kDepth` | Depth format chosen by `RenderSystem::_depthStencilFormatToUse` |
+
+---
+
+### 7.3 The two dispatch patterns
+
+#### Graphics pass (rasterization)
+
+```cpp
+// 1. Transition the color attachment to writable
+ImageManager::insertImageMemoryBarrier(
+    _outputImageRef,
+    VK_IMAGE_LAYOUT_UNDEFINED,
+    VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+    VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+    VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+
+// 2. Begin render pass
+VkClearValue clears[2];
+clears[0].color        = {{0.f, 0.f, 0.f, 1.f}};
+clears[1].depthStencil = {1.f, 0u};
+RenderSystem::beginRenderPass(_renderPassRef, _framebufferRef,
+                              VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS,
+                              2u, clears);
+
+// 3. Queue draw calls (they run in secondary cmd buffers in parallel)
+DrawCallDispatcher::queueDrawCalls(visibleDrawCalls, _renderPassRef, _framebufferRef);
+
+// OR for a single fullscreen triangle / quad:
+RenderSystem::beginRenderPass(_renderPassRef, _framebufferRef,
+                              VK_SUBPASS_CONTENTS_INLINE, 1u, clears);
+RenderSystem::dispatchDrawCall(_fullscreenDrawCallRef,
+                               RenderSystem::getPrimaryCommandBuffer());
+
+// 4. End render pass
+RenderSystem::endRenderPass(_renderPassRef);
+
+// 5. Transition to readable for later passes
+ImageManager::insertImageMemoryBarrier(
+    _outputImageRef,
+    VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+    VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+    VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+```
+
+#### Compute pass
+
+```cpp
+VkCommandBuffer cmd = RenderSystem::getPrimaryCommandBuffer();
+
+// 1. Transition storage images to GENERAL
+ImageManager::insertImageMemoryBarrier(
+    _outputImageRef,
+    VK_IMAGE_LAYOUT_UNDEFINED,
+    VK_IMAGE_LAYOUT_GENERAL,
+    VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+
+// 2. Upload per-dispatch uniforms
+MyPerInstanceData data = { width, height, time };
+ComputeCallManager::updateUniformMemory(
+    {_computeCallRef}, &data, sizeof(data));
+
+// 3. Dispatch
+RenderSystem::dispatchComputeCall(_computeCallRef, cmd);
+
+// 4. Transition output to readable
+ImageManager::insertImageMemoryBarrier(
+    _outputImageRef,
+    VK_IMAGE_LAYOUT_GENERAL,
+    VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+    VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+```
+
+---
+
+### 7.4 Adding a render pass: complete walkthrough
+
+**Every file that must be touched:**
+
+| File | What to add |
+|------|------------|
+| `IntrinsicRendererRenderPassMyPass.h` | struct declaration |
+| `IntrinsicRendererRenderPassMyPass.cpp` | implementation |
+| `IntrinsicRenderer/CMakeLists.txt` | add to source list |
+| `IntrinsicRendererRenderProcess.h` | `#include` the new header |
+| `IntrinsicRendererRenderProcess.cpp` | enum value, type mapping, function mapping |
+| `app/config/renderer_config.json` | add render step |
+
+#### Step 1 — Header
+
+```cpp
+// IntrinsicRendererRenderPassMyPass.h
+#pragma once
+#include "IntrinsicRendererRenderProcess.h"
+
+namespace Intrinsic { namespace Renderer { namespace RenderPass {
+
+struct MyPass
+{
+  static void init();
+  static void onReinitRendering();
+  static void destroy();
+  static void render(float p_DeltaT,
+                     Components::CameraRef p_CameraRef);
+
+  // Static resources (lifetime = renderer lifetime)
+  static PipelineLayoutRef _pipelineLayoutRef;
+  static PipelineRef       _pipelineRef;
+
+  // Volatile resources (recreated on reinit)
+  static ImageRef        _outputImageRef;
+  static FramebufferRef  _framebufferRef;
+  static RenderPassRef   _renderPassRef;
+  static DrawCallRef     _drawCallRef;
+};
+
+}}} // namespace
+```
+
+#### Step 2 — Implementation skeleton
+
+```cpp
+// IntrinsicRendererRenderPassMyPass.cpp
+#include "stdafx.h"
+#include "IntrinsicRendererRenderPassMyPass.h"
+
+using namespace RResources;
+using namespace CComponents;
+
+namespace Intrinsic { namespace Renderer { namespace RenderPass {
+
+// Static member definitions
+PipelineLayoutRef MyPass::_pipelineLayoutRef;
+PipelineRef       MyPass::_pipelineRef;
+ImageRef          MyPass::_outputImageRef;
+FramebufferRef    MyPass::_framebufferRef;
+RenderPassRef     MyPass::_renderPassRef;
+DrawCallRef       MyPass::_drawCallRef;
+
+// -----------------------------------------------------------------------
+// init() — called once at startup.
+// Create only resources that do NOT depend on the backbuffer resolution:
+// pipelines, pipeline layouts, static images, static buffers.
+// -----------------------------------------------------------------------
+void MyPass::init()
+{
+  PipelineLayoutRefArray layoutsToCreate;
+  PipelineRefArray       pipesToCreate;
+
+  // --- Pipeline layout (reflects binding slots from the shader) ---
+  _pipelineLayoutRef = PipelineLayoutManager::createPipelineLayout(_N(MyPass));
+  PipelineLayoutManager::resetToDefault(_pipelineLayoutRef);
+  GpuProgramManager::reflectPipelineLayout(
+      8u,   // max descriptor set count
+      { GpuProgramManager::getResourceByName(_N(my_pass.vert)),
+        GpuProgramManager::getResourceByName(_N(my_pass.frag)) },
+      _pipelineLayoutRef);
+  layoutsToCreate.push_back(_pipelineLayoutRef);
+
+  PipelineLayoutManager::createResources(layoutsToCreate);
+
+  // --- Graphics pipeline ---
+  _pipelineRef = PipelineManager::createPipeline(_N(MyPass));
+  PipelineManager::resetToDefault(_pipelineRef);
+  PipelineManager::_descVertexProgram(_pipelineRef) =
+      GpuProgramManager::getResourceByName(_N(my_pass.vert));
+  PipelineManager::_descFragmentProgram(_pipelineRef) =
+      GpuProgramManager::getResourceByName(_N(my_pass.frag));
+  PipelineManager::_descPipelineLayout(_pipelineRef) = _pipelineLayoutRef;
+  PipelineManager::_descDepthStencilState(_pipelineRef) =
+      DepthStencilStates::kDefaultNoWrite;   // read depth, don't write
+  PipelineManager::_descRasterizationState(_pipelineRef) =
+      RasterizationStates::kDefault;
+  // _descRenderPass and _descVertexLayout are filled in onReinitRendering
+  // because the render pass object references a resolution-dependent format
+  pipesToCreate.push_back(_pipelineRef);
+
+  PipelineManager::createResources(pipesToCreate);
+}
+
+// -----------------------------------------------------------------------
+// onReinitRendering() — called at startup (after init) AND after every
+// window resize / renderer config reload.
+// Create/recreate everything that depends on backbuffer dimensions.
+// -----------------------------------------------------------------------
+void MyPass::onReinitRendering()
+{
+  // -- Destroy old volatile resources --
+  {
+    ImageRefArray      imgDel;
+    FramebufferRefArray fbDel;
+    RenderPassRefArray  rpDel;
+    DrawCallRefArray    dcDel;
+
+    if (_outputImageRef.isValid()) imgDel.push_back(_outputImageRef);
+    if (_framebufferRef.isValid()) fbDel.push_back(_framebufferRef);
+    if (_renderPassRef.isValid())  rpDel.push_back(_renderPassRef);
+    if (_drawCallRef.isValid())    dcDel.push_back(_drawCallRef);
+
+    ImageManager::destroyImagesAndResources(imgDel);
+    FramebufferManager::destroyFramebuffersAndResources(fbDel);
+    RenderPassManager::destroyRenderPassesAndResources(rpDel);
+    DrawCallManager::destroyDrawCallsAndResources(dcDel);
+  }
+
+  const glm::uvec2 res = RenderSystem::_backbufferDimensions;
+
+  // -- Output image --
+  _outputImageRef = ImageManager::createImage(_N(MyPassOutput));
+  {
+    ImageManager::resetToDefault(_outputImageRef);
+    ImageManager::addResourceFlags(
+        _outputImageRef, Dod::Resources::ResourceFlags::kResourceVolatile);
+    ImageManager::_descMemoryPoolType(_outputImageRef) =
+        MemoryPoolType::kResolutionDependentImages;
+    ImageManager::_descDimensions(_outputImageRef) = glm::uvec3(res, 1u);
+    ImageManager::_descImageFormat(_outputImageRef) =
+        Format::kR16G16B16A16Float;
+    ImageManager::_descImageFlags(_outputImageRef) =
+        ImageFlags::kUsageAttachment | ImageFlags::kUsageSampled;
+  }
+  ImageManager::createResources({ _outputImageRef });
+
+  // -- Render pass (describes load/store ops and attachment formats) --
+  _renderPassRef = RenderPassManager::createRenderPass(_N(MyPass));
+  {
+    RenderPassManager::resetToDefault(_renderPassRef);
+    AttachmentDescription colorAtt = {
+        (uint8_t)Format::kR16G16B16A16Float,
+        AttachmentFlags::kClearOnLoad };
+    RenderPassManager::_descAttachments(_renderPassRef).push_back(colorAtt);
+    // Add depth attachment read-only if you need it:
+    // AttachmentDescription depthAtt = {
+    //     (uint8_t)RenderSystem::_depthStencilFormatToUse,
+    //     AttachmentFlags::kLoadFromPreviousPass };
+    // RenderPassManager::_descAttachments(_renderPassRef).push_back(depthAtt);
+  }
+  RenderPassManager::createResources({ _renderPassRef });
+
+  // -- Framebuffer --
+  _framebufferRef = FramebufferManager::createFramebuffer(_N(MyPass));
+  {
+    FramebufferManager::resetToDefault(_framebufferRef);
+    FramebufferManager::addResourceFlags(
+        _framebufferRef, Dod::Resources::ResourceFlags::kResourceVolatile);
+    FramebufferManager::_descDimensions(_framebufferRef) = res;
+    FramebufferManager::_descRenderPass(_framebufferRef) = _renderPassRef;
+    FramebufferManager::_descAttachedImages(_framebufferRef)
+        .push_back(AttachmentInfo(_outputImageRef));
+    // .push_back(AttachmentInfo(gbufferDepthRef));  // if depth read
+  }
+  FramebufferManager::createResources({ _framebufferRef });
+
+  // -- Wire render pass into the pipeline --
+  PipelineManager::_descRenderPass(_pipelineRef) = _renderPassRef;
+  PipelineManager::createResources({ _pipelineRef });
+
+  // -- Draw call (fullscreen triangle — no vertex buffer needed) --
+  _drawCallRef = DrawCallManager::createDrawCall(_N(MyPass));
+  {
+    DrawCallManager::resetToDefault(_drawCallRef);
+    DrawCallManager::addResourceFlags(
+        _drawCallRef, Dod::Resources::ResourceFlags::kResourceVolatile);
+    DrawCallManager::_descPipeline(_drawCallRef)       = _pipelineRef;
+    DrawCallManager::_descVertexCount(_drawCallRef)    = 3u;  // fullscreen tri
+    DrawCallManager::_descFramebuffer(_drawCallRef)    = _framebufferRef;
+    DrawCallManager::_descRenderPass(_drawCallRef)     = _renderPassRef;
+
+    // Bind per-frame uniform
+    DrawCallManager::bindBuffer(
+        _drawCallRef, _N(PerInstance),
+        GpuProgramType::kFragment,
+        UniformManager::_perInstanceUniformBuffer,
+        UboType::kPerInstanceFragment,
+        sizeof(MyPerInstanceData));
+
+    // Bind input textures from earlier passes
+    DrawCallManager::bindImage(
+        _drawCallRef, _N(sceneTex),
+        GpuProgramType::kFragment,
+        ImageManager::getResourceByName(_N(Scene)),   // output of Clustering pass
+        Samplers::kLinearClamp);
+
+    DrawCallManager::bindImage(
+        _drawCallRef, _N(depthTex),
+        GpuProgramType::kFragment,
+        ImageManager::getResourceByName(_N(GBufferDepth)),
+        Samplers::kNearestClamp);
+  }
+  DrawCallManager::createResources({ _drawCallRef });
+
+  // -- Initial layout transition (needed before first render call) --
+  VkCommandBuffer tmpCmd = RenderSystem::beginTemporaryCommandBuffer();
+  ImageManager::insertImageMemoryBarrier(
+      _outputImageRef,
+      VK_IMAGE_LAYOUT_UNDEFINED,
+      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+      VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+  RenderSystem::flushTemporaryCommandBuffer();
+}
+
+// -----------------------------------------------------------------------
+// destroy() — cleanup at shutdown
+// -----------------------------------------------------------------------
+void MyPass::destroy()
+{
+  PipelineManager::destroyPipelinesAndResources({ _pipelineRef });
+  PipelineLayoutManager::destroyPipelineLayoutsAndResources(
+      { _pipelineLayoutRef });
+}
+
+// -----------------------------------------------------------------------
+// render() — called every frame
+// -----------------------------------------------------------------------
+void MyPass::render(float p_DeltaT, Components::CameraRef p_CameraRef)
+{
+  _INTR_PROFILE_CPU("Render Pass", "My Pass");
+  _INTR_PROFILE_GPU("My Pass");
+
+  VkCommandBuffer cmd = RenderSystem::getPrimaryCommandBuffer();
+
+  // Update per-instance data
+  MyPerInstanceData perInstance;
+  perInstance.time     = TaskManager::_totalTimePassed;
+  perInstance.invRes   = glm::vec2(1.f) / glm::vec2(RenderSystem::_backbufferDimensions);
+
+  DrawCallManager::allocateAndUpdateUniformMemory(
+      { _drawCallRef }, nullptr, 0u, &perInstance, sizeof(perInstance));
+
+  // Transition output to writable
+  ImageManager::insertImageMemoryBarrier(
+      _outputImageRef,
+      VK_IMAGE_LAYOUT_UNDEFINED,
+      VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+      VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+
+  // Render
+  VkClearValue clear;
+  clear.color = {{0.f, 0.f, 0.f, 1.f}};
+  RenderSystem::beginRenderPass(_renderPassRef, _framebufferRef,
+                                VK_SUBPASS_CONTENTS_INLINE, 1u, &clear);
+  RenderSystem::dispatchDrawCall(_drawCallRef, cmd);
+  RenderSystem::endRenderPass(_renderPassRef);
+
+  // Transition to readable
+  ImageManager::insertImageMemoryBarrier(
+      _outputImageRef,
+      VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+      VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+      VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+}
+
+}}} // namespace
+```
+
+#### Step 3 — Register in RenderProcess
+
+In `IntrinsicRendererRenderProcess.cpp`:
+
+```cpp
+// 1. Add to RenderStepType::Enum
+namespace RenderStepType {
+enum Enum {
+  // ... existing values ...
+  kRenderPassMyPass        // ADD THIS
+};
+}
+
+// 2. Add to _renderStepTypeMapping
+_INTR_HASH_MAP(Name, RenderStepType::Enum) _renderStepTypeMapping = {
+  // ... existing entries ...
+  { "RenderPassMyPass", RenderStepType::kRenderPassMyPass },  // ADD THIS
+};
+
+// 3. Add to _renderStepFunctionMapping
+_INTR_HASH_MAP(RenderStepType::Enum, RenderPassInterface) _renderStepFunctionMapping = {
+  // ... existing entries ...
+  { RenderStepType::kRenderPassMyPass,
+    { RenderPass::MyPass::render, RenderPass::MyPass::onReinitRendering } },
+};
+```
+
+Also add `init()` and `destroy()` calls in `RenderProcess::init()` and
+`RenderProcess::destroy()`.
+
+In `IntrinsicRendererRenderProcess.h` add:
+```cpp
+#include "IntrinsicRendererRenderPassMyPass.h"
+```
+
+#### Step 4 — renderer_config.json
+
+```json
+"renderSteps": [
+  ...,
+  { "type": "RenderPassMyPass" },
+  ...
+]
+```
+
+Place it **after** any passes that produce images you bind as inputs (e.g. after
+`RenderPassClustering` if you read `Scene`).
+
+#### Step 5 — Shaders
+
+```glsl
+// app/assets/shaders/my_pass.vert.glsl
+#version 450
+#include "lib_buffers.glsl"
+
+// Fullscreen triangle — no input vertices needed.
+// The vertex shader generates clip-space positions from gl_VertexIndex.
+void main() {
+  vec2 uv = vec2((gl_VertexIndex << 1) & 2, gl_VertexIndex & 2);
+  gl_Position = vec4(uv * 2.0 - 1.0, 0.0, 1.0);
+}
+```
+
+```glsl
+// app/assets/shaders/my_pass.frag.glsl
+#version 450
+#include "lib_buffers.glsl"
+
+layout(set = 0, binding = 0) uniform PerInstance {
+  vec2 invRes;
+  float time;
+} uPerInstance;
+
+layout(set = 1, binding = 0) uniform sampler2D sceneTex;
+layout(set = 1, binding = 1) uniform sampler2D depthTex;
+
+layout(location = 0) out vec4 outColor;
+
+void main() {
+  vec2 uv    = gl_FragCoord.xy * uPerInstance.invRes;
+  vec4 scene = texture(sceneTex, uv);
+  outColor   = scene;
+}
+```
+
+Create the GPU program JSON files in `app/managers/gpu_programs/`:
+
+```json
+// my_pass_vert.gpu_program.json
+{ "name": "my_pass.vert", "shaderFileName": "my_pass.vert.glsl",
+  "entryPoint": "main", "programType": 0 }
+
+// my_pass_frag.gpu_program.json
+{ "name": "my_pass.frag", "shaderFileName": "my_pass.frag.glsl",
+  "entryPoint": "main", "programType": 1 }
+```
+
+---
+
+### 7.5 Image memory barriers — rules
+
+```
+oldLayout = UNDEFINED is always valid as srcLayout.
+The driver discards content and transitions to newLayout.
+Use it at the start of every frame for every attachment you're about to write.
+```
+
+| Transition | srcStage | dstStage |
+|------------|----------|----------|
+| init / first use | `TOP_OF_PIPE` | target stage |
+| after compute write | `COMPUTE_SHADER_BIT` | consumer stage |
+| after color attachment write | `COLOR_ATTACHMENT_OUTPUT_BIT` | consumer stage |
+| after depth write | `LATE_FRAGMENT_TESTS_BIT` | consumer stage |
+| after transfer | `TRANSFER_BIT` | consumer stage |
+
+`TOP_OF_PIPE` and `BOTTOM_OF_PIPE` must always have access masks `= 0`
+(the helper zeroes them automatically since commit `fd363ee7`).
+
+---
+
+### 7.6 Accessing a render target from another pass
+
+```cpp
+// In init() — the image was declared in renderer_config.json
+// or created by an earlier pass's onReinitRendering()
+_gbufferDepthRef = ImageManager::getResourceByName(_N(GBufferDepth));
+_sceneRef        = ImageManager::getResourceByName(_N(Scene));
+```
+
+The `Name` (`_N(...)`) must match the `"name"` field in the image's
+`ImageManager::createImage()` call or its `renderer_config.json` entry.
+
+---
+
+## 8. Example: Forward Transparent Pass
+
+A forward pass renders geometry that cannot be deferred (transparent objects,
+alpha-blended surfaces). It reads the filled G-Buffer depth for depth testing and
+writes color additively over the existing lighting result.
+
+### What changes versus the generic pass above
+
+- Uses the **existing G-Buffer depth** as a read-only depth attachment.
+- Writes over the **existing `Scene` image** (additive or alpha blend) rather
+  than a new image.
+- Iterates visible draw calls tagged with a **new material pass** `ForwardTransparent`.
+- Needs a **blend state** set to additive or source-alpha.
+- **No clear** — loads the previous content of the `Scene` attachment.
+
+### New material pass
+
+Add to `app/config/material_pass_config.json`:
+
+```json
+{
+  "name": "ForwardTransparent",
+  "materialPassId": 16
+}
+```
+
+Materials that should render in this pass set `materialPassMask |= (1 << 4)` (bit 4).
+In the material JSON:
+
+```json
+{ "materialPassMask": 17 }   // 0x01 (GBuffer) | 0x10 (ForwardTransparent)
+```
+
+Or for transparent-only materials that skip the G-Buffer:
+
+```json
+{ "materialPassMask": 16 }
+```
+
+### Header
+
+```cpp
+// IntrinsicRendererRenderPassForwardTransparent.h
+struct ForwardTransparent
+{
+  static void init();
+  static void onReinitRendering();
+  static void destroy();
+  static void render(float p_DeltaT, Components::CameraRef p_CameraRef);
+
+  static PipelineLayoutRef _pipelineLayoutRef;  // reflects forward.vert + forward.frag
+  // No volatile image — we write into the existing Scene image
+  static RenderPassRef  _renderPassRef;
+  static FramebufferRef _framebufferRef;
+};
+```
+
+### init() — create pipeline with alpha blend
+
+```cpp
+void ForwardTransparent::init()
+{
+  // Pipeline layout
+  _pipelineLayoutRef = PipelineLayoutManager::createPipelineLayout(
+      _N(ForwardTransparent));
+  PipelineLayoutManager::resetToDefault(_pipelineLayoutRef);
+  GpuProgramManager::reflectPipelineLayout(
+      8u,
+      { GpuProgramManager::getResourceByName(_N(forward_transparent.vert)),
+        GpuProgramManager::getResourceByName(_N(forward_transparent.frag)) },
+      _pipelineLayoutRef);
+  PipelineLayoutManager::createResources({ _pipelineLayoutRef });
+
+  // Pipeline — no depth write, back-to-front expected from caller,
+  // source-alpha blending
+  PipelineRef pip = PipelineManager::createPipeline(_N(ForwardTransparent));
+  PipelineManager::resetToDefault(pip);
+  PipelineManager::_descVertexProgram(pip) =
+      GpuProgramManager::getResourceByName(_N(forward_transparent.vert));
+  PipelineManager::_descFragmentProgram(pip) =
+      GpuProgramManager::getResourceByName(_N(forward_transparent.frag));
+  PipelineManager::_descPipelineLayout(pip)      = _pipelineLayoutRef;
+  PipelineManager::_descDepthStencilState(pip)   = DepthStencilStates::kDefaultNoWrite;
+  PipelineManager::_descBlendStates(pip).clear();
+  PipelineManager::_descBlendStates(pip).push_back(BlendStates::kAlphaBlend);
+  // _descRenderPass set in onReinitRendering after the render pass is created
+  PipelineManager::createResources({ pip });
+}
+```
+
+### onReinitRendering() — share Scene + GBufferDepth
+
+```cpp
+void ForwardTransparent::onReinitRendering()
+{
+  // Cleanup
+  if (_renderPassRef.isValid())
+    RenderPassManager::destroyRenderPassesAndResources({ _renderPassRef });
+  if (_framebufferRef.isValid())
+    FramebufferManager::destroyFramebuffersAndResources({ _framebufferRef });
+
+  ImageRef sceneRef  = ImageManager::getResourceByName(_N(Scene));
+  ImageRef depthRef  = ImageManager::getResourceByName(_N(GBufferDepth));
+
+  // Render pass: LOAD existing color (no clear), depth READ-ONLY
+  _renderPassRef = RenderPassManager::createRenderPass(_N(ForwardTransparent));
+  {
+    RenderPassManager::resetToDefault(_renderPassRef);
+    // Color attachment — load existing content (no clear flag)
+    AttachmentDescription colorAtt = {
+        (uint8_t)Format::kR16G16B16A16Float,
+        AttachmentFlags::kLoadFromPreviousPass };
+    // Depth attachment — read-only (test but don't write)
+    AttachmentDescription depthAtt = {
+        (uint8_t)RenderSystem::_depthStencilFormatToUse,
+        AttachmentFlags::kLoadFromPreviousPass };
+    RenderPassManager::_descAttachments(_renderPassRef).push_back(colorAtt);
+    RenderPassManager::_descAttachments(_renderPassRef).push_back(depthAtt);
+  }
+  RenderPassManager::createResources({ _renderPassRef });
+
+  // Framebuffer — attach the existing Scene and GBufferDepth images
+  _framebufferRef = FramebufferManager::createFramebuffer(_N(ForwardTransparent));
+  {
+    FramebufferManager::resetToDefault(_framebufferRef);
+    FramebufferManager::addResourceFlags(
+        _framebufferRef, Dod::Resources::ResourceFlags::kResourceVolatile);
+    FramebufferManager::_descDimensions(_framebufferRef) =
+        RenderSystem::_backbufferDimensions;
+    FramebufferManager::_descRenderPass(_framebufferRef)  = _renderPassRef;
+    FramebufferManager::_descAttachedImages(_framebufferRef)
+        .push_back(AttachmentInfo(sceneRef));
+    FramebufferManager::_descAttachedImages(_framebufferRef)
+        .push_back(AttachmentInfo(depthRef));
+  }
+  FramebufferManager::createResources({ _framebufferRef });
+
+  // Wire the render pass into the pipeline
+  PipelineManager::_descRenderPass(_pipelineRef) = _renderPassRef;
+  PipelineManager::createResources({ _pipelineRef });
+}
+```
+
+### render()
+
+```cpp
+void ForwardTransparent::render(float p_DeltaT,
+                                Components::CameraRef p_CameraRef)
+{
+  _INTR_PROFILE_CPU("Render Pass", "Forward Transparent");
+  _INTR_PROFILE_GPU("Forward Transparent");
+
+  ImageRef sceneRef = ImageManager::getResourceByName(_N(Scene));
+  ImageRef depthRef = ImageManager::getResourceByName(_N(GBufferDepth));
+
+  // Collect draw calls for the ForwardTransparent material pass
+  static DrawCallRefArray visibleDCs;
+  visibleDCs.clear();
+  RenderProcess::Default::getVisibleDrawCalls(
+      p_CameraRef, 0u,
+      MaterialManager::getMaterialPassId(_N(ForwardTransparent)))
+      .copy(visibleDCs);
+
+  if (visibleDCs.empty()) return;   // nothing to draw this frame
+
+  // Sort back-to-front for correct alpha blending
+  DrawCallManager::sortDrawCallsBackToFront(visibleDCs);
+
+  // Upload per-instance data for each visible mesh
+  Components::MeshManager::updatePerInstanceData(p_CameraRef, 0u);
+  Components::MeshManager::updateUniformData(visibleDCs);
+
+  // Scene was left in SHADER_READ_ONLY by Clustering; bring it back to COLOR_ATTACHMENT
+  ImageManager::insertImageMemoryBarrier(
+      sceneRef,
+      VK_IMAGE_LAYOUT_UNDEFINED,
+      VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+      VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+
+  // Depth must be readable for depth test
+  ImageManager::insertImageMemoryBarrier(
+      depthRef,
+      VK_IMAGE_LAYOUT_UNDEFINED,
+      VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL,
+      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+      VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT);
+
+  // No clear values — we LOAD both attachments
+  RenderSystem::beginRenderPass(
+      _renderPassRef, _framebufferRef,
+      VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+
+  DrawCallDispatcher::queueDrawCalls(visibleDCs, _renderPassRef, _framebufferRef);
+
+  RenderSystem::endRenderPass(_renderPassRef);
+
+  // Transition Scene back to readable for post-processing
+  ImageManager::insertImageMemoryBarrier(
+      sceneRef,
+      VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+      VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+      VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+}
+```
+
+### Placement in renderer_config.json
+
+```json
+{ "type": "RenderPassClustering" },
+{ "type": "RenderPassForwardTransparent" },   // AFTER Clustering, BEFORE Bloom
+{ "type": "RenderPassBloom" },
+```
+
+---
+
+## 9. Example: Ray Tracing Pass
+
+Ray tracing requires `VK_KHR_ray_tracing_pipeline` (and its dependencies). The
+engine as shipped does not include it — the steps below describe how you would
+add it from scratch. This is a significant addition, not a one-afternoon task.
+
+### New Vulkan extensions required
+
+These must all be enabled at device creation time in `IntrinsicRendererRenderSystem.cpp`:
+
+```cpp
+// Required chain (order matters — each depends on the previous)
+"VK_KHR_deferred_host_operations"
+"VK_KHR_buffer_device_address"       // also needs feature flag
+"VK_KHR_acceleration_structure"
+"VK_KHR_ray_tracing_pipeline"
+"VK_EXT_descriptor_indexing"         // likely already present
+```
+
+In `RenderSystem::init()` where extensions are enumerated and enabled:
+
+```cpp
+// Feature chain — must be linked via pNext
+VkPhysicalDeviceBufferDeviceAddressFeatures bufferDeviceAddressFeatures = {
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES };
+bufferDeviceAddressFeatures.bufferDeviceAddress = VK_TRUE;
+
+VkPhysicalDeviceAccelerationStructureFeaturesKHR accelFeatures = {
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR };
+accelFeatures.accelerationStructure = VK_TRUE;
+accelFeatures.pNext = &bufferDeviceAddressFeatures;
+
+VkPhysicalDeviceRayTracingPipelineFeaturesKHR rtFeatures = {
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR };
+rtFeatures.rayTracingPipeline = VK_TRUE;
+rtFeatures.pNext = &accelFeatures;
+
+// Chain into VkDeviceCreateInfo::pNext
+deviceCreateInfo.pNext = &rtFeatures;
+```
+
+Also query `VkPhysicalDeviceRayTracingPipelinePropertiesKHR` to get
+`shaderGroupHandleSize` and `shaderGroupBaseAlignment` (needed for the SBT).
+
+Load the function pointers (they are extension functions, not in the Vulkan core):
+
+```cpp
+auto vkCreateAccelerationStructureKHR =
+    (PFN_vkCreateAccelerationStructureKHR)
+    vkGetDeviceProcAddr(device, "vkCreateAccelerationStructureKHR");
+// ... vkDestroyAccelerationStructureKHR
+// ... vkGetAccelerationStructureBuildSizesKHR
+// ... vkCmdBuildAccelerationStructuresKHR
+// ... vkGetAccelerationStructureDeviceAddressKHR
+// ... vkCreateRayTracingPipelinesKHR
+// ... vkGetRayTracingShaderGroupHandlesKHR
+// ... vkCmdTraceRaysKHR
+```
+
+Store them as static members on `RenderSystem` for other passes to use.
+
+### Pass structure overview
+
+```
+init()
+ ├── createShadersAndPipeline()    – raygen, miss, closest-hit SPIR-V → pipeline
+ └── createShaderBindingTable()    – SBT buffer with aligned handles
+
+onReinitRendering()
+ └── (re)create output image
+
+buildBLAS()                        – called once per mesh (or on mesh change)
+ └── one VkAccelerationStructureKHR per mesh (triangle geometry)
+
+buildTLAS()                        – called every frame (or when scene changes)
+ └── one VkAccelerationStructureKHR with N instances pointing to BLASes
+
+render()
+ ├── buildTLAS()                   – or update if only transforms changed
+ ├── updateDescriptorSet()         – bind TLAS + output image + G-Buffer inputs
+ ├── insertImageMemoryBarrier()    – output UNDEFINED → GENERAL
+ ├── vkCmdTraceRaysKHR()           – dispatch rays
+ └── insertImageMemoryBarrier()    – output GENERAL → SHADER_READ_ONLY_OPTIMAL
+```
+
+### Building a BLAS
+
+A BLAS (Bottom-Level Acceleration Structure) represents the triangle geometry of
+one mesh. Build it once and cache it in a `BufferRef` or a
+`VkAccelerationStructureKHR` stored alongside the mesh data.
+
+```cpp
+void buildBLAS(MeshRef meshRef)
+{
+  // Get the vertex and index buffers for this mesh
+  BufferRef vbRef = MeshManager::_vertexBuffer(meshRef);
+  BufferRef ibRef = MeshManager::_indexBuffer(meshRef);
+
+  // Describe the triangle geometry
+  VkAccelerationStructureGeometryKHR geometry = {};
+  geometry.sType        = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
+  geometry.geometryType = VK_GEOMETRY_TYPE_TRIANGLES_KHR;
+  geometry.flags        = VK_GEOMETRY_OPAQUE_BIT_KHR;
+
+  auto& tris = geometry.geometry.triangles;
+  tris.sType         = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
+  tris.vertexFormat  = VK_FORMAT_R16G16B16_SFLOAT;  // packed half-float positions
+  tris.vertexData.deviceAddress =
+      getBufferDeviceAddress(RenderSystem::_vkDevice, BufferManager::_vkBuffer(vbRef));
+  tris.vertexStride  = sizeof(uint16_t) * 4;  // xyz + padding
+  tris.maxVertex     = MeshManager::_vertexCount(meshRef) - 1;
+  tris.indexType     = VK_INDEX_TYPE_UINT32;
+  tris.indexData.deviceAddress =
+      getBufferDeviceAddress(RenderSystem::_vkDevice, BufferManager::_vkBuffer(ibRef));
+
+  uint32_t primitiveCount = MeshManager::_indexCount(meshRef) / 3;
+
+  // Query required sizes
+  VkAccelerationStructureBuildGeometryInfoKHR buildInfo = {};
+  buildInfo.sType         = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR;
+  buildInfo.type          = VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR;
+  buildInfo.flags         = VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR;
+  buildInfo.geometryCount = 1u;
+  buildInfo.pGeometries   = &geometry;
+
+  VkAccelerationStructureBuildSizesInfoKHR sizes = {
+      VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR };
+  vkGetAccelerationStructureBuildSizesKHR(
+      RenderSystem::_vkDevice,
+      VK_ACCELERATION_STRUCTURE_BUILD_TYPE_DEVICE_KHR,
+      &buildInfo, &primitiveCount, &sizes);
+
+  // Allocate BLAS buffer and scratch buffer
+  // (use BufferManager with STORAGE_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR)
+  VkBuffer blasBuffer   = allocateBuffer(sizes.accelerationStructureSize,
+      VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR);
+  VkBuffer scratchBuffer = allocateBuffer(sizes.buildScratchSize,
+      VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT);
+
+  // Create the AS object
+  VkAccelerationStructureCreateInfoKHR createInfo = {};
+  createInfo.sType  = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR;
+  createInfo.buffer = blasBuffer;
+  createInfo.size   = sizes.accelerationStructureSize;
+  createInfo.type   = VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR;
+
+  VkAccelerationStructureKHR blas;
+  vkCreateAccelerationStructureKHR(RenderSystem::_vkDevice, &createInfo, nullptr, &blas);
+
+  // Build on the GPU
+  buildInfo.dstAccelerationStructure  = blas;
+  buildInfo.scratchData.deviceAddress = getBufferDeviceAddress(RenderSystem::_vkDevice,
+                                                               scratchBuffer);
+  VkAccelerationStructureBuildRangeInfoKHR rangeInfo = { primitiveCount };
+  const VkAccelerationStructureBuildRangeInfoKHR* pRangeInfo = &rangeInfo;
+
+  VkCommandBuffer cmd = RenderSystem::beginTemporaryCommandBuffer();
+  vkCmdBuildAccelerationStructuresKHR(cmd, 1u, &buildInfo, &pRangeInfo);
+  RenderSystem::flushTemporaryCommandBuffer();
+
+  // Store blas handle alongside mesh data (add a static map or extend MeshData)
+  _blasMap[meshRef] = blas;
+}
+```
+
+### Building a TLAS every frame
+
+A TLAS (Top-Level Acceleration Structure) contains one instance per visible
+object, each pointing to a BLAS and carrying a world transform.
+
+```cpp
+void buildTLAS(Components::CameraRef p_CameraRef)
+{
+  // Collect visible mesh instances
+  const DrawCallRefArray& dcs =
+      RenderProcess::Default::getVisibleDrawCalls(p_CameraRef, 0u,
+          MaterialManager::getMaterialPassId(_N(GBufferDefault)));
+
+  _INTR_ARRAY(VkAccelerationStructureInstanceKHR) instances;
+  for (DrawCallRef dc : dcs)
+  {
+    MeshRef mesh    = DrawCallManager::_descMesh(dc);
+    NodeRef node    = DrawCallManager::_descNode(dc);
+    glm::mat4 world = NodeManager::getWorldTransform(node);
+
+    VkAccelerationStructureInstanceKHR inst = {};
+    // VkTransformMatrixKHR is a row-major 3x4 matrix
+    memcpy(&inst.transform, glm::value_ptr(glm::transpose(world)), sizeof(inst.transform));
+    inst.instanceCustomIndex                    = instances.size();  // gl_InstanceCustomIndexEXT
+    inst.mask                                   = 0xFF;
+    inst.instanceShaderBindingTableRecordOffset = 0u;  // offset into hit group table
+    inst.flags                                  = VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;
+    inst.accelerationStructureReference         =
+        getAccelerationStructureAddress(RenderSystem::_vkDevice, _blasMap[mesh]);
+
+    instances.push_back(inst);
+  }
+
+  // Upload instance data to a device-visible buffer, then build TLAS
+  // (pattern identical to BLAS build — query sizes, allocate, vkCmdBuildAccelerationStructuresKHR)
+  // For dynamic scenes use VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR
+  // or UPDATE mode if only transforms changed.
+}
+```
+
+### Creating the RT pipeline
+
+```cpp
+void createRTPipeline()
+{
+  // Load SPIR-V shader modules
+  VkShaderModule raygenModule = loadSPIRV("rt_raygen.rgen.spv");
+  VkShaderModule missModule   = loadSPIRV("rt_miss.rmiss.spv");
+  VkShaderModule chitModule   = loadSPIRV("rt_chit.rchit.spv");
+
+  VkPipelineShaderStageCreateInfo stages[3];
+  stages[0] = makeStage(raygenModule, VK_SHADER_STAGE_RAYGEN_BIT_KHR,   "main");
+  stages[1] = makeStage(missModule,   VK_SHADER_STAGE_MISS_BIT_KHR,     "main");
+  stages[2] = makeStage(chitModule,   VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR, "main");
+
+  // Shader groups: one per logical entry point
+  VkRayTracingShaderGroupCreateInfoKHR groups[3] = {};
+  // Raygen group (general type)
+  groups[0].sType              = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
+  groups[0].type               = VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_KHR;
+  groups[0].generalShader      = 0;  // index into stages[]
+  groups[0].closestHitShader   = VK_SHADER_UNUSED_KHR;
+  groups[0].anyHitShader       = VK_SHADER_UNUSED_KHR;
+  groups[0].intersectionShader = VK_SHADER_UNUSED_KHR;
+  // Miss group
+  groups[1] = groups[0];
+  groups[1].generalShader = 1;
+  // Hit group (triangles type)
+  groups[2].sType              = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
+  groups[2].type               = VK_RAY_TRACING_SHADER_GROUP_TYPE_TRIANGLES_HIT_GROUP_KHR;
+  groups[2].generalShader      = VK_SHADER_UNUSED_KHR;
+  groups[2].closestHitShader   = 2;  // index into stages[]
+  groups[2].anyHitShader       = VK_SHADER_UNUSED_KHR;
+  groups[2].intersectionShader = VK_SHADER_UNUSED_KHR;
+
+  VkRayTracingPipelineCreateInfoKHR pipelineCI = {};
+  pipelineCI.sType                        = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR;
+  pipelineCI.stageCount                   = 3u;
+  pipelineCI.pStages                      = stages;
+  pipelineCI.groupCount                   = 3u;
+  pipelineCI.pGroups                      = groups;
+  pipelineCI.maxPipelineRayRecursionDepth = 1u;  // 1 = primary rays only (no reflections)
+  pipelineCI.layout                       = _rtPipelineLayout;
+
+  vkCreateRayTracingPipelinesKHR(RenderSystem::_vkDevice,
+      VK_NULL_HANDLE, RenderSystem::_vkPipelineCache,
+      1u, &pipelineCI, nullptr, &_rtPipeline);
+}
+```
+
+### Creating the Shader Binding Table (SBT)
+
+The SBT is a GPU buffer containing one aligned handle per shader group.
+
+```cpp
+void createSBT()
+{
+  // Query hardware handle size and alignment from device properties
+  uint32_t handleSize      = _rtProperties.shaderGroupHandleSize;
+  uint32_t handleAlignment = _rtProperties.shaderGroupHandleAlignment;
+  uint32_t groupCount      = 3u;  // raygen + miss + hit
+
+  uint32_t sbtStride = alignUp(handleSize, handleAlignment);
+  uint32_t sbtSize   = groupCount * sbtStride;
+
+  // Get raw handles from the pipeline
+  std::vector<uint8_t> handles(groupCount * handleSize);
+  vkGetRayTracingShaderGroupHandlesKHR(
+      RenderSystem::_vkDevice, _rtPipeline,
+      0u, groupCount, handles.size(), handles.data());
+
+  // Allocate a host-visible, device-addressable buffer
+  // Must have VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR
+  //           | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT
+  _sbtBuffer = allocateSBTBuffer(sbtSize);
+  uint8_t* mapped = mapSBTBuffer(_sbtBuffer);
+
+  // Copy each handle at the correct aligned offset
+  for (uint32_t i = 0; i < groupCount; ++i)
+    memcpy(mapped + i * sbtStride, handles.data() + i * handleSize, handleSize);
+
+  unmapSBTBuffer(_sbtBuffer);
+
+  // Store strided device address regions for dispatch
+  VkDeviceAddress sbtBase = getBufferDeviceAddress(RenderSystem::_vkDevice, _sbtBuffer);
+  _raygenRegion   = { sbtBase + 0 * sbtStride, sbtStride, sbtStride };
+  _missRegion     = { sbtBase + 1 * sbtStride, sbtStride, sbtStride };
+  _hitRegion      = { sbtBase + 2 * sbtStride, sbtStride, sbtStride };
+  _callableRegion = {};  // no callable shaders
+}
+```
+
+### render()
+
+```cpp
+void RayTracing::render(float p_DeltaT, Components::CameraRef p_CameraRef)
+{
+  _INTR_PROFILE_CPU("Render Pass", "Ray Tracing");
+  _INTR_PROFILE_GPU("Ray Tracing");
+
+  VkCommandBuffer cmd = RenderSystem::getPrimaryCommandBuffer();
+
+  // Rebuild TLAS for this frame's visible geometry
+  buildTLAS(p_CameraRef);
+
+  // Transition output image to GENERAL (storage write)
+  ImageManager::insertImageMemoryBarrier(
+      _rtOutputImageRef,
+      VK_IMAGE_LAYOUT_UNDEFINED,
+      VK_IMAGE_LAYOUT_GENERAL,
+      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+      VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR);
+
+  // Bind pipeline and descriptor sets
+  vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR, _rtPipeline);
+  vkCmdBindDescriptorSets(cmd, VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR,
+      _rtPipelineLayout, 0u, 1u, &_rtDescriptorSet, 0u, nullptr);
+
+  // Dispatch rays — one ray per pixel
+  const glm::uvec2 res = RenderSystem::_backbufferDimensions;
+  vkCmdTraceRaysKHR(cmd,
+      &_raygenRegion, &_missRegion, &_hitRegion, &_callableRegion,
+      res.x, res.y, 1u);
+
+  // Transition result to readable so it can be composited
+  ImageManager::insertImageMemoryBarrier(
+      _rtOutputImageRef,
+      VK_IMAGE_LAYOUT_GENERAL,
+      VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+      VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR,
+      VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+}
+```
+
+### Minimal raygen shader
+
+```glsl
+// app/assets/shaders/rt_raygen.rgen.glsl
+#version 460
+#extension GL_EXT_ray_tracing : require
+#include "lib_buffers.glsl"   // PerFrameData with invViewProjMatrix, camPos
+
+layout(set = 0, binding = 0) uniform accelerationStructureEXT topLevelAS;
+layout(set = 0, binding = 1, rgba16f) uniform image2D outputImage;
+
+layout(location = 0) rayPayloadEXT vec4 payload;
+
+void main()
+{
+  // Reconstruct ray from screen pixel
+  vec2 uv = (vec2(gl_LaunchIDEXT.xy) + 0.5) / vec2(gl_LaunchSizeEXT.xy);
+  vec2 ndc = uv * 2.0 - 1.0;
+
+  vec4 rayOriginH    = uPerFrame.invViewProjMatrix * vec4(ndc, 0.0, 1.0);
+  vec4 rayEndH       = uPerFrame.invViewProjMatrix * vec4(ndc, 1.0, 1.0);
+  vec3 rayOrigin     = rayOriginH.xyz / rayOriginH.w;
+  vec3 rayDir        = normalize(rayEndH.xyz / rayEndH.w - rayOrigin);
+
+  payload = vec4(0.0);
+
+  traceRayEXT(
+      topLevelAS,
+      gl_RayFlagsOpaqueEXT,   // ray flags
+      0xFF,                   // cull mask
+      0u,                     // sbtRecordOffset
+      0u,                     // sbtRecordStride
+      0u,                     // miss index
+      rayOrigin,
+      0.001,                  // tMin
+      rayDir,
+      10000.0,                // tMax
+      0                       // payload location
+  );
+
+  imageStore(outputImage, ivec2(gl_LaunchIDEXT.xy), payload);
+}
+```
+
+### Placement in renderer_config.json
+
+```json
+{ "type": "RenderPassClustering" },
+{ "type": "RenderPassRayTracing" },          // after deferred lighting
+{ "type": "GenericFullscreen",               // composite RT result over scene
+    "name": "RTComposite",
+    "fragmentGpuProgram": "rt_composite.frag",
+    "inputs": [
+      ["Image", "Scene",        "sceneTex",    "Fragment", "LinearClamp"],
+      ["Image", "RTOutput",     "rtTex",       "Fragment", "LinearClamp"],
+      ["Image", "GBufferDepth", "depthTex",    "Fragment", "NearestClamp"]
+    ],
+    "outputs": [ ["Scene"] ]
+},
+{ "type": "RenderPassBloom" },
+```
+
+### Practical notes on adding RT to this engine
+
+- **Buffer device addresses**: every BLAS and TLAS scratch buffer needs
+  `VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT`. The current `BufferManager` would
+  need a new `BufferType` or usage flag for this. The simplest approach is to add
+  a `kRaytracingBuffer` enum value and handle it in the buffer creation code.
+- **BLAS lifecycle**: BLASes should be rebuilt when a mesh is loaded/unloaded.
+  Hook into `MeshManager::createResources` / `destroyResources`.
+- **TLAS update vs. rebuild**: if only transforms change, use
+  `VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR` and rebuild with
+  `mode = VK_BUILD_ACCELERATION_STRUCTURE_MODE_UPDATE_KHR`. This is ~10× faster
+  than a full rebuild.
+- **Descriptor layout**: the TLAS is bound as
+  `VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR`. The output image is
+  `VK_DESCRIPTOR_TYPE_STORAGE_IMAGE`. These cannot use the existing
+  `GpuProgramManager::reflectPipelineLayout` (which does not know about RT
+  descriptor types) — you'll need to build the descriptor set layout manually
+  with `vkCreateDescriptorSetLayout`.
+- **Shadow/AO**: if you only want RT for shadows or ambient occlusion rather than
+  full path tracing, `maxPipelineRayRecursionDepth = 1` and a single closest-hit
+  shader that writes 0.0/1.0 (occluded/visible) is sufficient — much cheaper than
+  full GI.
+
+---
+
+## 10. Asset Pipeline
 
 ### Mesh import
 
@@ -683,7 +1813,7 @@ to re-cook: re-import through the editor or call
 
 ---
 
-## 9. Lua Scripting
+## 11. Lua Scripting
 
 ### Script component setup
 
@@ -764,7 +1894,7 @@ local m = glm.mat4(1.0)
 
 ---
 
-## 10. Procedural Systems
+## 12. Procedural Systems
 
 ### Marching cubes terrain
 
@@ -806,7 +1936,7 @@ bake the transformed positions into GPU memory. This is a CPU-side operation.
 
 ---
 
-## 11. Physics
+## 13. Physics
 
 The engine uses **NVIDIA PhysX 3.x**. Physics runs as part of the task system
 and updates node transforms after the simulation step.
@@ -856,7 +1986,7 @@ bool grounded = CharacterControllerManager::isGrounded(cc);
 
 ---
 
-## 12. Debugging & Profiling
+## 14. Debugging & Profiling
 
 ### Vulkan validation layers
 
@@ -926,7 +2056,7 @@ Debug::Settings::showAABBs = !Debug::Settings::showAABBs;
 
 ---
 
-## 13. Common Recipes
+## 15. Common Recipes
 
 ### Spawn an entity at runtime
 
