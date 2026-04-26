@@ -1,364 +1,366 @@
-# Zmiany wprowadzone w gałęzi `fixing_for_new_driver`
+# Changes in branch `fixing_for_new_driver`
 
-Gałąź naprawia kompatybilność silnika z nowymi sterownikami NVIDIA i nowszym
-środowiskiem budowania (MSVC 14.44, Vulkan SDK 1.3+). Poniżej szczegółowy opis
-każdego commita w porządku chronologicznym.
-
----
-
-## 1. `670290a1` — Naprawa budowania z nowym MSVC i Vulkan SDK
-
-**Pliki:** `IntrinsicCore/src/stdafx.h`, `cmake/FindLuaJIT.cmake`
-
-MSVC 14.44 przestał dołączać `<chrono>` pośrednio przez `<thread>`, co powodowało
-błąd kompilacji. Dodano jawny `#include <chrono>` do `stdafx.h`.
-
-Skrypt `FindLuaJIT.cmake` szukał najpierw `libluajit.a` (format GCC), przez co na
-Windows MSVC nie znajdował właściwej biblioteki. Zmieniono kolejność tak, żeby
-`lua51.lib` był szukany jako pierwszy.
+This branch fixes engine compatibility with new NVIDIA drivers and a newer build
+environment (MSVC 14.44, Vulkan SDK 1.3+). Below is a detailed description of
+each commit in chronological order.
 
 ---
 
-## 2. `460a12dd` — Naprawa decali na nowych sterownikach NVIDIA
+## 1. `670290a1` — Fix build with new MSVC and Vulkan SDK
 
-**Pliki:** `app/assets/shaders/decals.frag.glsl`,
+**Files:** `IntrinsicCore/src/stdafx.h`, `cmake/FindLuaJIT.cmake`
+
+MSVC 14.44 stopped including `<chrono>` transitively through `<thread>`, causing
+a compilation error. Added an explicit `#include <chrono>` to `stdafx.h`.
+
+`FindLuaJIT.cmake` searched for `libluajit.a` (GCC format) first, so on Windows
+with MSVC it failed to find the correct library. Changed the search order so that
+`lua51.lib` is tried first.
+
+---
+
+## 2. `460a12dd` — Fix decals on new NVIDIA drivers
+
+**Files:** `app/assets/shaders/decals.frag.glsl`,
 `app/assets/shaders/decals.inc.glsl`,
 `IntrinsicRenderer/src/IntrinsicRendererRenderPassClustering.cpp`,
 `IntrinsicRenderer/src/IntrinsicRendererResourcesPipeline.cpp`
 
-**Problem:** Funkcja `calcDecal` przyjmowała `sampler2D[4095]` jako parametr.
-Przekazywanie tablic samplerów jako argumentów funkcji GLSL nie jest legalne
-w standardzie i powodowało GPU hang na nowych sterownikach.
+**Problem:** `calcDecal` accepted `sampler2D[4095]` as a function parameter.
+Passing sampler arrays as function arguments is not legal in GLSL and caused a
+GPU hang on new drivers.
 
-**Rozwiązanie:** Usunięto tablicę z listy parametrów; shader odwołuje się do
-`globalTextures` bezpośrednio (tak jak `lighting.inc.glsl` obsługuje
-`globalCubeTextures`). Przy okazji usunięto debug hacki i poprawnie podpięto
-tworzenie pipeline'u i draw calla dla decali.
-
----
-
-## 3. `ab909002` — Usunięcie przestarzałego komentarza debug w Clustering
-
-**Pliki:** `IntrinsicRenderer/src/IntrinsicRendererRenderPassClustering.cpp`
-
-Drobny cleanup — usunięcie nieaktualnego komentarza.
+**Fix:** Removed the array from the parameter list; the shader now accesses
+`globalTextures` directly (the same way `lighting.inc.glsl` handles
+`globalCubeTextures`). Also removed debug hacks and properly wired up the
+pipeline creation and draw call for decals.
 
 ---
 
-## 4. `cf298e55` — Pierwsze błędy walidacji Vulkan (kategoria A)
+## 3. `ab909002` — Remove stale debug comment in Clustering
 
-**Pliki:** `IntrinsicRenderer/src/IntrinsicRendererHelper.h`,
+**Files:** `IntrinsicRenderer/src/IntrinsicRendererRenderPassClustering.cpp`
+
+Minor cleanup — removed an outdated debug comment.
+
+---
+
+## 4. `cf298e55` — First Vulkan validation errors (category A)
+
+**Files:** `IntrinsicRenderer/src/IntrinsicRendererHelper.h`,
 `IntrinsicRenderer/src/IntrinsicRendererRenderSystem.cpp`
 
-**Problem 1:** Specyfikacja Vulkan zabrania ustawiania niezerowych `srcAccessMask`
-/ `dstAccessMask` gdy etap pipeline'u to `VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT`.
-Wiele miejsc w kodzie ignorowało ten wymóg, co na nowych sterownikach generowało
-błędy walidacji. Naprawiono w pomocniku barier przez zerowanie masek dostępu,
-kiedy etap to `TOP_OF_PIPE`.
+**Problem 1:** The Vulkan spec forbids non-zero `srcAccessMask` / `dstAccessMask`
+when the pipeline stage is `VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT`. Many places in
+the code ignored this requirement, producing validation errors on new drivers.
+Fixed in the barrier helper by zeroing access masks when the stage is
+`TOP_OF_PIPE`.
 
-**Problem 2:** Rozszerzenie `VK_EXT_debug_marker` wymaga `VK_EXT_debug_report`
-jako rozszerzenia urządzenia. Silnik próbował włączyć debug marker bez sprawdzenia,
-czy debug report jest dostępny. Dodano weryfikację dostępności obu rozszerzeń
-przed ich włączeniem.
-
----
-
-## 5. `fa3d8e07` — Wykrywanie i włączanie `VK_KHR_maintenance2`
-
-**Pliki:** `IntrinsicRenderer/src/IntrinsicRendererRenderSystem.cpp`
-
-Rozszerzenie `VK_KHR_maintenance2` jest wymagane przez `VkImageViewUsageCreateInfo`
-(używane w następnym kroku do naprawy widoków SRGB). Dodano wykrywanie i warunkowe
-włączanie tego rozszerzenia podczas tworzenia urządzenia logicznego.
+**Problem 2:** The `VK_EXT_debug_marker` extension requires `VK_EXT_debug_report`
+as a device extension. The engine tried to enable debug markers without checking
+whether debug report was available. Added availability checks for both extensions
+before enabling them.
 
 ---
 
-## 6. `e0b33ce6` — Naprawa barier pre-present i post-present
+## 5. `fa3d8e07` — Detect and enable `VK_KHR_maintenance2`
 
-**Pliki:** `IntrinsicRenderer/src/IntrinsicRendererRenderSystem.h`
+**Files:** `IntrinsicRenderer/src/IntrinsicRendererRenderSystem.cpp`
 
-**Bariera pre-present:** `dstAccessMask` był ustawiony na `VK_ACCESS_MEMORY_READ_BIT`,
-ale specyfikacja wymaga `0` dla etapu `BOTTOM_OF_PIPE`.
+`VK_KHR_maintenance2` is required by `VkImageViewUsageCreateInfo` (used in the
+next step to fix SRGB image views). Added detection and conditional enabling of
+this extension during logical device creation.
 
-**Bariera post-present:** `dstStage` był `BOTTOM_OF_PIPE`, przez co
-`VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT` było nieprawidłowe. Zmieniono na
+---
+
+## 6. `e0b33ce6` — Fix pre-present and post-present barriers
+
+**Files:** `IntrinsicRenderer/src/IntrinsicRendererRenderSystem.h`
+
+**Pre-present barrier:** `dstAccessMask` was set to `VK_ACCESS_MEMORY_READ_BIT`,
+but the spec requires `0` for the `BOTTOM_OF_PIPE` stage.
+
+**Post-present barrier:** `dstStage` was `BOTTOM_OF_PIPE`, making
+`VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT` invalid. Changed to
 `COLOR_ATTACHMENT_OUTPUT`.
 
 ---
 
-## 7. `fd363ee7` — Naprawa barier dla `TOP_OF_PIPE` i `BOTTOM_OF_PIPE`
+## 7. `fd363ee7` — Fix barriers for `TOP_OF_PIPE` and `BOTTOM_OF_PIPE`
 
-**Pliki:** `IntrinsicRenderer/src/IntrinsicRendererHelper.h`
+**Files:** `IntrinsicRenderer/src/IntrinsicRendererHelper.h`
 
-Rozszerzono pomocnik barier obrazu i bufora: kiedy etap to `TOP_OF_PIPE` lub
-`BOTTOM_OF_PIPE`, maski dostępu są automatycznie zerowane (zgodnie ze
-specyfikacją Vulkan). Wcześniej wiele barier miało niezerowe maski dostępu
-przy tych etapach, co było niezgodne ze specyfikacją.
-
----
-
-## 8. `dd8082e4` — Dodanie flagi `STORAGE_BIT` do vertex bufferów
-
-**Pliki:** `IntrinsicRenderer/src/IntrinsicRendererHelper.h`
-
-Vertex buffery używane w compute shaderach (marching cubes, geometry generation)
-muszą mieć ustawioną flagę `VK_BUFFER_USAGE_STORAGE_BUFFER_BIT`. Dodano ją
-do domyślnego zestawu flag w pomocniku tworzenia bufforów.
+Extended the image and buffer barrier helpers: when the stage is `TOP_OF_PIPE`
+or `BOTTOM_OF_PIPE`, access masks are automatically zeroed (per the Vulkan spec).
+Previously many barriers had non-zero access masks at these stages, violating the
+spec.
 
 ---
 
-## 9. `689f3ea7` — Guard przed podwójnym `vkBindBufferMemory`
+## 8. `dd8082e4` — Add `STORAGE_BIT` flag to vertex buffers
 
-**Pliki:** `IntrinsicRenderer/src/IntrinsicRendererResourcesBuffer.cpp`
+**Files:** `IntrinsicRenderer/src/IntrinsicRendererHelper.h`
 
-`vkBindBufferMemory` musi być wywołane tylko przy nowej alokacji. Nowe sterowniki
-traktują ponowne bindowanie jako błąd walidacji. Dodano warunek sprawdzający,
-czy alokacja rzeczywiście nastąpiła, zanim wywoła się `vkBindBufferMemory`.
-
----
-
-## 10. `73af179b` — `VkImageViewUsageCreateInfo` dla widoków SRGB
-
-**Pliki:** `IntrinsicRenderer/src/IntrinsicRendererResourcesImage.cpp`
-
-Tekstury SRGB tworzą dwa widoki: jeden jako SRGB (do odczytu) i jeden jako
-UNORM (do storage). Nowe sterowniki wymagają jawnego określenia dozwolonych
-użyć widoku przez `VkImageViewUsageCreateInfo`. Dodano strukturę dla widoku SRGB
-z flagą `VK_IMAGE_USAGE_SAMPLED_BIT` (bez `STORAGE_BIT`), żeby walidator nie
-narzekał na niezgodność użyć.
+Vertex buffers used in compute shaders (marching cubes, geometry generation)
+must have `VK_BUFFER_USAGE_STORAGE_BUFFER_BIT` set. Added it to the default
+flag set in the buffer creation helper.
 
 ---
 
-## 11. `1d7e94ab` — Naprawa barier obrazu i aktualizacji bufora w geometry/texture generation
+## 9. `689f3ea7` — Guard against double `vkBindBufferMemory`
 
-**Pliki:** `IntrinsicRendererRenderPassDynamicGeometryGeneration.cpp`,
+**Files:** `IntrinsicRenderer/src/IntrinsicRendererResourcesBuffer.cpp`
+
+`vkBindBufferMemory` must only be called on a fresh allocation. New drivers treat
+re-binding as a validation error. Added a condition that checks whether an
+allocation actually occurred before calling `vkBindBufferMemory`.
+
+---
+
+## 10. `73af179b` — `VkImageViewUsageCreateInfo` for SRGB image views
+
+**Files:** `IntrinsicRenderer/src/IntrinsicRendererResourcesImage.cpp`
+
+SRGB textures create two views: one as SRGB (for sampling) and one as UNORM (for
+storage). New drivers require explicitly declaring allowed usages per view via
+`VkImageViewUsageCreateInfo`. Added the struct for the SRGB view with only
+`VK_IMAGE_USAGE_SAMPLED_BIT` (no `STORAGE_BIT`), so the validation layer does
+not complain about usage mismatches.
+
+---
+
+## 11. `1d7e94ab` — Fix image barriers and buffer updates in geometry/texture generation
+
+**Files:** `IntrinsicRendererRenderPassDynamicGeometryGeneration.cpp`,
 `IntrinsicRendererRenderPassDynamicTextureGeneration.cpp`,
 `IntrinsicRendererRenderPassGeometryGeneration.cpp`
 
-**Problem 1 (krytyczny):** `updateDataMemory` wywoływało `vkCmdCopyBuffer`
-z tym samym buforem jako źródłem i celem — co jest niezdefiniowanym
-zachowaniem. Zastąpiono bezpośrednim `memcpy` do pamięci host-visible.
+**Problem 1 (critical):** `updateDataMemory` called `vkCmdCopyBuffer` with the
+same buffer as both source and destination — undefined behavior. Replaced with a
+direct `memcpy` into host-visible memory.
 
-**Problem 2:** Brakujące przejście `UNDEFINED→GENERAL` dla `normalsTex`
-i generowanych tekstur podczas inicjalizacji powodowało, że compute shadery
-trafiały na obrazy w niezdefiniowanym layoutcie.
+**Problem 2:** Missing `UNDEFINED→GENERAL` transitions for `normalsTex` and
+generated textures during initialization caused compute shaders to encounter
+images in an undefined layout.
 
-**Problem 3:** Bariery `TRANSFER_SRC/DST` zamieniono na `GENERAL` z poprawnymi
-etapami pipeline'u.
+**Problem 3:** `TRANSFER_SRC/DST` barriers were replaced with `GENERAL` using
+correct pipeline stages.
 
-**Problem 4:** Dodano przejście `GENERAL→SHADER_READ_ONLY_OPTIMAL` przed
-dispatchem marching cubes.
+**Problem 4:** Added a `GENERAL→SHADER_READ_ONLY_OPTIMAL` transition before the
+marching cubes dispatch.
 
 ---
 
-## 12. `bd927c75` — Naprawa etapów barier w Bloom i VolumetricLighting
+## 12. `bd927c75` — Fix barrier stages in Bloom and VolumetricLighting
 
-**Pliki:** `IntrinsicRendererRenderPassBloom.cpp`,
+**Files:** `IntrinsicRendererRenderPassBloom.cpp`,
 `IntrinsicRendererRenderPassVolumetricLighting.cpp`
 
-**Bloom:** Bariera po dispatch lum używała `TOP_OF_PIPE` jako `srcStage`
-zamiast `COMPUTE_SHADER_BIT`. Dodano guard dla pierwszej klatki, żeby kolejne
-klatki używały faktycznego layoutu `SHADER_READ_ONLY` zamiast `UNDEFINED`.
-Naprawiono `dstStage` dla finalnej bariery `_lumImageRef` na `FRAGMENT_SHADER_BIT`.
+**Bloom:** The barrier after the lum dispatch used `TOP_OF_PIPE` as `srcStage`
+instead of `COMPUTE_SHADER_BIT`. Added a first-frame guard so subsequent frames
+use the actual `SHADER_READ_ONLY` layout instead of `UNDEFINED`. Fixed `dstStage`
+for the final `_lumImageRef` barrier to `FRAGMENT_SHADER_BIT`.
 
-**VolumetricLighting:** Bariery po dispatch akumulacji używały `TOP_OF_PIPE`
-zamiast `COMPUTE_SHADER_BIT` jako `srcStage`. Dodano guard dla pierwszej klatki.
-Naprawiono `dstStage` bariery scatter buffera na `FRAGMENT_SHADER_BIT`.
+**VolumetricLighting:** Barriers after the accumulation dispatch used `TOP_OF_PIPE`
+instead of `COMPUTE_SHADER_BIT` as `srcStage`. Added a first-frame guard. Fixed
+`dstStage` of the scatter buffer barrier to `FRAGMENT_SHADER_BIT`.
 
 ---
 
-## 13. `fb5bb76a` — Naprawa layoutu `UNDEFINED` w Shadow, Clustering, VolumetricLighting, PerPixelPicking
+## 13. `fb5bb76a` — Fix `UNDEFINED` layout in Shadow, Clustering, VolumetricLighting, PerPixelPicking
 
-**Pliki:** `IntrinsicRendererRenderPassShadow.cpp`,
+**Files:** `IntrinsicRendererRenderPassShadow.cpp`,
 `IntrinsicRendererRenderPassClustering.cpp`,
 `IntrinsicRendererRenderPassVolumetricLighting.cpp`,
 `IntrinsicRendererRenderPassPerPixelPicking.cpp`
 
-**Problem:** Od drugiej klatki każdy obraz jest w konkretnym, znanych layoucie.
-Używanie `UNDEFINED` jako `oldLayout` w barierach wyzwalało błędy śledzenia
-layoutu na nowych sterownikach.
+**Problem:** From the second frame onward every image is in a known, concrete
+layout. Using `UNDEFINED` as `oldLayout` in barriers triggered layout tracking
+errors on new drivers.
 
-**Rozwiązanie:** Dodano flagi `_shadowRendered`, `_clusteringRendered`,
-`_volLightingRendered`, `_pickingRendered`. Pierwsza klatka używa `UNDEFINED`,
-kolejne podają faktyczny layout końcowy z poprzedniej klatki
+**Fix:** Added `_shadowRendered`, `_clusteringRendered`, `_volLightingRendered`,
+`_pickingRendered` flags. The first frame uses `UNDEFINED`; subsequent frames
+supply the actual end-of-frame layout from the previous frame
 (`SHADER_READ_ONLY_OPTIMAL`, `DEPTH_STENCIL_ATTACHMENT_OPTIMAL`,
-`TRANSFER_SRC_OPTIMAL`). Flagi są resetowane w `onReinitRendering`.
+`TRANSFER_SRC_OPTIMAL`). Flags are reset in `onReinitRendering`.
 
 ---
 
-## 14. `c5ddc856` — Naprawa etapów barier bufora w geometry/marching cubes
+## 14. `c5ddc856` — Fix buffer barrier stages in geometry/marching cubes
 
-**Pliki:** `IntrinsicRendererRenderPassDynamicGeometryGeneration.cpp`,
+**Files:** `IntrinsicRendererRenderPassDynamicGeometryGeneration.cpp`,
 `IntrinsicRendererRenderPassGeometryGeneration.cpp`,
 `IntrinsicRendererRenderPassMarchingCubes.cpp`
 
-Bariery używające domyślnych etapów `TOP_OF_PIPE` miały swoje maski dostępu
-zerowane przez pomocnik (patrz `fd363ee7`), przez co były faktycznie no-opami.
+Barriers using the default `TOP_OF_PIPE` stage had their access masks zeroed by
+the helper (see `fd363ee7`), making them effectively no-ops.
 
-**Naprawiono:** Voxel buffery: `COMPUTE→COMPUTE`. Wyjściowe buffery vertex
-(position, normal, itd.): `COMPUTE→VERTEX_INPUT` z `dstAccessMask =
-VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT`, bo są konsumowane jako vertex attributes
-po dispatch marching cubes.
+**Fixed:** Voxel buffers: `COMPUTE→COMPUTE`. Output vertex buffers (position,
+normal, etc.): `COMPUTE→VERTEX_INPUT` with `dstAccessMask =
+VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT`, because they are consumed as vertex
+attributes after the marching cubes dispatch.
 
 ---
 
-## 15. `9bfb146d` — Naprawa etapów barier w texture upload i PerPixelPicking
+## 15. `9bfb146d` — Fix barrier stages in texture upload and PerPixelPicking
 
-**Pliki:** `IntrinsicRendererResourcesImage.cpp`,
+**Files:** `IntrinsicRendererResourcesImage.cpp`,
 `IntrinsicRendererRenderPassPerPixelPicking.cpp`
 
-**ResourcesImage:** Bariera `UNDEFINED→TRANSFER_DST` używa teraz
-`TOP_OF_PIPE→TRANSFER`. Bariera `TRANSFER_DST→SHADER_READ_ONLY` używa
-`TRANSFER→FRAGMENT_SHADER`. Dotyczy wszystkich ścieżek uploadu tekstur.
+**ResourcesImage:** The `UNDEFINED→TRANSFER_DST` barrier now uses
+`TOP_OF_PIPE→TRANSFER`. The `TRANSFER_DST→SHADER_READ_ONLY` barrier uses
+`TRANSFER→FRAGMENT_SHADER`. Applies to all texture upload paths.
 
-**PerPixelPicking:** Bariera `TRANSFER_SRC→COLOR_ATTACHMENT` używa
-`TRANSFER→COLOR_ATTACHMENT_OUTPUT`. Bariera powrotna `COLOR_ATTACHMENT→TRANSFER_SRC`
-używa `COLOR_ATTACHMENT_OUTPUT→TRANSFER`. Bariera depth pominięta w kolejnych
-klatkach (render pass sam obsługuje przejście).
+**PerPixelPicking:** The `TRANSFER_SRC→COLOR_ATTACHMENT` barrier uses
+`TRANSFER→COLOR_ATTACHMENT_OUTPUT`. The reverse `COLOR_ATTACHMENT→TRANSFER_SRC`
+uses `COLOR_ATTACHMENT_OUTPUT→TRANSFER`. The depth barrier is skipped on
+subsequent frames (the render pass handles the transition itself).
 
 ---
 
-## 16. `750aa2fd` — Naprawa błędów layoutu pierwszej klatki w VolumetricLighting
+## 16. `750aa2fd` — Fix first-frame layout errors in VolumetricLighting
 
-**Pliki:** `IntrinsicRendererRenderPassVolumetricLighting.cpp`,
+**Files:** `IntrinsicRendererRenderPassVolumetricLighting.cpp`,
 `IntrinsicRendererRenderSystem.cpp`, `IntrinsicRendererRenderProcess.cpp`,
 `IntrinsicCoreApplication.cpp`
 
-Wszystkie obrazy ESM i volumetric lighting są inicjalizowane do
-`SHADER_READ_ONLY_OPTIMAL` w `init()` przez tymczasowy command buffer. Dzięki
-temu draw calle bindujące całą tablicę obrazów (wszystkie warstwy) nie widzą
-`UNDEFINED` w żadnej warstwie na pierwszej klatce. Flaga `_volLightingRendered`
-jest ustawiana na `true` już w `init()`, żeby bariery per-frame zaczynały od
-`SHADER_READ_ONLY` zamiast `UNDEFINED`.
+All ESM and volumetric lighting images are initialized to
+`SHADER_READ_ONLY_OPTIMAL` in `init()` via a temporary command buffer. This
+ensures draw calls that bind the full image array (all layers) do not see
+`UNDEFINED` in any layer on the first frame. The `_volLightingRendered` flag is
+set to `true` already in `init()` so per-frame barriers start from
+`SHADER_READ_ONLY` rather than `UNDEFINED`.
 
 ---
 
-## 17. `d8793ced` — Przejście obrazów do `SHADER_READ_ONLY` po reinit
+## 17. `d8793ced` — Transition images to `SHADER_READ_ONLY` after reinit
 
-**Pliki:** `IntrinsicRendererRenderProcess.cpp`,
+**Files:** `IntrinsicRendererRenderProcess.cpp`,
 `IntrinsicRendererRenderPassVolumetricLighting.cpp`,
 `IntrinsicRendererResourcesImage.cpp`
 
-**Problem:** Obrazy resolution-dependent (tworzone świeżo przy każdym reinit)
-startują w layoucie `UNDEFINED`. Globalne deskryptory tekstur bindują te obrazy
-jako `SHADER_READ_ONLY_OPTIMAL`, co powodowało błąd walidacji przy pierwszym
-submit po reinit.
+**Problem:** Resolution-dependent images (recreated on every reinit) start in
+`UNDEFINED` layout. Global texture descriptors bind these images as
+`SHADER_READ_ONLY_OPTIMAL`, causing a validation error on the first submit after
+reinit.
 
-**Rozwiązanie:** Po stworzeniu wszystkich obrazów w `loadRendererConfig()` dodano
-tymczasowy command buffer przechodzący je z `UNDEFINED` do `SHADER_READ_ONLY_OPTIMAL`.
-Naprawiono też `VolumetricLighting::onReinitRendering()` by prawidłowo
-inicjalizowało obrazy statyczne (nie resolution-dependent) do `SHADER_READ_ONLY`
-po reinit.
+**Fix:** After all images are created in `loadRendererConfig()`, a temporary
+command buffer transitions them from `UNDEFINED` to `SHADER_READ_ONLY_OPTIMAL`.
+Also fixed `VolumetricLighting::onReinitRendering()` to properly initialize
+static (non-resolution-dependent) images to `SHADER_READ_ONLY` after reinit.
 
 ---
 
-## 18. `57e8245a` — Naprawa `VUID-VkDescriptorImageInfo-imageLayout-00344` w DynamicTextureGeneration
+## 18. `57e8245a` — Fix `VUID-VkDescriptorImageInfo-imageLayout-00344` in DynamicTextureGeneration
 
-**Pliki:** `IntrinsicRendererRenderPassDynamicTextureGeneration.cpp`,
+**Files:** `IntrinsicRendererRenderPassDynamicTextureGeneration.cpp`,
 `IntrinsicRendererRenderSystem.cpp`, `IntrinsicCoreApplication.cpp`
 
-**Problem:** Compute shadery generacji tekstur deklarują `_TextureTex` i
-`_SourceTex` jako `image2D` (storage images), co wymaga layoutu `GENERAL`.
-Bariera przed dispatchem używała `UNDEFINED` jako `oldLayout`, co warstwa
-walidacji śledziła nieprawidłowo.
+**Problem:** The texture generation compute shaders declare `_TextureTex` and
+`_SourceTex` as `image2D` (storage images), requiring `GENERAL` layout. The
+barrier before the dispatch used `UNDEFINED` as `oldLayout`, which the validation
+layer tracked incorrectly.
 
-**Rozwiązanie:** Bariery używają teraz faktycznego bieżącego layoutu
-(`SHADER_READ_ONLY_OPTIMAL→GENERAL`). Tekstury źródłowe (`hasSourceTex=true`)
-otrzymują jawne bariery `SHADER_READ_ONLY→GENERAL` przed dispatchem i
-`GENERAL→SHADER_READ_ONLY` po nim, żeby `house_01_E_GEN` był w `GENERAL`
-kiedy NRM generation dispatch odwołuje się do niego przez `_SourceTex`.
+**Fix:** Barriers now use the actual current layout
+(`SHADER_READ_ONLY_OPTIMAL→GENERAL`). Source textures (`hasSourceTex=true`) get
+explicit `SHADER_READ_ONLY→GENERAL` barriers before the dispatch and
+`GENERAL→SHADER_READ_ONLY` after, so `house_01_E_GEN` is in `GENERAL` when the
+NRM generation dispatch accesses it via `_SourceTex`.
 
 ---
 
-## 19. `0b7ae636` — Naprawa `VUID-VkWriteDescriptorSet-descriptorType-00339`
+## 19. `0b7ae636` — Fix `VUID-VkWriteDescriptorSet-descriptorType-00339`
 
-**Pliki:** `IntrinsicRendererRenderSystem.cpp`, `IntrinsicCoreResourcesMesh.cpp`,
+**Files:** `IntrinsicRendererRenderSystem.cpp`, `IntrinsicCoreResourcesMesh.cpp`,
 `IntrinsicRendererRenderProcess.cpp`, `IntrinsicRendererResourcesImage.cpp`
 
-**Problem (głęboka analiza):** `concrete_NRM_GEN` (compute call indeks 14) i
-`concrete_PBR_GEN` (indeks 15) używały `concrete_GEN` jako tekstury źródłowej.
-Wpis single-texture dla `concrete_GEN` był zakomentowany w `RenderSystem.cpp`,
-więc `getResourceByName("concrete_GEN")` wracał do fallbacku — tekstury
-`checkerboard` w formacie BC1 SRGB. BC1 nie ma flagi
-`VK_IMAGE_USAGE_STORAGE_BIT`, więc `vkUpdateDescriptorSets` zgłaszało błąd
-walidacji przy próbie zbindowania jej jako `VK_DESCRIPTOR_TYPE_STORAGE_IMAGE`.
+**Problem (deep analysis):** `concrete_NRM_GEN` (compute call index 14) and
+`concrete_PBR_GEN` (index 15) used `concrete_GEN` as their source texture. The
+single-texture entry for `concrete_GEN` was commented out in `RenderSystem.cpp`,
+so `getResourceByName("concrete_GEN")` fell back to the `checkerboard` texture in
+BC1 SRGB format. BC1 does not have `VK_IMAGE_USAGE_STORAGE_BIT`, so
+`vkUpdateDescriptorSets` reported a validation error when trying to bind it as
+`VK_DESCRIPTOR_TYPE_STORAGE_IMAGE`.
 
-**Rozwiązanie:** Odkomentowano wpis dla `concrete_GEN` i zastąpiono nieistniejący
-shader `texture_concrete_generation.comp` istniejącym
-`texture_bricks_generation.comp`. Usunięto też debug logging dodany podczas
-śledztwa.
-
----
-
-## 20. `21964455` — Usunięcie markerów `/* PJ: */` z RenderProcess.cpp
-
-**Pliki:** `IntrinsicRendererRenderProcess.cpp`
-
-Usunięto 4 bezsensowne markery debugowe `/* PJ: */` z tablic
-`_renderStepTypeMapping` i `_renderStepFunctionMapping`.
+**Fix:** Uncommented the entry for `concrete_GEN` and replaced the non-existent
+`texture_concrete_generation.comp` shader with the existing
+`texture_bricks_generation.comp`. Also removed debug logging added during
+investigation.
 
 ---
 
-## 21. `21816ab3` — Usunięcie flag `_*Rendered` z render passów
+## 20. `21964455` — Remove `/* PJ: */` markers from RenderProcess.cpp
 
-**Pliki:** `IntrinsicRendererRenderPassBloom.cpp`,
+**Files:** `IntrinsicRendererRenderProcess.cpp`
+
+Removed 4 stale debug markers `/* PJ: */` from `_renderStepTypeMapping` and
+`_renderStepFunctionMapping`.
+
+---
+
+## 21. `21816ab3` — Remove `_*Rendered` flags from render passes
+
+**Files:** `IntrinsicRendererRenderPassBloom.cpp`,
 `IntrinsicRendererRenderPassClustering.cpp`,
 `IntrinsicRendererRenderPassPerPixelPicking.cpp`,
 `IntrinsicRendererRenderPassShadow.cpp`,
 `IntrinsicRendererRenderPassVolumetricLighting.cpp`
 
-Flagi `_bloomRendered`, `_clusteringRendered`, `_pickingRendered`,
-`_shadowRendered`, `_volLightingRendered` (dodane w commitach `bd927c75` i
-`fb5bb76a`) okazały się zbędne. `VK_IMAGE_LAYOUT_UNDEFINED` jako `oldLayout`
-jest zawsze akceptowane przez sterownik i warstwę walidacji, bo funkcje
-`init()` / `onReinitRendering()` już wcześniej przechodzą obrazy do właściwego
-layoutu. Silnik działa poprawnie bez flag, bez żadnych warningów walidacji.
+The flags `_bloomRendered`, `_clusteringRendered`, `_pickingRendered`,
+`_shadowRendered`, `_volLightingRendered` (added in commits `bd927c75` and
+`fb5bb76a`) turned out to be unnecessary. `VK_IMAGE_LAYOUT_UNDEFINED` as
+`oldLayout` is always accepted by the driver and the validation layer, because
+`init()` / `onReinitRendering()` already transition images to the correct layout
+before the first `render()` call. The engine works correctly without the flags,
+with no validation warnings.
 
 ---
 
-## 22. `d3116793` — Naprawa UB: dangling reference i brakujący return
+## 22. `d3116793` — Fix UB: dangling reference and missing return path
 
-**Pliki:** `IntrinsicRendererPseudoInstancing.cpp`,
+**Files:** `IntrinsicRendererPseudoInstancing.cpp`,
 `IntrinsicRendererRenderPassDynamicGeometryGeneration.cpp`,
 `IntrinsicRendererRenderPassDynamicGeometryGeneration.h`
 
-**Problem 1 (C4172):** `DynamicGeometryGeneration::getNormal()` była
-zadeklarowana jako zwracająca `glm::vec3&`, ale wewnętrznie konstruowała
-tymczasowy obiekt `glm::vec3(...)` i zwracała do niego referencję — klasyczny
-dangling reference (UB). Zmieniono typ zwracany na `glm::vec3` (by value).
+**Problem 1 (C4172):** `DynamicGeometryGeneration::getNormal()` was declared as
+returning `glm::vec3&`, but internally constructed a temporary `glm::vec3(...)`
+and returned a reference to it — classic dangling reference (UB). Changed the
+return type to `glm::vec3` (by value).
 
-**Problem 2 (C4715):** `PseudoInstancing::getMeshSizes()` nie miała instrukcji
-`return` na ścieżce, gdy pętla kończy się bez znalezienia meshy — niezdefiniowane
-zachowanie. Dodano `_INTR_ASSERT(false)` i fallback return aby zadowolić
-kompilator (funkcja jest wołana tylko po pozytywnym wyniku `isInstancedMesh`).
+**Problem 2 (C4715):** `PseudoInstancing::getMeshSizes()` had no `return`
+statement on the code path where the loop finishes without finding a match —
+undefined behavior. Added `_INTR_ASSERT(false)` and a fallback return to satisfy
+the compiler (the function is only called after a positive result from
+`isInstancedMesh`).
 
 ---
 
-## 23. `ba9758bb` — Naprawa warningów C4267/C4018/C4305
+## 23. `ba9758bb` — Fix C4267/C4018/C4305 compiler warnings
 
-**Pliki:** `IntrinsicCoreResourcesMesh.cpp`, `IntrinsicCoreWorld.cpp`,
+**Files:** `IntrinsicCoreResourcesMesh.cpp`, `IntrinsicCoreWorld.cpp`,
 `IntrinsicRendererRenderPassDynamicTextureGeneration.cpp`,
 `IntrinsicRendererRenderPassGeometryGeneration.cpp`,
 `IntrinsicRendererRenderSystem.cpp`
 
-- **C4267** (`size_t→uint32_t`): jawne rzutowania `(uint32_t)` przy przypisaniach
-  z `.size()` wektora w `ResourcesMesh.cpp` (8 miejsc) i `World.cpp` (1 miejsce).
-- **C4018** (signed/unsigned): pętle `for (int j = ...)` porównujące z
-  `uint32_t` zmieniono na `for (uint32_t j = 0u; ...)` w `ResourcesMesh.cpp`
-  i `World.cpp`.
-- **C4305** (`double→float`): dodano sufiks `f` do literałów zmiennoprzecinkowych
-  (`0.02f`, `2.0f`, `1.0f`, `0.1f`, `1.01f`, `5.0f`, `-5.0f`, `2 * 3.1415f`
-  itd.) w kilku plikach generacji geometrii i tekstur.
+- **C4267** (`size_t→uint32_t`): added explicit `(uint32_t)` casts on assignments
+  from vector `.size()` in `ResourcesMesh.cpp` (8 places) and `World.cpp`
+  (1 place).
+- **C4018** (signed/unsigned mismatch): `for (int j = ...)` loops comparing
+  against `uint32_t` changed to `for (uint32_t j = 0u; ...)` in `ResourcesMesh.cpp`
+  and `World.cpp`.
+- **C4305** (`double→float`): added `f` suffix to floating-point literals
+  (`0.02f`, `2.0f`, `1.0f`, `0.1f`, `1.01f`, `5.0f`, `-5.0f`, `2.0f * 3.1415f`,
+  etc.) across several geometry and texture generation files.
 
 ---
 
-## Podsumowanie
+## Summary
 
-| Kategoria | Liczba commitów |
-|-----------|----------------|
-| Budowanie / środowisko | 1 |
-| Naprawa decali (GLSL) | 1 |
-| Vulkan validation errors (bariery, layouty, rozszerzenia) | 16 |
-| Cleanup kodu | 2 |
-| Naprawa UB i warningów kompilatora | 2 |
-| **Łącznie** | **22** |
+| Category | Commits |
+|----------|---------|
+| Build / environment | 1 |
+| Decal fix (GLSL) | 1 |
+| Vulkan validation errors (barriers, layouts, extensions) | 16 |
+| Code cleanup | 2 |
+| UB fixes and compiler warnings | 2 |
+| **Total** | **22** |
