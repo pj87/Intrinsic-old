@@ -464,66 +464,245 @@ Located in `app/managers/gpu_programs/`:
 
 ```
 app/assets/shaders/
-├── gbuffer.vert.glsl              # Vertex shader
-├── gbuffer.frag.glsl              # Fragment shader
-├── lighting.comp.glsl             # Compute shader
-├── lib_buffers.glsl               # Shared buffer layout declarations
-├── lib_lighting.glsl              # Shared lighting functions
-├── lib_noise.glsl                 # Noise utilities
-├── lib_math.glsl                  # Math helpers
-└── *.inc.glsl                     # Included fragments (not compiled standalone)
+├── gbuffer.vert.glsl              # G-Buffer vertex shader (standard mesh)
+├── gbuffer.frag.glsl              # G-Buffer fragment shader (standard mesh)
+├── gbuffer_*.vert/frag.glsl       # Variant G-Buffer shaders (foliage, terrain, water, etc.)
+├── lighting.frag.glsl             # Deferred lighting (fullscreen)
+├── shadow.vert.glsl               # Shadow map vertex shader
+├── post_*.glsl                    # Post-processing (bloom stages, combine, etc.)
+├── volumetric_lighting*.comp.glsl # Volumetric lighting compute
+├── lib_buffers.glsl               # MaterialParameters struct + MATERIAL_BUFFER macro
+├── lib_lighting.glsl              # PBR lighting functions
+├── lib_clustering.glsl            # Light/probe cluster lookup
+├── lib_math.glsl                  # Math helpers (encodeNormal, linearizeDepth, etc.)
+├── lib_noise.glsl                 # Simplex noise, fbm
+├── lib_vol_lighting.glsl          # Volumetric lighting helpers
+├── ubos.inc.glsl                  # Per-pass PerInstance UBO macros + PerFrame macro
+├── gbuffer.inc.glsl               # G-Buffer fragment UBO macros, GBuffer struct, writeGBuffer()
+├── gbuffer_vertex.inc.glsl        # G-Buffer vertex UBO macro + INPUT() vertex attributes
+└── SMAA.h                         # SMAA anti-aliasing implementation
 ```
 
 ### Common includes
 
 ```glsl
-#include "lib_buffers.glsl"    // uniform buffer bindings (per-frame, per-instance, etc.)
-#include "lib_lighting.glsl"   // calcDiffuse, calcSpecular, etc.
-#include "lib_math.glsl"       // helpers (saturate, linearizeDepth, etc.)
-#include "lib_noise.glsl"      // simplex noise, fbm
+#include "ubos.inc.glsl"       // per-pass PerInstance UBOs, PER_FRAME_DATA macro
+#include "gbuffer.inc.glsl"    // G-Buffer fragment UBO, GBuffer struct, texture helpers
+#include "gbuffer_vertex.inc.glsl"  // G-Buffer vertex UBO, vertex input attributes
+#include "lib_math.glsl"       // encodeNormal, linearizeDepth, unproject, etc.
+#include "lib_lighting.glsl"   // PBR BRDF functions
+#include "lib_clustering.glsl" // getClusterIndex, iterateLights, etc.
+#include "lib_noise.glsl"      // simplex2, simplex3, fbm
+#include "lib_buffers.glsl"    // MaterialParameters, MATERIAL_BUFFER macro
 ```
 
-### Bindless texture access
+### Uniform buffer system
 
-The engine uses a global bindless texture array. Access it with:
+The engine does **not** use a single giant PerFrame/PerInstance UBO. Instead,
+each pass defines its own `PerInstance` block with only the data it needs.
+All definitions live in `ubos.inc.glsl` (for post/fullscreen passes) or
+`gbuffer.inc.glsl` / `gbuffer_vertex.inc.glsl` (for mesh passes). Use them via
+macros — never declare uniform blocks by hand in shader files.
+
+#### G-Buffer vertex shader — `gbuffer_vertex.inc.glsl`
+
+`PER_INSTANCE_UBO` expands to `layout(binding = 0) uniform PerInstance { ... } uboPerInstance`
+
+C++ counterpart: `MeshPerInstanceDataVertex` (filled by `MeshManager::updatePerInstanceData`)
 
 ```glsl
-// Fragment/compute shader
-layout(set = 1, binding = 0) uniform sampler2D globalTextures[4095];
+PER_INSTANCE_UBO;   // use this macro, don't repeat the declaration
 
-// In code
-vec4 color = texture(globalTextures[u_AlbedoTextureIndex], uv);
+// Fields available as uboPerInstance.*:
+mat4  worldMatrix
+mat4  worldViewProjMatrix
+mat4  worldViewMatrix
+mat4  viewProjMatrix
+mat4  viewMatrix
+vec4  data0
+//    data0.y = distToCamera (world-space distance from camera)
+//    data0.w = totalTimePassed (seconds since engine start)
 ```
 
-The texture index is passed through the per-draw-call data or a uniform buffer.
+#### G-Buffer fragment shader — `gbuffer.inc.glsl`
 
-### Key uniform buffers (from `lib_buffers.glsl`)
+Two UBOs are used in G-Buffer fragment shaders: one per-instance (mesh data) and
+one per-material (material params). Both are declared with macros.
+
+`PER_INSTANCE_UBO` → `layout(binding = 1) uniform PerInstance { ... } uboPerInstance`
+
+C++ counterpart: `MeshPerInstanceDataFragment`
 
 ```glsl
-// Per-frame (set 0, binding 0)
-layout(...) uniform PerFrameData {
-    mat4 viewMatrix;
-    mat4 projMatrix;
-    mat4 viewProjMatrix;
-    mat4 invViewProjMatrix;
-    vec4 camPos;
-    vec4 nearFar;        // .x = near, .y = far
-    vec4 lightDir;       // directional light direction
-    vec4 lightColor;
-    float deltaT;
-    float time;
-    ...
-};
+PER_INSTANCE_UBO;
 
-// Per-instance (set 0, binding 1)
-layout(...) uniform PerInstanceData {
-    mat4 worldMatrix;
-    mat4 worldMatrixPrev;
-    uint albedoTextureIndex;
-    uint normalTextureIndex;
-    uint pbrTextureIndex;
-    ...
-};
+// uboPerInstance.*:
+vec4  colorTint      // RGBA tint applied to albedo; set via MeshManager::_descColorTint
+vec4  camParams
+//    camParams.x = nearPlane
+//    camParams.y = farPlane
+//    camParams.z = 1 / nearPlane
+//    camParams.w = 1 / farPlane
+vec4  data0
+//    data0.x = dayNightFactor (World::_currentDayNightFactor, 0=night, 1=day)
+//    data0.y = distToCamera
+//    data0.z = nodeRef._id cast to float (used for per-object effects)
+//    data0.w = totalTimePassed
+```
+
+`PER_MATERIAL_UBO` → `layout(binding = 2) uniform PerMaterial { ... } uboPerMaterial`
+
+C++ counterpart: material data uploaded by `MaterialManager`
+
+```glsl
+PER_MATERIAL_UBO;
+
+// uboPerMaterial.*:
+vec4  uvOffsetScale    // .xy = UV offset,  .zw = UV scale
+vec4  uvAnimation      // .xy = UV scroll speed (used by UV0_TRANSFORM_ANIMATED)
+vec4  pbrBias          // .x = metallicBias, .y = specularBias, .z = roughnessBias
+vec4  waterParams      // water-specific ripple/foam parameters
+uvec4 data0
+//    data0.x = materialBufferIdx — index into MaterialBuffer SSBO for runtime params
+vec4  data1
+//    data1.x = avgNormalLength — used by adjustRoughness() for specular AA
+```
+
+Texture bindings in G-Buffer fragment shaders (`BINDINGS_GBUFFER` macro):
+
+```glsl
+BINDINGS_GBUFFER;
+// expands to:
+layout(binding = 3) uniform sampler2D albedoTex;
+layout(binding = 4) uniform sampler2D normalTex;   // BC5: RG → reconstruct Z
+layout(binding = 5) uniform sampler2D pbrTex;      // R=metallic, G=roughness, B=AO
+// binding 6 is emissiveTex (declared manually in gbuffer.frag.glsl)
+```
+
+For terrain shaders use `BINDINGS_TERRAIN` instead (3 texture layers, bindings 3–13).
+
+#### UV transform helpers (gbuffer.inc.glsl)
+
+```glsl
+// With UV offset/scale and time-based animation (most common)
+vec2 uv0 = UV0_TRANSFORM_ANIMATED(inUV0);
+
+// With offset/scale only, no animation
+vec2 uv0 = UV0_TRANSFORM(inUV0);
+
+// Raw flip (just V-flip)
+vec2 uv0 = UV0(inUV0);
+```
+
+#### G-Buffer output (`OUTPUT` macro + `writeGBuffer`)
+
+```glsl
+OUTPUT  // declares: out vec4 outAlbedo, outNormal, outParameter0
+
+// Fill the GBuffer struct and write it:
+GBuffer gbuffer;
+gbuffer.albedo           = ...;   // vec4 RGBA
+gbuffer.normal           = ...;   // vec3 world-space normal (normalized)
+gbuffer.roughness        = ...;   // 0..1
+gbuffer.specular         = 0.5;   // fixed for most materials
+gbuffer.metalMask        = ...;   // 0..1
+gbuffer.materialBufferIdx = uboPerMaterial.data0.x;
+gbuffer.emissive         = ...;   // scalar intensity
+gbuffer.occlusion        = 1.0;   // or sample from AO texture
+writeGBuffer(gbuffer, outAlbedo, outNormal, outParameter0);
+```
+
+G-Buffer layout (what each render target stores):
+
+| Attachment | R | G | B | A |
+|------------|---|---|---|---|
+| `GBufferAlbedo` (R16G16B16A16F) | albedo.r | albedo.g | albedo.b | albedo.a |
+| `GBufferNormal` (R16G16B16A16F) | encoded normal X | encoded normal Y | specular | roughness |
+| `GBufferParameter0` (R16G16B16A16F) | metalMask | materialBufferIdx | occlusion | emissive |
+| `GBufferDepth` | depth | – | – | – |
+
+Normal encoding is octahedral (see `encodeNormal` / `decodeNormal` in `lib_math.glsl`).
+
+#### Per-frame data for lighting/post passes — `ubos.inc.glsl`
+
+Used by the deferred lighting pass (`lighting.frag.glsl`) and other fullscreen passes.
+Include with `#include "ubos.inc.glsl"` then use `PER_FRAME_DATA(binding)`.
+
+`PER_FRAME_DATA(x)` → `layout(binding = x) uniform PerFrame { ... } uboPerFrame`
+
+C++ counterpart: `RenderProcess::PerFrameDataFrament` (note: typo in original code)
+
+```glsl
+PER_FRAME_DATA(1);   // binding number varies per pass
+
+// uboPerFrame.*:
+mat4  viewMatrix
+mat4  invProjMatrix
+mat4  invViewMatrix
+
+vec4  skyModelConfigs[7]        // Preetham sky model coefficients
+vec4  skyModelRadiances         // sky radiance
+vec4  sunLightDirVS             // sun direction in view space
+vec4  sunLightDirWS             // sun direction in world space
+vec4  skyLightSH[7]             // spherical harmonics coefficients for sky irradiance
+vec4  sunLightColorAndIntensity // .xyz = color, .w = intensity
+
+vec4  postParams0
+//    postParams0.w = fog/atmosphere density parameter
+```
+
+#### Per-pass PerInstance UBOs for post-processing — `ubos.inc.glsl`
+
+Each fullscreen post pass uses a different macro. Use the matching one in your shader:
+
+| Macro | Pass | Key fields |
+|-------|------|-----------|
+| `PER_INSTANCE_DATA_PRE_COMBINE` | Pre-combine / SSAO | invViewMatrix, invProjMatrix, invViewProjMatrix, camPosition, camParams, postParams0 |
+| `PER_INSTANCE_DATA_POST_COMBINE` | Post-combine / tone mapping | haltonSamples, camParams, postParams0 |
+| `PER_INSTANCE_DATA_SSAO_TEMP_REPROJ` | SSAO temporal reprojection | invViewProjMatrix, invProjMatrix, projMatrix, prevViewMatrix |
+| `PER_INSTANCE_DATA_SSAO_HBAO` | SSAO HBAO | invProjMatrix |
+| `PER_INSTANCE_DATA_BLUR` | Blur passes | blurParams (direction + radius), camParams |
+| `PER_INSTANCE_DATA_SMAA_VERT` | SMAA vertex | backbufferSize |
+| `PER_INSTANCE_DATA_SMAA_FRAG` | SMAA fragment | backbufferSize (binding 1) |
+
+`camParams` in pre/post-combine passes:
+- `.x` = nearPlane, `.y` = farPlane, `.z` = 1/nearPlane, `.w` = 1/farPlane
+
+`postParams0` meaning depends on the pass — check `UniformManager::_uniformDataSource`
+and the pass-specific C++ fill code.
+
+#### Lighting pass PerInstance UBO — `lighting.frag.glsl`
+
+The deferred lighting pass declares its own `PerInstance` block (not via a macro):
+
+```glsl
+layout(binding = 0) uniform PerInstance {
+  mat4  shadowViewProjMatrix[MAX_SHADOW_MAP_COUNT];  // PSSM shadow matrices
+  vec4  nearFarWidthHeight;   // frustum parameters for shadow PCF
+  vec4  nearFar;              // .x = near, .y = far (linear depth)
+  vec4  data0;
+  //    data0.x = time (TaskManager::_totalTimePassed)
+  //    data0.y = globalIrradianceFactor (Clustering::_globalIrradianceFactor)
+  //    data0.z = globalSpecularFactor   (Clustering::_globalSpecularFactor)
+  //    data0.w = currentDayNightTime    (World::_currentTime)
+} uboPerInstance;
+```
+
+#### Material buffer SSBO — `lib_buffers.glsl`
+
+Runtime material parameters (translucency, emissive intensity, flags) are stored
+in a large SSBO indexed by `materialBufferIdx` from the G-Buffer:
+
+```glsl
+#include "lib_buffers.glsl"
+
+MATERIAL_BUFFER;   // expands to: buffer MaterialBuffer { MaterialParameters materialParameters[]; }
+
+// In fragment shader (lighting pass), look up parameters for the current pixel:
+uint matIdx = uint(gbuffer_materialBufferIdx);
+MaterialParameters matParams = materialParameters[matIdx];
+float thickness = matParams.translucencyThickness;
+float emissive  = matParams.emissiveIntensity;
 ```
 
 ### Adding a new shader
