@@ -511,7 +511,10 @@ macros — never declare uniform blocks by hand in shader files.
 C++ counterpart: `MeshPerInstanceDataVertex` (filled by `MeshManager::updatePerInstanceData`)
 
 ```glsl
-PER_INSTANCE_UBO;   // use this macro, don't repeat the declaration
+// gbuffer.vert.glsl — include the vertex inc, then invoke the macro:
+#include "gbuffer_vertex.inc.glsl"
+
+PER_INSTANCE_UBO;   // expands to: layout(binding = 0) uniform PerInstance { ... } uboPerInstance
 
 // Fields available as uboPerInstance.*:
 mat4  worldMatrix
@@ -526,15 +529,24 @@ vec4  data0
 
 #### G-Buffer fragment shader — `gbuffer.inc.glsl`
 
+> **Warning — name collision:** `gbuffer.inc.glsl` also defines a macro called
+> `PER_INSTANCE_UBO`, but it expands to a **different** struct at **binding 1**
+> (not binding 0). The two macros have the same name because they are always
+> used in separate shader stages — never include both files in the same shader.
+
 Two UBOs are used in G-Buffer fragment shaders: one per-instance (mesh data) and
 one per-material (material params). Both are declared with macros.
 
-`PER_INSTANCE_UBO` → `layout(binding = 1) uniform PerInstance { ... } uboPerInstance`
+`PER_INSTANCE_UBO` (from `gbuffer.inc.glsl`) → `layout(binding = 1) uniform PerInstance { ... } uboPerInstance`
 
 C++ counterpart: `MeshPerInstanceDataFragment`
 
 ```glsl
-PER_INSTANCE_UBO;
+// gbuffer.frag.glsl — include the fragment inc, then invoke the macro:
+#include "gbuffer.inc.glsl"
+
+PER_INSTANCE_UBO;   // expands to: layout(binding = 1) uniform PerInstance { ... } uboPerInstance
+                    // NOTE: binding 1, not 0 — different from the vertex version
 
 // uboPerInstance.*:
 vec4  colorTint      // RGBA tint applied to albedo; set via MeshManager::_descColorTint
@@ -549,6 +561,36 @@ vec4  data0
 //    data0.z = nodeRef._id cast to float (used for per-object effects)
 //    data0.w = totalTimePassed
 ```
+
+In fragment shaders both macros are declared together — the standard pattern from
+`gbuffer.frag.glsl` is:
+
+```glsl
+#include "gbuffer.inc.glsl"
+
+// Both macros in this order — PER_MATERIAL first, then PER_INSTANCE:
+PER_MATERIAL_UBO;   // → layout(binding = 2) uniform PerMaterial { ... } uboPerMaterial
+PER_INSTANCE_UBO;   // → layout(binding = 1) uniform PerInstance { ... } uboPerInstance
+
+BINDINGS_GBUFFER;   // → albedoTex(3), normalTex(4), pbrTex(5)
+layout(binding = 6) uniform sampler2D emissiveTex;   // declared manually
+```
+
+The order of the macro invocations in the GLSL source does not matter for
+correctness (each expands to an explicit `binding = N` declaration), but the
+codebase consistently puts `PER_MATERIAL_UBO` before `PER_INSTANCE_UBO`.
+
+Full binding layout for a standard G-Buffer shader pair:
+
+| Binding | Stage | Macro / declaration | C++ struct |
+|---------|-------|---------------------|-----------|
+| 0 | Vertex | `PER_INSTANCE_UBO` from `gbuffer_vertex.inc.glsl` | `MeshPerInstanceDataVertex` |
+| 1 | Fragment | `PER_INSTANCE_UBO` from `gbuffer.inc.glsl` | `MeshPerInstanceDataFragment` |
+| 2 | Fragment | `PER_MATERIAL_UBO` from `gbuffer.inc.glsl` | material data (MaterialManager) |
+| 3 | Fragment | `BINDINGS_GBUFFER` | albedoTex |
+| 4 | Fragment | `BINDINGS_GBUFFER` | normalTex |
+| 5 | Fragment | `BINDINGS_GBUFFER` | pbrTex |
+| 6 | Fragment | manual | emissiveTex |
 
 `PER_MATERIAL_UBO` → `layout(binding = 2) uniform PerMaterial { ... } uboPerMaterial`
 
